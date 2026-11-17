@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="ANKI MEOW">
 <title>暗記して ミヤオウ</title>
 <meta name="robots" content="noindex">
-<link rel="icon" href="cat/cat_ask.png" type="image/png">
+<link rel="icon" href="cat/melt/cat_ask.svg" type="image/svg+xml">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -603,7 +603,7 @@ img.nm[src$=".svg"]{image-rendering:auto}
   </section>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<div class="catswitch" role="group" aria-label="マスコットの絵柄"><button type="button" data-cat="dot">ドット</button><button type="button" data-cat="smooth">なめらか</button></div>
+
 
 <script>
 (() => {
@@ -769,7 +769,7 @@ const NM_BASE = "cat/";
 const CAT_OF = { cat_jpop:"ask", st_default:"ask", st_happy:"happy", st_surprised:"surprised", st_sleepy:"sleepy", st_love:"love", st_listening:"listen", listen_airpods:"listen", load_run:"think", load_done:"happy" };
 const NM_EXT = { cat_jpop:"gif", listen_airpods:"gif", load_run:"gif", load_done:"gif" };
 let CAT_STYLE = (() => { try{ return localStorage.getItem("catStyle") || "dot"; }catch(e){ return "dot"; } })();
-const nm = (name, px) => CAT_STYLE === "smooth" ? `<img class="nm" src="${NM_BASE}smooth/cat_${CAT_OF[name] || "ask"}.svg" width="${px}" height="${px}" alt="" decoding="async">` : `<img class="nm" src="${NM_BASE}cat_${CAT_OF[name] || "ask"}.png" width="${px}" height="${px}" alt="" loading="lazy" decoding="async">`;
+const nm = (name, px) => `<img class="nm" src="${NM_BASE}melt/cat_${CAT_OF[name] || "ask"}.svg" width="${px}" height="${px}" alt="" decoding="async">`;
 const say = (name, text, big) => `<div class="say${big ? " big" : ""}">${nm(name, big ? 128 : 64)}<div class="bubble">${text}</div></div>`;
 const fbh = (name, text) => `<div class="fbh">${nm(name, 64)}<strong>${text}</strong></div>`;
 const MODE_NM = { study:"cat_jpop", cloze:"st_default", recall:"st_listening", write:"st_default", speak:"listen_airpods" };
