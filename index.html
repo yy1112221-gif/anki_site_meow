@@ -484,7 +484,8 @@ async function tatoeba(word){
     const words = r.text.split(/\s+/).length;
     const form = findForm(r.text, word);
     const audio = (r.audios && r.audios[0] && r.audios[0].id) ? "https://tatoeba.org/audio/download/" + r.audios[0].id : null;
-    const score = (own ? 0 : 10) + Math.abs(words - 8) + (form ? 0 : 20) + (r.text.length > 110 ? 10 : 0) - (audio ? 3 : 0);
+    const exact = form && stripAcc(form.toLowerCase()) === stripAcc(term.toLowerCase());
+    const score = (own ? 0 : 10) + Math.abs(words - 8) + (form ? 0 : 20) - (exact ? 8 : 0) + (r.text.length > 110 ? 10 : 0) - (audio ? 3 : 0);
     return { id: r.id, text: r.text, tr: own ? own.text : "", en: en ? en.text : "", form, score, audio };
   }).sort((a,b) => a.score - b.score).slice(0, 6);
 }
