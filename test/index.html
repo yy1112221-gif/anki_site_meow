@@ -9,7 +9,6 @@
 <title>暗記して ミヤオウ</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="cat/melt/cat_ask.svg" type="image/svg+xml">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -426,18 +425,6 @@ h1 .logo-sub{font-size:.74rem;font-weight:600;letter-spacing:.18em;color:var(--m
   .iconbtn{padding:5px 9px}
 }
 
-/* ロゴ遊び（テスト版） */
-h1 .logo{display:inline-flex;align-items:center;white-space:nowrap}
-h1 .logo .lo{width:1.25em;height:1.25em;margin:0 .26em 0 .02em;color:var(--ink);transform:translateY(-.06em)}
-h1 .logo .lt{width:.8em;height:1em;margin-left:-.1em;transform:translateY(-.25em)}
-h1 .logo .testtag{font-size:.55rem;letter-spacing:.1em;background:var(--accent);color:#fff;border-radius:999px;padding:2px 7px;margin-left:6px}
-h1 .logo-sub{display:inline-flex;align-items:center;gap:5px}
-h1 .logo-sub .lp{width:.95em;height:.95em;color:var(--accent);transform:rotate(-14deg)}
-.catswitch{position:fixed;left:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:15;display:flex;gap:2px;padding:4px;border-radius:999px;background:var(--glass-strong);border:1px solid var(--glass-edge);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:var(--glass-shadow)}
-.catswitch button{border:0;background:transparent;font:600 .78rem var(--body);color:var(--muted);padding:7px 12px;border-radius:999px;cursor:pointer}
-.catswitch button[aria-pressed="true"]{background:var(--accent);color:#fff}
-img.nm[src$=".svg"]{image-rendering:auto}
-
 /* ══════════ 解答画面: 上の固定ステージ（問題と答え）・下のドック（入力と操作） ══════════ */
 body.focus nav.tabs{display:none}
 body.focus #sessionBox{position:fixed;z-index:6;top:calc(var(--vvt,0px) + 8px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);
@@ -485,6 +472,13 @@ p.muted,.muted.small{font-weight:400}
 .kbd button{color:var(--ink);font-weight:500}
 h2{color:var(--ink)}
 body.focus #toast{bottom:auto;top:calc(var(--vvt,0px) + 64px + env(safe-area-inset-top))}
+/* ロゴ遊び */
+h1 .logo{display:inline-flex;align-items:center;white-space:nowrap}
+h1 .logo .lo{width:1.25em;height:1.25em;margin:0 .26em 0 .02em;color:var(--ink);transform:translateY(-.06em)}
+h1 .logo .lt{width:.8em;height:1em;margin-left:-.1em;transform:translateY(-.25em)}
+h1 .logo-sub{display:inline-flex;align-items:center;gap:5px}
+h1 .logo-sub .lp{width:.95em;height:.95em;color:var(--accent);transform:rotate(-14deg)}
+img.nm[src$=".svg"]{image-rendering:auto}
 
 /* ══════════ ごほうび（おやつタイム） ══════════ */
 .petcard{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 14px;margin:12px 0 4px;border-radius:22px;background:var(--glass-strong);border:1px solid var(--glass-edge)}
@@ -520,6 +514,11 @@ body.petopen{overflow:hidden}
 .pet-it i{position:absolute;right:-4px;top:-4px;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#e8486a;color:#fff;font:700 .75rem/22px system-ui;font-style:normal}
 .pet-none{color:var(--muted);font-weight:600;padding:20px}
 .pet-hint{text-align:center;font-size:.72rem;color:var(--muted);margin:0}
+
+.chiptog.star{border-color:var(--accent);font-weight:700}
+.olv{margin-left:5px;font-size:.62rem;font-weight:700;padding:1px 5px;border-radius:999px;background:var(--field);color:var(--muted);vertical-align:1px}
+.olv-B{color:#2f8a5f} .olv-C{color:#b4572e} .olv-q{opacity:.6}
+h1 .logo .testtag{font-size:.55rem;letter-spacing:.1em;background:var(--accent);color:#fff;border-radius:999px;padding:2px 7px;margin-left:6px}
 </style>
 </head>
 <body>
@@ -687,7 +686,6 @@ body.petopen{overflow:hidden}
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-
 <script>
 (() => {
 "use strict";
@@ -732,7 +730,7 @@ ja: {
   meaningAlts:"意味の候補：", sideStreak:"日 連続学習", sideWeek:"これからの7日", sideLadder:"復習のはしご", syncTitle:"端末間で同期", syncNotReady:"同期サーバーを準備中です。もうすぐ使えるようになります。", syncHelp:"同期コードを発行すると、ほかの端末でも同じ単語と進み具合で続けられます。メールや名前は不要です。", syncStart:"同期を始める（コードを発行）", syncHaveCode:"別の端末で発行したコードがある場合", syncJoin:"このコードでつなぐ", syncBadCode:"コードは英数字8文字です（例：K7P2-QX9M）。", syncWorking:"つないでいます…", syncNotFound:"このコードは見つかりませんでした。もう一度確かめてください。", syncErr:"同期できませんでした。ネット接続を確認して、少ししてから試してください。", syncStarted:"同期を始めました。コードをメモしておいてください。", syncJoined:"つながりました！両方の端末の単語をまとめました。", syncOnHelp:"このコードをほかの端末で入れると、同じ単語帳で続けられます。変更は自動で同期されます。コードはパスワード代わりなので、人に教えないでください。", syncYourCode:"同期コード", syncBusy:"同期しています…", syncLast:t0=>`最後に同期：${t0}`, syncNowBtn:"今すぐ同期", syncOff:"この端末の同期をやめる", syncOffConfirm:"もう一度押すと解除（単語はこの端末に残ります）", syncCopied:"コードをコピーしました。", grad:"卒業", gradTitle:"もう完璧に覚えた単語を、毎日の復習から外します", gradAsk:w=>`「${w}」はもう完璧？ 卒業させる？`, gradSafe:"卒業した単語は「単語帳 › 卒業」に入るだけなので、いつでも復活させられます。安心してね！", gradCancel:"まだ続ける", gradDo:"卒業させる", gradDone:w=>`「${w}」は卒業！単語帳からいつでも復活できます。`, revive:"復活させる", revived:w=>`「${w}」を復活させました。今日の復習に入ります。`, home:"ホーム", pausedToast:"ここまで保存しました。「続きから」で再開できます。", setOrder:"新しい単語を出す順番", orderAdded:"追加した順", orderEasy:"よく使う単語から", orderHelp:"どちらの場合も、おたがいの例文に出てくる単語や、いま覚えている単語とつながる単語は、まとめて先に出します。", todayNewList:"今日の新しい単語：", linkedHint:"🔗 は例文でつながっている単語です。いっしょに覚えると効率的です。", levelsFreq:["基本","よく使う","中級","難しめ"], meanRefetch:"意味の候補を取り直す", uiLangTitle:"表示言語", learnLangTitle:"学習する言語", deckDefault:"基本", addTo:"追加先の単語帳", newDeck:"＋ 新しい単語帳…", deckNamePh:"単語帳の名前（例：旅行、ビジネス）", create:"作成", deckCreated:n=>`「${n}」を作りました。`,
   decksTitle:"単語帳", decksHelp:"チェックした単語帳だけが今日の学習に出ます。範囲をしぼると覚えやすくなります。", deckWords:n=>`${n}語`, deckDelete:"削除", deckDeleteConfirm:"もう一度押すと削除（単語は「基本」へ移動）", deckDeleted:"単語帳を削除し、単語は「基本」に移しました。", studyDecks:"学習する単語帳：", deckOf:"単語帳",
   photoTitle:"写真から追加", photoHelp:"本や画面を撮ると、端末の中で文字を読み取ります（AIサービスには送りません）。読み取った単語から覚えたいものを選んでください。", photoPick:"写真を撮る・選ぶ",
-  ocrLoading:"文字認識エンジンを準備中…（初回だけ数秒かかります）", ocrReading:n=>`読み取り中… ${n}%`, ocrFail:"読み取れませんでした。明るい場所で、文字が大きく写るように撮ってみてください。", ocrText:"読み取った文（間違いは直せます）", ocrReparse:"この文から単語を拾い直す", ocrPickWords:"覚えたい単語をタップ", ocrUseLine:"写真の文を例文にする", ocrAdd:n=>`選んだ${n}語を追加`, ocrInDeck:"登録済み", ocrNone:"単語が見つかりませんでした。",
+  ocrLoading:"文字認識エンジンを準備中…（初回だけ数秒かかります）", ocrReading:n=>`読み取り中… ${n}%`, ocrFail:"読み取れませんでした。明るい場所で、文字が大きく写るように撮ってみてください。", ocrText:"読み取った文（間違いは直せます）", ocrReparse:"この文から単語を拾い直す", ocrPickWords:"学習優先度の高い順。★はおすすめ（選択ずみ・タップで外せます）", ocrScoring:"単語の優先度を計算中…", ocrLvUnknown:"珍", ocrWhy:w=>`優先度 ${Math.round((w.score||0)*100)}${w.rank ? ` · 頻度 ${w.rank}位` : ""} · 抜くと意味が変わる度 ${Math.round((w.abl||0)*100)} · つながり ${Math.round((w.tr||0)*100)}${w.tf > 1 ? ` · 写真に${w.tf}回` : ""}`, ocrUseLine:"写真の文を例文にする", ocrAdd:n=>`選んだ${n}語を追加`, ocrInDeck:"登録済み", ocrNone:"単語が見つかりませんでした。",
   impTitle:"ほかの言語から取り込む", impHelp:"別の言語で覚えている単語を、この言語に訳して追加します。同じ意味の単語どうしがつながり、カードに並んで表示されます。", impFrom:"取り込み元", impAll:"すべて選択", impGo:"選んだ単語を取り込む", impNoSource:"ほかの言語の単語がまだありません。", impWorking:(i,n)=>`訳しています（${i}/${n}）…`, impDone:(n,f)=>`${n}語を取り込みました。${f ? "訳せなかった単語は単語帳で直せます。" : ""}`, impPickSome:"取り込む単語を選んでください。",
   nmAsk:{ study:l=>"はじめて見る単語だよ。カンでいいから書いてみて！", cloze:l=>"空いてるところ、なんて入るかな？", recall:l=>`この意味、${l}でなんて言う？`, write:l=>"この単語で、一文つくってみて〜", speak:l=>"声に出して言ってみて。ちゃんと聞いてるよ" },
   nmToday:(a,b)=>`今日は復習${a}枚と、新しい単語${b}つ。いっしょにやろ！`, nmEmpty:"ふぁ…まだ単語がないみたい。覚えたい単語を教えて？", nmNone:"今日の分はないよ。ネミミはちょっと寝るね…", nmDone:"今日もおつかれさま！また明日ね", nmResume:"おかえり！さっきの続きからできるよ",
@@ -802,7 +800,7 @@ ko: {
   meaningAlts:"뜻 후보:", sideStreak:"일 연속 학습", sideWeek:"앞으로 7일", sideLadder:"복습 사다리", syncTitle:"기기 간 동기화", syncNotReady:"동기화 서버를 준비 중이에요. 곧 쓸 수 있어요.", syncHelp:"동기화 코드를 만들면 다른 기기에서도 같은 단어와 진도로 이어서 할 수 있어요. 이메일이나 이름은 필요 없어요.", syncStart:"동기화 시작 (코드 만들기)", syncHaveCode:"다른 기기에서 만든 코드가 있다면", syncJoin:"이 코드로 연결", syncBadCode:"코드는 영문·숫자 8자예요 (예: K7P2-QX9M).", syncWorking:"연결하는 중…", syncNotFound:"이 코드를 찾지 못했어요. 다시 확인해 주세요.", syncErr:"동기화하지 못했어요. 인터넷 연결을 확인하고 잠시 뒤 다시 해 주세요.", syncStarted:"동기화를 시작했어요. 코드를 메모해 두세요.", syncJoined:"연결됐어요! 두 기기의 단어를 합쳤어요.", syncOnHelp:"이 코드를 다른 기기에 입력하면 같은 단어장으로 이어서 할 수 있어요. 바뀐 내용은 자동으로 동기화돼요. 코드는 비밀번호 대신이니 남에게 알려 주지 마세요.", syncYourCode:"동기화 코드", syncBusy:"동기화하는 중…", syncLast:t0=>`마지막 동기화: ${t0}`, syncNowBtn:"지금 동기화", syncOff:"이 기기 동기화 끄기", syncOffConfirm:"한 번 더 누르면 해제 (단어는 이 기기에 남아요)", syncCopied:"코드를 복사했어요.", grad:"졸업", gradTitle:"이미 완벽하게 외운 단어를 매일 복습에서 뺍니다", gradAsk:w=>`"${w}"은(는) 이제 완벽해? 졸업시킬까?`, gradSafe:"졸업한 단어는 「단어장 › 졸업」에 들어갈 뿐이라 언제든 다시 살릴 수 있어요. 안심해!", gradCancel:"계속할래", gradDo:"졸업시키기", gradDone:w=>`"${w}" 졸업! 단어장에서 언제든 다시 살릴 수 있어요.`, revive:"다시 살리기", revived:w=>`"${w}"을(를) 다시 살렸어요. 오늘 복습에 들어갑니다.`, home:"홈", pausedToast:"여기까지 저장했어요. 「이어서 하기」로 다시 시작할 수 있어요.", setOrder:"새 단어를 내는 순서", orderAdded:"추가한 순서", orderEasy:"자주 쓰는 단어부터", orderHelp:"어느 쪽이든 서로의 예문에 나오는 단어나 지금 외우는 단어와 이어진 단어는 묶어서 먼저 냅니다.", todayNewList:"오늘의 새 단어:", linkedHint:"🔗 는 예문으로 이어진 단어예요. 같이 외우면 효율적이에요.", levelsFreq:["기본","자주 씀","중급","어려움"], meanRefetch:"뜻 후보 다시 가져오기", uiLangTitle:"화면 언어", learnLangTitle:"학습 언어", deckDefault:"기본", addTo:"추가할 단어장", newDeck:"＋ 새 단어장…", deckNamePh:"단어장 이름 (예: 여행, 비즈니스)", create:"만들기", deckCreated:n=>`"${n}" 단어장을 만들었어요.`,
   decksTitle:"단어장", decksHelp:"체크한 단어장만 오늘 학습에 나와요. 범위를 좁히면 더 잘 외워집니다.", deckWords:n=>`${n}개`, deckDelete:"삭제", deckDeleteConfirm:"한 번 더 누르면 삭제 (단어는 「기본」으로 이동)", deckDeleted:"단어장을 지우고 단어는 「기본」으로 옮겼어요.", studyDecks:"학습할 단어장:", deckOf:"단어장",
   photoTitle:"사진으로 추가", photoHelp:"책이나 화면을 찍으면 기기 안에서 글자를 읽어요 (AI 서비스로 보내지 않아요). 읽힌 단어 중 외울 단어를 골라 주세요.", photoPick:"사진 찍기·고르기",
-  ocrLoading:"글자 인식 엔진 준비 중… (처음 한 번만 몇 초 걸려요)", ocrReading:n=>`읽는 중… ${n}%`, ocrFail:"글자를 읽지 못했어요. 밝은 곳에서 글자가 크게 나오게 찍어 보세요.", ocrText:"읽은 문장 (틀린 곳은 고칠 수 있어요)", ocrReparse:"이 문장에서 단어 다시 뽑기", ocrPickWords:"외울 단어를 눌러 고르세요", ocrUseLine:"사진 속 문장을 예문으로 쓰기", ocrAdd:n=>`고른 ${n}개 추가`, ocrInDeck:"이미 있음", ocrNone:"단어를 찾지 못했어요.",
+  ocrLoading:"글자 인식 엔진 준비 중… (처음 한 번만 몇 초 걸려요)", ocrReading:n=>`읽는 중… ${n}%`, ocrFail:"글자를 읽지 못했어요. 밝은 곳에서 글자가 크게 나오게 찍어 보세요.", ocrText:"읽은 문장 (틀린 곳은 고칠 수 있어요)", ocrReparse:"이 문장에서 단어 다시 뽑기", ocrPickWords:"학습 우선순위 높은 순. ★는 추천(미리 선택됨 · 눌러서 빼기)", ocrScoring:"단어 우선순위 계산 중…", ocrLvUnknown:"희귀", ocrWhy:w=>`우선순위 ${Math.round((w.score||0)*100)}${w.rank ? ` · 빈도 ${w.rank}위` : ""} · 빼면 의미가 바뀌는 정도 ${Math.round((w.abl||0)*100)} · 연결성 ${Math.round((w.tr||0)*100)}${w.tf > 1 ? ` · 사진에 ${w.tf}번` : ""}`, ocrUseLine:"사진 속 문장을 예문으로 쓰기", ocrAdd:n=>`고른 ${n}개 추가`, ocrInDeck:"이미 있음", ocrNone:"단어를 찾지 못했어요.",
   impTitle:"다른 언어에서 가져오기", impHelp:"다른 언어로 외우고 있는 단어를 이 언어로 옮겨 추가해요. 같은 뜻의 단어끼리 연결돼서 카드에 함께 보여요.", impFrom:"가져올 언어", impAll:"전체 선택", impGo:"고른 단어 가져오기", impNoSource:"다른 언어 단어가 아직 없어요.", impWorking:(i,n)=>`번역 중 (${i}/${n})…`, impDone:(n,f)=>`${n}개 가져왔어요.${f ? " 번역 못 한 단어는 단어장에서 고칠 수 있어요." : ""}`, impPickSome:"가져올 단어를 골라 주세요.",
   nmAsk:{ study:l=>"처음 보는 단어야. 감으로라도 써 봐!", cloze:l=>"빈칸에 뭐가 들어갈까?", recall:l=>`이 뜻, ${l}로 뭐라고 할까?`, write:l=>"이 단어로 문장 하나 만들어 봐~", speak:l=>"소리 내서 말해 봐. 잘 듣고 있을게" },
   nmToday:(a,b)=>`오늘은 복습 ${a}장, 새 단어 ${b}개. 같이 하자!`, nmEmpty:"하암… 아직 단어가 없네. 외우고 싶은 단어 알려 줄래?", nmNone:"오늘 할 건 없어. 네미미는 잠깐 잘게…", nmDone:"오늘도 수고했어! 내일 또 봐", nmResume:"어서 와! 아까 하던 데서 이어서 할 수 있어",
@@ -847,11 +845,10 @@ const LANGS = {
   ja: { tatoeba:"jpn", mm:"ja", speech:"ja-JP", wikt:"ja", chars:[], articles:null, ph:"活用する" }
 };
 const LADDER = [1, 7, 21, 60, 150];
-/* ネミミ（nemimi.net の絵をそのまま参照。描き直すと全部に反映される） */
+/* 암기냥이（cat/melt/ のSVG。cat/melt_wobble.py で生成） */
 const NM_BASE = "cat/";
 const CAT_OF = { cat_jpop:"ask", st_default:"ask", st_happy:"happy", st_surprised:"surprised", st_sleepy:"sleepy", st_love:"love", st_listening:"listen", listen_airpods:"listen", load_run:"think", load_done:"happy" };
 const NM_EXT = { cat_jpop:"gif", listen_airpods:"gif", load_run:"gif", load_done:"gif" };
-let CAT_STYLE = (() => { try{ return localStorage.getItem("catStyle") || "dot"; }catch(e){ return "dot"; } })();
 const nm = (name, px) => `<img class="nm" src="${NM_BASE}melt/cat_${CAT_OF[name] || "ask"}.svg" width="${Math.round(px*1.36)}" height="${px}" alt="" decoding="async">`;
 const say = (name, text, big) => `<div class="say${big ? " big" : ""}">${nm(name, big ? 128 : 64)}<div class="bubble">${text}</div></div>`;
 const fbh = (name, text) => `<div class="fbh">${nm(name, 64)}<strong>${text}</strong></div>`;
@@ -1698,18 +1695,68 @@ function wordsFromText(text){
   }); });
   return [...seen.values()];
 }
-function renderOcrWords(text){
-  const x = t(), box = $("#ocrBox"), list = wordsFromText(text);
-  const area = box.querySelector("#ocrWords"); const picked = new Set();
+
+/* ════════ 写真の単語の「学習優先度」（AIなし・端末内で計算） ════════
+   ① 役に立つ度: 頻度順位 r の対数で山なり（よく出るが基本すぎない 1,000〜6,000位が最高）
+   ② 抜くと意味がどれだけ変わるか: 文を IDF 重み付きの語の袋ベクトルで表すと、語 i を抜いたときの
+      元の文とのコサイン類似度は √(1 − wᵢ²/Σw²)。よって意味の変化 = 1 − √(1 − wᵢ²/Σw²)（モデル不要・厳密）
+   ③ つながり: 文の中で一緒に出る語のグラフで TextRank（多くの語とつながる中心語ほど高い）
+   優先度 = ① × (0.45 + 0.35×② + 0.2×③) × 写真の中の登場回数ボーナス。登録済みは除外 */
+function sentencesOf(text){ return text.replace(/\s+/g, " ").replace(/([.!?。！？;:])\s+/g, "$1\n").split(/\n|[¡¿]/).map(x => x.trim()).filter(x => x.length > 1); }
+async function scoreOcrWords(text){
+  const lang = S.meta.settings.lang, stop = new Set((STOP[lang] || "").split(" "));
+  const m = await freqMap(lang).catch(() => null);
+  const sents = sentencesOf(text).map(line => { const toks = (line.match(/[\p{L}][\p{L}\p{M}'’\-]*/gu) || []).map(w => w.toLowerCase()); return { line, toks, content: toks.filter(k => k.length >= 3 && !stop.has(k)) }; });
+  const rank0 = k => m ? (m.get(k) || null) : null;
+  // 活用形 → 辞書形（頻度表に載っていて、元の形より順位が上の候補だけ採用）
+  const ENDS = ["aríamos","eríamos","iríamos","ábamos","íamos","asteis","isteis","aremos","eremos","iremos","ieron","aron","aban","ió","aste","iste","ían","aba","ía","ando","iendo","ado","ido","ada","ida","amos","emos","imos","áis","éis","ará","erá","irá","an","en","as","es","a","e","o","ó","é","s"];
+  const LEM = new Map();
+  const lemma = k => { if(LEM.has(k)) return LEM.get(k); let best = { w: k, r: rank0(k) };
+    if(m && k.length >= 5 && /^(es|pt|it|fr)$/.test(lang)) for(const e of ENDS){ if(!k.endsWith(e) || k.length - e.length < 3) continue; const b = k.slice(0, -e.length);
+      for(const inf of (e === "s" || e === "es" ? ["", "ar","er","ir"] : ["ar","er","ir","are","ere","ire","re"])){ const r = rank0(b + inf); if(r && (!best.r || r < best.r) && (best.w === k ? !rank0(k) || r < rank0(k) : true)) best = { w: b + inf, r }; } }
+    LEM.set(k, best); return best; };
+  const rank = k => lemma(k).r;
+  const idf = k => { const r = rank(k); return r ? Math.log(r + 1) / Math.log(50001) : .9; };   // 0〜1
+  const util = k => { const r = rank(k); if(!m) return .6; if(!r) return .3;                      // 一覧にない = 固有名詞・読み間違いが多い
+    const dl = Math.log(r) - Math.log(2800); return Math.exp(-(dl ** 2) / (2 * (dl > 0 ? 1.6 : 1.1) ** 2)); };   // 珍しい側はゆるやかに下げる
+  const W = new Map();
+  sents.forEach(st => { const u = [...new Set(st.content)]; const sum2 = u.reduce((a, k) => a + idf(k) ** 2, 0) || 1;
+    u.forEach(k => { const L0 = lemma(k).w; const w = W.get(L0) || { word: L0, tf: 0, abl: 0, lines: [], nb: new Map() }; w.tf += st.content.filter(x => x === k).length;
+      w.abl = Math.max(w.abl, 1 - Math.sqrt(Math.max(0, 1 - idf(k) ** 2 / sum2))); w.lines.push(st.line);
+      u.forEach(o => { const L1 = lemma(o).w; if(L1 !== L0) w.nb.set(L1, (w.nb.get(L1) || 0) + 1); }); W.set(L0, w); }); });
+  // TextRank
+  const ks = [...W.keys()]; let pr = new Map(ks.map(k => [k, 1]));
+  for(let it = 0; it < 30; it++){ const nx = new Map(); ks.forEach(k => { let sum = 0; W.get(k).nb.forEach((c, o) => { const tot = [...W.get(o).nb.values()].reduce((a, b) => a + b, 0) || 1; sum += pr.get(o) * c / tot; }); nx.set(k, .15 + .85 * sum); }); pr = nx; }
+  const prMax = Math.max(1, ...pr.values()), ablMax = Math.max(.01, ...[...W.values()].map(w => w.abl));
+  const out = [...W.values()].map(w => {
+    const r = rank(w.word), tr = pr.get(w.word) / prMax, ab = w.abl / ablMax;
+    const score = util(w.word) * (.45 + .35 * ab + .2 * tr) * (1 + Math.min(2, w.tf - 1) * .5);   // 写真に何度も出る語＝その文章の話題
+    // 例文: 5〜18語で、まわりの語が多い（穴埋めで推測しやすい）文
+    const line = w.lines.slice().sort((a, b) => { const fa = a.split(" ").length, fb = b.split(" ").length; const ga = fa >= 5 && fa <= 18 ? 0 : 1, gb = fb >= 5 && fb <= 18 ? 0 : 1; return ga - gb || fb - fa; })[0];
+    const lv = !m ? "" : !r ? "?" : r < 800 ? "A" : r < 3000 ? "B1" : r < 8000 ? "B2" : "C";
+    return { word: w.word, line, score, rank: r, lv, tf: w.tf, abl: ab, tr };
+  }).filter(w => !(/^\d/.test(w.word)));
+  out.sort((a, b) => b.score - a.score);
+  return out;
+}
+async function renderOcrWords(text){
+  const x = t(), box = $("#ocrBox"); const area = box.querySelector("#ocrWords"); const picked = new Set();
+  area.innerHTML = `<p class="muted small">${x.ocrScoring}</p>`;
+  let list = await scoreOcrWords(text).catch(() => null);
+  if(!list) list = wordsFromText(text).map(w => Object.assign(w, { score: 0, lv: "" }));
   if(!list.length){ area.innerHTML = `<p class="muted small">${x.ocrNone}</p>`; return; }
-  area.innerHTML = `<p class="small muted">${x.ocrPickWords}</p><div class="chips">` + list.map((w,i) => { const dupc = findDup(w.word); return `<button type="button" class="chiptog" data-ow="${i}" aria-pressed="false" ${dupc ? "disabled" : ""}>${esc(w.word)}${dupc ? ` <span class="tiny">${x.ocrInDeck}</span>` : ""}</button>`; }).join("") + `</div>
+  const fresh = list.filter(w => !findDup(w.word)); const topN = Math.min(Math.max(3, S.meta.settings.newLimit || 7), fresh.length);
+  const cut = fresh.length ? fresh[topN - 1].score : 1;
+  list.forEach((w, i) => { w.star = !findDup(w.word) && w.score > 0 && w.score >= cut && i < 40; if(w.star) picked.add(i); });
+  const lvTxt = lv => lv ? `<span class="olv olv-${lv === "?" ? "q" : lv[0]}">${lv === "?" ? x.ocrLvUnknown : lv}</span>` : "";
+  area.innerHTML = `<p class="small muted">${x.ocrPickWords}</p><div class="chips">` + list.map((w,i) => { const dupc = findDup(w.word); return `<button type="button" class="chiptog${w.star ? " star" : ""}" data-ow="${i}" aria-pressed="${picked.has(i)}" ${dupc ? "disabled" : ""} title="${esc(x.ocrWhy(w))}">${w.star ? "★ " : ""}${esc(w.word)}${lvTxt(w.lv)}${dupc ? ` <span class="tiny">${x.ocrInDeck}</span>` : ""}</button>`; }).join("") + `</div>
     <label class="switch" for="ocrLine"><span>${x.ocrUseLine}</span><input type="checkbox" id="ocrLine" checked></label>
-    <div class="row end"><button class="btn primary" id="ocrAdd" type="button" disabled>${x.ocrAdd(0)}</button></div><p class="muted small" id="ocrNote" aria-live="polite"></p>`;
+    <div class="row end"><button class="btn primary" id="ocrAdd" type="button" ${picked.size ? "" : "disabled"}>${x.ocrAdd(picked.size)}</button></div><p class="muted small" id="ocrNote" aria-live="polite"></p>`;
   const btn = area.querySelector("#ocrAdd");
   area.querySelectorAll("[data-ow]").forEach(b => b.onclick = () => { const i = +b.dataset.ow; if(picked.has(i)) picked.delete(i); else picked.add(i); b.setAttribute("aria-pressed", picked.has(i)); btn.textContent = x.ocrAdd(picked.size); btn.disabled = !picked.size; });
   btn.onclick = async () => {
     const useLine = area.querySelector("#ocrLine").checked;
-    const rows = [...picked].map(i => list[i]).map(w => ({ word: w.word, meaning: "", example: useLine && w.line.split(" ").length >= 4 ? w.line : "", exampleKo: "" }));
+    const rows = [...picked].map(i => list[i]).map(w => ({ word: w.word, meaning: "", example: useLine && w.line && w.line.split(" ").length >= 4 ? w.line : "", exampleKo: "" }));
     await addMany(rows, area.querySelector("#ocrNote"), btn, true);
     renderOcrWords(box.querySelector("#ocrText").value);
   };
@@ -2176,10 +2223,6 @@ function renderSync(){
     <div class="row" style="align-items:baseline"><span class="eyebrow">${esc(x.syncYourCode)}</span><b style="font-family:var(--mono);font-size:1.6rem;letter-spacing:.14em">${esc(sy.code)}</b></div>
     <p class="small ${SYNC_STATE === "err" ? "" : "muted"}" style="${SYNC_STATE === "err" ? "color:var(--bad)" : ""}">${esc(st)}</p>
     <div class="row"><button class="btn" id="syncCopy" type="button">${esc(x.btnCopy)}</button><button class="btn" id="syncGo" type="button">${esc(x.syncNowBtn)}</button><span class="grow"></span><button class="btn ghost sm" id="syncOff" type="button">${esc(x.syncOff)}</button></div>`;
-(function(){ const sync = () => document.querySelectorAll("[data-cat]").forEach(b => b.setAttribute("aria-pressed", b.dataset.cat === CAT_STYLE));
-  document.querySelectorAll("[data-cat]").forEach(b => b.onclick = () => { CAT_STYLE = b.dataset.cat; try{ localStorage.setItem("catStyle", CAT_STYLE); }catch(e){} sync();
-    if(SES){ const it = SES.queue[0]; const c = it && S.cards[it.id]; if(c && !SES.state.answered) renderItem(c, it.mode); } else renderAll(); });
-  sync(); })();
   $("#syncCopy").onclick = async () => { try{ await navigator.clipboard.writeText(sy.code); toast(x.syncCopied); }catch(e){ toast(sy.code); } };
   $("#syncGo").onclick = () => syncNow();
   let armed = false;
@@ -2499,7 +2542,7 @@ function petDrawItem(ctx, it, x, y, sz, rot){
   ctx.restore();
 }
 
-if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $ };
+if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView };
 load(); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
