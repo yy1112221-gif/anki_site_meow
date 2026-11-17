@@ -480,6 +480,45 @@ h1 .logo .lt{width:.8em;height:1em;margin-left:-.1em;transform:translateY(-.25em
 h1 .logo-sub{display:inline-flex;align-items:center;gap:5px}
 h1 .logo-sub .lp{width:.95em;height:.95em;color:var(--accent);transform:rotate(-14deg)}
 img.nm[src$=".svg"]{image-rendering:auto}
+
+/* ══════════ ごほうび（おやつタイム） ══════════ */
+.petcard{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 14px;margin:12px 0 4px;border-radius:22px;background:var(--glass-strong);border:1px solid var(--glass-edge)}
+.petcard .pc-cat{border:0;background:transparent;padding:0;cursor:pointer;flex-shrink:0;animation:pcBob 1.6s ease-in-out infinite}
+.petcard .pc-txt{display:flex;flex-direction:column;min-width:170px;flex:1 1 170px;gap:1px}
+.petcard>.btn{white-space:nowrap;margin-left:auto}
+@media (max-width:520px){.petcard>.btn{flex:1 1 100%}}
+.petcard .pc-txt b{font-size:.95rem;color:var(--ink)} .petcard .pc-txt span{font-size:.82rem;color:var(--muted)} .petcard .pc-txt small{font-size:.72rem;color:var(--accent);font-weight:600}
+@keyframes pcBob{0%,100%{transform:scale(1,1)}50%{transform:scale(1.06,.94)}}
+.streak span.frz{background:#78bee6}
+.petgrant{margin:10px 0;padding:14px 16px;border-radius:22px;background:linear-gradient(135deg,rgba(255,214,90,.35),rgba(242,161,180,.3));border:1px solid rgba(255,214,90,.6)}
+.petgrant .pg-top{display:flex;flex-direction:column;gap:2px} .petgrant .pg-top b{font-size:1.15rem;color:var(--ink)} .petgrant .pg-top span{font-size:.8rem;color:var(--muted)}
+.petgrant .pg-items{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 6px}
+.pg-it{display:inline-flex;align-items:center;gap:3px;padding:4px 9px;border-radius:999px;background:rgba(255,255,255,.6)} .pg-it i{font-style:normal;font-size:.8rem;font-weight:700;color:var(--ink)}
+.pg-it.main{outline:2px solid #e8a400;background:#fff6d6}
+.petgrant .pg-main{font-size:.8rem;color:var(--ink);font-weight:600}
+.peti{line-height:1;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif} .peti.gold{filter:sepia(1) saturate(4) hue-rotate(-12deg) brightness(1.15) drop-shadow(0 0 4px #ffcc33)}
+body.petopen{overflow:hidden}
+#pet{position:fixed;inset:0;z-index:60;background:radial-gradient(120% 80% at 50% 40%,#c9eee0 0%,#8fcbb7 60%,#5f9e8a 100%);touch-action:none;-webkit-user-select:none;user-select:none}
+@media (prefers-color-scheme:dark){#pet{background:radial-gradient(120% 80% at 50% 40%,#2c5a4c 0%,#173a30 60%,#0d231d 100%)}}
+#pet.hidden{display:none}
+#petCv{position:absolute;inset:0;width:100%;height:100%;display:block}
+.pet-top{position:absolute;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));display:flex;align-items:center;gap:10px}
+.pet-lv{flex:1;display:flex;flex-direction:column;gap:4px;align-items:center} .pet-lv b{font-size:.95rem;color:var(--ink)}
+.pet-bar{width:min(220px,100%);height:9px;border-radius:999px;background:rgba(255,255,255,.5);overflow:hidden} .pet-bar i{display:block;height:100%;background:linear-gradient(90deg,#ffb84d,#f2708f);border-radius:999px;transition:width .3s}
+.pet-st{display:flex;flex-direction:column;align-items:flex-end} .pet-st b{font-size:1.05rem;color:var(--ink)} .pet-st small{font-size:.7rem;color:var(--muted)}
+.pet-msg{position:absolute;left:50%;top:calc(76px + env(safe-area-inset-top));transform:translate(-50%,-10px);max-width:88vw;padding:10px 16px;border-radius:18px;background:rgba(255,255,255,.92);color:#1d2b27;font-weight:700;font-size:.9rem;text-align:center;opacity:0;transition:.25s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.pet-msg.show{opacity:1;transform:translate(-50%,0)}
+.pet-bottom{position:absolute;left:0;right:0;bottom:0;padding:10px 12px calc(12px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px}
+.pet-tray{display:flex;gap:10px;overflow-x:auto;padding:6px 4px;scrollbar-width:none;justify-content:safe center}
+.pet-it{position:relative;flex-shrink:0;width:64px;height:64px;border-radius:22px;border:1px solid var(--glass-edge);background:var(--glass-strong);display:grid;place-items:center;cursor:pointer;touch-action:none;transition:transform .08s}
+.pet-it:active{transform:scale(.88)} .pet-it.gold{border-color:#ffcc33;box-shadow:0 0 14px rgba(255,204,51,.6)}
+.pet-it i{position:absolute;right:-4px;top:-4px;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#e8486a;color:#fff;font:700 .75rem/22px system-ui;font-style:normal}
+.pet-none{color:var(--muted);font-weight:600;padding:20px}
+.pet-hint{text-align:center;font-size:.72rem;color:var(--muted);margin:0}
+
+.chiptog.star{border-color:var(--accent);font-weight:700}
+.olv{margin-left:5px;font-size:.62rem;font-weight:700;padding:1px 5px;border-radius:999px;background:var(--field);color:var(--muted);vertical-align:1px}
+.olv-B{color:#2f8a5f} .olv-C{color:#b4572e} .olv-q{opacity:.6}
 </style>
 </head>
 <body>
@@ -691,7 +730,7 @@ ja: {
   meaningAlts:"意味の候補：", sideStreak:"日 連続学習", sideWeek:"これからの7日", sideLadder:"復習のはしご", syncTitle:"端末間で同期", syncNotReady:"同期サーバーを準備中です。もうすぐ使えるようになります。", syncHelp:"同期コードを発行すると、ほかの端末でも同じ単語と進み具合で続けられます。メールや名前は不要です。", syncStart:"同期を始める（コードを発行）", syncHaveCode:"別の端末で発行したコードがある場合", syncJoin:"このコードでつなぐ", syncBadCode:"コードは英数字8文字です（例：K7P2-QX9M）。", syncWorking:"つないでいます…", syncNotFound:"このコードは見つかりませんでした。もう一度確かめてください。", syncErr:"同期できませんでした。ネット接続を確認して、少ししてから試してください。", syncStarted:"同期を始めました。コードをメモしておいてください。", syncJoined:"つながりました！両方の端末の単語をまとめました。", syncOnHelp:"このコードをほかの端末で入れると、同じ単語帳で続けられます。変更は自動で同期されます。コードはパスワード代わりなので、人に教えないでください。", syncYourCode:"同期コード", syncBusy:"同期しています…", syncLast:t0=>`最後に同期：${t0}`, syncNowBtn:"今すぐ同期", syncOff:"この端末の同期をやめる", syncOffConfirm:"もう一度押すと解除（単語はこの端末に残ります）", syncCopied:"コードをコピーしました。", grad:"卒業", gradTitle:"もう完璧に覚えた単語を、毎日の復習から外します", gradAsk:w=>`「${w}」はもう完璧？ 卒業させる？`, gradSafe:"卒業した単語は「単語帳 › 卒業」に入るだけなので、いつでも復活させられます。安心してね！", gradCancel:"まだ続ける", gradDo:"卒業させる", gradDone:w=>`「${w}」は卒業！単語帳からいつでも復活できます。`, revive:"復活させる", revived:w=>`「${w}」を復活させました。今日の復習に入ります。`, home:"ホーム", pausedToast:"ここまで保存しました。「続きから」で再開できます。", setOrder:"新しい単語を出す順番", orderAdded:"追加した順", orderEasy:"よく使う単語から", orderHelp:"どちらの場合も、おたがいの例文に出てくる単語や、いま覚えている単語とつながる単語は、まとめて先に出します。", todayNewList:"今日の新しい単語：", linkedHint:"🔗 は例文でつながっている単語です。いっしょに覚えると効率的です。", levelsFreq:["基本","よく使う","中級","難しめ"], meanRefetch:"意味の候補を取り直す", uiLangTitle:"表示言語", learnLangTitle:"学習する言語", deckDefault:"基本", addTo:"追加先の単語帳", newDeck:"＋ 新しい単語帳…", deckNamePh:"単語帳の名前（例：旅行、ビジネス）", create:"作成", deckCreated:n=>`「${n}」を作りました。`,
   decksTitle:"単語帳", decksHelp:"チェックした単語帳だけが今日の学習に出ます。範囲をしぼると覚えやすくなります。", deckWords:n=>`${n}語`, deckDelete:"削除", deckDeleteConfirm:"もう一度押すと削除（単語は「基本」へ移動）", deckDeleted:"単語帳を削除し、単語は「基本」に移しました。", studyDecks:"学習する単語帳：", deckOf:"単語帳",
   photoTitle:"写真から追加", photoHelp:"本や画面を撮ると、端末の中で文字を読み取ります（AIサービスには送りません）。読み取った単語から覚えたいものを選んでください。", photoPick:"写真を撮る・選ぶ",
-  ocrLoading:"文字認識エンジンを準備中…（初回だけ数秒かかります）", ocrReading:n=>`読み取り中… ${n}%`, ocrFail:"読み取れませんでした。明るい場所で、文字が大きく写るように撮ってみてください。", ocrText:"読み取った文（間違いは直せます）", ocrReparse:"この文から単語を拾い直す", ocrPickWords:"覚えたい単語をタップ", ocrUseLine:"写真の文を例文にする", ocrAdd:n=>`選んだ${n}語を追加`, ocrInDeck:"登録済み", ocrNone:"単語が見つかりませんでした。",
+  ocrLoading:"文字認識エンジンを準備中…（初回だけ数秒かかります）", ocrReading:n=>`読み取り中… ${n}%`, ocrFail:"読み取れませんでした。明るい場所で、文字が大きく写るように撮ってみてください。", ocrText:"読み取った文（間違いは直せます）", ocrReparse:"この文から単語を拾い直す", ocrPickWords:"学習優先度の高い順。★はおすすめ（選択ずみ・タップで外せます）", ocrScoring:"単語の優先度を計算中…", ocrLvUnknown:"珍", ocrWhy:w=>`優先度 ${Math.round((w.score||0)*100)}${w.rank ? ` · 頻度 ${w.rank}位` : ""} · 抜くと意味が変わる度 ${Math.round((w.abl||0)*100)} · つながり ${Math.round((w.tr||0)*100)}${w.tf > 1 ? ` · 写真に${w.tf}回` : ""}`, ocrUseLine:"写真の文を例文にする", ocrAdd:n=>`選んだ${n}語を追加`, ocrInDeck:"登録済み", ocrNone:"単語が見つかりませんでした。",
   impTitle:"ほかの言語から取り込む", impHelp:"別の言語で覚えている単語を、この言語に訳して追加します。同じ意味の単語どうしがつながり、カードに並んで表示されます。", impFrom:"取り込み元", impAll:"すべて選択", impGo:"選んだ単語を取り込む", impNoSource:"ほかの言語の単語がまだありません。", impWorking:(i,n)=>`訳しています（${i}/${n}）…`, impDone:(n,f)=>`${n}語を取り込みました。${f ? "訳せなかった単語は単語帳で直せます。" : ""}`, impPickSome:"取り込む単語を選んでください。",
   nmAsk:{ study:l=>"はじめて見る単語だよ。カンでいいから書いてみて！", cloze:l=>"空いてるところ、なんて入るかな？", recall:l=>`この意味、${l}でなんて言う？`, write:l=>"この単語で、一文つくってみて〜", speak:l=>"声に出して言ってみて。ちゃんと聞いてるよ" },
   nmToday:(a,b)=>`今日は復習${a}枚と、新しい単語${b}つ。いっしょにやろ！`, nmEmpty:"ふぁ…まだ単語がないみたい。覚えたい単語を教えて？", nmNone:"今日の分はないよ。ネミミはちょっと寝るね…", nmDone:"今日もおつかれさま！また明日ね", nmResume:"おかえり！さっきの続きからできるよ",
@@ -761,7 +800,7 @@ ko: {
   meaningAlts:"뜻 후보:", sideStreak:"일 연속 학습", sideWeek:"앞으로 7일", sideLadder:"복습 사다리", syncTitle:"기기 간 동기화", syncNotReady:"동기화 서버를 준비 중이에요. 곧 쓸 수 있어요.", syncHelp:"동기화 코드를 만들면 다른 기기에서도 같은 단어와 진도로 이어서 할 수 있어요. 이메일이나 이름은 필요 없어요.", syncStart:"동기화 시작 (코드 만들기)", syncHaveCode:"다른 기기에서 만든 코드가 있다면", syncJoin:"이 코드로 연결", syncBadCode:"코드는 영문·숫자 8자예요 (예: K7P2-QX9M).", syncWorking:"연결하는 중…", syncNotFound:"이 코드를 찾지 못했어요. 다시 확인해 주세요.", syncErr:"동기화하지 못했어요. 인터넷 연결을 확인하고 잠시 뒤 다시 해 주세요.", syncStarted:"동기화를 시작했어요. 코드를 메모해 두세요.", syncJoined:"연결됐어요! 두 기기의 단어를 합쳤어요.", syncOnHelp:"이 코드를 다른 기기에 입력하면 같은 단어장으로 이어서 할 수 있어요. 바뀐 내용은 자동으로 동기화돼요. 코드는 비밀번호 대신이니 남에게 알려 주지 마세요.", syncYourCode:"동기화 코드", syncBusy:"동기화하는 중…", syncLast:t0=>`마지막 동기화: ${t0}`, syncNowBtn:"지금 동기화", syncOff:"이 기기 동기화 끄기", syncOffConfirm:"한 번 더 누르면 해제 (단어는 이 기기에 남아요)", syncCopied:"코드를 복사했어요.", grad:"졸업", gradTitle:"이미 완벽하게 외운 단어를 매일 복습에서 뺍니다", gradAsk:w=>`"${w}"은(는) 이제 완벽해? 졸업시킬까?`, gradSafe:"졸업한 단어는 「단어장 › 졸업」에 들어갈 뿐이라 언제든 다시 살릴 수 있어요. 안심해!", gradCancel:"계속할래", gradDo:"졸업시키기", gradDone:w=>`"${w}" 졸업! 단어장에서 언제든 다시 살릴 수 있어요.`, revive:"다시 살리기", revived:w=>`"${w}"을(를) 다시 살렸어요. 오늘 복습에 들어갑니다.`, home:"홈", pausedToast:"여기까지 저장했어요. 「이어서 하기」로 다시 시작할 수 있어요.", setOrder:"새 단어를 내는 순서", orderAdded:"추가한 순서", orderEasy:"자주 쓰는 단어부터", orderHelp:"어느 쪽이든 서로의 예문에 나오는 단어나 지금 외우는 단어와 이어진 단어는 묶어서 먼저 냅니다.", todayNewList:"오늘의 새 단어:", linkedHint:"🔗 는 예문으로 이어진 단어예요. 같이 외우면 효율적이에요.", levelsFreq:["기본","자주 씀","중급","어려움"], meanRefetch:"뜻 후보 다시 가져오기", uiLangTitle:"화면 언어", learnLangTitle:"학습 언어", deckDefault:"기본", addTo:"추가할 단어장", newDeck:"＋ 새 단어장…", deckNamePh:"단어장 이름 (예: 여행, 비즈니스)", create:"만들기", deckCreated:n=>`"${n}" 단어장을 만들었어요.`,
   decksTitle:"단어장", decksHelp:"체크한 단어장만 오늘 학습에 나와요. 범위를 좁히면 더 잘 외워집니다.", deckWords:n=>`${n}개`, deckDelete:"삭제", deckDeleteConfirm:"한 번 더 누르면 삭제 (단어는 「기본」으로 이동)", deckDeleted:"단어장을 지우고 단어는 「기본」으로 옮겼어요.", studyDecks:"학습할 단어장:", deckOf:"단어장",
   photoTitle:"사진으로 추가", photoHelp:"책이나 화면을 찍으면 기기 안에서 글자를 읽어요 (AI 서비스로 보내지 않아요). 읽힌 단어 중 외울 단어를 골라 주세요.", photoPick:"사진 찍기·고르기",
-  ocrLoading:"글자 인식 엔진 준비 중… (처음 한 번만 몇 초 걸려요)", ocrReading:n=>`읽는 중… ${n}%`, ocrFail:"글자를 읽지 못했어요. 밝은 곳에서 글자가 크게 나오게 찍어 보세요.", ocrText:"읽은 문장 (틀린 곳은 고칠 수 있어요)", ocrReparse:"이 문장에서 단어 다시 뽑기", ocrPickWords:"외울 단어를 눌러 고르세요", ocrUseLine:"사진 속 문장을 예문으로 쓰기", ocrAdd:n=>`고른 ${n}개 추가`, ocrInDeck:"이미 있음", ocrNone:"단어를 찾지 못했어요.",
+  ocrLoading:"글자 인식 엔진 준비 중… (처음 한 번만 몇 초 걸려요)", ocrReading:n=>`읽는 중… ${n}%`, ocrFail:"글자를 읽지 못했어요. 밝은 곳에서 글자가 크게 나오게 찍어 보세요.", ocrText:"읽은 문장 (틀린 곳은 고칠 수 있어요)", ocrReparse:"이 문장에서 단어 다시 뽑기", ocrPickWords:"학습 우선순위 높은 순. ★는 추천(미리 선택됨 · 눌러서 빼기)", ocrScoring:"단어 우선순위 계산 중…", ocrLvUnknown:"희귀", ocrWhy:w=>`우선순위 ${Math.round((w.score||0)*100)}${w.rank ? ` · 빈도 ${w.rank}위` : ""} · 빼면 의미가 바뀌는 정도 ${Math.round((w.abl||0)*100)} · 연결성 ${Math.round((w.tr||0)*100)}${w.tf > 1 ? ` · 사진에 ${w.tf}번` : ""}`, ocrUseLine:"사진 속 문장을 예문으로 쓰기", ocrAdd:n=>`고른 ${n}개 추가`, ocrInDeck:"이미 있음", ocrNone:"단어를 찾지 못했어요.",
   impTitle:"다른 언어에서 가져오기", impHelp:"다른 언어로 외우고 있는 단어를 이 언어로 옮겨 추가해요. 같은 뜻의 단어끼리 연결돼서 카드에 함께 보여요.", impFrom:"가져올 언어", impAll:"전체 선택", impGo:"고른 단어 가져오기", impNoSource:"다른 언어 단어가 아직 없어요.", impWorking:(i,n)=>`번역 중 (${i}/${n})…`, impDone:(n,f)=>`${n}개 가져왔어요.${f ? " 번역 못 한 단어는 단어장에서 고칠 수 있어요." : ""}`, impPickSome:"가져올 단어를 골라 주세요.",
   nmAsk:{ study:l=>"처음 보는 단어야. 감으로라도 써 봐!", cloze:l=>"빈칸에 뭐가 들어갈까?", recall:l=>`이 뜻, ${l}로 뭐라고 할까?`, write:l=>"이 단어로 문장 하나 만들어 봐~", speak:l=>"소리 내서 말해 봐. 잘 듣고 있을게" },
   nmToday:(a,b)=>`오늘은 복습 ${a}장, 새 단어 ${b}개. 같이 하자!`, nmEmpty:"하암… 아직 단어가 없네. 외우고 싶은 단어 알려 줄래?", nmNone:"오늘 할 건 없어. 네미미는 잠깐 잘게…", nmDone:"오늘도 수고했어! 내일 또 봐", nmResume:"어서 와! 아까 하던 데서 이어서 할 수 있어",
@@ -1136,6 +1175,7 @@ function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1
 function renderStart(){
   renderStartInner(); renderSide();
   const box = $("#sessionStart"), pos = box.querySelector(".poster");
+  if(cardsHere().length){ const pc = document.createElement("div"); pc.innerHTML = petCardHTML(); const el = pc.firstElementChild; if(pos) pos.after(el); else box.prepend(el); bindPetOpen(box); }
   if(pos){ const rest = [...box.children].filter(el => el !== pos); if(rest.length){ const w = document.createElement("div"); w.className = "after-poster"; rest.forEach(el => w.appendChild(el)); box.appendChild(w); } }
   else box.style.background = "";
 }
@@ -1150,7 +1190,7 @@ function renderSide(){
   const max = Math.max(1, ...days.map(v => v.n));
   const fc = days.map((v,i) => { const [y,m,dd] = v.d.split("-").map(Number); return `<div class="fc${i ? "" : " today"}"><em>${v.n}</em><i style="height:${Math.round(v.n/max*70)}px"></i><span>${i ? x.week[new Date(y,m-1,dd).getDay()] : x.todayShort}</span></div>`; }).join("");
   // 最近4週間の学習した日
-  const cells = []; for(let i = 27; i >= 0; i--){ const d = addDays(d0, -i); cells.push(`<span class="${S.meta.days[d] ? "on" : ""}${i === 0 ? " today" : ""}" title="${d}"></span>`); }
+  const cells = []; for(let i = 27; i >= 0; i--){ const d = addDays(d0, -i); cells.push(`<span class="${S.meta.days[d] === "freeze" ? "on frz" : S.meta.days[d] ? "on" : ""}${i === 0 ? " today" : ""}" title="${d}"></span>`); }
   // はしごの段ごとの数
   const counts = [0,0,0,0,0,0]; let mastered = 0; all.forEach(c => { if(c.mastered) mastered++; else counts[Math.min(c.level, 5)]++; });
   const lad = x.levels.map((n,i) => `<div><b>${counts[i]}</b><span>${esc(n)}</span></div>`).join("") + `<div><b>${mastered}</b><span>${esc(x.chipDone)}</span></div>`;
@@ -1242,10 +1282,12 @@ function finishSession(){
   const keys = Object.keys(S.meta.days).sort(); if(keys.length > 400) keys.slice(0, keys.length-400).forEach(k => delete S.meta.days[k]);
   save();
   const ok = SES.finished.filter(f => f.ok).length, ng = SES.finished.length - ok;
+  const PG = petGrant(ok, ng);
   const rows = SES.finished.map(f => { const c = S.cards[f.id]; if(!c) return ""; return `<div class="item" style="cursor:default"><span style="min-width:0"><span class="w">${esc(c.word)}</span><span class="m">${esc(c.meaning)}</span></span><span class="right">${f.grad ? `<span class="chip done">🎓 ${x.graduated}</span>` : f.ok ? `<span class="chip done">${x.firstTry}</span>` : `<span class="chip leech">${x.tomorrow}</span>`}<span>${c.mastered ? x.graduated : esc(x.nextOn(c.due))}</span></span></div>`; }).join("");
   document.body.classList.remove("focus");
   const box = $("#sessionBox");
-  box.innerHTML = `${heroHTML(x.finishTitle, "", 100)}${say(ng ? "st_happy" : "st_love", esc(ng ? x.nmFinishSome : x.nmFinishAll))}<p>${x.finishSum(ok, ng)}</p><div class="list">${rows}</div><div class="row"><button class="btn primary" id="backHome" type="button">${x.ok}</button></div>`;
+  box.innerHTML = `${heroHTML(x.finishTitle, "", 100)}${say(ng ? "st_happy" : "st_love", esc(ng ? x.nmFinishSome : x.nmFinishAll))}${petGrantHTML(PG)}<p>${x.finishSum(ok, ng)}</p><div class="list">${rows}</div><div class="row">${petCount() ? `<button class="btn primary" type="button" data-petopen>🍖 ${esc(pt().throwNow)}</button>` : ""}<span class="grow"></span><button class="btn${petCount() ? "" : " primary"}" id="backHome" type="button">${x.ok}</button></div>`;
+  bindPetOpen(box); if(PG) setTimeout(sfxFanfare, 200);
   paintHero(box);
   $("#backHome").onclick = () => { SES = null; document.body.classList.remove("focus"); box.classList.add("hidden"); $("#sessionStart").classList.remove("hidden"); renderAll(); };
 }
@@ -1653,18 +1695,68 @@ function wordsFromText(text){
   }); });
   return [...seen.values()];
 }
-function renderOcrWords(text){
-  const x = t(), box = $("#ocrBox"), list = wordsFromText(text);
-  const area = box.querySelector("#ocrWords"); const picked = new Set();
+
+/* ════════ 写真の単語の「学習優先度」（AIなし・端末内で計算） ════════
+   ① 役に立つ度: 頻度順位 r の対数で山なり（よく出るが基本すぎない 1,000〜6,000位が最高）
+   ② 抜くと意味がどれだけ変わるか: 文を IDF 重み付きの語の袋ベクトルで表すと、語 i を抜いたときの
+      元の文とのコサイン類似度は √(1 − wᵢ²/Σw²)。よって意味の変化 = 1 − √(1 − wᵢ²/Σw²)（モデル不要・厳密）
+   ③ つながり: 文の中で一緒に出る語のグラフで TextRank（多くの語とつながる中心語ほど高い）
+   優先度 = ① × (0.45 + 0.35×② + 0.2×③) × 写真の中の登場回数ボーナス。登録済みは除外 */
+function sentencesOf(text){ return text.replace(/\s+/g, " ").replace(/([.!?。！？;:])\s+/g, "$1\n").split(/\n|[¡¿]/).map(x => x.trim()).filter(x => x.length > 1); }
+async function scoreOcrWords(text){
+  const lang = S.meta.settings.lang, stop = new Set((STOP[lang] || "").split(" "));
+  const m = await freqMap(lang).catch(() => null);
+  const sents = sentencesOf(text).map(line => { const toks = (line.match(/[\p{L}][\p{L}\p{M}'’\-]*/gu) || []).map(w => w.toLowerCase()); return { line, toks, content: toks.filter(k => k.length >= 3 && !stop.has(k)) }; });
+  const rank0 = k => m ? (m.get(k) || null) : null;
+  // 活用形 → 辞書形（頻度表に載っていて、元の形より順位が上の候補だけ採用）
+  const ENDS = ["aríamos","eríamos","iríamos","ábamos","íamos","asteis","isteis","aremos","eremos","iremos","ieron","aron","aban","ió","aste","iste","ían","aba","ía","ando","iendo","ado","ido","ada","ida","amos","emos","imos","áis","éis","ará","erá","irá","an","en","as","es","a","e","o","ó","é","s"];
+  const LEM = new Map();
+  const lemma = k => { if(LEM.has(k)) return LEM.get(k); let best = { w: k, r: rank0(k) };
+    if(m && k.length >= 5 && /^(es|pt|it|fr)$/.test(lang)) for(const e of ENDS){ if(!k.endsWith(e) || k.length - e.length < 3) continue; const b = k.slice(0, -e.length);
+      for(const inf of (e === "s" || e === "es" ? ["", "ar","er","ir"] : ["ar","er","ir","are","ere","ire","re"])){ const r = rank0(b + inf); if(r && (!best.r || r < best.r) && (best.w === k ? !rank0(k) || r < rank0(k) : true)) best = { w: b + inf, r }; } }
+    LEM.set(k, best); return best; };
+  const rank = k => lemma(k).r;
+  const idf = k => { const r = rank(k); return r ? Math.log(r + 1) / Math.log(50001) : .9; };   // 0〜1
+  const util = k => { const r = rank(k); if(!m) return .6; if(!r) return .3;                      // 一覧にない = 固有名詞・読み間違いが多い
+    const dl = Math.log(r) - Math.log(2800); return Math.exp(-(dl ** 2) / (2 * (dl > 0 ? 1.6 : 1.1) ** 2)); };   // 珍しい側はゆるやかに下げる
+  const W = new Map();
+  sents.forEach(st => { const u = [...new Set(st.content)]; const sum2 = u.reduce((a, k) => a + idf(k) ** 2, 0) || 1;
+    u.forEach(k => { const L0 = lemma(k).w; const w = W.get(L0) || { word: L0, tf: 0, abl: 0, lines: [], nb: new Map() }; w.tf += st.content.filter(x => x === k).length;
+      w.abl = Math.max(w.abl, 1 - Math.sqrt(Math.max(0, 1 - idf(k) ** 2 / sum2))); w.lines.push(st.line);
+      u.forEach(o => { const L1 = lemma(o).w; if(L1 !== L0) w.nb.set(L1, (w.nb.get(L1) || 0) + 1); }); W.set(L0, w); }); });
+  // TextRank
+  const ks = [...W.keys()]; let pr = new Map(ks.map(k => [k, 1]));
+  for(let it = 0; it < 30; it++){ const nx = new Map(); ks.forEach(k => { let sum = 0; W.get(k).nb.forEach((c, o) => { const tot = [...W.get(o).nb.values()].reduce((a, b) => a + b, 0) || 1; sum += pr.get(o) * c / tot; }); nx.set(k, .15 + .85 * sum); }); pr = nx; }
+  const prMax = Math.max(1, ...pr.values()), ablMax = Math.max(.01, ...[...W.values()].map(w => w.abl));
+  const out = [...W.values()].map(w => {
+    const r = rank(w.word), tr = pr.get(w.word) / prMax, ab = w.abl / ablMax;
+    const score = util(w.word) * (.45 + .35 * ab + .2 * tr) * (1 + Math.min(2, w.tf - 1) * .5);   // 写真に何度も出る語＝その文章の話題
+    // 例文: 5〜18語で、まわりの語が多い（穴埋めで推測しやすい）文
+    const line = w.lines.slice().sort((a, b) => { const fa = a.split(" ").length, fb = b.split(" ").length; const ga = fa >= 5 && fa <= 18 ? 0 : 1, gb = fb >= 5 && fb <= 18 ? 0 : 1; return ga - gb || fb - fa; })[0];
+    const lv = !m ? "" : !r ? "?" : r < 800 ? "A" : r < 3000 ? "B1" : r < 8000 ? "B2" : "C";
+    return { word: w.word, line, score, rank: r, lv, tf: w.tf, abl: ab, tr };
+  }).filter(w => !(/^\d/.test(w.word)));
+  out.sort((a, b) => b.score - a.score);
+  return out;
+}
+async function renderOcrWords(text){
+  const x = t(), box = $("#ocrBox"); const area = box.querySelector("#ocrWords"); const picked = new Set();
+  area.innerHTML = `<p class="muted small">${x.ocrScoring}</p>`;
+  let list = await scoreOcrWords(text).catch(() => null);
+  if(!list) list = wordsFromText(text).map(w => Object.assign(w, { score: 0, lv: "" }));
   if(!list.length){ area.innerHTML = `<p class="muted small">${x.ocrNone}</p>`; return; }
-  area.innerHTML = `<p class="small muted">${x.ocrPickWords}</p><div class="chips">` + list.map((w,i) => { const dupc = findDup(w.word); return `<button type="button" class="chiptog" data-ow="${i}" aria-pressed="false" ${dupc ? "disabled" : ""}>${esc(w.word)}${dupc ? ` <span class="tiny">${x.ocrInDeck}</span>` : ""}</button>`; }).join("") + `</div>
+  const fresh = list.filter(w => !findDup(w.word)); const topN = Math.min(Math.max(3, S.meta.settings.newLimit || 7), fresh.length);
+  const cut = fresh.length ? fresh[topN - 1].score : 1;
+  list.forEach((w, i) => { w.star = !findDup(w.word) && w.score > 0 && w.score >= cut && i < 40; if(w.star) picked.add(i); });
+  const lvTxt = lv => lv ? `<span class="olv olv-${lv === "?" ? "q" : lv[0]}">${lv === "?" ? x.ocrLvUnknown : lv}</span>` : "";
+  area.innerHTML = `<p class="small muted">${x.ocrPickWords}</p><div class="chips">` + list.map((w,i) => { const dupc = findDup(w.word); return `<button type="button" class="chiptog${w.star ? " star" : ""}" data-ow="${i}" aria-pressed="${picked.has(i)}" ${dupc ? "disabled" : ""} title="${esc(x.ocrWhy(w))}">${w.star ? "★ " : ""}${esc(w.word)}${lvTxt(w.lv)}${dupc ? ` <span class="tiny">${x.ocrInDeck}</span>` : ""}</button>`; }).join("") + `</div>
     <label class="switch" for="ocrLine"><span>${x.ocrUseLine}</span><input type="checkbox" id="ocrLine" checked></label>
-    <div class="row end"><button class="btn primary" id="ocrAdd" type="button" disabled>${x.ocrAdd(0)}</button></div><p class="muted small" id="ocrNote" aria-live="polite"></p>`;
+    <div class="row end"><button class="btn primary" id="ocrAdd" type="button" ${picked.size ? "" : "disabled"}>${x.ocrAdd(picked.size)}</button></div><p class="muted small" id="ocrNote" aria-live="polite"></p>`;
   const btn = area.querySelector("#ocrAdd");
   area.querySelectorAll("[data-ow]").forEach(b => b.onclick = () => { const i = +b.dataset.ow; if(picked.has(i)) picked.delete(i); else picked.add(i); b.setAttribute("aria-pressed", picked.has(i)); btn.textContent = x.ocrAdd(picked.size); btn.disabled = !picked.size; });
   btn.onclick = async () => {
     const useLine = area.querySelector("#ocrLine").checked;
-    const rows = [...picked].map(i => list[i]).map(w => ({ word: w.word, meaning: "", example: useLine && w.line.split(" ").length >= 4 ? w.line : "", exampleKo: "" }));
+    const rows = [...picked].map(i => list[i]).map(w => ({ word: w.word, meaning: "", example: useLine && w.line && w.line.split(" ").length >= 4 ? w.line : "", exampleKo: "" }));
     await addMany(rows, area.querySelector("#ocrNote"), btn, true);
     renderOcrWords(box.querySelector("#ocrText").value);
   };
@@ -2072,6 +2164,7 @@ function mergeData(remote){
   S.cards = out;
   S.meta.deleted = del;
   S.meta.days = Object.assign({}, rm.days || {}, S.meta.days || {});
+  if(rm.pet && (rm.pet.u || 0) > ((S.meta.pet || {}).u || 0)) S.meta.pet = rm.pet;
   // 単語帳: 両方の単語帳を残す（同じ id はこの端末を優先）
   const dk = new Map(); (rm.decks || []).forEach(d => dk.set(d.id, d)); (S.meta.decks || []).forEach(d => dk.set(d.id, d)); if(dk.size) S.meta.decks = [...dk.values()];
   // 設定は新しく変えた方。ただし表示言語・学習言語はこの端末のまま
@@ -2145,7 +2238,381 @@ function syncViewport(){ const vv = window.visualViewport; const r = document.do
   r.setProperty("--vvh", (vv ? vv.height : window.innerHeight) + "px"); r.setProperty("--vvt", (vv ? vv.offsetTop : 0) + "px"); }
 if(window.visualViewport){ visualViewport.addEventListener("resize", syncViewport); visualViewport.addEventListener("scroll", syncViewport); }
 window.addEventListener("resize", syncViewport); syncViewport();
-load(); applyUi(); drawRain();
+/* ═══════════ ごほうび: おやつを 암기냥이 のおなかに投げる ═══════════
+   レベル設計
+   ・連続学習日数で「おやつランク」が上がり、豪華なおやつが解禁（0/3/7/14/30/60/100日）
+   ・1日の学習を終えると おやつ = 3 + 連続日数/3（最大+20）+ 正解ボーナス（5問ごと+1, 最大+5）+ 全問一発正解+2
+   ・中身は「今日の目玉」1個（最上位ランク確定）＋ 上位ほど出やすい抽選
+   ・投げた kcal で「ぷにLv」が上がり、おなかが大きくなる（必要量は 20×Lv^2.2）
+   ・7日ごとに「ひとやすみ券」（最大2）: 休んだ日を自動で埋めて連続を守る
+   ・連続ヒットでコンボ（kcal 1割ずつ増し・音が上がる）。おやつ無しでも、おなかはいつでもつつける/長押しで握れる */
+const PET_TIERS = [0, 3, 7, 14, 30, 60, 100];
+const PET_ITEMS = [
+  { id:"kari",  t:0, e:"",   kcal:2,   F:.55, ja:"カリカリ",   ko:"사료" },
+  { id:"nibo",  t:0, e:"🐟", kcal:3,   F:.6,  ja:"煮干し",     ko:"멸치" },
+  { id:"sasa",  t:1, e:"🍗", kcal:6,   F:.8,  ja:"ささみ",     ko:"닭가슴살" },
+  { id:"stick", t:1, e:"",   kcal:8,   F:.75, ja:"とろりスティック", ko:"츄르 스틱" },
+  { id:"can",   t:2, e:"🥫", kcal:12,  F:1.1, ja:"ねこ缶",     ko:"고양이 캔" },
+  { id:"ebi",   t:2, e:"🍤", kcal:14,  F:1.0, ja:"えびフライ", ko:"새우튀김" },
+  { id:"sushi", t:3, e:"🍣", kcal:22,  F:1.25,ja:"マグロ寿司", ko:"참치 초밥" },
+  { id:"tai",   t:3, e:"🐠", kcal:26,  F:1.4, ja:"鯛",         ko:"도미" },
+  { id:"kani",  t:4, e:"🦀", kcal:40,  F:1.6, ja:"カニ",       ko:"꽃게" },
+  { id:"lob",   t:4, e:"🦞", kcal:50,  F:1.8, ja:"伊勢エビ",   ko:"랍스터" },
+  { id:"cake",  t:5, e:"🎂", kcal:80,  F:2.1, ja:"王様ケーキ", ko:"왕 케이크" },
+  { id:"gold",  t:5, e:"🐟", kcal:100, F:2.3, ja:"金のマグロ", ko:"황금 참치", gold:1 },
+  { id:"whale", t:6, e:"🐋", kcal:200, F:3.2, ja:"クジラ",     ko:"고래" },
+  { id:"star",  t:6, e:"🌟", kcal:300, F:3.6, ja:"流れ星おやつ", ko:"별똥별 간식" },
+];
+const PET_IT = Object.fromEntries(PET_ITEMS.map(i => [i.id, i]));
+const PT = {
+  ja:{ title:"おやつタイム", give:"おやつをあげる", snacks:n=>`おやつ ${n}個`, streakN:n=>`連続 ${n}日`, next:(it,d)=>`あと${d}日で ${it} 解禁`, maxed:"おやつ全部解禁ずみ！",
+       empty:"おやつがないよ。今日の学習を終えるともらえる！ おなかはいつでもつつけるよ", grant:n=>`ごほうび おやつ ×${n}`, grantWhy:(s,b)=>`連続${s}日ボーナス${b ? ` ＋正解ボーナス${b}` : ""}`,
+       throwNow:"おなかに投げる", lv:n=>`ぷにLv.${n}`, lvUp:n=>`ぷにLv.${n}！ おなかがひとまわり大きくなった`, unlock:"新しいおやつ解禁！", freezeGot:"7日達成！ひとやすみ券ゲット（1日休んでも連続が続く）",
+       freezeUsed:n=>`ひとやすみ券で ${n}日分の連続を守ったよ`, freezes:n=>`ひとやすみ券 ${n}`, main:"今日の目玉", combo:n=>`COMBO ×${n}`, close:"閉じる", hint:"上にフリックで投げる · 持ったままくるくる回すとカーブ · タップで自動 · おなかを長押しでむぎゅっ", nice:"ナイス！", great:"グレート！", excellent:"エクセレント！", curve:"カーブ！", miss:"おしい！ もう一回",
+       ranks:["見習い","ささみ級","ねこ缶級","おすし級","海の幸級","王様級","伝説級"], test:"テスト: おやつ+10", testStreak:"テスト: 連続日数" },
+  ko:{ title:"간식 타임", give:"간식 주기", snacks:n=>`간식 ${n}개`, streakN:n=>`연속 ${n}일`, next:(it,d)=>`${d}일 더 하면 ${it} 해금`, maxed:"간식 전부 해금 완료!",
+       empty:"간식이 없어. 오늘 학습을 끝내면 받을 수 있어! 배는 언제든 찔러도 돼", grant:n=>`보상 간식 ×${n}`, grantWhy:(s,b)=>`연속 ${s}일 보너스${b ? ` + 정답 보너스 ${b}` : ""}`,
+       throwNow:"배에 던지기", lv:n=>`말랑 Lv.${n}`, lvUp:n=>`말랑 Lv.${n}! 배가 한층 더 커졌다`, unlock:"새 간식 해금!", freezeGot:"7일 달성! 쉬는 날 쿠폰 획득 (하루 쉬어도 연속 유지)",
+       freezeUsed:n=>`쉬는 날 쿠폰으로 ${n}일치 연속을 지켰어`, freezes:n=>`쉬는 날 쿠폰 ${n}`, main:"오늘의 메인", combo:n=>`COMBO ×${n}`, close:"닫기", hint:"위로 휙 밀어 던지기 · 잡고 빙글빙글 돌리면 커브 · 탭하면 자동 · 배를 꾹 누르면 주물주물", nice:"나이스!", great:"그레이트!", excellent:"엑설런트!", curve:"커브!", miss:"아깝다! 한 번 더",
+       ranks:["견습","닭가슴살급","캔급","초밥급","해산물급","왕급","전설급"], test:"테스트: 간식 +10", testStreak:"테스트: 연속 일수" },
+};
+const pt = () => PT[S.meta.settings.ui] || PT.ja;
+const itName = it => it[S.meta.settings.ui] || it.ja;
+function petState(){ const p = S.meta.pet || (S.meta.pet = {}); p.inv = p.inv || {}; p.kcal = p.kcal || 0; p.lv = p.lv || 1; p.granted = p.granted || {}; p.freezes = p.freezes || 0; p.seenTier = p.seenTier ?? 0; return p; }
+const petTier = s => { let k = 0; PET_TIERS.forEach((d, i) => { if(s >= d) k = i; }); return k; };
+const petNeed = lv => lv < 1 ? 0 : Math.round(20 * Math.pow(lv, 2.2));
+const petCount = () => Object.values(petState().inv).reduce((a, b) => a + b, 0);
+function petNextInfo(){ const s = streak(), k = petTier(s); if(k >= PET_TIERS.length - 1) return pt().maxed;
+  const its = PET_ITEMS.filter(i => i.t === k + 1).map(itName).join("・"); return pt().next(its, PET_TIERS[k + 1] - s); }
+function petIconHTML(it, px){ px = px || 26;
+  if(it.id === "kari") return `<svg width="${px}" height="${px}" viewBox="0 0 24 24"><g stroke="#5a3a22" stroke-width="1.2"><path d="M5 14l4-6 4 6z" fill="#b9773e"/><path d="M11 18l4-6 4 6z" fill="#a8672f"/><path d="M3 20l3-5 3 5z" fill="#c8874a"/></g></svg>`;
+  if(it.id === "stick") return `<svg width="${px}" height="${px}" viewBox="0 0 24 24"><g transform="rotate(-35 12 12)"><rect x="9" y="1.5" width="6" height="19" rx="2.6" fill="#fff" stroke="#e46b8a" stroke-width="1.4"/><rect x="9" y="8" width="6" height="7" fill="#f6b7c8"/><path d="M10 20.5h4l-2 3z" fill="#e46b8a"/></g></svg>`;
+  return `<span class="peti${it.gold ? " gold" : ""}" style="font-size:${Math.round(px * .9)}px">${it.e}</span>`; }
+
+/* 休んだ日を「ひとやすみ券」で埋める（アプリを開いたとき） */
+function petApplyFreeze(){
+  const p = petState(); if(!p.freezes) return 0;
+  const done = Object.keys(S.meta.days).filter(d => S.meta.days[d] && d < today()).sort(); const last = done[done.length - 1]; if(!last) return 0;
+  const gap = diffDays(last, today()) - 1; if(gap < 1 || gap > p.freezes) return 0;
+  for(let i = 1; i <= gap; i++) S.meta.days[addDays(last, i)] = "freeze";
+  p.freezes -= gap; p.u = Date.now(); save(); return gap;
+}
+/* 1日の学習を終えたときのごほうび */
+function petGrant(ok, ng){
+  const p = petState(), d = today(); if(p.granted[d]) return null;
+  const s = streak(), top = petTier(s);
+  const bonus = Math.min(5, Math.floor(ok / 5)) + (ok + ng >= 5 && ng === 0 ? 2 : 0);
+  const n = 3 + Math.min(20, Math.floor(s / 3)) + bonus;
+  const pick = tier => { const c = PET_ITEMS.filter(i => i.t === tier); return c[Math.floor(Math.random() * c.length)]; };
+  const got = [pick(top)];
+  for(let i = 1; i < n; i++){ const r = Math.random(); const k = r < .25 ? 0 : r < .6 ? 1 : r < .85 ? 2 : 3 + Math.floor(Math.random() * 3); got.push(pick(Math.max(0, top - k))); }
+  got.forEach(it => { p.inv[it.id] = (p.inv[it.id] || 0) + 1; });
+  let freeze = false; if(s > 0 && s % 7 === 0 && p.freezes < 2){ p.freezes++; freeze = true; }
+  p.granted[d] = n; const gk = Object.keys(p.granted).sort(); if(gk.length > 60) gk.slice(0, gk.length - 60).forEach(k => delete p.granted[k]);
+  p.u = Date.now(); save();
+  return { n, s, bonus, main: got[0], got, freeze };
+}
+function petGrantHTML(g){ if(!g) return ""; const x = pt();
+  const tally = {}; g.got.forEach(it => tally[it.id] = (tally[it.id] || 0) + 1);
+  return `<div class="petgrant"><div class="pg-top"><b>🎁 ${esc(x.grant(g.n))}</b><span>${esc(x.grantWhy(g.s, g.bonus))}</span></div>
+    <div class="pg-items">${Object.keys(tally).map(id => `<span class="pg-it${id === g.main.id ? " main" : ""}">${petIconHTML(PET_IT[id], 24)}<i>×${tally[id]}</i></span>`).join("")}</div>
+    <div class="pg-main">${esc(x.main)}: ${esc(itName(g.main))}</div>${g.freeze ? `<div class="pg-main">🧊 ${esc(x.freezeGot)}</div>` : ""}</div>`; }
+function petCardHTML(){ const x = pt(), p = petState(), s = streak();
+  return `<div class="petcard"><button class="pc-cat" type="button" data-petopen aria-label="${esc(x.give)}">${nm("st_love", 52)}</button>
+    <div class="pc-txt"><b>🔥 ${esc(x.streakN(s))} · ${esc(x.ranks[petTier(s)])}</b><span>🍖 ${esc(x.snacks(petCount()))} · ${esc(x.lv(p.lv))}${p.freezes ? ` · 🧊 ${p.freezes}` : ""}</span><small>${esc(petNextInfo())}</small></div>
+    <button class="btn primary sm" type="button" data-petopen>${esc(x.give)}</button></div>`; }
+function bindPetOpen(root){ (root || document).querySelectorAll("[data-petopen]").forEach(b => b.onclick = () => openPet()); }
+
+/* ───────── 音（Web Audio で合成。ファイル不要） ───────── */
+let PA = null, PNOISE = null;
+function pa(){ if(!PA){ try{ PA = new (window.AudioContext || window.webkitAudioContext)(); const n = PA.sampleRate; PNOISE = PA.createBuffer(1, n, n); const d = PNOISE.getChannelData(0); for(let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1; }catch(e){ PA = null; } }
+  if(PA && PA.state === "suspended") PA.resume(); return PA; }
+function pOsc(type, f0, f1, t0, dur, vol, out){ const a = PA, o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.setValueAtTime(f0, t0); o.frequency.exponentialRampToValueAtTime(Math.max(20, f1), t0 + dur);
+  g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + .008); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur); o.connect(g).connect(out || a.destination); o.start(t0); o.stop(t0 + dur + .05); return o; }
+function pNoise(type, f0, f1, q, t0, dur, vol){ const a = PA, s = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain(); s.buffer = PNOISE; f.type = type; f.Q.value = q;
+  f.frequency.setValueAtTime(f0, t0); f.frequency.exponentialRampToValueAtTime(f1, t0 + dur); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  s.connect(f).connect(g).connect(a.destination); s.start(t0, Math.random() * .5); s.stop(t0 + dur + .02); }
+function sfxHit(F, combo){ if(!pa()) return; const t0 = PA.currentTime, pm = Math.pow(1.06, Math.min(combo, 12)) / Math.pow(F, .25);
+  pOsc("sine", 170 * pm, 48, t0, .22 + F * .05, Math.min(.9, .5 + F * .15));                         // どすっ
+  pNoise("bandpass", 2600, 320, 2.2, t0, .16, .45 + F * .08);                                         // むにゅ
+  const o = PA.createOscillator(), g = PA.createGain(), lfo = PA.createOscillator(), lg = PA.createGain();   // ぼよよよん（出렁）
+  o.type = "sine"; o.frequency.setValueAtTime(330 * pm, t0 + .02); o.frequency.exponentialRampToValueAtTime(150 * pm, t0 + .55 + F * .1);
+  lfo.frequency.setValueAtTime(16, t0); lfo.frequency.linearRampToValueAtTime(7, t0 + .6); lg.gain.value = 26 * pm; lfo.connect(lg).connect(o.frequency);
+  g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(.32, t0 + .04); g.gain.exponentialRampToValueAtTime(0.0001, t0 + .6 + F * .12);
+  o.connect(g).connect(PA.destination); o.start(t0); lfo.start(t0); o.stop(t0 + .8 + F * .12); lfo.stop(t0 + .8 + F * .12);
+  if(F > 1.5) pOsc("sine", 60, 30, t0, .45, .8);                                                      // 重いおやつは地鳴り
+}
+function sfxWhoosh(){ if(!pa()) return; pNoise("highpass", 600, 3200, .7, PA.currentTime, .16, .12); }
+function sfxPoyon(k){ if(!pa()) return; const t0 = PA.currentTime; pOsc("sine", 380, 900 + k * 300, t0, .09, .35); pOsc("sine", 900 + k * 300, 260, t0 + .08, .32, .3); pNoise("bandpass", 1800, 500, 3, t0, .1, .25); }
+let SQZ = null;
+function sfxSqueezeStart(){ if(!pa()) return; const s = PA.createBufferSource(), f = PA.createBiquadFilter(), g = PA.createGain(); s.buffer = PNOISE; s.loop = true; f.type = "bandpass"; f.Q.value = 6;
+  f.frequency.setValueAtTime(260, PA.currentTime); f.frequency.exponentialRampToValueAtTime(1500, PA.currentTime + 1.4); g.gain.setValueAtTime(0.0001, PA.currentTime); g.gain.exponentialRampToValueAtTime(.18, PA.currentTime + .15);
+  s.connect(f).connect(g).connect(PA.destination); s.start(); SQZ = { s, g }; }
+function sfxSqueezeEnd(){ if(!SQZ || !PA) return; const { s, g } = SQZ; g.gain.cancelScheduledValues(PA.currentTime); g.gain.setValueAtTime(g.gain.value, PA.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, PA.currentTime + .05); s.stop(PA.currentTime + .08); SQZ = null; }
+function sfxFanfare(){ if(!pa()) return; const t0 = PA.currentTime; [523, 659, 784, 1047, 1319].forEach((f, i) => pOsc("triangle", f, f, t0 + i * .085, .32, .28)); }
+const buzz = p => { try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} };
+
+/* ───────── 画面とぷにぷに物理 ───────── */
+const PET_BASE = "M4 112 C4 100 14 96 22 96 C24 80 34 60 64 60 C94 60 104 80 106 96 C114 96 124 100 124 112 C124 118 116 120 64 120 C12 120 4 118 4 112 Z";
+let PET = null;
+function openPet(){
+  const x = pt(), p = petState();
+  if(!$("#pet")){ const el = document.createElement("div"); el.id = "pet"; el.setAttribute("role", "dialog"); document.body.appendChild(el); }
+  const el = $("#pet"); el.classList.remove("hidden"); document.body.classList.add("petopen");
+  const isTest = /\/test\//.test(location.pathname) || location.protocol === "file:";
+  el.innerHTML = `<canvas id="petCv"></canvas>
+    <div class="pet-top"><button class="btn sm" type="button" id="petClose">‹ ${esc(x.close)}</button>
+      <div class="pet-lv"><b id="petLv"></b><div class="pet-bar"><i id="petBar"></i></div></div>
+      <div class="pet-st"><b>🔥 ${streak()}</b><small>${esc(x.ranks[petTier(streak())])}${p.freezes ? ` · 🧊${p.freezes}` : ""}</small></div></div>
+    <div class="pet-msg" id="petMsg" aria-live="polite"></div>
+    <div class="pet-bottom"><div class="pet-tray" id="petTray"></div><p class="pet-hint">${esc(x.hint)}</p>
+      ${isTest ? `<div class="row" style="justify-content:center;gap:6px"><button class="btn sm" type="button" id="petTest">${esc(x.test)}</button><label class="small" style="display:flex;gap:6px;align-items:center">${esc(x.testStreak)}<input id="petTestS" type="number" min="0" max="200" value="${streak()}" style="width:70px"></label></div>` : ""}</div>`;
+  $("#petClose").onclick = closePet;
+  const tb = $("#petTest"); if(tb){ tb.onclick = () => { const s = streak(), top = petTier(s); for(let i = 0; i < 10; i++){ const c = PET_ITEMS.filter(it => it.t <= top); const it = c[Math.floor(Math.random() * c.length)]; p.inv[it.id] = (p.inv[it.id] || 0) + 1; } save(); petTray(); };
+    $("#petTestS").onchange = e => { const n = Math.max(0, Math.min(200, parseInt(e.target.value, 10) || 0)); S.meta.days = {}; for(let i = 0; i < n; i++) S.meta.days[addDays(today(), -i)] = true; save(); openPet(); }; }
+  petTray(); petStart();
+  const top = petTier(streak()); if(top > p.seenTier){ const its = PET_ITEMS.filter(i => i.t === top); p.seenTier = top; save(); setTimeout(() => { petMsg(`${x.unlock} ${its.map(i => i.e || "").join("")} ${its.map(itName).join("・")}`, 3200); sfxFanfare(); }, 500); }
+  else if(!petCount()) petMsg(x.empty, 4200);
+}
+function closePet(){ const el = $("#pet"); if(el){ el.classList.add("hidden"); el.innerHTML = ""; } document.body.classList.remove("petopen"); if(PET){ cancelAnimationFrame(PET.raf); window.removeEventListener("resize", PET.onResize); PET = null; } sfxSqueezeEnd(); save(); renderAll(); }
+let PMSG_T = null;
+function petMsg(txt, ms){ const m = $("#petMsg"); if(!m) return; m.textContent = txt; m.classList.add("show"); clearTimeout(PMSG_T); PMSG_T = setTimeout(() => m.classList.remove("show"), ms || 2200); }
+function petLvUI(){ const p = petState(); const a = petNeed(p.lv - 1 < 1 ? 0 : p.lv - 1) * (p.lv > 1 ? 1 : 0), b = petNeed(p.lv); const lv = $("#petLv"), bar = $("#petBar"); if(!lv) return;
+  lv.textContent = pt().lv(p.lv); bar.style.width = Math.max(2, Math.min(100, (p.kcal - a) / Math.max(1, b - a) * 100)) + "%"; }
+function petTray(){ const tr = $("#petTray"); if(!tr) return; const p = petState();
+  const ids = PET_ITEMS.filter(i => p.inv[i.id] > 0).sort((a, b) => b.t - a.t);
+  tr.innerHTML = ids.length ? ids.map(i => `<button class="pet-it${i.gold ? " gold" : ""}" type="button" data-it="${i.id}" title="${esc(itName(i))}">${petIconHTML(i, 34)}<i>${p.inv[i.id]}</i></button>`).join("") : `<span class="pet-none">🍽️ 0</span>`;
+  tr.querySelectorAll("[data-it]").forEach(b => {
+    let hold = null, rep = null, mode = null, sx = 0, sy = 0; const stop = () => { clearTimeout(hold); clearInterval(rep); hold = rep = null; };
+    b.onpointerdown = e => { e.preventDefault(); pa(); mode = "press"; sx = e.clientX; sy = e.clientY; try{ b.setPointerCapture(e.pointerId); }catch(_){}
+      hold = setTimeout(() => { if(mode !== "press") return; mode = "rapid"; petThrow(b.dataset.it, b); rep = setInterval(() => { if(!petThrow(b.dataset.it, b)) stop(); }, 130); }, 380); };
+    b.onpointermove = e => { if(mode === "press" && Math.hypot(e.clientX - sx, e.clientY - sy) > 12){ stop(); mode = "drag"; petGrab(b.dataset.it, b); } if(mode === "drag") petDragMove(e.clientX, e.clientY); };
+    b.onpointerup = () => { stop(); if(mode === "press") petThrow(b.dataset.it, b); else if(mode === "drag") petRelease(); mode = null; };
+    b.onpointercancel = () => { stop(); if(mode === "drag" && PET) PET.grab = null; mode = null; };
+  });
+  petLvUI(); }
+
+function petStart(){
+  const cv = $("#petCv"), ctx = cv.getContext("2d");
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"); svg.setAttribute("width", "0"); svg.setAttribute("height", "0"); svg.style.position = "absolute";
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path"); path.setAttribute("d", PET_BASE); svg.appendChild(path); document.body.appendChild(svg);
+  const N = 84, len = path.getTotalLength(), U = [];
+  for(let i = 0; i < N; i++){ const q = path.getPointAtLength(len * i / N); U.push({ x: q.x, y: q.y }); }
+  svg.remove();
+  const st = { cv, ctx, U, N, d: U.map(() => ({ x: 0, y: 0 })), v: U.map(() => ({ x: 0, y: 0 })), q: 0, qv: 0, sk: 0, skv: 0, fx: 0, fy: 0, fvx: 0, fvy: 0,
+    flies: [], parts: [], ripples: [], texts: [], dent: null, combo: 0, lastHit: 0, squeeze: 0, holding: false, hold0: 0, hit: 0, flap: 0, shake: 0, t: 0, last: performance.now() };
+  // 各点の外向き法線・接地の強さ
+  st.n = U.map((p, i) => { const a = U[(i - 1 + N) % N], b = U[(i + 1) % N]; let nx = b.y - a.y, ny = -(b.x - a.x); const l = Math.hypot(nx, ny) || 1; nx /= l; ny /= l; if((p.x - 64) * nx + (p.y - 100) * ny < 0){ nx = -nx; ny = -ny; } return { x: nx, y: ny }; });
+  st.pin = U.map(p => p.y > 117 ? 1 : 0);
+  const nearest = (x, y) => { let k = 0, m = 1e9; U.forEach((p, i) => { const dd = (p.x - x) ** 2 + (p.y - y) ** 2; if(dd < m){ m = dd; k = i; } }); return k; };
+  st.earL = nearest(44, 63); st.earR = nearest(84, 63); st.handL = nearest(22, 96); st.handR = nearest(106, 96);
+  const resize = () => { const r = cv.getBoundingClientRect(), dpr = Math.min(2.5, window.devicePixelRatio || 1); cv.width = r.width * dpr; cv.height = r.height * dpr; st.W = r.width; st.H = r.height; st.dpr = dpr;
+    st.s = Math.min(st.W * .82 / 136, st.H * .36 / 70); st.cx = st.W / 2; st.by = st.H * .64; };
+  resize(); st.onResize = resize; window.addEventListener("resize", resize);
+  // 画面座標 ↔ 猫の単位座標
+  st.toScr = (ux, uy) => ({ x: st.cx + (ux - 64) * st.s * st.bw, y: st.by + (uy - 120) * st.s * st.bh });
+  // おなかのタッチ: 短く=つつく / 長押し=むぎゅっ → 離すとぽよん
+  cv.onpointerdown = e => { pa(); const r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top;
+    const ux = (px - st.cx) / (st.s * st.bw) + 64, uy = (py - st.by) / (st.s * st.bh) + 120; if(ux < 0 || ux > 128 || uy < 52 || uy > 124) return;
+    st.holding = true; st.hold0 = performance.now(); st.hx = ux; st.hy = uy; cv.setPointerCapture(e.pointerId); };
+  cv.onpointerup = cv.onpointercancel = () => { if(!st.holding) return; st.holding = false; const held = performance.now() - st.hold0;
+    if(held < 200){ petImpact(.55, st.hx, Math.max(84, st.hy), null); sfxPoyon(0); }
+    else { const k = st.squeeze; sfxSqueezeEnd(); st.qv += 9 * k; st.q = Math.min(st.q, -.05); petWave(1.4 * k, st.hx); sfxPoyon(k); buzz(30); st.flap = 1; } st.squeeze = 0; };
+  // おなかの中を伝わる波（高さ場 64×34、体の形の中だけ）
+  st.GW = 64; st.GH = 34; const GN = st.GW * st.GH; st.hf = new Float32Array(GN); st.hp = new Float32Array(GN); st.hn = new Float32Array(GN); st.mask = new Uint8Array(GN);
+  st.upath = new Path2D(PET_BASE); st.hcv = document.createElement("canvas"); st.hcv.width = st.GW; st.hcv.height = st.GH; st.hctx = st.hcv.getContext("2d"); st.img = st.hctx.createImageData(st.GW, st.GH);
+  st.mctx = document.createElement("canvas").getContext("2d");
+  for(let y = 0; y < st.GH; y++) for(let x = 0; x < st.GW; x++) st.mask[y * st.GW + x] = st.mctx.isPointInPath(st.upath, x * 2 + 1, 54 + y * 2 + 1) && x > 0 && y > 0 && x < st.GW - 1 && y < st.GH - 1 ? 1 : 0;
+  st.proj = []; st.grab = null; st.ring = 0;
+  PET = st; petLvUI(); st.raf = requestAnimationFrame(petLoop);
+}
+function petWave(F, hx){ const st = PET; st.U.forEach((p, i) => { const n = st.n[i]; const near = Math.exp(-((p.x - hx) ** 2) / 500);
+  const k = (Math.abs(n.x) * 1.1 - Math.max(0, -n.y) * (.7 + near)) * F * 90; st.v[i].x += n.x * k; st.v[i].y += n.y * k; }); }
+function petThrow(id, fromEl){
+  const p = petState(); if(!PET || !(p.inv[id] > 0)) return false; const st = PET, it = PET_IT[id];
+  p.inv[id]--; if(!p.inv[id]) delete p.inv[id];
+  const r = fromEl.getBoundingClientRect(), cr = st.cv.getBoundingClientRect();
+  const hx = 64 + (Math.random() - .5) * 44, hy = 96 + (Math.random() - .5) * 14, tgt = st.toScr(hx, hy);
+  st.flies.push({ it, x0: r.left + r.width / 2 - cr.left, y0: r.top - cr.top, x1: tgt.x, y1: tgt.y, hx, hy, t: 0, dur: .36 + Math.random() * .08, rot: (Math.random() - .5) * 14 });
+  sfxWhoosh(); const b = fromEl.querySelector("i"); if(b) b.textContent = p.inv[id] || 0; if(!p.inv[id]) setTimeout(petTray, 60);
+  return true;
+}
+function petImpact(F, hx, hy, it, mul, labels){
+  const st = PET, now = performance.now();
+  st.combo = it && now - st.lastHit < 750 ? st.combo + 1 : it ? 1 : st.combo; if(it) st.lastHit = now;
+  st.qv -= 7.5 * F; st.skv += (64 - hx) / 64 * -5 * F; petWave(F, hx);
+  st.fvy += 260 * F; st.fvx += (hx - 64) * 3 * F; st.hit = 1; st.flap = 1; st.shake = Math.max(st.shake, F > 1.4 ? F * 4 : F * 1.2);
+  hfPoke(st, hx, hy, 4 + F * 3.2, 2 + F * .5, true);
+  const c = st.toScr(hx, hy), n = Math.round(6 + F * 8);
+  for(let i = 0; i < n; i++){ const a = -Math.PI * (.1 + Math.random() * .8), sp = 120 + Math.random() * 260 * Math.sqrt(F);
+    st.parts.push({ x: c.x, y: c.y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 1, kind: it && (it.gold || it.t >= 5) ? "star" : Math.random() < .5 ? "drop" : "crumb", sz: 3 + Math.random() * 4 }); }
+  sfxHit(F, st.combo); buzz(F > 1.5 ? [40, 30, 60] : Math.round(18 + F * 14));
+  if(it){ const p = petState(); const gain = Math.round(it.kcal * (1 + Math.min(st.combo - 1, 20) * .1) * (mul || 1));
+    (labels || []).forEach((l, k) => st.texts.push({ x: st.W / 2, y: st.H * .2 + 46 * (k + (st.combo >= 3 ? 1 : 0)), t: -k * .08, s: l, big: 1 }));
+    p.kcal += gain; p.u = Date.now(); st.texts.push({ x: c.x, y: c.y - 30, t: 0, s: `+${gain}`, big: 0 });
+    if(st.combo >= 3) st.texts.push({ x: st.W / 2, y: st.H * .2, t: 0, s: pt().combo(st.combo), big: 1 });
+    let up = false; while(p.kcal >= petNeed(p.lv)){ p.lv++; up = true; }
+    if(up){ setTimeout(() => { sfxFanfare(); petMsg(pt().lvUp(p.lv), 2600); }, 250); for(let i = 0; i < 30; i++){ const a = Math.random() * Math.PI * 2, sp = 100 + Math.random() * 300; st.parts.push({ x: st.W / 2, y: st.by - 60, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 120, life: 1.3, kind: "star", sz: 4 + Math.random() * 4 }); } }
+    clearTimeout(st.saveT); st.saveT = setTimeout(save, 600); petLvUI(); }
+}
+function petLoop(now){
+  const st = PET; if(!st) return; let dt = Math.min(.05, (now - st.last) / 1000); st.last = now; st.t += dt;
+  const p = petState(); st.bw = 1 + Math.min(p.lv, 40) * .011; st.bh = 1 + Math.min(p.lv, 40) * .005;
+  // むぎゅっ（長押し）
+  if(st.holding && now - st.hold0 > 200){ if(!SQZ) sfxSqueezeStart(); st.squeeze = Math.min(1, st.squeeze + dt * 1.3); if(Math.random() < .2) buzz(8); }
+  const steps = 4, h = dt / steps;
+  for(let k = 0; k < 3; k++) hfStep(st);
+  if(st.holding && st.squeeze > 0) hfPoke(st, st.hx, st.hy, 6 * st.squeeze, 3.2, false);
+  st.ring += dt; if(st.grab) st.grab.rot += dt * (3 + Math.abs(st.grab.acc) * 1.6) * (st.grab.acc < 0 ? -1 : 1);
+  st.proj = st.proj.filter(q => petProjStep(st, q, dt));
+  for(let s = 0; s < steps; s++){
+    const tq = st.holding ? -.32 * st.squeeze : 0;
+    st.qv += (-110 * (st.q - tq) - 7 * st.qv) * h; st.q += st.qv * h;
+    st.skv += (-90 * st.sk - 6 * st.skv) * h; st.sk += st.skv * h;
+    st.fvx += (-140 * st.fx - 9 * st.fvx) * h; st.fvy += (-140 * st.fy - 9 * st.fvy) * h; st.fx += st.fvx * h; st.fy += st.fvy * h;
+    const N = st.N, d = st.d, v = st.v;
+    for(let i = 0; i < N; i++){ const a = d[(i - 1 + N) % N], b = d[(i + 1) % N], c = d[i]; const K = st.pin[i] ? 1400 : 70;   // 輪郭: 弱いバネ＋強い隣どうしの結合 → 波が体のまわりを伝わる
+      v[i].x += (-K * c.x + 2400 * (a.x + b.x - 2 * c.x) - 2.6 * v[i].x) * h; v[i].y += (-K * c.y + 2400 * (a.y + b.y - 2 * c.y) - 2.6 * v[i].y) * h; }
+    for(let i = 0; i < N; i++){ d[i].x += v[i].x * h; d[i].y += v[i].y * h; }
+  }
+  st.q = Math.max(-.45, Math.min(.5, st.q));
+  // 飛んでいるおやつ
+  st.flies = st.flies.filter(f => { f.t += dt / f.dur; if(f.t >= 1){ const tgt = st.toScr(f.hx, f.hy); f.x1 = tgt.x; f.y1 = tgt.y; petImpact(f.it.F, f.hx, f.hy, f.it); return false; } return true; });
+  st.parts = st.parts.filter(q => { q.life -= dt * 1.4; q.vy += 700 * dt; q.x += q.vx * dt; q.y += q.vy * dt; return q.life > 0 && q.y < st.H + 20; });
+  st.texts = st.texts.filter(x => (x.t += dt * (x.big ? .9 : 1.2)) < 1);
+  st.hit = Math.max(0, st.hit - dt * 3.5); st.flap = Math.max(0, st.flap - dt * .9); st.shake = Math.max(0, st.shake - dt * 14);
+  petDraw(); st.raf = requestAnimationFrame(petLoop);
+}
+const PINK = "#f2a1b4", INKC = "#1d2b27", FURC = "#f8f3ea", SHADEC = "#ebe1cf";
+function petDraw(){
+  const st = PET, { ctx, U, d } = st, s = st.s, dpr = st.dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, st.W, st.H);
+  const sh = st.shake; if(sh) ctx.translate((Math.random() - .5) * sh * 2, (Math.random() - .5) * sh * 2);
+  // 影
+  ctx.fillStyle = "rgba(0,0,0,.12)"; ctx.beginPath(); ctx.ellipse(st.cx, st.by + 4, 66 * s * st.bw * (1 - st.q * .5), 7 * s, 0, 0, Math.PI * 2); ctx.fill();
+  // 全体の変形（下端中央を支点に、つぶれ・のび・ゆらぎ）
+  const sy = (1 + st.q) * st.bh, sx = (1 - st.q * .7) * st.bw;
+  ctx.save(); ctx.translate(st.cx, st.by); ctx.transform(sx * s, 0, -st.sk * .25 * s, sy * s, 0, 0); ctx.translate(-64, -120);
+  const P = U.map((p, i) => ({ x: p.x + d[i].x / s, y: p.y + d[i].y / s }));
+  const body = new Path2D(); body.moveTo((P[0].x + P[st.N - 1].x) / 2, (P[0].y + P[st.N - 1].y) / 2);
+  for(let i = 0; i < st.N; i++){ const a = P[i], b = P[(i + 1) % st.N]; body.quadraticCurveTo(a.x, a.y, (a.x + b.x) / 2, (a.y + b.y) / 2); }
+  body.closePath();
+  const ear = (k, dir) => { const a = P[k]; const e = new Path2D(); e.moveTo(a.x - dir * 1, a.y + 9); e.lineTo(a.x - dir * 2, a.y - 6); e.lineTo(a.x + dir * 11, a.y + 3); e.closePath(); return e; };
+  const eL = ear(st.earL, 1), eR = ear(st.earR, -1);
+  ctx.lineJoin = "round"; ctx.lineCap = "round";
+  [["#fff", 12.4], [INKC, 6.4]].forEach(([c, w]) => { ctx.strokeStyle = c; ctx.lineWidth = w; [eL, eR, body].forEach(pp => ctx.stroke(pp)); });
+  ctx.fillStyle = FURC; ctx.fill(eL); ctx.fill(eR);
+  ctx.fillStyle = PINK; [[st.earL, 1], [st.earR, -1]].forEach(([k, dir]) => { const a = P[k]; ctx.beginPath(); ctx.moveTo(a.x + dir * 1, a.y + 4); ctx.lineTo(a.x - dir * 0.5, a.y - 1.5); ctx.lineTo(a.x + dir * 5.5, a.y + 2.5); ctx.closePath(); ctx.fill(); });
+  ctx.fillStyle = FURC; ctx.fill(body);
+  ctx.save(); ctx.clip(body);
+  // つやと影（ゼリー感）
+  const gl = ctx.createRadialGradient(46, 76, 2, 46, 76, 40); gl.addColorStop(0, "rgba(255,255,255,.75)"); gl.addColorStop(1, "rgba(255,255,255,0)"); ctx.fillStyle = gl; ctx.fillRect(0, 50, 128, 80);
+  ctx.strokeStyle = SHADEC; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(8, 114); ctx.bezierCurveTo(40, 120, 88, 120, 120, 114); ctx.stroke();
+  // 肉の波（高さ場を左上からの光で陰影に）
+  hfRender(st); ctx.imageSmoothingEnabled = true; ctx.drawImage(st.hcv, 0, 54, 128, 68);
+  ctx.restore();
+  // 顔（遅れてついてくる）
+  const fh = st.hf[15 * st.GW + 32] || 0; ctx.save(); ctx.translate(st.fx / s * .5, st.fy / s * .25 - fh * .7);
+  const y = 82, L = 52, R = 76, hit = st.hit > .15, happy = !hit && performance.now() - st.lastHit < 1400;
+  ctx.strokeStyle = INKC; ctx.fillStyle = INKC; ctx.lineWidth = 2.6;
+  if(hit){ [[L, 1], [R, -1]].forEach(([ex, dir]) => { ctx.beginPath(); ctx.moveTo(ex - 4 * dir, y - 3.5); ctx.lineTo(ex + 3 * dir, y); ctx.lineTo(ex - 4 * dir, y + 3.5); ctx.stroke(); }); }
+  else if(happy || st.holding){ [L, R].forEach(ex => { ctx.beginPath(); ctx.moveTo(ex - 4, y + 1.5); ctx.quadraticCurveTo(ex, y - 3.5, ex + 4, y + 1.5); ctx.stroke(); }); }
+  else { const bl = (st.t % 3.4) < .12; [L, R].forEach(ex => { ctx.beginPath(); if(bl) ctx.ellipse(ex, y, 3, .8, 0, 0, Math.PI * 2); else ctx.arc(ex, y, 3, 0, Math.PI * 2); ctx.fill(); }); }
+  ctx.strokeStyle = "#e8798f"; ctx.lineWidth = 1.8; [44, 84].forEach(x => { for(const o of [-5, -1, 3]){ ctx.beginPath(); ctx.moveTo(x + o, 90.5); ctx.lineTo(x + o + 2.6, 85.5); ctx.stroke(); } });
+  ctx.fillStyle = PINK; ctx.beginPath(); ctx.ellipse(64, y + 4.5, 2, 1.4, 0, 0, Math.PI * 2); ctx.fill();
+  const my = y + 8, w = 5.5; ctx.strokeStyle = INKC; ctx.lineWidth = 2.4;
+  if(hit){ ctx.fillStyle = INKC; ctx.beginPath(); ctx.ellipse(64, my + 3, 3.2, 3.8 + st.hit * 2, 0, 0, Math.PI * 2); ctx.fill(); }
+  else { ctx.beginPath(); ctx.moveTo(64 - w - 2.5, my - 2.5); ctx.quadraticCurveTo(64 - w - 1.5, my + 1, 64 - w / 2, my + 3.2); ctx.quadraticCurveTo(63.4, my + 4.4, 64, my); ctx.quadraticCurveTo(64.6, my + 4.4, 64 + w / 2, my + 3.2); ctx.quadraticCurveTo(64 + w + 1.5, my + 1, 64 + w + 2.5, my - 2.5); ctx.stroke();
+    if(happy){ ctx.fillStyle = "#d9465a"; ctx.beginPath(); ctx.moveTo(61.6, my + 3); ctx.quadraticCurveTo(64, my + 8, 66.4, my + 3); ctx.fill(); } }
+  ctx.lineWidth = 1.7; ctx.globalAlpha = .8; [[-1, 38], [1, 90]].forEach(([sx2, x0]) => [[-3, -4], [1.5, 0], [6, 4]].forEach(([dy, an]) => { ctx.beginPath(); ctx.moveTo(x0, 84 + dy); ctx.quadraticCurveTo(x0 + sx2 * 9, 84 + dy + an * .4 + st.hit * 3 * an, x0 + sx2 * 17, 84 + dy + an); ctx.stroke(); })); ctx.globalAlpha = 1;
+  ctx.restore();
+  // ちっちゃい役立たずの手（たたかれると高速パタパタ）
+  const fr = 9 + st.flap * 30, amp = .45 + st.flap * .5;
+  [[st.handL, -1, 0], [st.handR, 1, 1.3]].forEach(([k, dir, ph]) => { const a = P[k]; ctx.save(); ctx.translate(a.x + dir * 1.5, a.y - 1); ctx.rotate(dir * Math.sin(st.t * fr + ph) * amp - dir * .2);
+    ctx.beginPath(); ctx.ellipse(dir * 5, 0, 5, 3.3, 0, 0, Math.PI * 2); ctx.lineWidth = 6; ctx.strokeStyle = "#fff"; ctx.stroke(); ctx.lineWidth = 2.6; ctx.strokeStyle = INKC; ctx.stroke(); ctx.fillStyle = FURC; ctx.fill(); ctx.restore(); });
+  ctx.restore();
+  // 狙いの輪（つかんでいる間・飛んでいる間）
+  if(st.grab || st.proj.length){ const c = st.toScr(64, 98), R = petRingR(st) * st.s * st.bw, R0 = 30 * st.s * st.bw;
+    ctx.lineWidth = 3; ctx.strokeStyle = "rgba(255,255,255,.8)"; ctx.beginPath(); ctx.ellipse(c.x, c.y, R0, R0 * .62, 0, 0, Math.PI * 2); ctx.stroke();
+    const col = R / (st.s * st.bw) < 14 ? "#ff8a3d" : R / (st.s * st.bw) < 21 ? "#ffd23d" : "#7bdc6b"; ctx.lineWidth = 4; ctx.strokeStyle = col; ctx.beginPath(); ctx.ellipse(c.x, c.y, R, R * .62, 0, 0, Math.PI * 2); ctx.stroke(); }
+  // 投げたおやつ・つかんでいるおやつ
+  st.proj.forEach(q => { if(q.spin){ ctx.strokeStyle = "rgba(255,230,120,.7)"; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(q.x, q.y, q.sz * .7, q.rot, q.rot + 4); ctx.stroke(); } petDrawItem(ctx, q.it, q.x, q.y, q.sz, q.rot); });
+  if(st.grab && st.grab.x){ const g = st.grab; if(g.spin){ ctx.strokeStyle = "rgba(255,230,120,.85)"; ctx.lineWidth = 4; for(let k = 0; k < 2; k++){ ctx.beginPath(); ctx.arc(g.x, g.y, 34 + k * 8, g.rot + k * 2, g.rot + k * 2 + 2.4); ctx.stroke(); } }
+    petDrawItem(ctx, g.it, g.x, g.y, 50, g.rot); }
+  // 飛ぶおやつ
+  st.flies.forEach(f => { const t = f.t, e = t; const tg = st.toScr(f.hx, f.hy); const mx = (f.x0 + tg.x) / 2, my2 = Math.min(f.y0, tg.y) - st.H * .28;
+    const x = (1 - e) * (1 - e) * f.x0 + 2 * (1 - e) * e * mx + e * e * tg.x, yy = (1 - e) * (1 - e) * f.y0 + 2 * (1 - e) * e * my2 + e * e * tg.y;
+    petDrawItem(ctx, f.it, x, yy, (34 + f.it.F * 10) * (1.25 - t * .35), f.rot * t); });
+  // 粒
+  st.parts.forEach(q => { ctx.globalAlpha = Math.max(0, Math.min(1, q.life)); if(q.kind === "star"){ ctx.fillStyle = "#ffd65a"; petStar(ctx, q.x, q.y, q.sz * 1.4); } else { ctx.fillStyle = q.kind === "drop" ? "#ffffff" : "#d39a5f"; ctx.beginPath(); ctx.arc(q.x, q.y, q.sz * .7, 0, Math.PI * 2); ctx.fill(); } }); ctx.globalAlpha = 1;
+  // 文字
+  st.texts.forEach(x => { const a = 1 - x.t; ctx.globalAlpha = a; ctx.textAlign = "center"; ctx.lineJoin = "round";
+    const sz = x.big ? 34 + Math.sin(Math.min(1, x.t * 4) * Math.PI) * 12 : 22; ctx.font = `900 ${sz}px system-ui, sans-serif`;
+    const yy = x.big ? x.y : x.y - x.t * 50; ctx.lineWidth = 6; ctx.strokeStyle = "#fff"; ctx.strokeText(x.s, x.x, yy); ctx.fillStyle = x.big ? "#e8486a" : "#c8860a"; ctx.fillText(x.s, x.x, yy); }); ctx.globalAlpha = 1;
+}
+
+/* ── 体の中の波: 2次元の波動方程式（体の形の外は固定＝縁で反射） ── */
+function hfStep(st){ const { GW, GH, mask } = st; let h = st.hf, p = st.hp, n = st.hn;
+  for(let y = 1; y < GH - 1; y++) for(let x = 1; x < GW - 1; x++){ const i = y * GW + x; if(!mask[i]){ n[i] = 0; continue; }
+    const lap = h[i - 1] + h[i + 1] + h[i - GW] + h[i + GW] - 4 * h[i]; n[i] = (2 * h[i] - p[i] + .22 * lap) * .986; }
+  st.hp = h; st.hf = n; st.hn = p; }
+function hfPoke(st, ux, uy, A, sig, impulse){ const { GW, GH, mask } = st; const cx = ux / 2, cy = (uy - 54) / 2, R = Math.ceil(sig * 3);
+  for(let y = Math.max(1, Math.floor(cy - R)); y < Math.min(GH - 1, cy + R); y++) for(let x = Math.max(1, Math.floor(cx - R)); x < Math.min(GW - 1, cx + R); x++){ const i = y * GW + x; if(!mask[i]) continue;
+    const g = Math.exp(-((x - cx) ** 2 + (y - cy) ** 2) / (2 * sig * sig)); if(impulse){ st.hf[i] -= A * g; st.hp[i] -= A * g * .35; } else { const tgt = -A * g; if(st.hf[i] > tgt){ st.hf[i] = tgt; st.hp[i] = tgt; } } } }
+function hfRender(st){ const { GW, GH, mask, hf } = st, d = st.img.data;
+  for(let y = 0; y < GH; y++) for(let x = 0; x < GW; x++){ const i = y * GW + x, o = i * 4; if(!mask[i] || x < 1 || y < 1 || x > GW - 2 || y > GH - 2){ d[o + 3] = 0; continue; }
+    const gx = hf[i + 1] - hf[i - 1], gy = hf[i + GW] - hf[i - GW], sh = (.5 * gx + .75 * gy) * .34 - hf[i] * .01;
+    if(sh > 0){ d[o] = 255; d[o + 1] = 255; d[o + 2] = 255; d[o + 3] = Math.min(170, sh * 255); } else { d[o] = 214; d[o + 1] = 160; d[o + 2] = 150; d[o + 3] = Math.min(110, -sh * 230); } }
+  st.hctx.putImageData(st.img, 0, 0); }
+/* ── ポケモンGO風: つかんで回す → 上にフリック ── */
+const petRingR = st => 8 + 20 * (.5 + .5 * Math.sin(st.ring * 2.4));
+function sfxSpin(){ if(!pa()) return; const t0 = PA.currentTime; pOsc("triangle", 420, 1500, t0, .22, .16); pOsc("sine", 900, 2200, t0 + .05, .2, .08); }
+function petGrab(id, el){ const st = PET; if(!st || !(petState().inv[id] > 0)) return; st.grab = { id, it: PET_IT[id], el, pts: [], acc: 0, lastA: null, x: 0, y: 0, spin: 0, rot: 0 }; }
+function petDragMove(cx, cy){ const st = PET, g = st && st.grab; if(!g) return; const r = st.cv.getBoundingClientRect(), x = cx - r.left, y = cy - r.top, now = performance.now();
+  g.x = x; g.y = y; g.pts.push({ x, y, t: now }); while(g.pts.length > 3 && now - g.pts[0].t > 450) g.pts.shift();
+  const mx = g.pts.reduce((a, q) => a + q.x, 0) / g.pts.length, my = g.pts.reduce((a, q) => a + q.y, 0) / g.pts.length, a = Math.atan2(y - my, x - mx);
+  if(g.lastA !== null && Math.hypot(x - mx, y - my) > 8){ let da = a - g.lastA; while(da > Math.PI) da -= 2 * Math.PI; while(da < -Math.PI) da += 2 * Math.PI; g.acc = g.acc * .985 + da; }
+  g.lastA = a; const was = g.spin; g.spin = Math.abs(g.acc) > Math.PI * 2 ? Math.sign(g.acc) : Math.abs(g.acc) < Math.PI ? 0 : g.spin;
+  if(g.spin && !was){ sfxSpin(); buzz(15); } }
+function petRelease(){ const st = PET, g = st && st.grab; if(!g) return; st.grab = null; const now = performance.now();
+  const recent = g.pts.filter(q => now - q.t <= 70), a = recent[0] || g.pts[Math.max(0, g.pts.length - 2)], b = g.pts[g.pts.length - 1]; if(!a || !b) return;
+  const dt = Math.max(.016, (b.t - a.t) / 1000), vx = (b.x - a.x) / dt, vy = (b.y - a.y) / dt; st.lastThrow = { vx, vy }; if(vy > -350) return;   // 上に投げていない → 手元に戻る
+  const p = petState(); if(!(p.inv[g.id] > 0)) return; p.inv[g.id]--; if(!p.inv[g.id]) delete p.inv[g.id];
+  // 奥に向かって投げる: 強さ → 当たる高さ、左右の向き＋回転 → 当たる左右
+  const sp = -vy, lx = 64 + Math.max(-1, Math.min(1, vx / sp)) * 55 + g.spin * 16, ly = 98 + (1700 - sp) * .016;
+  const hit = ly > 62 && ly < 121 && st.mctx.isPointInPath(st.upath, lx, ly);
+  st.proj.push({ it: g.it, id: g.id, x0: b.x, y0: b.y, lx, ly, hit, sp, spin: g.spin, rot: g.rot, rs: g.spin ? 26 * g.spin : 7, t: 0, dur: Math.max(.38, .6 - sp / 12000), x: b.x, y: b.y, sz: 50, over: ly < 62 });
+  sfxWhoosh(); const bd = g.el && g.el.querySelector("i"); if(bd) bd.textContent = p.inv[g.id] || 0; if(!p.inv[g.id]) setTimeout(petTray, 60); }
+function petProjStep(st, q, dt){
+  q.t += dt / q.dur; q.rot += q.rs * dt;
+  const tg = st.toScr(q.lx, q.ly), e = Math.min(1, q.t);
+  // 放物線（奥へ飛ぶので上にふくらむ）＋回転していれば横にカーブ
+  const mx = (q.x0 + tg.x) / 2 - q.spin * st.W * .32, my = Math.min(q.y0, tg.y) - st.H * .22;
+  if(q.t <= 1){ q.x = (1 - e) ** 2 * q.x0 + 2 * (1 - e) * e * mx + e * e * tg.x; q.y = (1 - e) ** 2 * q.y0 + 2 * (1 - e) * e * my + e * e * tg.y; q.sz = 50 - 20 * e; }
+  if(q.t < 1) return true;
+  if(q.hit){ const x = pt(), dist = Math.hypot(q.lx - 64, (q.ly - 98) / .62), R = petRingR(st); let mul = 1; const labels = [];
+    if(dist <= R){ if(R < 14){ mul = 1.6; labels.push(x.excellent); } else if(R < 21){ mul = 1.3; labels.push(x.great); } else { mul = 1.1; labels.push(x.nice); } }
+    if(q.spin){ mul *= 1.3; labels.push(x.curve); }
+    const F = q.it.F * Math.max(.75, Math.min(1.5, q.sp / 1700)); petImpact(F, q.lx, q.ly, q.it, mul, labels);
+    if(mul >= 1.6) for(let i = 0; i < 24; i++){ const a = Math.random() * Math.PI * 2, s2 = 120 + Math.random() * 280; st.parts.push({ x: tg.x, y: tg.y, vx: Math.cos(a) * s2, vy: Math.sin(a) * s2, life: 1.2, kind: "star", sz: 4 + Math.random() * 3 }); }
+    return false; }
+  // はずれ: 頭を越えて飛んでいく／手前に落ちる → おやつは戻ってくる
+  if(!q.miss){ q.miss = 1; q.vx = (tg.x - mx) * 1.6; q.vy = q.over ? -500 : 120; }
+  q.vy += 1400 * dt; q.x += q.vx * dt; q.y += q.vy * dt; q.sz = Math.max(14, q.sz - dt * (q.over ? 40 : 0));
+  if(q.y > st.H + 60 || q.y < -80 || q.x < -80 || q.x > st.W + 80 || q.t > 2.6){ const p = petState(); p.inv[q.id] = (p.inv[q.id] || 0) + 1; petMsg(pt().miss, 1400); petTray(); return false; }
+  return true; }
+function petStar(ctx, x, y, r){ ctx.beginPath(); for(let i = 0; i < 8; i++){ const a = i * Math.PI / 4, rr = i % 2 ? r * .38 : r; ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } ctx.closePath(); ctx.fill(); }
+function petDrawItem(ctx, it, x, y, sz, rot){
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot);
+  if(it.id === "kari"){ ctx.fillStyle = "#b9773e"; ctx.strokeStyle = "#5a3a22"; ctx.lineWidth = 2; [[-6, 3], [5, 6], [0, -5]].forEach(([dx, dy]) => { ctx.beginPath(); ctx.moveTo(dx - 7, dy + 5); ctx.lineTo(dx, dy - 7); ctx.lineTo(dx + 7, dy + 5); ctx.closePath(); ctx.fill(); ctx.stroke(); }); }
+  else if(it.id === "stick"){ ctx.rotate(-.6); ctx.fillStyle = "#fff"; ctx.strokeStyle = "#e46b8a"; ctx.lineWidth = 2.4; ctx.beginPath(); ctx.roundRect(-6, -sz * .45, 12, sz * .9, 5); ctx.fill(); ctx.stroke(); ctx.fillStyle = "#f6b7c8"; ctx.fillRect(-5, -6, 10, 12); }
+  else { if(it.gold || it.t >= 5){ ctx.shadowColor = "#ffcc33"; ctx.shadowBlur = 22; } ctx.font = `${Math.round(sz)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    if(it.gold){ ctx.filter = "sepia(1) saturate(4) hue-rotate(-12deg) brightness(1.15)"; } ctx.fillText(it.e, 0, 0); ctx.filter = "none"; }
+  ctx.restore();
+}
+
+if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET };
+load(); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
 if("serviceWorker" in navigator && location.protocol === "https:"){ navigator.serviceWorker.register("sw.js").catch(() => {}); }
