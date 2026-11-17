@@ -347,6 +347,10 @@ h2{font-size:1.2rem}
       </label>
       <p class="muted tiny" data-i18n="emailHelp"></p>
     </div>
+    <div class="card" id="syncCard">
+      <h2 data-i18n="syncTitle"></h2>
+      <div id="syncBody"></div>
+    </div>
     <div class="card">
       <h2 data-i18n="backup"></h2>
       <p class="muted small" data-i18n="backupHelp"></p>
@@ -401,7 +405,7 @@ ja: {
   modes:{ study:"まず当ててみる", cloze:"穴埋め", recall:"意味から書く", write:"作文", speak:"スピーキング" },
   left:n=>`残り${n}枚`, listen:"発音を聞く", listenEx:"例文を聞く", listenAgain:"もう一度聞く", listenMine:"自分の文を聞く",
   noExample:"例文がありません。単語帳で追加すると穴埋め問題が出ます。", gotIt:"覚えた、次へ",
-  meaningAlts:"意味の候補：", grad:"卒業", gradTitle:"もう完璧に覚えた単語を、毎日の復習から外します", gradAsk:w=>`「${w}」はもう完璧？ 卒業させる？`, gradSafe:"卒業した単語は「単語帳 › 卒業」に入るだけなので、いつでも復活させられます。安心してね！", gradCancel:"まだ続ける", gradDo:"卒業させる", gradDone:w=>`「${w}」は卒業！単語帳からいつでも復活できます。`, revive:"復活させる", revived:w=>`「${w}」を復活させました。今日の復習に入ります。`, home:"ホーム", pausedToast:"ここまで保存しました。「続きから」で再開できます。", setOrder:"新しい単語を出す順番", orderAdded:"追加した順", orderEasy:"よく使う単語から", orderHelp:"どちらの場合も、おたがいの例文に出てくる単語や、いま覚えている単語とつながる単語は、まとめて先に出します。", todayNewList:"今日の新しい単語：", linkedHint:"🔗 は例文でつながっている単語です。いっしょに覚えると効率的です。", levelsFreq:["基本","よく使う","中級","難しめ"], meanRefetch:"意味の候補を取り直す", uiLangTitle:"表示言語", learnLangTitle:"学習する言語", deckDefault:"基本", addTo:"追加先の単語帳", newDeck:"＋ 新しい単語帳…", deckNamePh:"単語帳の名前（例：旅行、ビジネス）", create:"作成", deckCreated:n=>`「${n}」を作りました。`,
+  meaningAlts:"意味の候補：", syncTitle:"端末間で同期", syncNotReady:"同期サーバーを準備中です。もうすぐ使えるようになります。", syncHelp:"同期コードを発行すると、ほかの端末でも同じ単語と進み具合で続けられます。メールや名前は不要です。", syncStart:"同期を始める（コードを発行）", syncHaveCode:"別の端末で発行したコードがある場合", syncJoin:"このコードでつなぐ", syncBadCode:"コードは英数字8文字です（例：K7P2-QX9M）。", syncWorking:"つないでいます…", syncNotFound:"このコードは見つかりませんでした。もう一度確かめてください。", syncErr:"同期できませんでした。ネット接続を確認して、少ししてから試してください。", syncStarted:"同期を始めました。コードをメモしておいてください。", syncJoined:"つながりました！両方の端末の単語をまとめました。", syncOnHelp:"このコードをほかの端末で入れると、同じ単語帳で続けられます。変更は自動で同期されます。コードはパスワード代わりなので、人に教えないでください。", syncYourCode:"同期コード", syncBusy:"同期しています…", syncLast:t0=>`最後に同期：${t0}`, syncNowBtn:"今すぐ同期", syncOff:"この端末の同期をやめる", syncOffConfirm:"もう一度押すと解除（単語はこの端末に残ります）", syncCopied:"コードをコピーしました。", grad:"卒業", gradTitle:"もう完璧に覚えた単語を、毎日の復習から外します", gradAsk:w=>`「${w}」はもう完璧？ 卒業させる？`, gradSafe:"卒業した単語は「単語帳 › 卒業」に入るだけなので、いつでも復活させられます。安心してね！", gradCancel:"まだ続ける", gradDo:"卒業させる", gradDone:w=>`「${w}」は卒業！単語帳からいつでも復活できます。`, revive:"復活させる", revived:w=>`「${w}」を復活させました。今日の復習に入ります。`, home:"ホーム", pausedToast:"ここまで保存しました。「続きから」で再開できます。", setOrder:"新しい単語を出す順番", orderAdded:"追加した順", orderEasy:"よく使う単語から", orderHelp:"どちらの場合も、おたがいの例文に出てくる単語や、いま覚えている単語とつながる単語は、まとめて先に出します。", todayNewList:"今日の新しい単語：", linkedHint:"🔗 は例文でつながっている単語です。いっしょに覚えると効率的です。", levelsFreq:["基本","よく使う","中級","難しめ"], meanRefetch:"意味の候補を取り直す", uiLangTitle:"表示言語", learnLangTitle:"学習する言語", deckDefault:"基本", addTo:"追加先の単語帳", newDeck:"＋ 新しい単語帳…", deckNamePh:"単語帳の名前（例：旅行、ビジネス）", create:"作成", deckCreated:n=>`「${n}」を作りました。`,
   decksTitle:"単語帳", decksHelp:"チェックした単語帳だけが今日の学習に出ます。範囲をしぼると覚えやすくなります。", deckWords:n=>`${n}語`, deckDelete:"削除", deckDeleteConfirm:"もう一度押すと削除（単語は「基本」へ移動）", deckDeleted:"単語帳を削除し、単語は「基本」に移しました。", studyDecks:"学習する単語帳：", deckOf:"単語帳",
   photoTitle:"写真から追加", photoHelp:"本や画面を撮ると、端末の中で文字を読み取ります（AIサービスには送りません）。読み取った単語から覚えたいものを選んでください。", photoPick:"写真を撮る・選ぶ",
   ocrLoading:"文字認識エンジンを準備中…（初回だけ数秒かかります）", ocrReading:n=>`読み取り中… ${n}%`, ocrFail:"読み取れませんでした。明るい場所で、文字が大きく写るように撮ってみてください。", ocrText:"読み取った文（間違いは直せます）", ocrReparse:"この文から単語を拾い直す", ocrPickWords:"覚えたい単語をタップ", ocrUseLine:"写真の文を例文にする", ocrAdd:n=>`選んだ${n}語を追加`, ocrInDeck:"登録済み", ocrNone:"単語が見つかりませんでした。",
@@ -471,7 +475,7 @@ ko: {
   modes:{ study:"먼저 맞혀보기", cloze:"빈칸 채우기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
   left:n=>`남은 ${n}장`, listen:"발음 듣기", listenEx:"예문 듣기", listenAgain:"다시 듣기", listenMine:"내 문장 듣기",
   noExample:"예문이 없어요. 단어장에서 넣으면 빈칸 문제가 생깁니다.", gotIt:"외웠어요, 다음",
-  meaningAlts:"뜻 후보:", grad:"졸업", gradTitle:"이미 완벽하게 외운 단어를 매일 복습에서 뺍니다", gradAsk:w=>`"${w}"은(는) 이제 완벽해? 졸업시킬까?`, gradSafe:"졸업한 단어는 「단어장 › 졸업」에 들어갈 뿐이라 언제든 다시 살릴 수 있어요. 안심해!", gradCancel:"계속할래", gradDo:"졸업시키기", gradDone:w=>`"${w}" 졸업! 단어장에서 언제든 다시 살릴 수 있어요.`, revive:"다시 살리기", revived:w=>`"${w}"을(를) 다시 살렸어요. 오늘 복습에 들어갑니다.`, home:"홈", pausedToast:"여기까지 저장했어요. 「이어서 하기」로 다시 시작할 수 있어요.", setOrder:"새 단어를 내는 순서", orderAdded:"추가한 순서", orderEasy:"자주 쓰는 단어부터", orderHelp:"어느 쪽이든 서로의 예문에 나오는 단어나 지금 외우는 단어와 이어진 단어는 묶어서 먼저 냅니다.", todayNewList:"오늘의 새 단어:", linkedHint:"🔗 는 예문으로 이어진 단어예요. 같이 외우면 효율적이에요.", levelsFreq:["기본","자주 씀","중급","어려움"], meanRefetch:"뜻 후보 다시 가져오기", uiLangTitle:"화면 언어", learnLangTitle:"학습 언어", deckDefault:"기본", addTo:"추가할 단어장", newDeck:"＋ 새 단어장…", deckNamePh:"단어장 이름 (예: 여행, 비즈니스)", create:"만들기", deckCreated:n=>`"${n}" 단어장을 만들었어요.`,
+  meaningAlts:"뜻 후보:", syncTitle:"기기 간 동기화", syncNotReady:"동기화 서버를 준비 중이에요. 곧 쓸 수 있어요.", syncHelp:"동기화 코드를 만들면 다른 기기에서도 같은 단어와 진도로 이어서 할 수 있어요. 이메일이나 이름은 필요 없어요.", syncStart:"동기화 시작 (코드 만들기)", syncHaveCode:"다른 기기에서 만든 코드가 있다면", syncJoin:"이 코드로 연결", syncBadCode:"코드는 영문·숫자 8자예요 (예: K7P2-QX9M).", syncWorking:"연결하는 중…", syncNotFound:"이 코드를 찾지 못했어요. 다시 확인해 주세요.", syncErr:"동기화하지 못했어요. 인터넷 연결을 확인하고 잠시 뒤 다시 해 주세요.", syncStarted:"동기화를 시작했어요. 코드를 메모해 두세요.", syncJoined:"연결됐어요! 두 기기의 단어를 합쳤어요.", syncOnHelp:"이 코드를 다른 기기에 입력하면 같은 단어장으로 이어서 할 수 있어요. 바뀐 내용은 자동으로 동기화돼요. 코드는 비밀번호 대신이니 남에게 알려 주지 마세요.", syncYourCode:"동기화 코드", syncBusy:"동기화하는 중…", syncLast:t0=>`마지막 동기화: ${t0}`, syncNowBtn:"지금 동기화", syncOff:"이 기기 동기화 끄기", syncOffConfirm:"한 번 더 누르면 해제 (단어는 이 기기에 남아요)", syncCopied:"코드를 복사했어요.", grad:"졸업", gradTitle:"이미 완벽하게 외운 단어를 매일 복습에서 뺍니다", gradAsk:w=>`"${w}"은(는) 이제 완벽해? 졸업시킬까?`, gradSafe:"졸업한 단어는 「단어장 › 졸업」에 들어갈 뿐이라 언제든 다시 살릴 수 있어요. 안심해!", gradCancel:"계속할래", gradDo:"졸업시키기", gradDone:w=>`"${w}" 졸업! 단어장에서 언제든 다시 살릴 수 있어요.`, revive:"다시 살리기", revived:w=>`"${w}"을(를) 다시 살렸어요. 오늘 복습에 들어갑니다.`, home:"홈", pausedToast:"여기까지 저장했어요. 「이어서 하기」로 다시 시작할 수 있어요.", setOrder:"새 단어를 내는 순서", orderAdded:"추가한 순서", orderEasy:"자주 쓰는 단어부터", orderHelp:"어느 쪽이든 서로의 예문에 나오는 단어나 지금 외우는 단어와 이어진 단어는 묶어서 먼저 냅니다.", todayNewList:"오늘의 새 단어:", linkedHint:"🔗 는 예문으로 이어진 단어예요. 같이 외우면 효율적이에요.", levelsFreq:["기본","자주 씀","중급","어려움"], meanRefetch:"뜻 후보 다시 가져오기", uiLangTitle:"화면 언어", learnLangTitle:"학습 언어", deckDefault:"기본", addTo:"추가할 단어장", newDeck:"＋ 새 단어장…", deckNamePh:"단어장 이름 (예: 여행, 비즈니스)", create:"만들기", deckCreated:n=>`"${n}" 단어장을 만들었어요.`,
   decksTitle:"단어장", decksHelp:"체크한 단어장만 오늘 학습에 나와요. 범위를 좁히면 더 잘 외워집니다.", deckWords:n=>`${n}개`, deckDelete:"삭제", deckDeleteConfirm:"한 번 더 누르면 삭제 (단어는 「기본」으로 이동)", deckDeleted:"단어장을 지우고 단어는 「기본」으로 옮겼어요.", studyDecks:"학습할 단어장:", deckOf:"단어장",
   photoTitle:"사진으로 추가", photoHelp:"책이나 화면을 찍으면 기기 안에서 글자를 읽어요 (AI 서비스로 보내지 않아요). 읽힌 단어 중 외울 단어를 골라 주세요.", photoPick:"사진 찍기·고르기",
   ocrLoading:"글자 인식 엔진 준비 중… (처음 한 번만 몇 초 걸려요)", ocrReading:n=>`읽는 중… ${n}%`, ocrFail:"글자를 읽지 못했어요. 밝은 곳에서 글자가 크게 나오게 찍어 보세요.", ocrText:"읽은 문장 (틀린 곳은 고칠 수 있어요)", ocrReparse:"이 문장에서 단어 다시 뽑기", ocrPickWords:"외울 단어를 눌러 고르세요", ocrUseLine:"사진 속 문장을 예문으로 쓰기", ocrAdd:n=>`고른 ${n}개 추가`, ocrInDeck:"이미 있음", ocrNone:"단어를 찾지 못했어요.",
@@ -548,7 +552,7 @@ const t = () => T[S.meta.settings.ui] || T.ja;
 const U = () => UI_LANG[S.meta.settings.ui] || UI_LANG.ja;
 const L = () => LANGS[S.meta.settings.lang] || LANGS.es;
 const langName = k => t().langNames[k || S.meta.settings.lang];
-function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){ toast(t().storageFull); } }
+function save(){ S.meta.mu = Date.now(); try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){ toast(t().storageFull); } scheduleSync(); }
 function load(){ try{ const raw = localStorage.getItem(LS_KEY); if(!raw) return; const d = JSON.parse(raw); S.cards = d.cards || {}; S.meta = Object.assign(S.meta, d.meta||{}); S.meta.settings = Object.assign({}, DEFAULT_SETTINGS, (d.meta||{}).settings||{}); }catch(e){} }
 try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){}
 const cardsHere = () => Object.values(S.cards).filter(c => (c.lang||"es") === S.meta.settings.lang);
@@ -574,8 +578,8 @@ document.addEventListener("click", e => {
   const d = decks().find(d => d.id === b.dataset.deck); if(!d) return;
   d.on = d.on === false; save(); renderAll();
 });
-function saveCard(c){ S.cards[c.id] = c; save(); }
-function removeCard(id){ delete S.cards[id]; save(); }
+function saveCard(c){ c.u = Date.now(); delete c._linked; S.cards[c.id] = c; save(); }
+function removeCard(id){ delete S.cards[id]; S.meta.deleted = S.meta.deleted || {}; S.meta.deleted[id] = Date.now(); save(); }
 
 /* ───────── 辞書・例文 API ───────── */
 async function getJSON(url, ms=12000){
@@ -1670,7 +1674,7 @@ function showView(v){
   document.querySelectorAll(".view").forEach(s => s.classList.add("hidden"));
   $("#view-" + v).classList.remove("hidden");
   document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v ? "true" : "false"));
-  if(v === "list"){ renderDecks(); renderDeckFilter(); renderList(); } if(v === "how") renderHow(); if(v === "add"){ fillDeckSelects(); fillImport(); }
+  if(v === "list"){ renderDecks(); renderDeckFilter(); renderList(); } if(v === "how"){ renderHow(); renderSync(); } if(v === "add"){ fillDeckSelects(); fillImport(); }
   if(v === "today" && SES){ document.body.classList.add("focus"); centerBox($("#sessionBox")); }
   else { document.body.classList.remove("focus"); const first = $("#view-" + v + " .card"); if(first && first.getBoundingClientRect().top < 0 || v !== "today") window.scrollTo({ top: 0 }); }
 }
@@ -1692,7 +1696,108 @@ function renderAll(){
 }
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
+/* ════════ 端末間の同期（Supabase・同期コード方式） ════════ */
+const SB_URL = "";      // 例: https://xxxx.supabase.co
+const SB_KEY = "";      // anon public key（公開用のキー）
+const syncReady = () => !!(SB_URL && SB_KEY);
+const CODE_ABC = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+function newCode(){ const b = crypto.getRandomValues(new Uint8Array(8)); const c = [...b].map(v => CODE_ABC[v % 32]).join(""); return c.slice(0,4) + "-" + c.slice(4); }
+const normCode = c => String(c||"").toUpperCase().replace(/[^0-9A-Z]/g, "").replace(/O/g, "0").replace(/I/g, "1");
+async function codeId(code){ const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("focus-vocab:" + normCode(code))); return [...new Uint8Array(d)].map(b => b.toString(16).padStart(2, "0")).join(""); }
+async function sbRpc(fn, body, keepalive){
+  const r = await fetch(`${SB_URL}/rest/v1/rpc/${fn}`, { method: "POST", keepalive: !!keepalive, headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  if(!r.ok) throw new Error("sync " + r.status);
+  const tx = await r.text(); return tx ? JSON.parse(tx) : null;
+}
+function payload(){ const meta = Object.assign({}, S.meta); delete meta.session; delete meta.sync; return { v: 1, cards: S.cards, meta }; }
+function mergeData(remote){
+  if(!remote || !remote.cards) return;
+  const rm = remote.meta || {};
+  const del = Object.assign({}, rm.deleted || {}, S.meta.deleted || {});
+  Object.keys(rm.deleted || {}).forEach(k => { del[k] = Math.max(rm.deleted[k] || 0, (S.meta.deleted || {})[k] || 0); });
+  const ids = new Set([...Object.keys(S.cards), ...Object.keys(remote.cards)]);
+  const out = {};
+  ids.forEach(id => {
+    const a = S.cards[id], b = remote.cards[id];
+    const ta = a ? (a.u || a.created || 0) : -1, tb = b ? (b.u || b.created || 0) : -1;
+    const win = ta >= tb ? a : b, tw = Math.max(ta, tb);
+    if(del[id] && del[id] >= tw) return;
+    if(win) out[id] = win;
+  });
+  S.cards = out;
+  S.meta.deleted = del;
+  S.meta.days = Object.assign({}, rm.days || {}, S.meta.days || {});
+  // 単語帳: 両方の単語帳を残す（同じ id はこの端末を優先）
+  const dk = new Map(); (rm.decks || []).forEach(d => dk.set(d.id, d)); (S.meta.decks || []).forEach(d => dk.set(d.id, d)); if(dk.size) S.meta.decks = [...dk.values()];
+  // 設定は新しく変えた方。ただし表示言語・学習言語はこの端末のまま
+  if((rm.mu || 0) > (S.meta.mu || 0) && rm.settings){ const keep = { ui: S.meta.settings.ui, lang: S.meta.settings.lang }; S.meta.settings = Object.assign({}, DEFAULT_SETTINGS, rm.settings, keep); }
+}
+let SYNC_T = null, SYNCING = false, SYNC_AGAIN = false;
+function scheduleSync(){ if(!syncReady() || !(S.meta.sync && S.meta.sync.code) || SYNCING) { if(SYNCING) SYNC_AGAIN = true; return; } clearTimeout(SYNC_T); SYNC_T = setTimeout(() => syncNow(), 4000); }
+async function syncNow(opts){
+  opts = opts || {};
+  if(!syncReady() || !(S.meta.sync && S.meta.sync.code)) return false;
+  if(SYNCING){ SYNC_AGAIN = true; return false; }
+  SYNCING = true; setSyncState("busy");
+  try{
+    const id = await codeId(S.meta.sync.code);
+    const got = await sbRpc("sync_get", { p_id: id });
+    if(got && got.data) mergeData(got.data);
+    else if(opts.mustExist){ throw new Error("notfound"); }
+    try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){}
+    await sbRpc("sync_put", { p_id: id, p_data: payload() });
+    S.meta.sync.lastAt = Date.now(); try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){}
+    setSyncState("ok"); if(!SES) renderAll();
+    return true;
+  }catch(e){ setSyncState(e.message === "notfound" ? "notfound" : "err"); if(e.message === "notfound") throw e; return false; }
+  finally{ SYNCING = false; if(SYNC_AGAIN){ SYNC_AGAIN = false; scheduleSync(); } }
+}
+let SYNC_STATE = "";
+let JOINING = false;
+function setSyncState(st){ SYNC_STATE = st; if(!JOINING && !$("#view-how").classList.contains("hidden")) renderSync(); }
+function renderSync(){
+  const x = t(), box = $("#syncBody"); if(!box) return;
+  if(!syncReady()){ box.innerHTML = `<p class="muted small">${esc(x.syncNotReady)}</p>`; return; }
+  const sy = S.meta.sync || {};
+  if(!sy.code){
+    box.innerHTML = `<p class="muted small">${esc(x.syncHelp)}</p>
+      <div class="row"><button class="btn primary" id="syncStart" type="button">${esc(x.syncStart)}</button></div>
+      <label for="syncCodeIn"><span>${esc(x.syncHaveCode)}</span><input type="text" id="syncCodeIn" placeholder="XXXX-XXXX" autocapitalize="characters" autocomplete="off" spellcheck="false" style="font-family:var(--mono);letter-spacing:.15em;text-transform:uppercase"></label>
+      <div class="row end"><button class="btn" id="syncJoin" type="button">${esc(x.syncJoin)}</button></div>
+      <p class="small" id="syncMsg" aria-live="polite"></p>`;
+    $("#syncStart").onclick = async () => { S.meta.sync = { code: newCode() }; save(); renderSync(); const ok = await syncNow(); toast(ok ? x.syncStarted : x.syncErr); };
+    $("#syncJoin").onclick = async () => {
+      const c = normCode($("#syncCodeIn").value); if(c.length !== 8){ $("#syncMsg").textContent = x.syncBadCode; return; }
+      const prev = S.meta.sync; S.meta.sync = { code: c.slice(0,4) + "-" + c.slice(4) };
+      $("#syncJoin").disabled = true; $("#syncMsg").textContent = x.syncWorking; JOINING = true;
+      let ok = false, notFound = false;
+      try{ ok = await syncNow({ mustExist: true }); }catch(e){ notFound = true; }
+      JOINING = false;
+      if(ok){ save(); fillLangs(); renderAll(); renderSync(); toast(x.syncJoined); return; }
+      if(prev) S.meta.sync = prev; else delete S.meta.sync;
+      renderSync(); $("#syncMsg").textContent = notFound ? x.syncNotFound : x.syncErr;
+    };
+    return;
+  }
+  const last = sy.lastAt ? new Date(sy.lastAt) : null;
+  const st = SYNC_STATE === "busy" ? x.syncBusy : SYNC_STATE === "err" ? x.syncErr : last ? x.syncLast(`${last.getMonth()+1}/${last.getDate()} ${String(last.getHours()).padStart(2,"0")}:${String(last.getMinutes()).padStart(2,"0")}`) : "";
+  box.innerHTML = `<p class="muted small">${esc(x.syncOnHelp)}</p>
+    <div class="row" style="align-items:baseline"><span class="eyebrow">${esc(x.syncYourCode)}</span><b style="font-family:var(--mono);font-size:1.6rem;letter-spacing:.14em">${esc(sy.code)}</b></div>
+    <p class="small ${SYNC_STATE === "err" ? "" : "muted"}" style="${SYNC_STATE === "err" ? "color:var(--bad)" : ""}">${esc(st)}</p>
+    <div class="row"><button class="btn" id="syncCopy" type="button">${esc(x.btnCopy)}</button><button class="btn" id="syncGo" type="button">${esc(x.syncNowBtn)}</button><span class="grow"></span><button class="btn ghost sm" id="syncOff" type="button">${esc(x.syncOff)}</button></div>`;
+  $("#syncCopy").onclick = async () => { try{ await navigator.clipboard.writeText(sy.code); toast(x.syncCopied); }catch(e){ toast(sy.code); } };
+  $("#syncGo").onclick = () => syncNow();
+  let armed = false;
+  $("#syncOff").onclick = () => { const b = $("#syncOff"); if(!armed){ armed = true; b.textContent = x.syncOffConfirm; setTimeout(() => { armed = false; if(b.isConnected) b.textContent = x.syncOff; }, 3000); return; } delete S.meta.sync; save(); renderSync(); };
+}
+document.addEventListener("visibilitychange", () => {
+  if(!syncReady() || !(S.meta.sync && S.meta.sync.code)) return;
+  if(document.hidden){ clearTimeout(SYNC_T); codeId(S.meta.sync.code).then(id => sbRpc("sync_put", { p_id: id, p_data: payload() }, true)).catch(() => {}); }
+  else syncNow();
+});
+
 load(); applyUi();
+if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
 if("serviceWorker" in navigator && location.protocol === "https:"){ navigator.serviceWorker.register("sw.js").catch(() => {}); }
 })();
