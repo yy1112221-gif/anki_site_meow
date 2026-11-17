@@ -581,6 +581,24 @@ body.dropping::after{content:"📥";position:fixed;inset:10px;z-index:90;display
 .sc-prev{font-size:1.3rem;letter-spacing:.06em}
 .script-sec .pitem{flex-direction:column;align-items:stretch;gap:4px} .script-sec .pitem span{font-size:.78rem} .script-sec .pitem .btn{align-self:flex-start}
 .script-big{font-size:min(38vw,9rem);line-height:1.1;text-align:center;font-weight:600;color:var(--ink);margin:6px 0 2px}
+
+/* ══════════ UX 監査の修正 ══════════ */
+/* 小さい画面: 解答後に問題文が上に流れないよう、ねこの吹き出しを省く */
+@media (max-height:760px), (max-width:360px){
+  body.focus #sessionBox > .say, body.focus .stage > .say{display:none}
+  body.focus .feedback img.nm{display:none}
+  body.focus .stage .sentence{font-size:1.18rem}
+  body.focus #sessionBox{gap:8px;padding:12px 12px 10px}
+  body.focus .dock .kbd{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  body.focus .dock .kbd button{flex-shrink:0}
+  body.focus .dock{gap:8px;padding-top:8px}
+}
+.stage:has(#fb .feedback) .q-hint{display:none}
+@media (max-width:360px){ nav.tabs button{font-size:.72rem;letter-spacing:.02em;padding:9px 2px} .bignums span{letter-spacing:.06em} }
+.bignums span{font-size:.7rem}
+.ladder > *{flex:1 1 0;min-width:0}
+.pitem .btn.sm, .langbtn, .iconbtn, .chiptog, .fchip{min-height:40px}
+.oq-x{width:28px;height:28px;line-height:28px}
 </style>
 </head>
 <body>
@@ -1429,7 +1447,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
   // 答えは問題の空欄にそのまま入れる。フィードバックには「単語・意味」だけ（例文は上に出ているので繰り返さない）
   const answerBlock = () => `<span class="fb-answer">${esc(target)}${norm(target) !== norm(c.word) ? ` <span class="fb-base">${x.baseForm} ${esc(c.word)}</span>` : ""}</span>${c.meaning ? `<span class="fb-mean">${esc(c.meaning)}</span>` : ""}${siblings(c)}${!blank && c.example ? `<span class="fb-ex">${highlight(c)}</span><span class="fb-mean">${esc(c.exampleKo)}</span>` : ""}`;
   const fillBlank = ok => { if(blank){ blank.textContent = target; blank.classList.add("filled", ok ? "ok" : "no"); } };
-  const showFb = () => { const st = box.querySelector(".stage"); if(st) requestAnimationFrame(() => st.scrollTo({ top: st.scrollHeight, behavior: "smooth" })); };
+  const showFb = () => { const fb = $("#fb"); if(fb) requestAnimationFrame(() => fb.scrollIntoView({ block: "nearest", behavior: "smooth" })); };
   const finish = ok => settleItem(isGuess ? true : ok);
   const reveal = res => {
     SES.state.answered = true;
@@ -1474,7 +1492,7 @@ function askHandsFree(c, mode, promptHTML, target, isGuess){
   $("#rv").onclick = () => {
     const bl = box.querySelector(".stage .blank"); if(bl){ bl.textContent = target; bl.classList.add("filled", "ok"); }
     $("#fb").innerHTML = `<div class="feedback meh">${fbh("st_listening", x.answer)}<span class="fb-answer">${esc(target)}</span>${c.meaning ? `<span class="fb-mean">${esc(c.meaning)}</span>` : ""}${!bl && c.example ? `<span class="fb-ex">${highlight(c)}</span>` : ""}</div>`;
-    const st = box.querySelector(".stage"); if(st) requestAnimationFrame(() => st.scrollTo({ top: st.scrollHeight, behavior: "smooth" }));
+    const fbx = $("#fb"); if(fbx) requestAnimationFrame(() => fbx.scrollIntoView({ block: "nearest", behavior: "smooth" }));
     speak(c.example || c.word);
     $("#acts").innerHTML = `${listenBtn(c.example || c.word)}<span class="grow"></span>` + (isGuess
       ? `<button class="btn primary" type="button" id="sOk">${x.next}</button>`
@@ -1743,7 +1761,7 @@ function drawRain(){
   for(let i = 0; i < 2; i++){ const x = r() * w, y = r() * h * 0.6, len = 120 + r() * 160; g.beginPath(); g.moveTo(x, y); g.lineTo(x - len * lean, y + len); g.strokeStyle = col("--rainHi"); g.globalAlpha = 0.9; g.lineWidth = 2.5; g.stroke(); }
   g.globalAlpha = 1;
   const cx = w * (0.62 + r() * 0.24), cy = Math.min(h * 0.3, 260) * (0.7 + r() * 0.5), rad = Math.max(22, Math.min(w, 600) * 0.07);
-  g.beginPath(); g.fillStyle = col("--accent"); g.arc(cx, cy, rad, 0, Math.PI * 2); g.fill();
+  if(w >= 900){ g.beginPath(); g.fillStyle = col("--accent"); g.arc(cx, cy, rad, 0, Math.PI * 2); g.fill(); }   // スマホでは板の下に隠れて「汚れ」に見えるので描かない
 }
 let RAIN_T = null;
 window.addEventListener("resize", () => { clearTimeout(RAIN_T); RAIN_T = setTimeout(drawRain, 150); });
