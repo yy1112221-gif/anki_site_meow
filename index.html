@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F2ECE1">
+<meta name="theme-color" content="#69a795">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="集中暗記">
 <title>集中暗記</title>
@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=DM+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
   /* レイアウト: 上に要約 → タブ → 1枚ずつめくるカード。スマホ片手操作が前提
@@ -199,9 +199,100 @@ h2{font-size:1.2rem}
 .hidden{display:none!important}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 @media (max-width:400px){.word{font-size:1.8rem}}
+
+/* ══════════ MIMI 52 ポスターの世界観（ここから下が最終の見た目） ══════════
+   一面のセージ色・斜めに降る深緑の線・深緑の円がひとつ・黒い文字だけ。
+   カードは紙ではなく「霧」: 背景を少しだけ曇らせて文字を読みやすくする。 */
+:root{
+  --bg:#69a795; --surface:rgba(105,167,149,.82); --ink:#06120f; --muted:rgba(6,18,15,.66); --line:rgba(6,18,15,.2);
+  --accent:#006945; --accent-soft:rgba(0,105,69,.13); --on-accent:#eaf4f0;
+  --rust:#006945; --ochre:#006945; --cream:rgba(234,244,240,.32); --navy:#06120f;
+  --good:#006945; --good-soft:rgba(0,105,69,.14); --bad:#7d2a1f; --bad-soft:rgba(125,42,31,.12); --warn:#06120f; --warn-soft:rgba(6,18,15,.08);
+  --display:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  --body:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  --mono:var(--body);
+  --rain1:#386f66; --rain2:#183936; --rain3:#225054; --rainHi:#2f8a5f;
+}
+html[lang="ko"]{ --display:"Apple SD Gothic Neo","Noto Sans KR","Hiragino Sans",sans-serif; --body:"Apple SD Gothic Neo","Noto Sans KR","Hiragino Sans",sans-serif; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#13302a; --surface:rgba(19,48,42,.84); --ink:#dcefe8; --muted:rgba(220,239,232,.66); --line:rgba(220,239,232,.18);
+  --accent:#3fc28c; --accent-soft:rgba(63,194,140,.14); --on-accent:#06120f; --rust:#3fc28c; --cream:rgba(220,239,232,.1);
+  --good:#3fc28c; --good-soft:rgba(63,194,140,.14); --bad:#ef8a72; --bad-soft:rgba(239,138,114,.12); --warn:#dcefe8; --warn-soft:rgba(220,239,232,.07);
+  --rain1:#2b5a52; --rain2:#0b1f1b; --rain3:#1d4744; --rainHi:#2f8a5f; color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#13302a; --surface:rgba(19,48,42,.84); --ink:#dcefe8; --muted:rgba(220,239,232,.66); --line:rgba(220,239,232,.18);
+  --accent:#3fc28c; --accent-soft:rgba(63,194,140,.14); --on-accent:#06120f; --rust:#3fc28c; --cream:rgba(220,239,232,.1);
+  --good:#3fc28c; --good-soft:rgba(63,194,140,.14); --bad:#ef8a72; --bad-soft:rgba(239,138,114,.12); --warn:#dcefe8; --warn-soft:rgba(220,239,232,.07);
+  --rain1:#2b5a52; --rain2:#0b1f1b; --rain3:#1d4744; --rainHi:#2f8a5f; color-scheme:dark; }
+html,body{background:var(--bg)}
+#rain{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none;display:block}
+.wrap{position:relative;z-index:1}
+/* 見出し: 太い和文、字間は詰め気味 */
+h1,h2{font-family:var(--display);font-weight:700;letter-spacing:.01em}
+h1{font-size:.95rem;font-weight:600;letter-spacing:.32em}
+.top #todayLabel{font-family:var(--body);font-weight:600;font-size:.72rem;letter-spacing:.3em;color:var(--ink);opacity:.85}
+.eyebrow{font-family:var(--body);font-weight:600;letter-spacing:.3em;color:var(--ink)}
+/* カード = 霧のパネル（枠なし・角は控えめ） */
+.card{background:var(--surface);border:0;border-radius:6px;box-shadow:none;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+/* ボタン: 平たく、主ボタンだけ深緑 */
+.btn{border-radius:4px;border:1px solid var(--line);background:transparent;color:var(--ink);font-family:var(--body);font-weight:600;letter-spacing:.04em}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.good{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.bad{background:transparent;border-color:var(--bad);color:var(--bad)}
+input[type=text],input[type=email],textarea,select,input[type=number]{background:rgba(234,244,240,.22);border:1px solid var(--line);border-radius:4px;color:var(--ink)}
+input::placeholder,textarea::placeholder{color:var(--muted)}
+.kbd button{background:rgba(234,244,240,.18);border-color:var(--line);color:var(--ink);border-radius:4px}
+/* タブ: 字間の広い小さなラベル、選ばれたら深緑の下線 */
+nav.tabs{background:color-mix(in srgb, var(--bg) 86%, transparent);border-bottom:1px solid var(--line)}
+nav.tabs button{font-family:var(--body);font-weight:600;font-size:.82rem;letter-spacing:.14em;color:var(--muted)}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.langbtn,.iconbtn{background:transparent;border-color:var(--line);color:var(--ink)}
+/* チップ・小ラベル */
+.chip{background:transparent;border:1px solid var(--line);color:var(--ink);font-family:var(--body);font-weight:600;letter-spacing:.06em;border-radius:3px}
+.chip.new{border-color:var(--accent);color:var(--accent)}
+.chip.done{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chip.leech{border-color:var(--bad);color:var(--bad)}
+.chiptog{background:transparent;border-color:var(--line);color:var(--muted);border-radius:3px}
+.chiptog[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.modehead .muted.small{font-family:var(--body);font-weight:600;letter-spacing:.24em;font-size:.7rem;color:var(--ink)}
+/* 問題の単語・文 */
+.word{font-family:var(--display);font-weight:700;letter-spacing:.01em}
+mark,.tok.hl{background:transparent;color:var(--accent);border-bottom:2px solid var(--accent);border-radius:0}
+.blank{background:var(--cream);border-bottom:2px solid var(--accent);color:var(--accent);border-radius:2px 2px 0 0}
+/* 進み具合 = ポスター下の目盛り（左端に深緑のバー） */
+.progress{height:16px;background:repeating-linear-gradient(90deg, var(--ink) 0 1px, transparent 1px 8px);opacity:.55}
+.progress::after{display:none}
+.progress i{background:none;border-right:4px solid var(--accent);opacity:1}
+/* フィードバック */
+.feedback{border-radius:4px;background:rgba(234,244,240,.2)}
+.feedback.ok{background:var(--good-soft)} .feedback.no{background:var(--bad-soft)} .feedback.meh{background:var(--warn-soft)}
+.feedback.ok strong{color:var(--good)} .feedback.no strong{color:var(--bad)} .feedback.meh strong{color:var(--ink)}
+.bubble{background:rgba(234,244,240,.9);border:1.5px solid var(--ink);color:#06120f;font-weight:600}
+.bubble::after{border-right-color:rgba(234,244,240,.9)!important}
+.say.big .bubble::after{border-bottom-color:rgba(234,244,240,.9)!important;border-right-color:transparent!important}
+.toast{background:var(--ink);color:var(--bg);border-radius:4px}
+.sheet{background:var(--bg);border-radius:10px 10px 0 0}
+.sheet .x{background:transparent;border-color:var(--line);color:var(--ink)}
+.ex,.cand{background:rgba(234,244,240,.16);border-color:var(--line);border-radius:4px}
+.cand[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.item{border-bottom-color:var(--line)}
+.bignums span{font-family:var(--body);font-weight:600;letter-spacing:.24em;color:var(--ink);opacity:.75}
+.bignums b{font-family:var(--display);font-weight:700}
+/* 「今日」= ポスター: 上は空けて雨を見せ、下に大きな題名と目盛り */
+#sessionStart.card{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;padding-left:0;padding-right:0}
+.poster{display:flex;flex-direction:column;gap:8px;padding-top:min(34vh,300px)}
+.poster .pweek{font-weight:600;font-size:.82rem;letter-spacing:.3em;color:var(--ink)}
+.poster .pweek em{font-style:normal;color:var(--accent)}
+.poster .ptitle{font-family:var(--display);font-weight:700;font-size:clamp(2rem,9vw,2.9rem);line-height:1.12;letter-spacing:.01em;color:var(--ink)}
+.poster .psub{font-size:.9rem;letter-spacing:.06em;color:var(--ink);opacity:.85}
+.poster .pruler{position:relative;height:18px;margin-top:6px;background:repeating-linear-gradient(90deg, var(--ink) 0 1px, transparent 1px 9px);opacity:.55}
+.poster .pruler i{position:absolute;top:-2px;bottom:-2px;width:5px;background:var(--accent);opacity:1}
+.poster + *{margin-top:10px}
+.after-poster{background:var(--surface);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:14px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
 </style>
 </head>
 <body>
+<canvas id="rain" aria-hidden="true"></canvas>
 <div class="wrap">
   <header class="top">
     <div class="titlebar">
@@ -849,7 +940,12 @@ function buildSession(){
 }
 function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1); while(S.meta.days[d]){ n++; d = addDays(d, -1); } return n; }
 
-function renderStart(){ renderStartInner(); paintHero($("#sessionStart")); }
+function renderStart(){
+  renderStartInner();
+  const box = $("#sessionStart"), pos = box.querySelector(".poster");
+  if(pos){ const rest = [...box.children].filter(el => el !== pos); if(rest.length){ const w = document.createElement("div"); w.className = "after-poster"; rest.forEach(el => w.appendChild(el)); box.appendChild(w); } }
+  else box.style.background = "";
+}
 function renderStartInner(){
   const box = $("#sessionStart"), x = t();
   const due = dueCards().length, nq = Math.min(newQuota(), newCandidates().length);
@@ -1262,14 +1358,42 @@ function drawArt(cv, seed){
 }
 function heroHTML(title, sub, pct){
   const d = new Date(); const day = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
-  const ds = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`;
-  return `<div class="hero"><canvas aria-hidden="true"></canvas><div class="hmeta"><span>${esc(t().appName)}</span><span>${ds}</span></div>
-    <div class="htitle"><span class="eb">DAY ${String(day).padStart(3,"0")} / 365 · ${FLAGS[S.meta.settings.lang] || ""} ${esc(langName())}</span><b>${esc(title)}</b>${sub ? `<small>${esc(sub)}</small>` : ""}</div>
-    <div class="ruler"><i style="left:${Math.max(0, Math.min(100, pct || 0))}%"></i></div></div>`;
+  return `<div class="poster"><span class="pweek">DAY <em>${String(day).padStart(3,"0")}</em> / 365 · ${esc(langName())}</span>
+    <b class="ptitle">${esc(title)}</b>${sub ? `<span class="psub">${esc(sub)}</span>` : ""}
+    <div class="pruler"><i style="left:${Math.max(0, Math.min(99, pct || 0))}%"></i></div></div>`;
 }
-function paintHero(root){ const cv = root && root.querySelector(".hero canvas"); if(cv) requestAnimationFrame(() => drawArt(cv, today() + S.meta.settings.lang)); }
+function paintHero(root){}
 function bigNums(){ const x = t(), all = cardsHere();
   return `<div class="bignums"><div><span>${esc(x.statDue)}</span><b>${dueCards().length}</b></div><div><span>${esc(x.statNew)}</span><b>${Math.min(newQuota(), newCandidates().length)}</b></div><div><span>${esc(x.statLearning)}</span><b>${all.filter(c => !c.mastered && !c.isNew).length}</b></div><div><span>${esc(x.statMastered)}</span><b>${all.filter(c => c.mastered).length}</b></div></div>`; }
+
+/* ════════ 背景: 斜めに降る雨の線と、深緑の円 ════════ */
+function drawRain(){
+  const cv = $("#rain"); if(!cv) return;
+  const css = getComputedStyle(document.documentElement);
+  const col = n => css.getPropertyValue(n).trim();
+  const w = window.innerWidth, h = window.innerHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+  const g = cv.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.fillStyle = col("--bg"); g.fillRect(0, 0, w, h);
+  const r = seededRand(today() + "rain" + S.meta.settings.lang);
+  const cols = [[col("--rain1"), .8], [col("--rain2"), .8], [col("--rain3"), .5], [col("--rain1"), .5]];
+  const lean = 0.16 + r() * 0.1, n = Math.round((w * h) / 4200);
+  for(let i = 0; i < n; i++){
+    const thick = r() < 0.18; const [c, op] = cols[Math.floor(r() * cols.length)];
+    const x = r() * (w + h * lean) - h * lean * 0.2, y = -40 + r() * h * 1.05, len = 60 + r() * (thick ? 260 : 420);
+    const bend = (r() - 0.5) * 30;
+    g.beginPath(); g.moveTo(x, y);
+    g.quadraticCurveTo(x - len * lean * 0.5 + bend, y + len * 0.5, x - len * lean, y + len);
+    g.strokeStyle = c; g.globalAlpha = op * (thick ? 0.55 : 0.75); g.lineWidth = thick ? 3 + r() * 6 : 0.5 + r() * 1.6; g.lineCap = "round"; g.stroke();
+  }
+  for(let i = 0; i < 2; i++){ const x = r() * w, y = r() * h * 0.6, len = 120 + r() * 160; g.beginPath(); g.moveTo(x, y); g.lineTo(x - len * lean, y + len); g.strokeStyle = col("--rainHi"); g.globalAlpha = 0.9; g.lineWidth = 2.5; g.stroke(); }
+  g.globalAlpha = 1;
+  const cx = w * (0.62 + r() * 0.24), cy = Math.min(h * 0.3, 260) * (0.7 + r() * 0.5), rad = Math.max(22, Math.min(w, 600) * 0.07);
+  g.beginPath(); g.fillStyle = col("--accent"); g.arc(cx, cy, rad, 0, Math.PI * 2); g.fill();
+}
+let RAIN_T = null;
+window.addEventListener("resize", () => { clearTimeout(RAIN_T); RAIN_T = setTimeout(drawRain, 150); });
+try{ matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => setTimeout(drawRain, 50)); }catch(e){}
 
 /* ════════ 写真から追加（端末内OCR: Tesseract） ════════ */
 const STOP = {
@@ -1652,7 +1776,7 @@ $("#uiBtn").onclick = () => {
 $("#langBtn").onclick = () => {
   const x = t(); if(SES){ toast(x.noLangSwitch); return; }
   const bg = openSheet(`<h2>${x.learnLangTitle}</h2><div>` + Object.keys(LANGS).filter(k => k !== S.meta.settings.ui || Object.values(S.cards).some(c => c.lang === k)).map(k => { const n = Object.values(S.cards).filter(c => (c.lang||"es") === k).length; return `<button class="opt" type="button" data-lang="${k}" aria-current="${S.meta.settings.lang === k}"><span class="flag">${FLAGS[k]}</span><span class="grow">${esc(x.langNames[k])}</span><span class="tiny muted">${n ? x.deckWords(n) : ""}</span>${S.meta.settings.lang === k ? " ✓" : ""}</button>`; }).join("") + `</div>`);
-  bg.querySelectorAll("[data-lang]").forEach(b => b.onclick = () => { closePop(); S.meta.settings.lang = b.dataset.lang; save(); fillLangs(); fillVoices(); closeEdit(); renderAll(); });
+  bg.querySelectorAll("[data-lang]").forEach(b => b.onclick = () => { closePop(); S.meta.settings.lang = b.dataset.lang; save(); fillLangs(); fillVoices(); closeEdit(); renderAll(); drawRain(); });
 };
 function fillLangs(){
   const x = t();
@@ -1689,7 +1813,7 @@ function updateStats(){
 function renderAll(){
   if(!renderAll._r){ renderAll._r = 1; setTimeout(() => { renderAll._r = 0; ensureRanks(); }, 50); }
   const d = new Date(), x = t();
-  $("#todayLabel").textContent = x.dateLabel(d.getMonth()+1, d.getDate(), x.week[d.getDay()]);
+  $("#todayLabel").textContent = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")} ${x.week[d.getDay()]}`;
   updateStats(); if(!SES) renderStart();
   if(!$("#view-list").classList.contains("hidden")) renderList();
   if(!$("#view-how").classList.contains("hidden")) renderHow();
@@ -1796,7 +1920,7 @@ document.addEventListener("visibilitychange", () => {
   else syncNow();
 });
 
-load(); applyUi();
+load(); applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
 if("serviceWorker" in navigator && location.protocol === "https:"){ navigator.serviceWorker.register("sw.js").catch(() => {}); }
