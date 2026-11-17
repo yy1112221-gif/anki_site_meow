@@ -599,6 +599,7 @@ body.dropping::after{content:"📥";position:fixed;inset:10px;z-index:90;display
 .ladder > *{flex:1 1 0;min-width:0}
 .pitem .btn.sm, .langbtn, .iconbtn, .chiptog, .fchip{min-height:40px}
 .oq-x{width:28px;height:28px;line-height:28px}
+.startopts{display:flex;flex-direction:column;gap:8px;align-items:stretch;max-width:340px}
 </style>
 </head>
 <body>
@@ -1309,8 +1310,11 @@ function renderStartInner(){
   const due = dueCards().length, nq = Math.min(newQuota(), newCandidates().length) + scriptNewToday();
   if(cardsHere().length === 0){
     box.innerHTML = `${say("st_sleepy", esc(x.nmEmpty), true)}<h2>${x.emptyTitle}</h2><p class="muted">${esc(x.emptyBody(langName()))}</p>
-      <div class="row"><button class="btn primary" id="goAdd" type="button">${x.goAdd}</button>${S.meta.settings.lang === "es" ? `<button class="btn" id="seed" type="button">${x.seed}</button>` : ""}</div>`;
+      <div class="startopts">${PRESET_LANGS.includes(S.meta.settings.lang) ? `<button class="btn primary" id="goDiag" type="button">${esc(x.diagBtn)}</button>` : ""}${SCRIPT_SETS[S.meta.settings.lang] ? `<button class="btn${PRESET_LANGS.includes(S.meta.settings.lang) ? "" : " primary"}" id="goScript" type="button">🔤 ${esc(x.scriptTitle)}</button>` : ""}
+      <button class="btn${PRESET_LANGS.includes(S.meta.settings.lang) || SCRIPT_SETS[S.meta.settings.lang] ? "" : " primary"}" id="goAdd" type="button">${x.goAdd}</button>${S.meta.settings.lang === "es" ? `<button class="btn ghost" id="seed" type="button">${x.seed}</button>` : ""}</div>`;
     $("#goAdd").onclick = () => showView("add");
+    const gd = $("#goDiag"); if(gd) gd.onclick = async () => { showView("add"); await renderPresets(); $("#presetCard").scrollIntoView({ behavior: "smooth", block: "start" }); startDiag(S.meta.settings.lang); };
+    const gs = $("#goScript"); if(gs) gs.onclick = async () => { showView("add"); await renderPresets(); const sc = document.querySelector(".script-sec"); if(sc) sc.scrollIntoView({ behavior: "smooth", block: "start" }); };
     const sd = $("#seed"); if(sd) sd.onclick = seedExamples;
     return;
   }
@@ -1319,8 +1323,8 @@ function renderStartInner(){
     box.innerHTML = `${heroHTML(S.meta.days[today()] ? x.doneTitle : x.noneTitle, "", S.meta.days[today()] ? 100 : 0)}${bigNums()}${say(S.meta.days[today()] ? "st_love" : "st_sleepy", esc(S.meta.days[today()] ? x.nmDone : x.nmNone))}
       <p class="muted">${next ? esc(x.nextReview(next, diffDays(today(), next))) : x.nextNone}</p>
       <p class="muted small">${x.streak(streak())}</p>${deckChips()}
-      <div class="row"><button class="btn" id="goAdd2" type="button">${x.addMore}</button></div>`;
-    $("#goAdd2").onclick = () => showView("add");
+      <div class="row"><button class="btn${PRESET_LANGS.includes(S.meta.settings.lang) && !decks().some(d => d.preset && !d.preset.startsWith("script-")) ? " primary" : ""}" id="goAdd2" type="button">${PRESET_LANGS.includes(S.meta.settings.lang) && !decks().some(d => d.preset && !d.preset.startsWith("script-")) ? "📚 " + esc(x.presetTitle) : x.addMore}</button></div>`;
+    $("#goAdd2").onclick = async () => { showView("add"); if(PRESET_LANGS.includes(S.meta.settings.lang)){ await renderPresets(); $("#presetCard").scrollIntoView({ behavior: "smooth", block: "start" }); } };
     return;
   }
   const z = savedSession();
@@ -1354,7 +1358,7 @@ function nextItem(){
   const it = SES.queue[0], c = S.cards[it.id];
   if(!c){ SES.queue.shift(); return nextItem(); }
   if(c.lazy && !it.waited){ it.waited = 1; document.body.classList.add("focus"); $("#sessionBox").innerHTML = `<div class="stage">${say("load_run", esc(t().prepping))}</div>`;
-    Promise.race([fillLazy(c), sleep(7000)]).then(() => { if(SES && SES.queue[0] === it) nextItem(); }); return; }
+    Promise.race([fillLazy(c), sleep(3000)]).then(() => { if(SES && SES.queue[0] === it) nextItem(); }); return; }
   SES.state = { answered: false }; document.body.classList.add("focus"); renderItem(c, it.mode); centerBox($("#sessionBox"));
 }
 function saveSession(){
@@ -2867,7 +2871,7 @@ function pawStamp(){
 }
 
 /* ════════ レベル別セット（公開リスト）とレベル診断 ════════ */
-let PRESET_IDX = null;
+let PRESET_IDX = null; const PRESET_LANGS = ["es", "ja", "ko"];
 async function presetIndex(){ if(PRESET_IDX) return PRESET_IDX; const r = await fetch("presets/index.json"); if(!r.ok) throw new Error("preset"); PRESET_IDX = await r.json(); return PRESET_IDX; }
 const lvLabel = (lv) => S.meta.settings.ui === "ko" && lv.labelKo ? lv.labelKo : lv.label;
 function presetDeckName(lang, lv){ return ({ es: "ELELex ", ja: "JLPT " , ko: "한국어 " })[lang] + lvLabel(lv); }
