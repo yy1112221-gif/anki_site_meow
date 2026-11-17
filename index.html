@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#2747d4">
+<meta name="theme-color" content="#574B78">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="集中暗記">
 <title>集中暗記</title>
@@ -16,8 +16,8 @@
 <style>
 :root{
   /* レイアウト: 上に要約 → タブ → 1枚ずつめくるカード。スマホ片手操作が前提 */
-  --bg:#f3f5f9; --surface:#ffffff; --ink:#151a2e; --muted:#5d6580; --line:#dfe3ee;
-  --accent:#2747d4; --accent-soft:#e6eafc;
+  --bg:#f5f3fa; --surface:#ffffff; --ink:#2b2540; --muted:#6c6488; --line:#e3ddf0;
+  --accent:#574B78; --accent-soft:#ece7f6; --nm-body:#A69CC0; --cream:#FFF1B0; --pink:#F28AB2;
   --good:#11845b; --good-soft:#e2f4ec; --bad:#c0362c; --bad-soft:#fbe7e5; --warn:#a86400; --warn-soft:#fdf0dc;
   --display:"Bricolage Grotesque", "IBM Plex Sans JP", system-ui, sans-serif;
   --body:"IBM Plex Sans JP", "Hiragino Sans", "Yu Gothic UI", system-ui, sans-serif;
@@ -26,15 +26,15 @@
 html[lang="ko"]{ --body:"IBM Plex Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif; --display:"Bricolage Grotesque", "IBM Plex Sans KR", system-ui, sans-serif; }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0e1120; --surface:#181c2f; --ink:#e9ecf7; --muted:#9aa2bf; --line:#2a304a;
-    --accent:#8197ff; --accent-soft:#232b55;
+    --bg:#1f1d2b; --surface:#2A2B3A; --ink:#efeaf9; --muted:#a8a1c4; --line:#3b3852;
+    --accent:#B7AEDB; --accent-soft:#3a3456; --cream:#5a4f2a; --on-accent:#2b2540;
     --good:#4fd19c; --good-soft:#15362b; --bad:#ff8378; --bad-soft:#3d1d1d; --warn:#f2b45a; --warn-soft:#3a2c14;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0e1120; --surface:#181c2f; --ink:#e9ecf7; --muted:#9aa2bf; --line:#2a304a;
-  --accent:#8197ff; --accent-soft:#232b55;
+  --bg:#1f1d2b; --surface:#2A2B3A; --ink:#efeaf9; --muted:#a8a1c4; --line:#3b3852;
+  --accent:#B7AEDB; --accent-soft:#3a3456; --cream:#5a4f2a; --on-accent:#2b2540;
   --good:#4fd19c; --good-soft:#15362b; --bad:#ff8378; --bad-soft:#3d1d1d; --warn:#f2b45a; --warn-soft:#3a2c14;
   color-scheme: dark;
 }
@@ -58,10 +58,10 @@ a{color:var(--accent)}
 .stat span{font-size:.75rem;color:var(--muted)}
 nav.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;position:sticky;top:calc(8px + env(safe-area-inset-top));z-index:5}
 nav.tabs button{flex:1;border:0;background:transparent;color:var(--muted);font:600 .88rem var(--body);padding:9px 4px;border-radius:9px;cursor:pointer}
-nav.tabs button[aria-selected="true"]{background:var(--accent);color:#fff}
+nav.tabs button[aria-selected="true"]{background:var(--accent);color:var(--on-accent,#fff)}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px}
 .btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 .95rem var(--body);padding:11px 16px;border-radius:11px;cursor:pointer;min-height:44px}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent,#fff)}
 .btn.good{background:var(--good);border-color:var(--good);color:#fff}
 .btn.bad{background:var(--bad-soft);border-color:transparent;color:var(--bad)}
 .btn.ghost{background:transparent}
@@ -130,6 +130,17 @@ mark{background:var(--accent-soft);color:var(--accent);border-radius:4px;padding
 .exlist{display:flex;flex-direction:column;gap:10px}
 .ex{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
 input[type=range]{width:100%;accent-color:var(--accent)}
+.say{display:flex;align-items:flex-end;gap:10px}
+.nm{image-rendering:pixelated;image-rendering:crisp-edges;flex-shrink:0;display:block}
+.bubble{position:relative;background:var(--surface);border:2px solid var(--accent);border-radius:16px 16px 16px 4px;padding:9px 13px;font-weight:600;font-size:.95rem;line-height:1.5;color:var(--ink);max-width:100%}
+.bubble::before{content:"";position:absolute;left:-9px;bottom:10px;border:8px solid transparent;border-right-color:var(--accent);border-left:0}
+.bubble::after{content:"";position:absolute;left:-6px;bottom:11px;border:7px solid transparent;border-right-color:var(--surface);border-left:0}
+.say.big{flex-direction:column;align-items:center;text-align:center;gap:6px}
+.say.big .bubble{border-radius:16px}
+.say.big .bubble::before{left:50%;top:-9px;bottom:auto;transform:translateX(-50%);border:8px solid transparent;border-bottom-color:var(--accent);border-top:0}
+.say.big .bubble::after{left:50%;top:-6px;bottom:auto;transform:translateX(-50%);border:7px solid transparent;border-bottom-color:var(--surface);border-top:0}
+.fbh{display:flex;align-items:center;gap:8px}
+.blank{background:var(--cream);border-radius:6px 6px 0 0}
 .hidden{display:none!important}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 @media (max-width:400px){.stats{grid-template-columns:repeat(2,1fr)} .word{font-size:1.8rem}}
@@ -142,7 +153,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
       <h1 data-i18n="appName"></h1>
       <p class="muted small" id="todayLabel"></p>
     </div>
-    <div class="pickers"><select id="langPick" class="langpick" data-i18n-aria="learnLang"></select></div>
+    <div class="pickers"><select id="uiPick" class="langpick" aria-label="表示言語 · 화면 언어"><option value="ja">日本語</option><option value="ko">한국어</option></select><select id="langPick" class="langpick" data-i18n-aria="learnLang"></select></div>
   </header>
 
   <section class="stats" data-i18n-aria="summary">
@@ -306,10 +317,13 @@ ja: {
   todayHint:n=>`最初に間違えたカードは正解するまで繰り返し出ます。連続学習 ${n}日。`, start:"はじめる",
   modes:{ study:"まず当ててみる", cloze:"穴埋め", recall:"意味から書く", write:"作文", speak:"スピーキング" },
   left:n=>`残り${n}枚`, listen:"発音を聞く", listenEx:"例文を聞く", listenAgain:"もう一度聞く", listenMine:"自分の文を聞く",
-  noExample:"例文がありません。単語帳で追加すると穴埋め問題が出ます。", gotIt:"覚えた、次へ", resumeTitle:"途中から再開できます", resumeBody:(n,d)=>`前回の続きです。終わった問題 ${d}・残り ${n}問。答えた分はすべて保存されています。`, resume:"続きから", restart:"最初からやり直す", guessLead:"初めての単語です。答えを見る前に、まず推測して書いてみましょう。", copyPrompt:"正解を1回書いてから次へ進みましょう。", copyPh:"正解を書き写す", copyAgain:"もう一度、正解をそのまま書いてみましょう", copyOk:"OK、書けました", skipCopy:"入力せずに次へ", hfOn:"入力なしモード：オン", hfOff:"入力なしモード（歩きながら・電車で）", remembered:"覚えてた", forgot:"忘れてた", setHf:"入力なしモード（答えを聞いて自己採点）", slow:"ゆっくり", popDetail:"詳細を見る", popAdd:"単語帳に追加", popInDeck:"単語帳にあり", popNoMeaning:"意味を取得できませんでした", popDict:"辞書で調べる", popExamples:"例文", popLoading:"例文を探しています…", popNoEx:"ほかの例文は見つかりませんでした。", popAdded:w=>`「${w}」を単語帳に追加しました。`, popClose:"閉じる", popHint:"文中の単語をタップすると意味と発音が見られます。", voice:"読み上げの声", voiceAuto:"自動（いちばん自然な声）", rate:"読み上げの速さ", preview:"試しに聞く", voiceTip:"iPhoneは「設定 › アクセシビリティ › 読み上げコンテンツ › 声」で「拡張」や「プレミアム」の声をダウンロードすると、ずっと聞き取りやすくなります。ネイティブ録音がある例文は録音を優先して再生します。", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"空欄に入る単語はどれ？ 初めてでもOK、まず推測してみましょう。", guessMCm:(m,l)=>`「${m}」は${l}でどれ？ まず推測してみましょう。`, guessType:"推測して入力（間違えて大丈夫）", guessBtn:"これだと思う", guessRight:"当たり！", guessWrong:"正解はこちら。先に推測したぶん記憶に残りやすくなります。", guessSkip:"見当もつかない",
+  noExample:"例文がありません。単語帳で追加すると穴埋め問題が出ます。", gotIt:"覚えた、次へ",
+  nmAsk:{ study:l=>"はじめて見る単語だよ。カンでいいから書いてみて！", cloze:l=>"空いてるところ、なんて入るかな？", recall:l=>`この意味、${l}でなんて言う？`, write:l=>"この単語で、一文つくってみて〜", speak:l=>"声に出して言ってみて。ちゃんと聞いてるよ" },
+  nmToday:(a,b)=>`今日は復習${a}枚と、新しい単語${b}つ。いっしょにやろ！`, nmEmpty:"ふぁ…まだ単語がないみたい。覚えたい単語を教えて？", nmNone:"今日の分はないよ。ネミミはちょっと寝るね…", nmDone:"今日もおつかれさま！また明日ね", nmResume:"おかえり！さっきの続きからできるよ",
+  nmFinishAll:"ぜんぶ一発で正解！すごい！", nmFinishSome:"おつかれさま！間違えたのは明日もう一回出すね", resumeTitle:"途中から再開できます", resumeBody:(n,d)=>`前回の続きです。終わった問題 ${d}・残り ${n}問。答えた分はすべて保存されています。`, resume:"続きから", restart:"最初からやり直す", guessLead:"初めての単語です。答えを見る前に、まず推測して書いてみましょう。", copyPrompt:"正解を1回書いてから次へ進みましょう。", copyPh:"正解を書き写す", copyAgain:"もう一度、正解をそのまま書いてみましょう", copyOk:"OK、書けました", skipCopy:"入力せずに次へ", hfOn:"入力なしモード：オン", hfOff:"入力なしモード（歩きながら・電車で）", remembered:"覚えてた", forgot:"忘れてた", setHf:"入力なしモード（答えを聞いて自己採点）", slow:"ゆっくり", popDetail:"詳細を見る", popAdd:"単語帳に追加", popInDeck:"単語帳にあり", popNoMeaning:"意味を取得できませんでした", popDict:"辞書で調べる", popExamples:"例文", popLoading:"例文を探しています…", popNoEx:"ほかの例文は見つかりませんでした。", popAdded:w=>`「${w}」を単語帳に追加しました。`, popClose:"閉じる", popHint:"文中の単語をタップすると意味と発音が見られます。", voice:"読み上げの声", voiceAuto:"自動（いちばん自然な声）", rate:"読み上げの速さ", preview:"試しに聞く", voiceTip:"iPhoneは「設定 › アクセシビリティ › 読み上げコンテンツ › 声」で「拡張」や「プレミアム」の声をダウンロードすると、ずっと聞き取りやすくなります。ネイティブ録音がある例文は録音を優先して再生します。", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"空欄に入る単語はどれ？ 初めてでもOK、まず推測してみましょう。", guessMCm:(m,l)=>`「${m}」は${l}でどれ？ まず推測してみましょう。`, guessType:"推測して入力（間違えて大丈夫）", guessBtn:"これだと思う", guessRight:"すごい、当たり！", guessWrong:"答えはこれ！先に考えたから、もう覚えやすくなってるよ", guessSkip:"見当もつかない",
   hint:(m,c)=>`ヒント：${m} · 「${c}」で始まる`, recallQ:l=>`この意味の${l}の単語は？`, noMeaning:"（意味なし）",
   answerPh:"答えを入力", answer:"答え", idk:"わからない", check:"確認", next:"次へ",
-  correct:"正解", correctAccent:"正解 · アクセントを確認", wrong:"不正解", baseForm:"原形", retryLater:"3枚後にもう一度出ます。",
+  correct:"せいかい！", correctAccent:"おしい！アクセント記号だけ気をつけてね", wrong:"だいじょうぶ、答えはこれだよ", baseForm:"原形", retryLater:"3枚後にもう一度出ます。",
   writePrompt:"この単語を使って文を1つ書いてみましょう。今日あったことだとなお良いです。", myText:"自分の文", wrote:"書けた",
   seeExample:"例文でもう一度確認", writeUsed:"単語は入っています。意味に合っているか自分で確認してください", writeMissing:"文の中に目標の単語が見当たりません",
   refEx:"参考例文：", selfNo:"うまく書けなかった", selfOk:"正しく書けた",
@@ -368,10 +382,13 @@ ko: {
   todayHint:n=>`처음 틀린 카드는 맞힐 때까지 다시 나옵니다. 연속 학습 ${n}일.`, start:"시작하기",
   modes:{ study:"먼저 맞혀보기", cloze:"빈칸 채우기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
   left:n=>`남은 ${n}장`, listen:"발음 듣기", listenEx:"예문 듣기", listenAgain:"다시 듣기", listenMine:"내 문장 듣기",
-  noExample:"예문이 없어요. 단어장에서 넣으면 빈칸 문제가 생깁니다.", gotIt:"외웠어요, 다음", resumeTitle:"이어서 할 수 있어요", resumeBody:(n,d)=>`지난번에 하던 거예요. 끝낸 문제 ${d}개 · 남은 문제 ${n}개. 답한 건 모두 저장돼 있어요.`, resume:"이어서 하기", restart:"처음부터 다시", guessLead:"처음 보는 단어예요. 답을 보기 전에 먼저 짐작해서 써보세요.", copyPrompt:"정답을 한 번 따라 쓰고 넘어가요.", copyPh:"정답 따라 쓰기", copyAgain:"정답을 그대로 한 번 더 써보세요", copyOk:"좋아요, 썼어요", skipCopy:"안 쓰고 넘어가기", hfOn:"입력 없이 모드: 켜짐", hfOff:"입력 없이 모드 (걸으면서·지하철)", remembered:"기억났어요", forgot:"까먹었어요", setHf:"입력 없이 모드 (정답 듣고 직접 채점)", slow:"느리게", popDetail:"상세 보기", popAdd:"단어장에 추가", popInDeck:"단어장에 있음", popNoMeaning:"뜻을 가져오지 못했어요", popDict:"사전에서 찾기", popExamples:"예문", popLoading:"예문 찾는 중…", popNoEx:"다른 예문을 찾지 못했어요.", popAdded:w=>`"${w}"을(를) 단어장에 추가했어요.`, popClose:"닫기", popHint:"문장 속 단어를 누르면 뜻과 발음을 볼 수 있어요.", voice:"읽어주는 목소리", voiceAuto:"자동 (가장 자연스러운 목소리)", rate:"읽기 속도", preview:"들어보기", voiceTip:"아이폰은 설정 › 손쉬운 사용 › 콘텐츠 말하기 › 음성에서 「향상된」·「프리미엄」 음성을 내려받으면 훨씬 잘 들립니다. 원어민 녹음이 있는 예문은 녹음을 먼저 재생합니다.", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"빈칸에 들어갈 단어는? 처음이어도 괜찮아요, 먼저 짐작해 보세요.", guessMCm:(m,l)=>`"${m}"은(는) ${l}로 뭘까요? 먼저 짐작해 보세요.`, guessType:"짐작해서 입력 (틀려도 괜찮아요)", guessBtn:"이거 같아요", guessRight:"맞혔어요!", guessWrong:"정답은 이거예요. 먼저 짐작해 본 만큼 더 잘 기억납니다.", guessSkip:"전혀 모르겠어요",
+  noExample:"예문이 없어요. 단어장에서 넣으면 빈칸 문제가 생깁니다.", gotIt:"외웠어요, 다음",
+  nmAsk:{ study:l=>"처음 보는 단어야. 감으로라도 써 봐!", cloze:l=>"빈칸에 뭐가 들어갈까?", recall:l=>`이 뜻, ${l}로 뭐라고 할까?`, write:l=>"이 단어로 문장 하나 만들어 봐~", speak:l=>"소리 내서 말해 봐. 잘 듣고 있을게" },
+  nmToday:(a,b)=>`오늘은 복습 ${a}장, 새 단어 ${b}개. 같이 하자!`, nmEmpty:"하암… 아직 단어가 없네. 외우고 싶은 단어 알려 줄래?", nmNone:"오늘 할 건 없어. 네미미는 잠깐 잘게…", nmDone:"오늘도 수고했어! 내일 또 봐", nmResume:"어서 와! 아까 하던 데서 이어서 할 수 있어",
+  nmFinishAll:"전부 한 번에 맞혔어! 대단해!", nmFinishSome:"수고했어! 틀린 건 내일 한 번 더 낼게", resumeTitle:"이어서 할 수 있어요", resumeBody:(n,d)=>`지난번에 하던 거예요. 끝낸 문제 ${d}개 · 남은 문제 ${n}개. 답한 건 모두 저장돼 있어요.`, resume:"이어서 하기", restart:"처음부터 다시", guessLead:"처음 보는 단어예요. 답을 보기 전에 먼저 짐작해서 써보세요.", copyPrompt:"정답을 한 번 따라 쓰고 넘어가요.", copyPh:"정답 따라 쓰기", copyAgain:"정답을 그대로 한 번 더 써보세요", copyOk:"좋아요, 썼어요", skipCopy:"안 쓰고 넘어가기", hfOn:"입력 없이 모드: 켜짐", hfOff:"입력 없이 모드 (걸으면서·지하철)", remembered:"기억났어요", forgot:"까먹었어요", setHf:"입력 없이 모드 (정답 듣고 직접 채점)", slow:"느리게", popDetail:"상세 보기", popAdd:"단어장에 추가", popInDeck:"단어장에 있음", popNoMeaning:"뜻을 가져오지 못했어요", popDict:"사전에서 찾기", popExamples:"예문", popLoading:"예문 찾는 중…", popNoEx:"다른 예문을 찾지 못했어요.", popAdded:w=>`"${w}"을(를) 단어장에 추가했어요.`, popClose:"닫기", popHint:"문장 속 단어를 누르면 뜻과 발음을 볼 수 있어요.", voice:"읽어주는 목소리", voiceAuto:"자동 (가장 자연스러운 목소리)", rate:"읽기 속도", preview:"들어보기", voiceTip:"아이폰은 설정 › 손쉬운 사용 › 콘텐츠 말하기 › 음성에서 「향상된」·「프리미엄」 음성을 내려받으면 훨씬 잘 들립니다. 원어민 녹음이 있는 예문은 녹음을 먼저 재생합니다.", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"빈칸에 들어갈 단어는? 처음이어도 괜찮아요, 먼저 짐작해 보세요.", guessMCm:(m,l)=>`"${m}"은(는) ${l}로 뭘까요? 먼저 짐작해 보세요.`, guessType:"짐작해서 입력 (틀려도 괜찮아요)", guessBtn:"이거 같아요", guessRight:"맞혔어요!", guessWrong:"정답은 이거! 먼저 생각해 봐서 벌써 더 잘 기억될 거야", guessSkip:"전혀 모르겠어요",
   hint:(m,c)=>`힌트: ${m} · ${c}로 시작`, recallQ:l=>`이 뜻의 ${l} 단어는?`, noMeaning:"(뜻 없음)",
   answerPh:"정답 입력", answer:"정답", idk:"모르겠어요", check:"확인", next:"다음",
-  correct:"정답", correctAccent:"정답 · 악센트 확인", wrong:"오답", baseForm:"기본형", retryLater:"3장 뒤에 다시 나옵니다.",
+  correct:"정답!", correctAccent:"아깝다! 악센트만 조심해", wrong:"괜찮아, 정답은 이거야", baseForm:"기본형", retryLater:"3장 뒤에 다시 나옵니다.",
   writePrompt:"이 단어를 넣어 문장을 하나 직접 써보세요. 오늘 있었던 일이면 더 좋아요.", myText:"내 문장", wrote:"다 썼어요",
   seeExample:"예문으로 다시 보기", writeUsed:"단어를 넣었어요. 뜻에 맞게 썼는지 직접 확인하세요", writeMissing:"목표 단어가 문장에 안 보여요",
   refEx:"참고 예문: ", selfNo:"제대로 못 씀", selfOk:"맞게 썼음",
@@ -409,6 +426,13 @@ const LANGS = {
   ja: { tatoeba:"jpn", mm:"ja", speech:"ja-JP", wikt:"ja", chars:[], articles:null, ph:"活用する" }
 };
 const LADDER = [1, 7, 21, 60, 150];
+/* ネミミ（nemimi.net の絵をそのまま参照。描き直すと全部に反映される） */
+const NM_BASE = "https://nemimi.net/nemimi/koala-v2-lavender/";
+const NM_EXT = { cat_jpop:"gif", listen_airpods:"gif", load_run:"gif", load_done:"gif" };
+const nm = (name, px) => `<img class="nm" src="${NM_BASE}${name}.${NM_EXT[name] || "png"}" width="${px}" height="${px}" alt="" loading="lazy" decoding="async">`;
+const say = (name, text, big) => `<div class="say${big ? " big" : ""}">${nm(name, big ? 128 : 64)}<div class="bubble">${text}</div></div>`;
+const fbh = (name, text) => `<div class="fbh">${nm(name, 64)}<strong>${text}</strong></div>`;
+const MODE_NM = { study:"cat_jpop", cloze:"st_default", recall:"st_listening", write:"st_default", speak:"listen_airpods" };
 const LEECH = 3;
 const LS_KEY = "focus-vocab-v1";
 const $ = s => document.querySelector(s);
@@ -684,7 +708,7 @@ function renderStart(){
   const box = $("#sessionStart"), x = t();
   const due = dueCards().length, nq = Math.min(newQuota(), newCandidates().length);
   if(cardsHere().length === 0){
-    box.innerHTML = `<h2>${x.emptyTitle}</h2><p class="muted">${esc(x.emptyBody(langName()))}</p>
+    box.innerHTML = `${say("st_sleepy", esc(x.nmEmpty), true)}<h2>${x.emptyTitle}</h2><p class="muted">${esc(x.emptyBody(langName()))}</p>
       <div class="row"><button class="btn primary" id="goAdd" type="button">${x.goAdd}</button>${S.meta.settings.lang === "es" ? `<button class="btn" id="seed" type="button">${x.seed}</button>` : ""}</div>`;
     $("#goAdd").onclick = () => showView("add");
     const sd = $("#seed"); if(sd) sd.onclick = seedExamples;
@@ -692,7 +716,7 @@ function renderStart(){
   }
   if(due + nq === 0){
     const next = cardsHere().filter(c => !c.mastered && c.due).map(c => c.due).sort()[0];
-    box.innerHTML = `<h2>${S.meta.days[today()] ? x.doneTitle : x.noneTitle}</h2>
+    box.innerHTML = `${say(S.meta.days[today()] ? "st_love" : "st_sleepy", esc(S.meta.days[today()] ? x.nmDone : x.nmNone), true)}<h2>${S.meta.days[today()] ? x.doneTitle : x.noneTitle}</h2>
       <p class="muted">${next ? esc(x.nextReview(next, diffDays(today(), next))) : x.nextNone}</p>
       <p class="muted small">${x.streak(streak())}</p>
       <div class="row"><button class="btn" id="goAdd2" type="button">${x.addMore}</button></div>`;
@@ -701,13 +725,13 @@ function renderStart(){
   }
   const z = savedSession();
   if(z){
-    box.innerHTML = `<h2>${x.resumeTitle}</h2><p>${x.resumeBody(z.queue.length, z.done || 0)}</p>
+    box.innerHTML = `${say("st_default", esc(x.nmResume), true)}<h2>${x.resumeTitle}</h2><p>${x.resumeBody(z.queue.length, z.done || 0)}</p>
       <div class="row"><button class="btn primary" id="resumeBtn" type="button">${x.resume}</button><button class="btn ghost" id="restartBtn" type="button">${x.restart}</button></div>`;
     $("#resumeBtn").onclick = resumeSession;
     $("#restartBtn").onclick = () => { delete S.meta.session; save(); startSession(); };
     return;
   }
-  box.innerHTML = `<h2>${x.todayTitle}</h2><p>${x.todayCounts(due, nq)}</p><p class="muted small">${x.todayHint(streak())}</p>
+  box.innerHTML = `${say("cat_jpop", esc(x.nmToday(due, nq)), true)}<h2>${x.todayTitle}</h2><p>${x.todayCounts(due, nq)}</p><p class="muted small">${x.todayHint(streak())}</p>
     <div class="row"><button class="btn primary" id="startBtn" type="button">${x.start}</button></div>`;
   $("#startBtn").onclick = startSession;
 }
@@ -757,13 +781,13 @@ function finishSession(){
   const ok = SES.finished.filter(f => f.ok).length, ng = SES.finished.length - ok;
   const rows = SES.finished.map(f => { const c = S.cards[f.id]; if(!c) return ""; return `<div class="item" style="cursor:default"><span style="min-width:0"><span class="w">${esc(c.word)}</span><span class="m">${esc(c.meaning)}</span></span><span class="right">${f.ok ? `<span class="chip done">${x.firstTry}</span>` : `<span class="chip leech">${x.tomorrow}</span>`}<span>${c.mastered ? x.graduated : esc(x.nextOn(c.due))}</span></span></div>`; }).join("");
   const box = $("#sessionBox");
-  box.innerHTML = `<h2>${x.finishTitle}</h2><p>${x.finishSum(ok, ng)}</p><div class="list">${rows}</div><div class="row"><button class="btn primary" id="backHome" type="button">${x.ok}</button></div>`;
+  box.innerHTML = `${say(ng ? "st_happy" : "st_love", esc(ng ? x.nmFinishSome : x.nmFinishAll), true)}<h2>${x.finishTitle}</h2><p>${x.finishSum(ok, ng)}</p><div class="list">${rows}</div><div class="row"><button class="btn primary" id="backHome" type="button">${x.ok}</button></div>`;
   $("#backHome").onclick = () => { SES = null; box.classList.add("hidden"); $("#sessionStart").classList.remove("hidden"); renderAll(); };
 }
 
 const kbdHTML = () => L().chars.length ? '<div class="kbd">' + L().chars.map(ch => `<button type="button" data-ch="${ch}">${ch}</button>`).join("") + "</div>" : "";
 function bindKbd(box, input){ box.querySelectorAll(".kbd button").forEach(b => b.onclick = () => { const s = input.selectionStart ?? input.value.length, e = input.selectionEnd ?? s; input.value = input.value.slice(0,s) + b.dataset.ch + input.value.slice(e); input.focus(); try{ input.setSelectionRange(s+1, s+1); }catch(_){} }); }
-function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="progress" aria-hidden="true"><i style="width:${pct}%"></i></div><div class="modehead"><span class="muted small">${t().modes[mode]} · ${t().left(SES.queue.length)}</span><span>${levelChip(c)}</span></div><div class="row"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}">${hf ? t().hfOn : t().hfOff}</button></div>`; }
+function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="progress" aria-hidden="true"><i style="width:${pct}%"></i></div><div class="modehead"><span class="muted small">${t().modes[mode]} · ${t().left(SES.queue.length)}</span><span>${levelChip(c)}</span></div><div class="row"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}">${hf ? t().hfOn : t().hfOff}</button></div>${say(MODE_NM[mode] || "st_default", esc(t().nmAsk[mode](langName())))}`; }
 document.addEventListener("click", e => {
   if(!e.target.closest("#hfToggle") || !SES || SES.state.answered) return;
   S.meta.settings.handsFree = !S.meta.settings.handsFree; save();
@@ -790,7 +814,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
     if(ok){
       input.disabled = true;
       const title = isGuess ? x.guessRight : (res === "ok" ? x.correct : x.correctAccent);
-      $("#fb").innerHTML = `<div class="feedback ${res === "accent" ? "meh" : "ok"}"><strong>${title}</strong>${answerBlock()}</div>`;
+      $("#fb").innerHTML = `<div class="feedback ${res === "accent" ? "meh" : "ok"}">${fbh(res === "accent" ? "st_surprised" : "st_happy", title)}${answerBlock()}</div>`;
       $("#acts").innerHTML = `${listenBtn(c.example || c.word)}<span class="grow"></span><button class="btn primary" type="button" id="nx">${x.next}</button>`;
       bindSay(box); const nx = $("#nx"); nx.onclick = () => finish(true); nx.focus();
       speak(mode === "recall" ? c.word : (c.example || c.word));
@@ -798,7 +822,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
     }
     // 不正解：答えを見せて、書き写してから次へ（書かずに進むこともできる）
     phase = "copy";
-    $("#fb").innerHTML = `<div class="feedback ${isGuess ? "meh" : "no"}"><strong>${isGuess ? x.guessWrong : x.wrong}</strong>${answerBlock()}<span class="small"><b>${x.copyPrompt}</b>${isGuess ? "" : " " + x.retryLater}</span></div>`;
+    $("#fb").innerHTML = `<div class="feedback ${isGuess ? "meh" : "no"}">${fbh(isGuess ? "st_default" : "st_surprised", isGuess ? x.guessWrong : x.wrong)}${answerBlock()}<span class="small"><b>${x.copyPrompt}</b>${isGuess ? "" : " " + x.retryLater}</span></div>`;
     input.value = ""; input.disabled = false; input.placeholder = x.copyPh; input.focus();
     $("#acts").innerHTML = `${listenBtn(target)}<button class="btn ghost" type="button" id="skipCopy">${x.skipCopy}</button><span class="grow"></span><button class="btn primary" type="button" id="chk">${x.check}</button>`;
     bindSay(box);
@@ -823,7 +847,7 @@ function askHandsFree(c, mode, promptHTML, target, isGuess){
     <div class="row" id="acts"><span class="grow"></span><button class="btn primary" type="button" id="rv">${x.reveal}</button></div>`;
   if(mode !== "recall" && c.exampleKo) speak(c.exampleKo, { lang: S.meta.settings.ui, audio: null });
   $("#rv").onclick = () => {
-    $("#fb").innerHTML = `<div class="feedback meh"><strong>${x.answer}</strong><span class="sentence" style="font-size:1.15rem"><b>${esc(target)}</b></span>${c.meaning ? `<span class="muted">${esc(c.meaning)}</span>` : ""}${c.example ? `<span class="small">${highlight(c)}</span>` : ""}</div>`;
+    $("#fb").innerHTML = `<div class="feedback meh">${fbh("st_listening", x.answer)}<span class="sentence" style="font-size:1.15rem"><b>${esc(target)}</b></span>${c.meaning ? `<span class="muted">${esc(c.meaning)}</span>` : ""}${c.example ? `<span class="small">${highlight(c)}</span>` : ""}</div>`;
     speak(c.example || c.word);
     $("#acts").innerHTML = `${listenBtn(c.example || c.word)}<span class="grow"></span>` + (isGuess
       ? `<button class="btn primary" type="button" id="sOk">${x.next}</button>`
@@ -843,12 +867,12 @@ function renderItem(c, mode){
     const isGuess = mode === "study";
     const target = p ? p.answer : c.word;
     const promptHTML = p
-      ? `${isGuess ? `<p class="muted small">${x.guessLead}</p>` : ""}<p class="sentence">${tokHTML(p.before)}<span class="blank">____</span>${tokHTML(p.after)}</p><p class="muted">${esc(c.exampleKo)}</p><p class="small muted">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p>`
-      : `${isGuess ? `<p class="muted small">${x.guessLead}</p>` : ""}<div><p class="muted small">${esc(x.recallQ(langName()))}</p><div class="word" style="font-size:1.6rem">${esc(c.meaning || x.noMeaning)}</div><p class="small muted">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p></div>`;
+      ? `<p class="sentence">${tokHTML(p.before)}<span class="blank">____</span>${tokHTML(p.after)}</p><p class="muted">${esc(c.exampleKo)}</p><p class="small muted">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p>`
+      : `<div><div class="word" style="font-size:1.6rem">${esc(c.meaning || x.noMeaning)}</div><p class="small muted">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p></div>`;
     return (hf ? askHandsFree : askTyped)(c, mode, promptHTML, target, isGuess);
   }
   if(mode === "recall"){
-    const promptHTML = `<div><p class="muted small">${esc(x.recallQ(langName()))}</p><div class="word" style="font-size:1.6rem">${esc(c.meaning || x.noMeaning)}</div></div>`;
+    const promptHTML = `<div><div class="word" style="font-size:1.6rem">${esc(c.meaning || x.noMeaning)}</div></div>`;
     return (hf ? askHandsFree : askTyped)(c, mode, promptHTML, c.word, false);
   }
   if(mode === "write"){
@@ -860,13 +884,13 @@ function renderItem(c, mode){
       <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${x.idk}</button><span class="grow"></span><button class="btn primary" type="button" id="chk">${x.wrote}</button></div>`;
     const ta = $("#wr"); bindKbd(box, ta); ta.focus();
     $("#idk").onclick = () => { if(SES.state.answered) return; SES.state.answered = true; ta.disabled = true;
-      $("#fb").innerHTML = `<div class="feedback no"><strong>${x.seeExample}</strong><span>${highlight(c)}</span><span class="small muted">${esc(c.exampleKo)}</span></div>`;
+      $("#fb").innerHTML = `<div class="feedback no">${fbh("st_default", x.seeExample)}<span>${highlight(c)}</span><span class="small muted">${esc(c.exampleKo)}</span></div>`;
       $("#acts").innerHTML = `<span class="grow"></span><button class="btn primary" type="button" id="nx">${x.next}</button>`; $("#nx").onclick = () => settleItem(false); };
     $("#chk").onclick = () => {
       if(SES.state.answered) return; const txt = ta.value.trim(); if(!txt){ ta.focus(); return; }
       SES.state.answered = true; ta.disabled = true;
       const used = !!findForm(txt, c.word);
-      $("#fb").innerHTML = `<div class="feedback ${used ? "meh" : "no"}"><strong>${used ? x.writeUsed : x.writeMissing}</strong><span class="small">${x.refEx}${highlight(c)}</span><span class="small muted">${esc(c.exampleKo)}</span></div>`;
+      $("#fb").innerHTML = `<div class="feedback ${used ? "meh" : "no"}">${fbh(used ? "st_happy" : "st_surprised", used ? x.writeUsed : x.writeMissing)}<span class="small">${x.refEx}${highlight(c)}</span><span class="small muted">${esc(c.exampleKo)}</span></div>`;
       $("#acts").innerHTML = `${listenBtn(txt, x.listenMine)}<span class="grow"></span><button class="btn bad" type="button" id="sNo">${x.selfNo}</button><button class="btn good" type="button" id="sOk">${x.selfOk}</button>`;
       bindSay(box); $("#sNo").onclick = () => settleItem(false); $("#sOk").onclick = () => settleItem(true);
     };
@@ -897,7 +921,7 @@ function renderItem(c, mode){
       const hasKey = heard && !!findForm(heard, key);
       const exW = new Set(norm(stripAcc(c.example)).split(" ")); const hW = norm(stripAcc(heard)).split(" ").filter(Boolean);
       const overlap = hW.length ? Math.round(hW.filter(w => exW.has(w)).length / exW.size * 100) : 0;
-      $("#fb").innerHTML = `<div class="feedback ${heard ? (hasKey ? "ok" : "no") : "meh"}"><strong>${x.original}</strong><span class="sentence" style="font-size:1.1rem">${highlight(c)}</span>${heard ? `<span class="small">${hasKey ? x.keyHeard : x.keyMissed} · ${x.overlap(overlap)}</span>` : ""}</div>`;
+      $("#fb").innerHTML = `<div class="feedback ${heard ? (hasKey ? "ok" : "no") : "meh"}">${fbh(heard && hasKey ? "st_happy" : "listen_airpods", x.original)}<span class="sentence" style="font-size:1.1rem">${highlight(c)}</span>${heard ? `<span class="small">${hasKey ? x.keyHeard : x.keyMissed} · ${x.overlap(overlap)}</span>` : ""}</div>`;
       speak(c.example);
       $("#acts").innerHTML = `${listenBtn(c.example, x.listenAgain)}<span class="grow"></span><button class="btn bad" type="button" id="sNo">${x.stuck}</button><button class="btn good" type="button" id="sOk">${x.saidOk}</button>`;
       bindSay(box); $("#sNo").onclick = () => settleItem(false); $("#sOk").onclick = () => settleItem(true);
@@ -913,7 +937,7 @@ function candList(cands){ return `<div class="cands">` + cands.map((cd, i) => `<
 async function runFind(){
   const x = t(), word = $("#fWord").value.trim(); if(!word){ $("#fWord").focus(); return; }
   const b = $("#btnFind"); b.disabled = true; b.textContent = x.finding; $("#findNote").textContent = "";
-  const box = $("#dictBox"); box.classList.remove("hidden"); box.innerHTML = `<p class="muted small">${x.searching}</p>`;
+  const box = $("#dictBox"); box.classList.remove("hidden"); box.innerHTML = say("load_run", esc(x.searching));
   const r = await lookup(word);
   b.disabled = false; b.textContent = x.btnFindAgain;
   if(r.meaning && !$("#fMeaning").value.trim()) $("#fMeaning").value = r.meaning;
@@ -1113,7 +1137,12 @@ function renderHow(){
   const st = S.meta.settings;
   $("#setUi").value = st.ui; $("#setNew").value = st.newLimit; $("#setWrite").checked = st.writing; $("#setHf").checked = !!st.handsFree; $("#setSpeak").checked = st.speaking; $("#setAccent").checked = st.strictAccent; $("#setEmail").value = st.email || ""; $("#setRate").value = st.rate || 0.8; $("#rateOut").textContent = "×" + Number(st.rate || 0.8).toFixed(2); fillVoices();
 }
-$("#setUi").onchange = e => { if(SES){ toast(t().noLangSwitch); e.target.value = S.meta.settings.ui; return; } S.meta.settings.ui = e.target.value; save(); applyUi(); };
+function setUiLang(v){
+  S.meta.settings.ui = v; save(); applyUi();
+  if(SES){ const it = SES.queue[0]; const c = it && S.cards[it.id]; if(c && !SES.state.answered) renderItem(c, it.mode); }
+}
+$("#setUi").onchange = e => setUiLang(e.target.value);
+$("#uiPick").onchange = e => setUiLang(e.target.value);
 $("#setNew").onchange = e => { S.meta.settings.newLimit = Math.max(1, Math.min(30, parseInt(e.target.value, 10) || 7)); save(); renderAll(); };
 $("#setHf").onchange = e => { S.meta.settings.handsFree = e.target.checked; save(); };
 $("#setWrite").onchange = e => { S.meta.settings.writing = e.target.checked; save(); };
@@ -1150,6 +1179,7 @@ function applyUi(){
   document.querySelectorAll("[data-i18n-html]").forEach(el => { el.innerHTML = x[el.dataset.i18nHtml]; });
   document.querySelectorAll("[data-i18n-ph]").forEach(el => { el.placeholder = x[el.dataset.i18nPh]; });
   document.querySelectorAll("[data-i18n-aria]").forEach(el => { el.setAttribute("aria-label", x[el.dataset.i18nAria]); });
+  $("#uiPick").value = S.meta.settings.ui; const su = $("#setUi"); if(su) su.value = S.meta.settings.ui;
   fillLangs(); closeEdit(); renderAll();
 }
 function fillLangs(){
