@@ -294,7 +294,7 @@ ja: {
   emailHelp:"意味・例文の翻訳に使うMyMemoryは、メールアドレスを一緒に送ると1日の上限が約10倍になります。メールは翻訳リクエストにのみ使います。",
   backup:"バックアップ", backupHelp:"単語と進み具合はこの端末のブラウザにだけ保存されます。機種変更やブラウザのデータ削除の前にファイルで保存してください。",
   btnExport:"バックアップを保存", btnCopy:"コピー", importFile:"バックアップファイルから復元", importPaste:"または貼り付けて復元", btnImport:"貼り付けた内容を読み込む",
-  credits:'例文：<a href="https://tatoeba.org" target="_blank" rel="noopener">Tatoeba</a>（CC BY 2.0 FR）· 翻訳：<a href="https://mymemory.translated.net" target="_blank" rel="noopener">MyMemory</a> · 英語の意味：<a href="https://en.wiktionary.org" target="_blank" rel="noopener">Wiktionary</a>（CC BY-SA）',
+  credits:'例文：<a href="https://tatoeba.org" target="_blank" rel="noopener">Tatoeba</a>（CC BY 2.0 FR、録音は各話者のライセンス）· 翻訳：<a href="https://mymemory.translated.net" target="_blank" rel="noopener">MyMemory</a> · 英語の意味：<a href="https://en.wiktionary.org" target="_blank" rel="noopener">Wiktionary</a>（CC BY-SA）',
   dateLabel:(m,d,w)=>`${m}月${d}日（${w}）· 1日は朝4時に切り替わります`, week:["日","月","火","水","木","金","土"], todayShort:"今日",
   levels:["新出","1日","7日","21日","60日","150日"], levelSuffix:"の段", chipNew:"新出", chipDone:"卒業", chipLeech:"苦手",
   emptyTitle:"単語を入れるだけで、復習スケジュールは自動で組みます",
@@ -356,7 +356,7 @@ ko: {
   emailHelp:"뜻·예문 번역에 쓰는 MyMemory는 이메일을 함께 보내면 하루 번역 한도가 약 10배로 늘어납니다. 이메일은 번역 요청에만 쓰입니다.",
   backup:"백업", backupHelp:"단어와 진도는 이 기기 브라우저에만 저장됩니다. 기기를 바꾸거나 브라우저 데이터를 지우기 전에 파일로 받아두세요.",
   btnExport:"백업 파일 받기", btnCopy:"복사", importFile:"백업 파일로 복원", importPaste:"또는 붙여넣어 복원", btnImport:"붙여넣은 내용 가져오기",
-  credits:'예문: <a href="https://tatoeba.org" target="_blank" rel="noopener">Tatoeba</a> (CC BY 2.0 FR) · 번역: <a href="https://mymemory.translated.net" target="_blank" rel="noopener">MyMemory</a> · 영어 뜻: <a href="https://en.wiktionary.org" target="_blank" rel="noopener">Wiktionary</a> (CC BY-SA)',
+  credits:'예문: <a href="https://tatoeba.org" target="_blank" rel="noopener">Tatoeba</a> (CC BY 2.0 FR, 녹음은 각 화자의 라이선스) · 번역: <a href="https://mymemory.translated.net" target="_blank" rel="noopener">MyMemory</a> · 영어 뜻: <a href="https://en.wiktionary.org" target="_blank" rel="noopener">Wiktionary</a> (CC BY-SA)',
   dateLabel:(m,d,w)=>`${m}월 ${d}일 (${w}) · 하루는 새벽 4시에 바뀝니다`, week:["일","월","화","수","목","금","토"], todayShort:"오늘",
   levels:["새 단어","1일","7일","21일","60일","150일"], levelSuffix:" 칸", chipNew:"새 단어", chipDone:"졸업", chipLeech:"약점",
   emptyTitle:"단어를 넣으면 복습 일정은 알아서 짭니다",
@@ -483,7 +483,7 @@ async function tatoeba(word){
     const own = tr.find(x => x.lang === mine); const en = tr.find(x => x.lang === "eng");
     const words = r.text.split(/\s+/).length;
     const form = findForm(r.text, word);
-    const audio = (r.audios && r.audios[0] && r.audios[0].download_url) || null;
+    const audio = (r.audios && r.audios[0] && r.audios[0].id) ? "https://tatoeba.org/audio/download/" + r.audios[0].id : null;
     const score = (own ? 0 : 10) + Math.abs(words - 8) + (form ? 0 : 20) + (r.text.length > 110 ? 10 : 0) - (audio ? 3 : 0);
     return { id: r.id, text: r.text, tr: own ? own.text : "", en: en ? en.text : "", form, score, audio };
   }).sort((a,b) => a.score - b.score).slice(0, 6);
@@ -616,6 +616,7 @@ function plainAudio(url, text, opts){
   a.play().catch(() => ttsSpeak(text, opts.slow));
   a.onerror = () => ttsSpeak(text, opts.slow);
 }
+function fixAudioUrl(u){ const m = String(u||"").match(/api\.tatoeba\.org\/v1\/audio\/(\d+)\/file/); return m ? "https://tatoeba.org/audio/download/" + m[1] : u; }
 function audioFor(text){ const c = Object.values(S.cards).find(c => c.audio && c.example === text); return c ? c.audio : null; }
 const UI_SPEECH = { ja:"ja-JP", ko:"ko-KR" };
 function ttsSpeak(text, slow, uiLang){
@@ -637,7 +638,7 @@ function speak(text, opts){
     try{ if(canSpeak()) speechSynthesis.cancel(); }catch(e){}
     if(opts.lang) return ttsSpeak(text, false, opts.lang);
     const url = opts.audio === undefined ? audioFor(text) : opts.audio;
-    if(url && !opts.slow){ playEq(url).catch(() => plainAudio(url, text, opts)); return true; }
+    if(url){ plainAudio(fixAudioUrl(url), text, opts); return true; }
     if(url){
       const a = new Audio(url); AUDIO_EL = a;
       const base = Number(S.meta.settings.rate) || 0.8;
