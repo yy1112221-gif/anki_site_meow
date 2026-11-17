@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2747d4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="集中暗記">
+<title>集中暗記</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans+JP:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* レイアウト: 上に要約 → タブ → 1枚ずつめくるカード。スマホ片手操作が前提 */
+  --bg:#f3f5f9; --surface:#ffffff; --ink:#151a2e; --muted:#5d6580; --line:#dfe3ee;
+  --accent:#2747d4; --accent-soft:#e6eafc;
+  --good:#11845b; --good-soft:#e2f4ec; --bad:#c0362c; --bad-soft:#fbe7e5; --warn:#a86400; --warn-soft:#fdf0dc;
+  --display:"Bricolage Grotesque", "IBM Plex Sans JP", system-ui, sans-serif;
+  --body:"IBM Plex Sans JP", "Hiragino Sans", "Yu Gothic UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+html[lang="ko"]{ --body:"IBM Plex Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif; --display:"Bricolage Grotesque", "IBM Plex Sans KR", system-ui, sans-serif; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1120; --surface:#181c2f; --ink:#e9ecf7; --muted:#9aa2bf; --line:#2a304a;
+    --accent:#8197ff; --accent-soft:#232b55;
+    --good:#4fd19c; --good-soft:#15362b; --bad:#ff8378; --bad-soft:#3d1d1d; --warn:#f2b45a; --warn-soft:#3a2c14;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1120; --surface:#181c2f; --ink:#e9ecf7; --muted:#9aa2bf; --line:#2a304a;
+  --accent:#8197ff; --accent-soft:#232b55;
+  --good:#4fd19c; --good-soft:#15362b; --bad:#ff8378; --bad-soft:#3d1d1d; --warn:#f2b45a; --warn-soft:#3a2c14;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-text-size-adjust:100%}
+.wrap{max-width:620px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) calc(96px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));display:flex;flex-direction:column;gap:16px}
+h1,h2{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.25}
+h1{font-size:1.5rem;font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.15rem;font-weight:700}
+p{margin:0}
+a{color:var(--accent)}
+.muted{color:var(--muted)}
+.small{font-size:.86rem}
+.tiny{font-size:.75rem}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.pickers{display:flex;gap:6px}
+.langpick{font:600 .85rem var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 8px;text-align:center}
+.stat b{display:block;font-family:var(--display);font-size:1.35rem;font-variant-numeric:tabular-nums}
+.stat span{font-size:.75rem;color:var(--muted)}
+nav.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;position:sticky;top:calc(8px + env(safe-area-inset-top));z-index:5}
+nav.tabs button{flex:1;border:0;background:transparent;color:var(--muted);font:600 .88rem var(--body);padding:9px 4px;border-radius:9px;cursor:pointer}
+nav.tabs button[aria-selected="true"]{background:var(--accent);color:#fff}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 .95rem var(--body);padding:11px 16px;border-radius:11px;cursor:pointer;min-height:44px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.good{background:var(--good);border-color:var(--good);color:#fff}
+.btn.bad{background:var(--bad-soft);border-color:transparent;color:var(--bad)}
+.btn.ghost{background:transparent}
+.btn.sm{min-height:34px;padding:6px 12px;font-size:.85rem}
+.btn:disabled{opacity:.5;cursor:default}
+.btn:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,nav.tabs button:focus-visible,.cand:focus-visible,.item:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row.end{justify-content:flex-end}
+.grow{flex:1}
+label{font-size:.85rem;font-weight:600;color:var(--muted);display:flex;flex-direction:column;gap:5px}
+input[type=text],input[type=email],textarea,select,input[type=number]{font:400 1rem var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+textarea{min-height:90px;resize:vertical}
+.answer{font-size:1.15rem;padding:12px 14px}
+.kbd{display:flex;gap:6px;flex-wrap:wrap}
+.kbd button{border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 1rem var(--body);min-width:40px;height:38px;border-radius:8px;cursor:pointer}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:.75rem;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.chip.new{background:var(--warn-soft);color:var(--warn)}
+.chip.done{background:var(--good-soft);color:var(--good)}
+.chip.leech{background:var(--bad-soft);color:var(--bad)}
+.word{font-family:var(--display);font-size:2.1rem;font-weight:700;letter-spacing:-.01em;line-height:1.15;overflow-wrap:anywhere}
+.sentence{font-size:1.2rem;line-height:1.6;overflow-wrap:anywhere}
+mark{background:var(--accent-soft);color:var(--accent);border-radius:4px;padding:0 3px;font-weight:600}
+.blank{display:inline-block;min-width:4.5em;border-bottom:2px solid var(--accent);color:var(--accent);text-align:center}
+.feedback{border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.feedback.ok{background:var(--good-soft)} .feedback.ok strong{color:var(--good)}
+.feedback.no{background:var(--bad-soft)} .feedback.no strong{color:var(--bad)}
+.feedback.meh{background:var(--warn-soft)} .feedback.meh strong{color:var(--warn)}
+.progress{height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.modehead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.list{display:flex;flex-direction:column}
+.item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 2px;border:0;border-bottom:1px solid var(--line);cursor:pointer;background:none;text-align:left;color:var(--ink);font:inherit;width:100%}
+.item:last-child{border-bottom:0}
+.item .w{font-weight:600;display:block}
+.item .m{color:var(--muted);font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:52vw;display:block}
+.right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;font-size:.75rem;color:var(--muted);flex-shrink:0}
+.cands{display:flex;flex-direction:column;gap:8px}
+.cand{display:flex;flex-direction:column;gap:3px;text-align:left;background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:10px 12px;cursor:pointer;color:var(--ink);font:inherit}
+.cand[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.cand .tr{color:var(--muted);font-size:.88rem}
+.ladder{display:flex;gap:4px;overflow-x:auto}
+.rung{flex:1;min-width:52px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 4px;text-align:center}
+.rung b{display:block;font-family:var(--display);font-size:1.05rem;font-variant-numeric:tabular-nums}
+.rung span{font-size:.7rem;color:var(--muted)}
+.rung.hi{border-color:var(--accent);background:var(--accent-soft)}
+.forecast{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:96px}
+.fc{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.fc i{display:block;width:100%;max-width:30px;background:var(--accent);border-radius:5px 5px 2px 2px;min-height:2px;opacity:.75}
+.fc.today i{opacity:1}
+.fc span{font-size:.7rem;color:var(--muted)}
+.fc em{font-style:normal;font-size:.72rem;font-weight:600;font-variant-numeric:tabular-nums}
+.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:.9rem;max-width:90vw;z-index:20;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+.notes{display:flex;flex-direction:column;gap:10px}
+.notes p{max-width:65ch}
+.switch{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 0;font-weight:500;color:var(--ink);flex-direction:row}
+.switch input{width:22px;height:22px;accent-color:var(--accent);flex-shrink:0}
+.mic.on{background:var(--bad);border-color:var(--bad);color:#fff}
+.tok{cursor:pointer;border-radius:3px;-webkit-tap-highlight-color:transparent}
+.tok:hover,.tok:focus-visible{background:var(--accent-soft);outline:none}
+.tok.hl{background:var(--accent-soft);color:var(--accent);font-weight:600;padding:0 2px}
+.sheet-bg{position:fixed;inset:0;background:rgba(10,14,30,.42);z-index:30;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);color:var(--ink);width:100%;max-width:620px;max-height:82vh;overflow-y:auto;border-radius:18px 18px 0 0;padding:18px 18px calc(22px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;box-shadow:0 -8px 30px rgba(0,0,0,.18)}
+.sheet .x{position:sticky;top:0;align-self:flex-end;margin-bottom:-44px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 1.1rem var(--body);cursor:pointer}
+.sheet .pw{font-family:var(--display);font-size:1.8rem;font-weight:700;padding-right:48px;overflow-wrap:anywhere}
+.exlist{display:flex;flex-direction:column;gap:10px}
+.ex{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.hidden{display:none!important}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media (max-width:400px){.stats{grid-template-columns:repeat(2,1fr)} .word{font-size:1.8rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1 data-i18n="appName"></h1>
+      <p class="muted small" id="todayLabel"></p>
+    </div>
+    <div class="pickers"><select id="langPick" class="langpick" data-i18n-aria="learnLang"></select></div>
+  </header>
+
+  <section class="stats" data-i18n-aria="summary">
+    <div class="stat"><b id="sDue">0</b><span data-i18n="statDue"></span></div>
+    <div class="stat"><b id="sNew">0</b><span data-i18n="statNew"></span></div>
+    <div class="stat"><b id="sLearning">0</b><span data-i18n="statLearning"></span></div>
+    <div class="stat"><b id="sMastered">0</b><span data-i18n="statMastered"></span></div>
+  </section>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-view="today" data-i18n="tabToday"></button>
+    <button role="tab" aria-selected="false" data-view="add" data-i18n="tabAdd"></button>
+    <button role="tab" aria-selected="false" data-view="list" data-i18n="tabList"></button>
+    <button role="tab" aria-selected="false" data-view="how" data-i18n="tabHow"></button>
+  </nav>
+
+  <section id="view-today" class="view">
+    <div id="sessionStart" class="card"></div>
+    <div id="sessionBox" class="card hidden"></div>
+  </section>
+
+  <section id="view-add" class="view hidden">
+    <div class="card">
+      <h2 data-i18n="addOne"></h2>
+      <form id="findForm" autocomplete="off">
+        <label for="fWord"><span data-i18n="fWord"></span>
+          <input type="text" id="fWord" autocapitalize="off" autocorrect="off" spellcheck="false">
+        </label>
+      </form>
+      <div class="row"><button class="btn" id="btnFind" type="button" data-i18n="btnFind"></button><span class="muted tiny" id="findNote"></span></div>
+      <div id="dictBox" class="hidden"></div>
+      <label for="fMeaning"><span data-i18n="fMeaning"></span>
+        <input type="text" id="fMeaning" autocomplete="off" data-i18n-ph="phMeaning">
+      </label>
+      <label for="fExample"><span data-i18n="fExample"></span>
+        <textarea id="fExample" placeholder="Hay que aprovechar el buen tiempo."></textarea>
+      </label>
+      <label for="fExampleTr"><span data-i18n="fExampleTr"></span>
+        <input type="text" id="fExampleTr" autocomplete="off" data-i18n-ph="phExampleTr">
+      </label>
+      <div class="row end"><button class="btn primary" id="btnSave" type="button" data-i18n="save"></button></div>
+    </div>
+    <div class="card">
+      <h2 data-i18n="addBulk"></h2>
+      <p class="muted small" data-i18n-html="bulkHelp"></p>
+      <label for="fBulk"><span data-i18n="bulkLabel"></span>
+        <textarea id="fBulk" spellcheck="false" autocapitalize="off" data-i18n-ph="phBulk"></textarea>
+      </label>
+      <label class="switch" for="fBulkFill"><span data-i18n="bulkFill"></span><input type="checkbox" id="fBulkFill" checked></label>
+      <div class="row end"><button class="btn primary" id="btnBulk" type="button" data-i18n="btnBulk"></button></div>
+      <p class="muted small" id="bulkNote" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section id="view-list" class="view hidden">
+    <div class="card">
+      <input type="text" id="search" data-i18n-ph="phSearch" data-i18n-aria="phSearch">
+      <div class="row" id="filters">
+        <button class="btn sm" data-f="all" type="button" data-i18n="fAll"></button>
+        <button class="btn sm" data-f="learning" type="button" data-i18n="statLearning"></button>
+        <button class="btn sm" data-f="leech" type="button" data-i18n="fLeech"></button>
+        <button class="btn sm" data-f="mastered" type="button" data-i18n="statMastered"></button>
+      </div>
+      <div class="list" id="wordList"></div>
+    </div>
+    <div class="card hidden" id="editBox"></div>
+  </section>
+
+  <section id="view-how" class="view hidden">
+    <div class="card">
+      <h2 data-i18n="forecastTitle"></h2>
+      <div class="forecast" id="forecast"></div>
+    </div>
+    <div class="card">
+      <h2 data-i18n="ladderTitle"></h2>
+      <p class="muted small" data-i18n="ladderHelp"></p>
+      <div class="ladder" id="ladder"></div>
+      <div class="notes small">
+        <p data-i18n-html="note1"></p>
+        <p data-i18n-html="note2"></p>
+        <p data-i18n-html="note3"></p>
+        <p data-i18n-html="note4"></p>
+      </div>
+    </div>
+    <div class="card">
+      <h2 data-i18n="settings"></h2>
+      <label for="setUi"><span>表示言語 · 화면 언어</span>
+        <select id="setUi"><option value="ja">日本語</option><option value="ko">한국어</option></select>
+      </label>
+      <p class="muted tiny" data-i18n="uiHelp"></p>
+      <label for="setNew"><span data-i18n="setNew"></span>
+        <input type="number" id="setNew" min="1" max="30" step="1" inputmode="numeric">
+      </label>
+      <label class="switch" for="setHf"><span data-i18n="setHf"></span><input type="checkbox" id="setHf"></label>
+      <label class="switch" for="setWrite"><span data-i18n="setWrite"></span><input type="checkbox" id="setWrite"></label>
+      <label class="switch" for="setSpeak"><span data-i18n="setSpeak"></span><input type="checkbox" id="setSpeak"></label>
+      <label class="switch" for="setAccent"><span data-i18n="setAccent"></span><input type="checkbox" id="setAccent"></label>
+      <label for="setVoice"><span data-i18n="voice"></span>
+        <select id="setVoice"></select>
+      </label>
+      <label for="setRate"><span data-i18n="rate"></span> <output id="rateOut" class="tiny"></output>
+        <input type="range" id="setRate" min="0.5" max="1.1" step="0.05">
+      </label>
+      <div class="row"><button class="btn sm" id="btnPreview" type="button" data-i18n="preview"></button></div>
+      <p class="muted tiny" data-i18n="voiceTip"></p>
+      <label for="setEmail"><span data-i18n="setEmail"></span>
+        <input type="email" id="setEmail" autocomplete="email" data-i18n-ph="phEmail">
+      </label>
+      <p class="muted tiny" data-i18n="emailHelp"></p>
+    </div>
+    <div class="card">
+      <h2 data-i18n="backup"></h2>
+      <p class="muted small" data-i18n="backupHelp"></p>
+      <div class="row"><button class="btn" id="btnExport" type="button" data-i18n="btnExport"></button><button class="btn" id="btnCopy" type="button" data-i18n="btnCopy"></button></div>
+      <label for="importFile"><span data-i18n="importFile"></span><input type="file" id="importFile" accept="application/json,.json"></label>
+      <label for="importBox"><span data-i18n="importPaste"></span><textarea id="importBox" spellcheck="false" placeholder='{"cards":[...]}'></textarea></label>
+      <div class="row end"><button class="btn" id="btnImport" type="button" data-i18n="btnImport"></button></div>
+    </div>
+    <p class="muted tiny" data-i18n-html="credits"></p>
+  </section>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+"use strict";
+/* ───────── 表示言語 (日本語が基本、韓国語はオプション) ───────── */
+const T = {
+ja: {
+  appName:"集中暗記", learnLang:"学習する言語", summary:"今日のまとめ",
+  statDue:"今日の復習", statNew:"今日の新出", statLearning:"学習中", statMastered:"卒業",
+  tabToday:"今日", tabAdd:"単語を追加", tabList:"単語帳", tabHow:"設定",
+  addOne:"1語ずつ追加", fWord:"単語", btnFind:"意味・例文を探す", btnFindAgain:"もう一度探す", finding:"探しています…",
+  fMeaning:"意味", phMeaning:"例：(機会を)活かす", fExample:"例文（候補から選ぶか、辞書の例文を貼り付け）", fExampleTr:"例文の訳", phExampleTr:"例：いい天気を活かして出かけよう。",
+  save:"保存", addBulk:"まとめて追加",
+  bulkHelp:"1行に1語。<code>単語 = 意味 | 例文 | 訳</code> の形で、意味と例文は省略できます。",
+  bulkLabel:"単語リスト", phBulk:"aprovechar\nmadrugar = 早起きする\nquedar = 待ち合わせる | Quedamos a las ocho. | 8時に会おう。",
+  bulkFill:"足りない意味・例文を自動で探して埋める", btnBulk:"まとめて追加",
+  phSearch:"単語や意味で検索", fAll:"すべて", fLeech:"苦手",
+  forecastTitle:"これから7日間の復習量", ladderTitle:"復習のはしご",
+  ladderHelp:"正解すると1段上がり、間違えると翌日もう一度出て2段下がります。150日の段まで正解すると卒業し、毎日のリストから外れます。",
+  note1:"<b>答えを見る前にまず推測。</b>新しい単語は答えを見せる前に、まず推測して書いてもらいます。外れても、先に思い出そうとしてから答えを見たほうが記憶に残ります（Kornellほか 2009）。間違えたら答えを見て1回書き写してから進みます。<br><b>その日のうちに再テスト。</b>そのあと「穴埋め → 意味から書く」をすべて正解するまでその日は終わりません。間違えたカードは3枚後にもう一度出ます。読み返すより自分で思い出すほうがずっと長く残る、という研究（Karpicke・Roediger 2008）に基づいています。",
+  note2:"<b>翌日は必ずもう一度。</b>正解した単語も間違えた単語も翌日に出ます。1週間覚えておくには1日の間隔が最も効果的だったという結果（Cepedaほか 2008）と一致します。",
+  note3:"<b>間隔はだんだん長く。</b>1 → 7 → 21 → 60 → 150日。長く覚えたいほど最適な復習間隔も長くなります。日付は±10%ずらして、特定の日に集中しないようにしています。",
+  note4:"<b>苦手な単語。</b>3回以上間違えた単語には赤い印が付き、復習のたびに穴埋めと書き取りの両方が出ます。",
+  settings:"設定", uiHelp:"意味と例文の訳は、ここで選んだ言語で取得します。",
+  setNew:"1日の新しい単語数", setWrite:"作文の問題", setSpeak:"スピーキングの問題", setAccent:"アクセント記号まで厳しく採点",
+  setEmail:"翻訳上限を増やすためのメール（任意）", phEmail:"空欄なら1日約5,000字まで翻訳",
+  emailHelp:"意味・例文の翻訳に使うMyMemoryは、メールアドレスを一緒に送ると1日の上限が約10倍になります。メールは翻訳リクエストにのみ使います。",
+  backup:"バックアップ", backupHelp:"単語と進み具合はこの端末のブラウザにだけ保存されます。機種変更やブラウザのデータ削除の前にファイルで保存してください。",
+  btnExport:"バックアップを保存", btnCopy:"コピー", importFile:"バックアップファイルから復元", importPaste:"または貼り付けて復元", btnImport:"貼り付けた内容を読み込む",
+  credits:'例文：<a href="https://tatoeba.org" target="_blank" rel="noopener">Tatoeba</a>（CC BY 2.0 FR）· 翻訳：<a href="https://mymemory.translated.net" target="_blank" rel="noopener">MyMemory</a> · 英語の意味：<a href="https://en.wiktionary.org" target="_blank" rel="noopener">Wiktionary</a>（CC BY-SA）',
+  dateLabel:(m,d,w)=>`${m}月${d}日（${w}）· 1日は朝4時に切り替わります`, week:["日","月","火","水","木","金","土"], todayShort:"今日",
+  levels:["新出","1日","7日","21日","60日","150日"], levelSuffix:"の段", chipNew:"新出", chipDone:"卒業", chipLeech:"苦手",
+  emptyTitle:"単語を入れるだけで、復習スケジュールは自動で組みます",
+  emptyBody:l=>`覚えたい${l}の単語を追加すると、意味と実際の例文を探して埋め、毎日その日に見るべき単語だけをクイズにします。`,
+  goAdd:"単語を追加する", seed:"サンプル5語で始める", addMore:"単語をもっと追加",
+  doneTitle:"今日の分は終わり", noneTitle:"今日見るカードはありません",
+  nextReview:(d,n)=>`次の復習：${d}（${n}日後）`, nextNone:"新しい単語を追加するとすぐ学習に入ります。",
+  streak:n=>`連続学習 ${n}日`, todayTitle:"今日の学習", todayCounts:(a,b)=>`復習 <b>${a}</b>枚 · 新しい単語 <b>${b}</b>語`,
+  todayHint:n=>`最初に間違えたカードは正解するまで繰り返し出ます。連続学習 ${n}日。`, start:"はじめる",
+  modes:{ study:"まず当ててみる", cloze:"穴埋め", recall:"意味から書く", write:"作文", speak:"スピーキング" },
+  left:n=>`残り${n}枚`, listen:"発音を聞く", listenEx:"例文を聞く", listenAgain:"もう一度聞く", listenMine:"自分の文を聞く",
+  noExample:"例文がありません。単語帳で追加すると穴埋め問題が出ます。", gotIt:"覚えた、次へ", resumeTitle:"途中から再開できます", resumeBody:(n,d)=>`前回の続きです。終わった問題 ${d}・残り ${n}問。答えた分はすべて保存されています。`, resume:"続きから", restart:"最初からやり直す", guessLead:"初めての単語です。答えを見る前に、まず推測して書いてみましょう。", copyPrompt:"正解を1回書いてから次へ進みましょう。", copyPh:"正解を書き写す", copyAgain:"もう一度、正解をそのまま書いてみましょう", copyOk:"OK、書けました", skipCopy:"入力せずに次へ", hfOn:"入力なしモード：オン", hfOff:"入力なしモード（歩きながら・電車で）", remembered:"覚えてた", forgot:"忘れてた", setHf:"入力なしモード（答えを聞いて自己採点）", slow:"ゆっくり", popDetail:"詳細を見る", popAdd:"単語帳に追加", popInDeck:"単語帳にあり", popNoMeaning:"意味を取得できませんでした", popDict:"辞書で調べる", popExamples:"例文", popLoading:"例文を探しています…", popNoEx:"ほかの例文は見つかりませんでした。", popAdded:w=>`「${w}」を単語帳に追加しました。`, popClose:"閉じる", popHint:"文中の単語をタップすると意味と発音が見られます。", voice:"読み上げの声", voiceAuto:"自動（いちばん自然な声）", rate:"読み上げの速さ", preview:"試しに聞く", voiceTip:"iPhoneは「設定 › アクセシビリティ › 読み上げコンテンツ › 声」で「拡張」や「プレミアム」の声をダウンロードすると、ずっと聞き取りやすくなります。ネイティブ録音がある例文は録音を優先して再生します。", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"空欄に入る単語はどれ？ 初めてでもOK、まず推測してみましょう。", guessMCm:(m,l)=>`「${m}」は${l}でどれ？ まず推測してみましょう。`, guessType:"推測して入力（間違えて大丈夫）", guessBtn:"これだと思う", guessRight:"当たり！", guessWrong:"正解はこちら。先に推測したぶん記憶に残りやすくなります。", guessSkip:"見当もつかない",
+  hint:(m,c)=>`ヒント：${m} · 「${c}」で始まる`, recallQ:l=>`この意味の${l}の単語は？`, noMeaning:"（意味なし）",
+  answerPh:"答えを入力", answer:"答え", idk:"わからない", check:"確認", next:"次へ",
+  correct:"正解", correctAccent:"正解 · アクセントを確認", wrong:"不正解", baseForm:"原形", retryLater:"3枚後にもう一度出ます。",
+  writePrompt:"この単語を使って文を1つ書いてみましょう。今日あったことだとなお良いです。", myText:"自分の文", wrote:"書けた",
+  seeExample:"例文でもう一度確認", writeUsed:"単語は入っています。意味に合っているか自分で確認してください", writeMissing:"文の中に目標の単語が見当たりません",
+  refEx:"参考例文：", selfNo:"うまく書けなかった", selfOk:"正しく書けた",
+  speakPrompt:(l,w)=>`下の文を${l}で声に出して言ってみましょう。キーワード：<b>${w}</b>`, micStart:"話しはじめる", micStop:"止める", micAgain:"もう一度話す", reveal:"答えを見る",
+  heard:"聞き取った文：", original:"原文", keyHeard:"キーワードは聞き取れました", keyMissed:"キーワードが聞き取れませんでした", overlap:n=>`原文と単語${n}%一致`,
+  stuck:"詰まった", saidOk:"だいたい言えた", micDenied:"マイクの許可がオフです。声に出して言ってから「答えを見る」を押してください。", micNo:"このブラウザでは音声認識が使えません。", noVoice:"この端末では音声を再生できません。",
+  finishTitle:"今日の分は終わり", finishSum:(a,b)=>`一発正解 <b>${a}</b> · もう一度見る単語 <b>${b}</b>`, firstTry:"一発正解", tomorrow:"明日もう一度", graduated:"卒業", nextOn:d=>`次回 ${d}`, ok:"OK",
+  searching:"辞書と例文コーパスを検索中…", englishGloss:"英語の意味", pickOne:"実際の例文の候補 · 1つ選んでください",
+  candsErr:"例文コーパスに接続できませんでした。ネット接続を確認するか、例文を直接入力してください。", candsNone:"この単語を含む例文が見つかりませんでした。辞書の例文を直接入力してください。",
+  quota:"今日の翻訳上限に達しました。設定でメールを入れると増やせます。", translating:"翻訳中…", enPrefix:"（英語）",
+  dup:"すでに単語帳にある単語です。", saved:w=>`「${w}」を保存しました。今日の学習に入ります。`,
+  bulkAdded:(n,d)=>`${n}語を追加${d ? `、重複${d}語はスキップ` : ""}。`, bulkFilling:(n,i,t)=>`${n}語を追加。意味・例文を探しています（${i}/${t}）…`,
+  bulkDone:(n,f,q)=>`${n}語を追加、${f}語の意味・例文を埋めました。` + (q ? " 翻訳上限に達した単語は意味が空欄です。単語帳で埋められます。" : ""),
+  seeded:"サンプル5語を入れました。単語帳から削除できます。", none:"該当する単語がありません。", waiting:"学習待ち", noMeaningShort:"意味なし",
+  reviews:(r,l)=>`復習${r}回 · 間違い${l}回`, eWord:"単語", eMeaning:"意味", eExample:"例文", eExampleTr:"例文の訳", eForm:"穴埋めにする形（例文中の活用形）",
+  source:id=>`例文の出典 Tatoeba #${id}`, findOther:"別の例文を探す", reset:"最初から覚え直す", del:"削除", delConfirm:"もう一度押すと削除", close:"閉じる",
+  savedShort:"保存しました。", resetDone:"新しい単語に戻しました。", deleted:"削除しました。", noneFound:"例文が見つかりませんでした。",
+  storageFull:"保存容量が足りません。バックアップしてから不要な単語を削除してください。", exportFail:"ファイルで保存できません。コピーを使ってください。",
+  copied:n=>`${n}語をコピーしました。`, copyFail:"コピーできなかったので下の欄に入れました。", imported:n=>`${n}語を読み込みました。`, importFail:"バックアップの形式ではありません。保存したファイルかコピーした内容をそのまま入れてください。",
+  noLangSwitch:"学習中は言語を切り替えられません。", backupName:"集中暗記-バックアップ-", langCount:n=>` · ${n}`,
+  langNames:{ es:"スペイン語", fr:"フランス語", de:"ドイツ語", it:"イタリア語", pt:"ポルトガル語", en:"英語", ko:"韓国語", ja:"日本語" },
+  seedData:[["aprovechar","(機会を)活かす","Hay que aprovechar el buen tiempo para salir.","いい天気を活かして出かけなきゃ。","aprovechar"],["madrugar","早起きする","Mañana tengo que madrugar para ir al aeropuerto.","明日は空港に行くので早起きしないと。","madrugar"],["quedar","待ち合わせる、残る","Quedamos a las ocho delante del cine.","8時に映画館の前で会おう。","Quedamos"],["el sueldo","給料","Con este sueldo no puedo pagar el alquiler.","この給料じゃ家賃が払えない。","sueldo"],["agotado","くたくたの、売り切れの","Después del trabajo llegué a casa agotado.","仕事のあと、くたくたで家に帰った。","agotado"]]
+},
+ko: {
+  appName:"집중 암기", learnLang:"학습 언어", summary:"오늘 요약",
+  statDue:"오늘 복습", statNew:"오늘 새 단어", statLearning:"외우는 중", statMastered:"졸업",
+  tabToday:"오늘", tabAdd:"단어 추가", tabList:"단어장", tabHow:"원리·설정",
+  addOne:"한 단어씩", fWord:"단어", btnFind:"뜻·예문 찾기", btnFindAgain:"다시 찾기", finding:"찾는 중…",
+  fMeaning:"뜻", phMeaning:"예: (기회를) 활용하다", fExample:"예문 (후보에서 고르거나, 사전 예문을 직접 붙여넣기)", fExampleTr:"예문 해석", phExampleTr:"예: 좋은 날씨를 활용해야 해.",
+  save:"저장", addBulk:"여러 개 한꺼번에",
+  bulkHelp:"한 줄에 하나씩. <code>단어 = 뜻 | 예문 | 해석</code> 형식이고, 뜻·예문은 빼도 됩니다.",
+  bulkLabel:"단어 목록", phBulk:"aprovechar\nmadrugar = 일찍 일어나다\nquedar = 만나기로 하다 | Quedamos a las ocho. | 8시에 만나자.",
+  bulkFill:"빠진 뜻·예문을 자동으로 찾아 채우기", btnBulk:"한꺼번에 추가",
+  phSearch:"단어나 뜻으로 찾기", fAll:"전체", fLeech:"약점",
+  forecastTitle:"다음 7일 복습량", ladderTitle:"복습 사다리",
+  ladderHelp:"맞히면 한 칸 올라가고, 틀리면 다음 날 다시 보고 두 칸 내려옵니다. 150일 칸까지 맞히면 졸업해서 매일 목록에서 빠집니다.",
+  note1:"<b>답을 보기 전에 먼저 짐작.</b> 새 단어는 답을 보여주기 전에 먼저 짐작해서 써봅니다. 틀려도 먼저 떠올려 본 뒤 답을 보는 쪽이 더 잘 기억납니다(Kornell 외 2009). 틀리면 정답을 보고 한 번 따라 쓴 뒤 넘어갑니다.<br><b>당일 재시험.</b> 그다음 빈칸 → 뜻 보고 쓰기를 모두 맞혀야 그날 끝납니다. 틀린 카드는 3장 뒤에 다시 나옵니다. 다시 읽기보다 직접 떠올리기가 훨씬 오래 남는다는 연구(Karpicke·Roediger 2008)를 따랐습니다.",
+  note2:"<b>다음 날 무조건 한 번 더.</b> 맞힌 단어도 틀린 단어도 다음 날 다시 봅니다. 1주일 동안 기억하려면 하루 간격이 가장 좋았다는 결과(Cepeda 외 2008)와 맞습니다.",
+  note3:"<b>간격은 점점 길게.</b> 1 → 7 → 21 → 60 → 150일. 오래 기억해야 할수록 최적의 복습 간격도 길어집니다. 날짜는 ±10% 흩어서 한 날에 몰리지 않게 했습니다.",
+  note4:"<b>약점 단어.</b> 3번 이상 틀린 단어는 빨간 표시가 붙고, 복습 때마다 빈칸과 쓰기 문제가 둘 다 나옵니다.",
+  settings:"설정", uiHelp:"뜻과 예문 해석은 여기서 고른 언어로 가져옵니다.",
+  setNew:"하루 새 단어 수", setWrite:"문장 쓰기 문제", setSpeak:"말하기 문제", setAccent:"악센트까지 엄격하게 채점",
+  setEmail:"번역 한도 늘리기용 이메일 (선택)", phEmail:"비워두면 하루 약 5천 자까지 번역",
+  emailHelp:"뜻·예문 번역에 쓰는 MyMemory는 이메일을 함께 보내면 하루 번역 한도가 약 10배로 늘어납니다. 이메일은 번역 요청에만 쓰입니다.",
+  backup:"백업", backupHelp:"단어와 진도는 이 기기 브라우저에만 저장됩니다. 기기를 바꾸거나 브라우저 데이터를 지우기 전에 파일로 받아두세요.",
+  btnExport:"백업 파일 받기", btnCopy:"복사", importFile:"백업 파일로 복원", importPaste:"또는 붙여넣어 복원", btnImport:"붙여넣은 내용 가져오기",
+  credits:'예문: <a href="https://tatoeba.org" target="_blank" rel="noopener">Tatoeba</a> (CC BY 2.0 FR) · 번역: <a href="https://mymemory.translated.net" target="_blank" rel="noopener">MyMemory</a> · 영어 뜻: <a href="https://en.wiktionary.org" target="_blank" rel="noopener">Wiktionary</a> (CC BY-SA)',
+  dateLabel:(m,d,w)=>`${m}월 ${d}일 (${w}) · 하루는 새벽 4시에 바뀝니다`, week:["일","월","화","수","목","금","토"], todayShort:"오늘",
+  levels:["새 단어","1일","7일","21일","60일","150일"], levelSuffix:" 칸", chipNew:"새 단어", chipDone:"졸업", chipLeech:"약점",
+  emptyTitle:"단어를 넣으면 복습 일정은 알아서 짭니다",
+  emptyBody:l=>`외울 ${l} 단어를 추가하면 뜻과 실제 예문을 찾아 채우고, 매일 그날 볼 단어만 골라 퀴즈를 냅니다.`,
+  goAdd:"단어 추가하러 가기", seed:"예시 단어 5개로 시작", addMore:"단어 더 추가",
+  doneTitle:"오늘 분량 끝", noneTitle:"오늘 볼 카드가 없어요",
+  nextReview:(d,n)=>`다음 복습: ${d} (${n}일 뒤)`, nextNone:"새 단어를 추가하면 바로 학습에 들어갑니다.",
+  streak:n=>`연속 학습 ${n}일`, todayTitle:"오늘의 학습", todayCounts:(a,b)=>`복습 <b>${a}</b>장 · 새 단어 <b>${b}</b>개`,
+  todayHint:n=>`처음 틀린 카드는 맞힐 때까지 다시 나옵니다. 연속 학습 ${n}일.`, start:"시작하기",
+  modes:{ study:"먼저 맞혀보기", cloze:"빈칸 채우기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
+  left:n=>`남은 ${n}장`, listen:"발음 듣기", listenEx:"예문 듣기", listenAgain:"다시 듣기", listenMine:"내 문장 듣기",
+  noExample:"예문이 없어요. 단어장에서 넣으면 빈칸 문제가 생깁니다.", gotIt:"외웠어요, 다음", resumeTitle:"이어서 할 수 있어요", resumeBody:(n,d)=>`지난번에 하던 거예요. 끝낸 문제 ${d}개 · 남은 문제 ${n}개. 답한 건 모두 저장돼 있어요.`, resume:"이어서 하기", restart:"처음부터 다시", guessLead:"처음 보는 단어예요. 답을 보기 전에 먼저 짐작해서 써보세요.", copyPrompt:"정답을 한 번 따라 쓰고 넘어가요.", copyPh:"정답 따라 쓰기", copyAgain:"정답을 그대로 한 번 더 써보세요", copyOk:"좋아요, 썼어요", skipCopy:"안 쓰고 넘어가기", hfOn:"입력 없이 모드: 켜짐", hfOff:"입력 없이 모드 (걸으면서·지하철)", remembered:"기억났어요", forgot:"까먹었어요", setHf:"입력 없이 모드 (정답 듣고 직접 채점)", slow:"느리게", popDetail:"상세 보기", popAdd:"단어장에 추가", popInDeck:"단어장에 있음", popNoMeaning:"뜻을 가져오지 못했어요", popDict:"사전에서 찾기", popExamples:"예문", popLoading:"예문 찾는 중…", popNoEx:"다른 예문을 찾지 못했어요.", popAdded:w=>`"${w}"을(를) 단어장에 추가했어요.`, popClose:"닫기", popHint:"문장 속 단어를 누르면 뜻과 발음을 볼 수 있어요.", voice:"읽어주는 목소리", voiceAuto:"자동 (가장 자연스러운 목소리)", rate:"읽기 속도", preview:"들어보기", voiceTip:"아이폰은 설정 › 손쉬운 사용 › 콘텐츠 말하기 › 음성에서 「향상된」·「프리미엄」 음성을 내려받으면 훨씬 잘 들립니다. 원어민 녹음이 있는 예문은 녹음을 먼저 재생합니다.", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"빈칸에 들어갈 단어는? 처음이어도 괜찮아요, 먼저 짐작해 보세요.", guessMCm:(m,l)=>`"${m}"은(는) ${l}로 뭘까요? 먼저 짐작해 보세요.`, guessType:"짐작해서 입력 (틀려도 괜찮아요)", guessBtn:"이거 같아요", guessRight:"맞혔어요!", guessWrong:"정답은 이거예요. 먼저 짐작해 본 만큼 더 잘 기억납니다.", guessSkip:"전혀 모르겠어요",
+  hint:(m,c)=>`힌트: ${m} · ${c}로 시작`, recallQ:l=>`이 뜻의 ${l} 단어는?`, noMeaning:"(뜻 없음)",
+  answerPh:"정답 입력", answer:"정답", idk:"모르겠어요", check:"확인", next:"다음",
+  correct:"정답", correctAccent:"정답 · 악센트 확인", wrong:"오답", baseForm:"기본형", retryLater:"3장 뒤에 다시 나옵니다.",
+  writePrompt:"이 단어를 넣어 문장을 하나 직접 써보세요. 오늘 있었던 일이면 더 좋아요.", myText:"내 문장", wrote:"다 썼어요",
+  seeExample:"예문으로 다시 보기", writeUsed:"단어를 넣었어요. 뜻에 맞게 썼는지 직접 확인하세요", writeMissing:"목표 단어가 문장에 안 보여요",
+  refEx:"참고 예문: ", selfNo:"제대로 못 씀", selfOk:"맞게 썼음",
+  speakPrompt:(l,w)=>`아래 문장을 ${l}로 소리 내어 말해보세요. 핵심 단어: <b>${w}</b>`, micStart:"말하기 시작", micStop:"멈추기", micAgain:"다시 말하기", reveal:"정답 보기",
+  heard:"들린 문장: ", original:"원문", keyHeard:"핵심 단어 들렸어요", keyMissed:"핵심 단어 안 들렸어요", overlap:n=>`원문과 단어 ${n}% 일치`,
+  stuck:"막혔어요", saidOk:"비슷하게 말했어요", micDenied:"마이크 권한이 꺼져 있어요. 소리 내어 말한 뒤 정답 보기를 누르세요.", micNo:"이 브라우저에서는 음성 인식을 쓸 수 없어요.", noVoice:"이 기기에서는 음성 재생이 안 돼요.",
+  finishTitle:"오늘 분량 끝", finishSum:(a,b)=>`한 번에 맞힘 <b>${a}</b> · 다시 볼 단어 <b>${b}</b>`, firstTry:"한 번에 맞힘", tomorrow:"내일 다시", graduated:"졸업", nextOn:d=>`다음 ${d}`, ok:"확인",
+  searching:"사전과 예문 모음에서 찾는 중…", englishGloss:"영어 뜻", pickOne:"실제 예문 후보 · 하나 골라주세요",
+  candsErr:"예문 모음에 연결하지 못했어요. 인터넷 연결을 확인하거나 예문을 직접 넣어주세요.", candsNone:"이 단어가 들어간 예문을 찾지 못했어요. 사전 예문을 직접 넣어주세요.",
+  quota:"오늘 번역 한도를 다 썼어요. 설정에서 이메일을 넣으면 늘어납니다.", translating:"번역 중…", enPrefix:"(영어) ",
+  dup:"이미 단어장에 있는 단어예요.", saved:w=>`"${w}" 저장. 오늘의 학습에 들어갑니다.`,
+  bulkAdded:(n,d)=>`${n}개 추가${d ? `, 중복 ${d}개는 건너뜀` : ""}.`, bulkFilling:(n,i,t)=>`${n}개 추가. 뜻·예문 찾는 중 (${i}/${t})…`,
+  bulkDone:(n,f,q)=>`${n}개 추가, ${f}개 뜻·예문 채움.` + (q ? " 번역 한도에 걸린 단어는 뜻이 비어 있어요. 단어장에서 채울 수 있어요." : ""),
+  seeded:"예시 단어 5개를 넣었어요. 단어장에서 지울 수 있어요.", none:"해당하는 단어가 없어요.", waiting:"학습 대기", noMeaningShort:"뜻 없음",
+  reviews:(r,l)=>`복습 ${r}번 · 틀린 횟수 ${l}번`, eWord:"단어", eMeaning:"뜻", eExample:"예문", eExampleTr:"예문 해석", eForm:"빈칸으로 만들 형태 (예문 속 활용형)",
+  source:id=>`예문 출처 Tatoeba #${id}`, findOther:"다른 예문 찾기", reset:"처음부터 다시 외우기", del:"삭제", delConfirm:"한 번 더 누르면 삭제", close:"닫기",
+  savedShort:"저장했어요.", resetDone:"새 단어로 되돌렸어요.", deleted:"삭제했어요.", noneFound:"찾은 예문이 없어요.",
+  storageFull:"저장 공간이 부족해요. 백업 후 안 쓰는 단어를 지워주세요.", exportFail:"파일로 받을 수 없어요. 복사 버튼을 써주세요.",
+  copied:n=>`단어 ${n}개를 복사했어요.`, copyFail:"복사가 막혀 있어 아래 칸에 넣었어요.", imported:n=>`${n}개 가져왔어요.`, importFail:"백업 형식이 아니에요. 받은 파일이나 복사한 내용을 그대로 넣어주세요.",
+  noLangSwitch:"학습 중에는 언어를 바꿀 수 없어요.", backupName:"집중암기-백업-", langCount:n=>` · ${n}`,
+  langNames:{ es:"스페인어", fr:"프랑스어", de:"독일어", it:"이탈리아어", pt:"포르투갈어", en:"영어", ko:"한국어", ja:"일본어" },
+  seedData:[["aprovechar","(기회를) 활용하다","Hay que aprovechar el buen tiempo para salir.","좋은 날씨를 이용해서 나가야 해.","aprovechar"],["madrugar","일찍 일어나다","Mañana tengo que madrugar para ir al aeropuerto.","내일 공항에 가려면 일찍 일어나야 해.","madrugar"],["quedar","만나기로 하다, 남다","Quedamos a las ocho delante del cine.","8시에 영화관 앞에서 만나자.","Quedamos"],["el sueldo","월급","Con este sueldo no puedo pagar el alquiler.","이 월급으로는 월세를 낼 수 없어.","sueldo"],["agotado","녹초가 된, 매진된","Después del trabajo llegué a casa agotado.","일 끝나고 녹초가 돼서 집에 왔어.","agotado"]]
+}};
+/* 表示言語ごとの「意味・訳」を取りに行く言語 */
+const UI_LANG = { ja:{ mm:"ja", tatoeba:"jpn" }, ko:{ mm:"ko", tatoeba:"kor" } };
+/* 学習する言語 */
+const LANGS = {
+  es: { tatoeba:"spa", mm:"es", speech:"es-ES", wikt:"es", chars:["á","é","í","ó","ú","ñ","ü","¿","¡"], articles:/^(el|la|los|las|un|una|unos|unas)\s+/i, ph:"aprovechar" },
+  fr: { tatoeba:"fra", mm:"fr", speech:"fr-FR", wikt:"fr", chars:["é","è","ê","à","â","ç","ô","î","ù","œ"], articles:/^(le|la|les|l'|un|une|des)\s*/i, ph:"profiter" },
+  de: { tatoeba:"deu", mm:"de", speech:"de-DE", wikt:"de", chars:["ä","ö","ü","ß"], articles:/^(der|die|das|ein|eine)\s+/i, ph:"nutzen" },
+  it: { tatoeba:"ita", mm:"it", speech:"it-IT", wikt:"it", chars:["à","è","é","ì","ò","ù"], articles:/^(il|lo|la|i|gli|le|un|uno|una|l')\s*/i, ph:"approfittare" },
+  pt: { tatoeba:"por", mm:"pt", speech:"pt-BR", wikt:"pt", chars:["á","â","ã","à","ç","é","ê","í","ó","ô","õ","ú"], articles:/^(o|a|os|as|um|uma)\s+/i, ph:"aproveitar" },
+  en: { tatoeba:"eng", mm:"en", speech:"en-US", wikt:"en", chars:[], articles:/^(the|a|an)\s+/i, ph:"take advantage of" },
+  ko: { tatoeba:"kor", mm:"ko", speech:"ko-KR", wikt:"ko", chars:[], articles:null, ph:"활용하다" },
+  ja: { tatoeba:"jpn", mm:"ja", speech:"ja-JP", wikt:"ja", chars:[], articles:null, ph:"活用する" }
+};
+const LADDER = [1, 7, 21, 60, 150];
+const LEECH = 3;
+const LS_KEY = "focus-vocab-v1";
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid = () => "c" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function dayStr(d){ const t = new Date(d.getTime() - 4*3600*1000); return t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0"); }
+const today = () => dayStr(new Date());
+function addDays(ds, n){ const [y,m,d] = ds.split("-").map(Number); const t = new Date(y, m-1, d+n, 12); return t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0"); }
+function diffDays(a, b){ const pa=a.split("-").map(Number), pb=b.split("-").map(Number); return Math.round((Date.UTC(pb[0],pb[1]-1,pb[2]) - Date.UTC(pa[0],pa[1]-1,pa[2]))/86400000); }
+const stripAcc = s => String(s||"").normalize("NFD").replace(/[̀-ͯ]/g, "");
+const norm = s => String(s||"").toLowerCase().replace(/[¿¡.,!?;:"«»()「」。、！？（）]/g, " ").replace(/\s+/g, " ").trim();
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"), 2800); }
+
+/* ───────── 保存（この端末のブラウザ） ───────── */
+const DEFAULT_SETTINGS = { ui:"ja", lang:"es", rate:0.8, handsFree:false, voices:{}, newLimit:7, writing:true, speaking:true, strictAccent:false, email:"" };
+const S = { cards:{}, meta:{ days:{}, settings:Object.assign({}, DEFAULT_SETTINGS) } };
+const t = () => T[S.meta.settings.ui] || T.ja;
+const U = () => UI_LANG[S.meta.settings.ui] || UI_LANG.ja;
+const L = () => LANGS[S.meta.settings.lang] || LANGS.es;
+const langName = k => t().langNames[k || S.meta.settings.lang];
+function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){ toast(t().storageFull); } }
+function load(){ try{ const raw = localStorage.getItem(LS_KEY); if(!raw) return; const d = JSON.parse(raw); S.cards = d.cards || {}; S.meta = Object.assign(S.meta, d.meta||{}); S.meta.settings = Object.assign({}, DEFAULT_SETTINGS, (d.meta||{}).settings||{}); }catch(e){} }
+try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){}
+const cardsHere = () => Object.values(S.cards).filter(c => (c.lang||"es") === S.meta.settings.lang);
+function saveCard(c){ S.cards[c.id] = c; save(); }
+function removeCard(id){ delete S.cards[id]; save(); }
+
+/* ───────── 辞書・例文 API ───────── */
+async function getJSON(url, ms=12000){
+  const ctl = new AbortController(); const tm = setTimeout(()=>ctl.abort(), ms);
+  try{ const r = await fetch(url, { signal: ctl.signal }); if(!r.ok) throw new Error("HTTP " + r.status); return await r.json(); }
+  finally{ clearTimeout(tm); }
+}
+const trCache = {};
+async function translate(text, from){
+  const to = U().mm;
+  if(!text) return ""; if(from === to) return text;
+  const key = from + "|" + to + "|" + text; if(trCache[key]) return trCache[key];
+  const p = new URLSearchParams({ q: text.slice(0, 480), langpair: from + "|" + to });
+  if(S.meta.settings.email) p.set("de", S.meta.settings.email);
+  const d = await getJSON("https://api.mymemory.translated.net/get?" + p.toString());
+  if(d && d.quotaFinished) throw new Error("quota");
+  let out = (d && d.responseData && d.responseData.translatedText) || "";
+  if(/MYMEMORY WARNING|QUERY LENGTH/i.test(out)) throw new Error("quota");
+  out = out.replace(/&#39;/g,"'").replace(/&quot;/g,'"').replace(/&amp;/g,"&");
+  trCache[key] = out; return out;
+}
+async function wiktionary(word){
+  try{
+    const d = await getJSON("https://en.wiktionary.org/api/rest_v1/page/definition/" + encodeURIComponent(word.replace(/ /g,"_")), 8000);
+    const entries = d[L().wikt] || []; const out = [];
+    entries.forEach(e => (e.definitions||[]).forEach(df => { const tx = String(df.definition||"").replace(/<[^>]+>/g,"").trim(); if(tx && out.length < 4) out.push({ pos: e.partOfSpeech, def: tx }); }));
+    return out;
+  }catch(e){ return []; }
+}
+function searchTerm(word){ let w = String(word||"").trim(); const a = L().articles; if(a) w = w.replace(a, ""); return w.trim(); }
+async function tatoeba(word){
+  const lang = L(), mine = U().tatoeba;
+  const term = searchTerm(word);
+  const trLangs = mine === "eng" ? "eng" : mine + ",eng";
+  const base = { lang: lang.tatoeba, sort: "relevance", limit: "20", is_unapproved: "no", "trans:lang": trLangs, "showtrans:lang": trLangs, include: "audios" };
+  if(!["jpn","kor"].includes(lang.tatoeba)) base.word_count = "4-16";
+  const run = async q => { const p = new URLSearchParams(Object.assign({}, base, { q })); const d = await getJSON("https://api.tatoeba.org/v1/sentences?" + p.toString()); return (d && d.data) || []; };
+  let rows = await run(term.includes(" ") ? '"' + term + '"' : term);
+  if(rows.length < 3 && !term.includes(" ") && term.length > 4){
+    try{ const stem = stripAcc(term).replace(/se$/i,"").replace(/(ar|er|ir|re|en)$/i, ""); if(stem.length >= 3){ const more = await run(stem + "*"); const seen = new Set(rows.map(r=>r.id)); more.forEach(r => { if(!seen.has(r.id)) rows.push(r); }); } }catch(e){}
+  }
+  return rows.map(r => {
+    const tr = r.translations || [];
+    const own = tr.find(x => x.lang === mine); const en = tr.find(x => x.lang === "eng");
+    const words = r.text.split(/\s+/).length;
+    const form = findForm(r.text, word);
+    const audio = (r.audios && r.audios[0] && r.audios[0].download_url) || null;
+    const score = (own ? 0 : 10) + Math.abs(words - 8) + (form ? 0 : 20) + (r.text.length > 110 ? 10 : 0) - (audio ? 3 : 0);
+    return { id: r.id, text: r.text, tr: own ? own.text : "", en: en ? en.text : "", form, score, audio };
+  }).sort((a,b) => a.score - b.score).slice(0, 6);
+}
+async function lookup(word){
+  const [m, c, w] = await Promise.allSettled([ translate(searchTerm(word), L().mm), tatoeba(word), wiktionary(searchTerm(word)) ]);
+  return {
+    meaning: m.status === "fulfilled" ? m.value : "",
+    meaningErr: m.status === "rejected" ? String(m.reason && m.reason.message || "") : "",
+    cands: c.status === "fulfilled" ? c.value : [], candsErr: c.status === "rejected",
+    wikt: w.status === "fulfilled" ? w.value : []
+  };
+}
+async function trOf(cand){
+  if(cand.tr) return cand.tr;
+  try{ return await translate(cand.text, L().mm); }catch(e){ return cand.en ? t().enPrefix + cand.en : ""; }
+}
+
+/* ───────── カード ───────── */
+function newCard(o){
+  return { id: uid(), lang: o.lang || S.meta.settings.lang, word: String(o.word||"").trim(), meaning: String(o.meaning||"").trim(), example: String(o.example||"").trim(), exampleKo: String(o.exampleKo||"").trim(), form: String(o.form||"").trim(), src: o.src || null, audio: o.audio || null,
+    level: 0, due: null, isNew: true, lapses: 0, reps: 0, created: Date.now(), introduced: null, mastered: false, relearn: false, log: [] };
+}
+/* exampleKo は「例文の訳」(旧バージョン互換のためキー名はそのまま) */
+const isLeech = c => c.lapses >= LEECH;
+function levelChip(c){
+  if(c.mastered) return `<span class="chip done">${t().chipDone}</span>`;
+  if(c.isNew) return `<span class="chip new">${t().chipNew}</span>`;
+  return `<span class="chip">${t().levels[Math.min(c.level, 5)]}${t().levelSuffix}</span>` + (isLeech(c) ? ` <span class="chip leech">${t().chipLeech}</span>` : "");
+}
+function schedule(c, correct){
+  const d = today();
+  c.reps++; c.log.push({ d, ok: correct }); if(c.log.length > 40) c.log = c.log.slice(-40);
+  if(c.isNew){ c.isNew = false; c.introduced = d; }
+  if(!correct){ c.lapses++; c.level = Math.max(1, c.level - 2); c.relearn = true; c.due = addDays(d, 1); return; }
+  c.relearn = false;
+  if(c.level >= LADDER.length){ c.mastered = true; c.due = null; return; }
+  let iv = LADDER[c.level];
+  if(iv >= 7){ const f = Math.round(iv * 0.1); iv += Math.floor(Math.random() * (2*f + 1)) - f; }
+  c.level++; c.due = addDays(d, iv);
+}
+function findForm(text, word){
+  const ex = text || ""; const w = searchTerm(word);
+  if(!ex || !w) return "";
+  const low = stripAcc(ex.toLowerCase()), lw = stripAcc(w.toLowerCase());
+  const i = low.indexOf(lw); if(i >= 0) return ex.slice(i, i + w.length);
+  if(/\s/.test(w)) return "";
+  const base = lw.replace(/se$/,"").replace(/(ar|er|ir|re|en)$/,""); const stem = base.length >= 3 ? base : lw.slice(0, 3);
+  const re = /[\p{L}]+/gu; let m;
+  while((m = re.exec(ex))){ if(stripAcc(m[0].toLowerCase()).startsWith(stem)) return m[0]; }
+  return "";
+}
+function clozeParts(c){
+  const ex = c.example || ""; if(!ex) return null;
+  const f = (c.form && stripAcc(ex.toLowerCase()).includes(stripAcc(c.form.toLowerCase()))) ? c.form : findForm(ex, c.word);
+  if(!f) return null;
+  const i = stripAcc(ex.toLowerCase()).indexOf(stripAcc(f.toLowerCase()));
+  return { before: ex.slice(0, i), answer: ex.slice(i, i + f.length), after: ex.slice(i + f.length) };
+}
+function tokHTML(text, hlFrom, hlTo){
+  const out = []; const re = /[\p{L}\p{M}][\p{L}\p{M}'’\-]*/gu; let last = 0, m;
+  text = String(text || "");
+  while((m = re.exec(text))){
+    out.push(esc(text.slice(last, m.index)));
+    const hl = hlFrom != null && m.index < hlTo && m.index + m[0].length > hlFrom;
+    out.push(`<span class="tok${hl ? " hl" : ""}" role="button" tabindex="0" data-w="${esc(m[0])}">${esc(m[0])}</span>`);
+    last = m.index + m[0].length;
+  }
+  out.push(esc(text.slice(last)));
+  return out.join("");
+}
+function highlight(c){ const p = clozeParts(c); return p ? tokHTML(c.example, p.before.length, p.before.length + p.answer.length) : tokHTML(c.example); }
+function hlText(text, form){ if(!form) return esc(text); const i = stripAcc(text.toLowerCase()).indexOf(stripAcc(form.toLowerCase())); if(i < 0) return esc(text); return esc(text.slice(0,i)) + "<mark>" + esc(text.slice(i, i+form.length)) + "</mark>" + esc(text.slice(i+form.length)); }
+function check(input, target){
+  const a = norm(input), b = norm(target);
+  if(!a) return "no"; if(a === b) return "ok";
+  if(stripAcc(a) === stripAcc(b)) return S.meta.settings.strictAccent ? "no" : "accent";
+  return "no";
+}
+
+/* 音声（ブラウザの機能） */
+const canSpeak = () => { try{ return "speechSynthesis" in window; }catch(e){ return false; } };
+let VOICES = [];
+function loadVoices(){ try{ VOICES = speechSynthesis.getVoices() || []; }catch(e){ VOICES = []; } fillVoices(); }
+function voicesFor(langCode){ const pre = langCode.slice(0,2).toLowerCase(); return VOICES.filter(v => v.lang && v.lang.toLowerCase().replace("_","-").startsWith(pre)); }
+function voiceScore(v, want){
+  let sc = 0; const n = (v.name || "").toLowerCase(); const l = (v.lang || "").toLowerCase().replace("_","-");
+  if(l === want.toLowerCase()) sc += 3;
+  if(/premium|enhanced|neural|natural|拡張|プレミアム|향상|프리미엄/.test(n)) sc += 6;
+  if(/google/.test(n)) sc += 4;
+  if(/siri/.test(n)) sc += 5;
+  if(/monica|mónica|jorge|paulina|marisol|lucia|lucía|diego|helena|alvaro|álvaro|elvira/.test(n)) sc += 2;
+  if(/compact|eloquence|grandma|grandpa|novelty|bad news|bells|boing|bubbles|cellos|whisper|zarvox|trinoids|albert|jester|organ|superstar|wobble|fred|junior|ralph|kathy|rocko|shelley|flo|reed|sandy/.test(n)) sc -= 8;
+  return sc;
+}
+function pickVoice(){
+  const lang = L(), list = voicesFor(lang.speech); if(!list.length) return null;
+  const chosen = (S.meta.settings.voices || {})[S.meta.settings.lang];
+  if(chosen){ const v = list.find(v => v.voiceURI === chosen); if(v) return v; }
+  return list.slice().sort((a,b) => voiceScore(b, lang.speech) - voiceScore(a, lang.speech))[0];
+}
+function fillVoices(){
+  const sel = $("#setVoice"); if(!sel) return;
+  const lang = L(), list = voicesFor(lang.speech).sort((a,b) => voiceScore(b, lang.speech) - voiceScore(a, lang.speech));
+  const cur = (S.meta.settings.voices || {})[S.meta.settings.lang] || "";
+  sel.innerHTML = `<option value="">${esc(t().voiceAuto)}</option>` + list.map(v => `<option value="${esc(v.voiceURI)}">${esc(v.name)} (${esc(v.lang)})</option>`).join("");
+  sel.value = list.some(v => v.voiceURI === cur) ? cur : "";
+}
+let AUDIO_EL = null, ACTX = null, EQ_SRC = null;
+/* ネイティブ録音: 低音を少し削り、子音の帯域(3〜6kHz)を持ち上げて聞き取りやすく */
+async function playEq(url){
+  const AC = window.AudioContext || window.webkitAudioContext; if(!AC) throw new Error("no ctx");
+  ACTX = ACTX || new AC(); if(ACTX.state === "suspended") await ACTX.resume();
+  const r = await fetch(url); if(!r.ok) throw new Error("fetch");
+  const buf = await ACTX.decodeAudioData(await r.arrayBuffer());
+  if(EQ_SRC){ try{ EQ_SRC.stop(); }catch(e){} }
+  const src = ACTX.createBufferSource(); src.buffer = buf; EQ_SRC = src;
+  const hp = ACTX.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 90;
+  const low = ACTX.createBiquadFilter(); low.type = "lowshelf"; low.frequency.value = 220; low.gain.value = -4;
+  const pres = ACTX.createBiquadFilter(); pres.type = "peaking"; pres.frequency.value = 3200; pres.Q.value = 0.9; pres.gain.value = 5;
+  const air = ACTX.createBiquadFilter(); air.type = "highshelf"; air.frequency.value = 6500; air.gain.value = 4;
+  const comp = ACTX.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3;
+  src.connect(hp).connect(low).connect(pres).connect(air).connect(comp).connect(ACTX.destination);
+  src.start();
+}
+function plainAudio(url, text, opts){
+  const a = new Audio(url); AUDIO_EL = a;
+  a.playbackRate = opts.slow ? 0.7 : 1;
+  try{ a.preservesPitch = true; a.webkitPreservesPitch = true; }catch(e){}
+  a.play().catch(() => ttsSpeak(text, opts.slow));
+  a.onerror = () => ttsSpeak(text, opts.slow);
+}
+function audioFor(text){ const c = Object.values(S.cards).find(c => c.audio && c.example === text); return c ? c.audio : null; }
+const UI_SPEECH = { ja:"ja-JP", ko:"ko-KR" };
+function ttsSpeak(text, slow, uiLang){
+  if(!canSpeak()) return false;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text); u.lang = L().speech;
+  if(uiLang){ const want = UI_SPEECH[uiLang] || "ja-JP"; u.lang = want; const vv = voicesFor(want).sort((a,b) => voiceScore(b, want) - voiceScore(a, want))[0]; if(vv) u.voice = vv; u.rate = Number(S.meta.settings.rate) || 0.8; speechSynthesis.speak(u); return true; }
+  const base = Number(S.meta.settings.rate) || 0.8;
+  u.rate = Math.max(0.3, slow ? base * 0.65 : base);
+  const v = pickVoice(); if(v){ u.voice = v; u.lang = v.lang; }
+  speechSynthesis.speak(u); return true;
+}
+function speak(text, opts){
+  opts = opts || {};
+  try{
+    if(!text) return false;
+    if(AUDIO_EL){ try{ AUDIO_EL.pause(); }catch(e){} AUDIO_EL = null; }
+    if(EQ_SRC){ try{ EQ_SRC.stop(); }catch(e){} EQ_SRC = null; }
+    try{ if(canSpeak()) speechSynthesis.cancel(); }catch(e){}
+    if(opts.lang) return ttsSpeak(text, false, opts.lang);
+    const url = opts.audio === undefined ? audioFor(text) : opts.audio;
+    if(url && !opts.slow){ playEq(url).catch(() => plainAudio(url, text, opts)); return true; }
+    if(url){
+      const a = new Audio(url); AUDIO_EL = a;
+      const base = Number(S.meta.settings.rate) || 0.8;
+      a.playbackRate = opts.slow ? 0.7 : Math.min(1, base + 0.15);
+      try{ a.preservesPitch = true; a.webkitPreservesPitch = true; }catch(e){}
+      a.play().catch(() => ttsSpeak(text, opts.slow));
+      a.onerror = () => ttsSpeak(text, opts.slow);
+      return true;
+    }
+    return ttsSpeak(text, opts.slow);
+  }catch(e){ return false; }
+}
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+
+/* ───────── 今日のセッション ───────── */
+const dueCards = () => { const d = today(); return cardsHere().filter(c => !c.mastered && !c.isNew && c.due && c.due <= d).sort((a,b)=> a.due < b.due ? -1 : 1); };
+const introducedToday = () => cardsHere().filter(c => c.introduced === today()).length;
+const newCandidates = () => cardsHere().filter(c => c.isNew).sort((a,b)=>a.created-b.created);
+const newQuota = () => Math.max(0, S.meta.settings.newLimit - introducedToday());
+function reviewModes(c){
+  const st = S.meta.settings, hasCloze = !!clozeParts(c);
+  if(isLeech(c)) return hasCloze ? ["cloze","recall"] : ["recall"];
+  if(c.level <= 1) return [hasCloze ? "cloze" : "recall"];
+  if(c.level === 2) return ["recall"];
+  const pool = [];
+  if(st.writing) pool.push("write");
+  if(st.speaking && c.example && c.exampleKo) pool.push("speak");
+  pool.push("recall"); if(hasCloze) pool.push("cloze");
+  return [pool[(c.reps + c.level) % pool.length]];
+}
+let SES = null;
+function buildSession(){
+  const items = [];
+  dueCards().forEach(c => reviewModes(c).forEach(m => items.push({ id: c.id, mode: m })));
+  newCandidates().slice(0, newQuota()).forEach(c => { items.push({ id:c.id, mode:"study" }); if(clozeParts(c)) items.push({ id:c.id, mode:"cloze" }); items.push({ id:c.id, mode:"recall" }); });
+  const remaining = {}; items.forEach(it => remaining[it.id] = (remaining[it.id]||0) + 1);
+  return { queue: items, done: 0, failed: {}, remaining, finished: [], state: null };
+}
+function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1); while(S.meta.days[d]){ n++; d = addDays(d, -1); } return n; }
+
+function renderStart(){
+  const box = $("#sessionStart"), x = t();
+  const due = dueCards().length, nq = Math.min(newQuota(), newCandidates().length);
+  if(cardsHere().length === 0){
+    box.innerHTML = `<h2>${x.emptyTitle}</h2><p class="muted">${esc(x.emptyBody(langName()))}</p>
+      <div class="row"><button class="btn primary" id="goAdd" type="button">${x.goAdd}</button>${S.meta.settings.lang === "es" ? `<button class="btn" id="seed" type="button">${x.seed}</button>` : ""}</div>`;
+    $("#goAdd").onclick = () => showView("add");
+    const sd = $("#seed"); if(sd) sd.onclick = seedExamples;
+    return;
+  }
+  if(due + nq === 0){
+    const next = cardsHere().filter(c => !c.mastered && c.due).map(c => c.due).sort()[0];
+    box.innerHTML = `<h2>${S.meta.days[today()] ? x.doneTitle : x.noneTitle}</h2>
+      <p class="muted">${next ? esc(x.nextReview(next, diffDays(today(), next))) : x.nextNone}</p>
+      <p class="muted small">${x.streak(streak())}</p>
+      <div class="row"><button class="btn" id="goAdd2" type="button">${x.addMore}</button></div>`;
+    $("#goAdd2").onclick = () => showView("add");
+    return;
+  }
+  const z = savedSession();
+  if(z){
+    box.innerHTML = `<h2>${x.resumeTitle}</h2><p>${x.resumeBody(z.queue.length, z.done || 0)}</p>
+      <div class="row"><button class="btn primary" id="resumeBtn" type="button">${x.resume}</button><button class="btn ghost" id="restartBtn" type="button">${x.restart}</button></div>`;
+    $("#resumeBtn").onclick = resumeSession;
+    $("#restartBtn").onclick = () => { delete S.meta.session; save(); startSession(); };
+    return;
+  }
+  box.innerHTML = `<h2>${x.todayTitle}</h2><p>${x.todayCounts(due, nq)}</p><p class="muted small">${x.todayHint(streak())}</p>
+    <div class="row"><button class="btn primary" id="startBtn" type="button">${x.start}</button></div>`;
+  $("#startBtn").onclick = startSession;
+}
+function startSession(){
+  SES = buildSession(); if(!SES.queue.length){ SES = null; renderStart(); return; }
+  saveSession();
+  $("#sessionStart").classList.add("hidden"); $("#sessionBox").classList.remove("hidden"); nextItem();
+}
+function nextItem(){
+  if(!SES.queue.length) return finishSession();
+  const it = SES.queue[0], c = S.cards[it.id];
+  if(!c){ SES.queue.shift(); return nextItem(); }
+  SES.state = { answered: false }; renderItem(c, it.mode);
+}
+function saveSession(){
+  if(!SES){ delete S.meta.session; save(); return; }
+  S.meta.session = { day: today(), lang: S.meta.settings.lang, queue: SES.queue, done: SES.done, failed: SES.failed, remaining: SES.remaining, finished: SES.finished };
+  save();
+}
+function savedSession(){
+  const z = S.meta.session;
+  if(!z || z.day !== today() || z.lang !== S.meta.settings.lang || !Array.isArray(z.queue)) return null;
+  const queue = z.queue.filter(it => S.cards[it.id]);
+  return queue.length ? Object.assign({}, z, { queue }) : null;
+}
+function resumeSession(){
+  const z = savedSession(); if(!z) return startSession();
+  SES = { queue: z.queue, done: z.done || 0, failed: z.failed || {}, remaining: z.remaining || {}, finished: z.finished || [], state: null };
+  $("#sessionStart").classList.add("hidden"); $("#sessionBox").classList.remove("hidden"); nextItem();
+}
+function settleItem(correct){
+  const it = SES.queue.shift();
+  if(it.mode !== "study" && !correct){
+    SES.failed[it.id] = true;
+    SES.queue.splice(Math.min(3, SES.queue.length), 0, { id: it.id, mode: it.mode });
+    SES.remaining[it.id]++;
+  }
+  SES.remaining[it.id]--; SES.done++;
+  if(SES.remaining[it.id] <= 0){ const c = S.cards[it.id]; if(c){ schedule(c, !SES.failed[it.id]); saveCard(c); SES.finished.push({ id: c.id, ok: !SES.failed[it.id] }); } }
+  saveSession(); updateStats(); nextItem();
+}
+function finishSession(){
+  const x = t();
+  S.meta.days[today()] = true; delete S.meta.session;
+  const keys = Object.keys(S.meta.days).sort(); if(keys.length > 400) keys.slice(0, keys.length-400).forEach(k => delete S.meta.days[k]);
+  save();
+  const ok = SES.finished.filter(f => f.ok).length, ng = SES.finished.length - ok;
+  const rows = SES.finished.map(f => { const c = S.cards[f.id]; if(!c) return ""; return `<div class="item" style="cursor:default"><span style="min-width:0"><span class="w">${esc(c.word)}</span><span class="m">${esc(c.meaning)}</span></span><span class="right">${f.ok ? `<span class="chip done">${x.firstTry}</span>` : `<span class="chip leech">${x.tomorrow}</span>`}<span>${c.mastered ? x.graduated : esc(x.nextOn(c.due))}</span></span></div>`; }).join("");
+  const box = $("#sessionBox");
+  box.innerHTML = `<h2>${x.finishTitle}</h2><p>${x.finishSum(ok, ng)}</p><div class="list">${rows}</div><div class="row"><button class="btn primary" id="backHome" type="button">${x.ok}</button></div>`;
+  $("#backHome").onclick = () => { SES = null; box.classList.add("hidden"); $("#sessionStart").classList.remove("hidden"); renderAll(); };
+}
+
+const kbdHTML = () => L().chars.length ? '<div class="kbd">' + L().chars.map(ch => `<button type="button" data-ch="${ch}">${ch}</button>`).join("") + "</div>" : "";
+function bindKbd(box, input){ box.querySelectorAll(".kbd button").forEach(b => b.onclick = () => { const s = input.selectionStart ?? input.value.length, e = input.selectionEnd ?? s; input.value = input.value.slice(0,s) + b.dataset.ch + input.value.slice(e); input.focus(); try{ input.setSelectionRange(s+1, s+1); }catch(_){} }); }
+function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="progress" aria-hidden="true"><i style="width:${pct}%"></i></div><div class="modehead"><span class="muted small">${t().modes[mode]} · ${t().left(SES.queue.length)}</span><span>${levelChip(c)}</span></div><div class="row"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}">${hf ? t().hfOn : t().hfOff}</button></div>`; }
+document.addEventListener("click", e => {
+  if(!e.target.closest("#hfToggle") || !SES || SES.state.answered) return;
+  S.meta.settings.handsFree = !S.meta.settings.handsFree; save();
+  const it = SES.queue[0]; const c = it && S.cards[it.id]; if(c) renderItem(c, it.mode);
+});
+const listenBtn = (text, label) => canSpeak() && text ? `<button class="btn ghost" type="button" data-say="${esc(text)}">${label || t().listen}</button><button class="btn ghost" type="button" data-say="${esc(text)}" data-slow="1">${t().slow}</button>` : "";
+function bindSay(box){ box.querySelectorAll("[data-say]").forEach(b => b.onclick = () => { if(!speak(b.dataset.say, { slow: b.dataset.slow === "1" })) toast(t().noVoice); }); }
+const srcLine = c => c.src ? `<a class="tiny" href="https://tatoeba.org/sentences/show/${encodeURIComponent(c.src)}" target="_blank" rel="noopener">${esc(t().source(c.src))}</a>` : "";
+
+/* 入力式の問題（推測・穴埋め・意味から書く）共通：間違えたら答えを見せて書き写させる */
+function askTyped(c, mode, promptHTML, target, isGuess){
+  const box = $("#sessionBox"), x = t();
+  box.innerHTML = head(c, mode) + promptHTML + `
+    <form id="ansForm" autocomplete="off"><input type="text" id="ans" class="answer" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${isGuess ? x.guessType : x.answerPh}" aria-label="${x.answer}" enterkeyhint="done"></form>
+    ${kbdHTML()}<div id="fb"></div>
+    <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${isGuess ? x.guessSkip : x.idk}</button><span class="grow"></span><button class="btn primary" type="button" id="chk">${isGuess ? x.guessBtn : x.check}</button></div>`;
+  const input = $("#ans"); bindKbd(box, input); input.focus();
+  let phase = "answer";
+  const answerBlock = () => `<span class="sentence" style="font-size:1.15rem"><b>${esc(target)}</b>${norm(target) !== norm(c.word) ? ` <span class="muted small">(${x.baseForm} ${esc(c.word)})</span>` : ""}</span>${c.meaning ? `<span class="muted">${esc(c.meaning)}</span>` : ""}${c.example ? `<span class="small">${highlight(c)}</span><span class="small muted">${esc(c.exampleKo)}</span>` : ""}`;
+  const finish = ok => settleItem(isGuess ? true : ok);
+  const reveal = res => {
+    SES.state.answered = true;
+    const ok = res !== "no";
+    if(ok){
+      input.disabled = true;
+      const title = isGuess ? x.guessRight : (res === "ok" ? x.correct : x.correctAccent);
+      $("#fb").innerHTML = `<div class="feedback ${res === "accent" ? "meh" : "ok"}"><strong>${title}</strong>${answerBlock()}</div>`;
+      $("#acts").innerHTML = `${listenBtn(c.example || c.word)}<span class="grow"></span><button class="btn primary" type="button" id="nx">${x.next}</button>`;
+      bindSay(box); const nx = $("#nx"); nx.onclick = () => finish(true); nx.focus();
+      speak(mode === "recall" ? c.word : (c.example || c.word));
+      return;
+    }
+    // 不正解：答えを見せて、書き写してから次へ（書かずに進むこともできる）
+    phase = "copy";
+    $("#fb").innerHTML = `<div class="feedback ${isGuess ? "meh" : "no"}"><strong>${isGuess ? x.guessWrong : x.wrong}</strong>${answerBlock()}<span class="small"><b>${x.copyPrompt}</b>${isGuess ? "" : " " + x.retryLater}</span></div>`;
+    input.value = ""; input.disabled = false; input.placeholder = x.copyPh; input.focus();
+    $("#acts").innerHTML = `${listenBtn(target)}<button class="btn ghost" type="button" id="skipCopy">${x.skipCopy}</button><span class="grow"></span><button class="btn primary" type="button" id="chk">${x.check}</button>`;
+    bindSay(box);
+    $("#skipCopy").onclick = () => finish(false);
+    $("#chk").onclick = submit;
+    speak(target);
+  };
+  function submit(){
+    if(!input.value.trim()){ input.focus(); return; }
+    if(phase === "answer"){ if(SES.state.answered) return; reveal(check(input.value, target)); return; }
+    if(check(input.value, target) !== "no"){ toast(x.copyOk); finish(false); }
+    else { input.value = ""; input.placeholder = x.copyAgain; input.focus(); toast(x.copyAgain); }
+  }
+  $("#ansForm").onsubmit = e => { e.preventDefault(); submit(); };
+  $("#chk").onclick = submit;
+  $("#idk").onclick = () => { if(phase === "answer" && !SES.state.answered) reveal("no"); };
+}
+/* 入力なしモード（歩きながら・電車用）：考える → 答えを聞く → 自己採点 */
+function askHandsFree(c, mode, promptHTML, target, isGuess){
+  const box = $("#sessionBox"), x = t();
+  box.innerHTML = head(c, mode) + promptHTML + `<div id="fb"></div>
+    <div class="row" id="acts"><span class="grow"></span><button class="btn primary" type="button" id="rv">${x.reveal}</button></div>`;
+  if(mode !== "recall" && c.exampleKo) speak(c.exampleKo, { lang: S.meta.settings.ui, audio: null });
+  $("#rv").onclick = () => {
+    $("#fb").innerHTML = `<div class="feedback meh"><strong>${x.answer}</strong><span class="sentence" style="font-size:1.15rem"><b>${esc(target)}</b></span>${c.meaning ? `<span class="muted">${esc(c.meaning)}</span>` : ""}${c.example ? `<span class="small">${highlight(c)}</span>` : ""}</div>`;
+    speak(c.example || c.word);
+    $("#acts").innerHTML = `${listenBtn(c.example || c.word)}<span class="grow"></span>` + (isGuess
+      ? `<button class="btn primary" type="button" id="sOk">${x.next}</button>`
+      : `<button class="btn bad" type="button" id="sNo">${x.forgot}</button><button class="btn good" type="button" id="sOk">${x.remembered}</button>`);
+    bindSay(box);
+    $("#sOk").onclick = () => settleItem(true);
+    const no = $("#sNo"); if(no) no.onclick = () => settleItem(false);
+  };
+}
+function renderItem(c, mode){
+  const box = $("#sessionBox"), x = t();
+  const hf = !!S.meta.settings.handsFree;
+  if(hf && mode === "write") mode = (c.example && c.exampleKo) ? "speak" : "recall";
+  if(mode === "study" || mode === "cloze"){
+    const p = clozeParts(c);
+    if(mode === "cloze" && !p) return renderItem(c, "recall");
+    const isGuess = mode === "study";
+    const target = p ? p.answer : c.word;
+    const promptHTML = p
+      ? `${isGuess ? `<p class="muted small">${x.guessLead}</p>` : ""}<p class="sentence">${tokHTML(p.before)}<span class="blank">____</span>${tokHTML(p.after)}</p><p class="muted">${esc(c.exampleKo)}</p><p class="small muted">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p>`
+      : `${isGuess ? `<p class="muted small">${x.guessLead}</p>` : ""}<div><p class="muted small">${esc(x.recallQ(langName()))}</p><div class="word" style="font-size:1.6rem">${esc(c.meaning || x.noMeaning)}</div><p class="small muted">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p></div>`;
+    return (hf ? askHandsFree : askTyped)(c, mode, promptHTML, target, isGuess);
+  }
+  if(mode === "recall"){
+    const promptHTML = `<div><p class="muted small">${esc(x.recallQ(langName()))}</p><div class="word" style="font-size:1.6rem">${esc(c.meaning || x.noMeaning)}</div></div>`;
+    return (hf ? askHandsFree : askTyped)(c, mode, promptHTML, c.word, false);
+  }
+  if(mode === "write"){
+    box.innerHTML = head(c, mode) + `
+      <div><div class="word" style="font-size:1.7rem">${esc(c.word)}</div><p class="muted">${esc(c.meaning)}</p></div>
+      <p>${x.writePrompt}</p>
+      <label for="wr">${x.myText}<textarea id="wr" spellcheck="false"></textarea></label>
+      ${kbdHTML()}<div id="fb"></div>
+      <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${x.idk}</button><span class="grow"></span><button class="btn primary" type="button" id="chk">${x.wrote}</button></div>`;
+    const ta = $("#wr"); bindKbd(box, ta); ta.focus();
+    $("#idk").onclick = () => { if(SES.state.answered) return; SES.state.answered = true; ta.disabled = true;
+      $("#fb").innerHTML = `<div class="feedback no"><strong>${x.seeExample}</strong><span>${highlight(c)}</span><span class="small muted">${esc(c.exampleKo)}</span></div>`;
+      $("#acts").innerHTML = `<span class="grow"></span><button class="btn primary" type="button" id="nx">${x.next}</button>`; $("#nx").onclick = () => settleItem(false); };
+    $("#chk").onclick = () => {
+      if(SES.state.answered) return; const txt = ta.value.trim(); if(!txt){ ta.focus(); return; }
+      SES.state.answered = true; ta.disabled = true;
+      const used = !!findForm(txt, c.word);
+      $("#fb").innerHTML = `<div class="feedback ${used ? "meh" : "no"}"><strong>${used ? x.writeUsed : x.writeMissing}</strong><span class="small">${x.refEx}${highlight(c)}</span><span class="small muted">${esc(c.exampleKo)}</span></div>`;
+      $("#acts").innerHTML = `${listenBtn(txt, x.listenMine)}<span class="grow"></span><button class="btn bad" type="button" id="sNo">${x.selfNo}</button><button class="btn good" type="button" id="sOk">${x.selfOk}</button>`;
+      bindSay(box); $("#sNo").onclick = () => settleItem(false); $("#sOk").onclick = () => settleItem(true);
+    };
+    return;
+  }
+  if(mode === "speak"){
+    const p = clozeParts(c); const key = p ? p.answer : c.word;
+    box.innerHTML = head(c, mode) + `
+      <p class="muted small">${x.speakPrompt(esc(langName()), esc(c.word))}</p>
+      <p class="sentence">${esc(c.exampleKo)}</p>
+      <p class="small" id="heard" aria-live="polite"></p><div id="fb"></div>
+      <div class="row" id="acts">${SR ? `<button class="btn mic" type="button" id="micBtn">${x.micStart}</button>` : ""}<span class="grow"></span><button class="btn primary" type="button" id="rv">${x.reveal}</button></div>`;
+    let heard = "";
+    if(SR){
+      const mb = $("#micBtn"); let rec = null;
+      mb.onclick = () => {
+        if(rec){ try{ rec.stop(); }catch(e){} return; }
+        try{
+          rec = new SR(); rec.lang = L().speech; rec.interimResults = true; rec.maxAlternatives = 1;
+          rec.onresult = e => { heard = Array.from(e.results).map(r => r[0].transcript).join(" "); $("#heard").textContent = x.heard + heard; };
+          rec.onend = () => { rec = null; mb.classList.remove("on"); mb.textContent = x.micAgain; };
+          rec.onerror = ev => { if(ev.error === "not-allowed") toast(x.micDenied); };
+          rec.start(); mb.classList.add("on"); mb.textContent = x.micStop;
+        }catch(e){ toast(x.micNo); }
+      };
+    }
+    $("#rv").onclick = () => {
+      const hasKey = heard && !!findForm(heard, key);
+      const exW = new Set(norm(stripAcc(c.example)).split(" ")); const hW = norm(stripAcc(heard)).split(" ").filter(Boolean);
+      const overlap = hW.length ? Math.round(hW.filter(w => exW.has(w)).length / exW.size * 100) : 0;
+      $("#fb").innerHTML = `<div class="feedback ${heard ? (hasKey ? "ok" : "no") : "meh"}"><strong>${x.original}</strong><span class="sentence" style="font-size:1.1rem">${highlight(c)}</span>${heard ? `<span class="small">${hasKey ? x.keyHeard : x.keyMissed} · ${x.overlap(overlap)}</span>` : ""}</div>`;
+      speak(c.example);
+      $("#acts").innerHTML = `${listenBtn(c.example, x.listenAgain)}<span class="grow"></span><button class="btn bad" type="button" id="sNo">${x.stuck}</button><button class="btn good" type="button" id="sOk">${x.saidOk}</button>`;
+      bindSay(box); $("#sNo").onclick = () => settleItem(false); $("#sOk").onclick = () => settleItem(true);
+    };
+    return;
+  }
+}
+
+/* ───────── 単語の追加 ───────── */
+const findDup = word => cardsHere().find(c => norm(c.word) === norm(word));
+let PICK = null;
+function candList(cands){ return `<div class="cands">` + cands.map((cd, i) => `<button type="button" class="cand" aria-pressed="false" data-i="${i}"><span>${hlText(cd.text, cd.form)}</span><span class="tr" data-tr="${i}">${esc(cd.tr || (cd.en ? t().enPrefix + cd.en : ""))}</span></button>`).join("") + `</div>`; }
+async function runFind(){
+  const x = t(), word = $("#fWord").value.trim(); if(!word){ $("#fWord").focus(); return; }
+  const b = $("#btnFind"); b.disabled = true; b.textContent = x.finding; $("#findNote").textContent = "";
+  const box = $("#dictBox"); box.classList.remove("hidden"); box.innerHTML = `<p class="muted small">${x.searching}</p>`;
+  const r = await lookup(word);
+  b.disabled = false; b.textContent = x.btnFindAgain;
+  if(r.meaning && !$("#fMeaning").value.trim()) $("#fMeaning").value = r.meaning;
+  const wk = r.wikt.length ? `<p class="small"><span class="muted">${x.englishGloss}</span> ${r.wikt.map(w => `<span>${esc(w.pos ? "(" + w.pos + ") " : "")}${esc(w.def)}</span>`).join(" · ")}</p>` : "";
+  box.innerHTML = wk + (r.cands.length ? `<p class="muted small">${x.pickOne}</p>` + candList(r.cands) : `<p class="muted small">${r.candsErr ? x.candsErr : x.candsNone}</p>`);
+  if(r.meaningErr === "quota") $("#findNote").textContent = x.quota;
+  box.querySelectorAll(".cand").forEach(el => el.onclick = async () => {
+    const cd = r.cands[+el.dataset.i];
+    box.querySelectorAll(".cand").forEach(o => o.setAttribute("aria-pressed", o === el ? "true" : "false"));
+    $("#fExample").value = cd.text; PICK = { src: cd.id, form: cd.form, audio: cd.audio };
+    $("#fExampleTr").value = cd.tr || x.translating;
+    if(!cd.tr){ const tr = await trOf(cd); cd.tr = tr; if($("#fExample").value === cd.text) $("#fExampleTr").value = tr; const s = box.querySelector(`[data-tr="${el.dataset.i}"]`); if(s) s.textContent = tr; }
+    speak(cd.text, { audio: cd.audio });
+  });
+}
+$("#btnFind").onclick = runFind;
+$("#findForm").onsubmit = e => { e.preventDefault(); runFind(); };
+$("#fExample").oninput = () => { PICK = null; };
+$("#btnSave").onclick = () => {
+  const x = t(), word = $("#fWord").value.trim(); if(!word){ $("#fWord").focus(); return; }
+  if(findDup(word)){ toast(x.dup); return; }
+  const ex = $("#fExample").value.trim(), tr = $("#fExampleTr").value;
+  saveCard(newCard({ word, meaning: $("#fMeaning").value, example: ex, exampleKo: tr === x.translating ? "" : tr, form: PICK && PICK.form || findForm(ex, word), src: PICK && PICK.src, audio: PICK && PICK.audio }));
+  ["#fWord","#fMeaning","#fExample","#fExampleTr"].forEach(s => $(s).value = ""); PICK = null;
+  $("#dictBox").classList.add("hidden"); $("#dictBox").innerHTML = ""; $("#btnFind").textContent = x.btnFind; $("#findNote").textContent = "";
+  toast(x.saved(word)); renderAll(); $("#fWord").focus();
+};
+function parseBulk(text){
+  return text.split(/\n+/).map(l => l.trim()).filter(Boolean).map(line => {
+    const [h, ex, tr] = line.split("|").map(s => (s||"").trim());
+    let word = h, meaning = ""; const m = h.match(/^(.+?)\s*(?:=|＝|\t|\s-\s|:|：)\s*(.+)$/);
+    if(m){ word = m[1].trim(); meaning = m[2].trim(); }
+    return { word, meaning, example: ex||"", exampleKo: tr||"" };
+  }).filter(o => o.word);
+}
+$("#btnBulk").onclick = async () => {
+  const x = t(), rows = parseBulk($("#fBulk").value); if(!rows.length){ $("#fBulk").focus(); return; }
+  const added = []; let dup = 0;
+  rows.forEach(r => { if(findDup(r.word) || added.some(a => norm(a.word) === norm(r.word))){ dup++; return; } const c = newCard(Object.assign(r, { form: findForm(r.example, r.word) })); added.push(c); saveCard(c); });
+  $("#fBulk").value = ""; renderAll();
+  const note = $("#bulkNote"); note.textContent = x.bulkAdded(added.length, dup);
+  if(!$("#fBulkFill").checked) return;
+  const need = added.filter(c => !c.meaning || !c.example); if(!need.length) return;
+  const b = $("#btnBulk"); b.disabled = true; let filled = 0, quota = false;
+  for(let i = 0; i < need.length; i++){
+    note.textContent = x.bulkFilling(added.length, i+1, need.length);
+    const c = S.cards[need[i].id]; if(!c) continue;
+    try{
+      const r = await lookup(c.word);
+      if(!c.meaning && r.meaning) c.meaning = r.meaning;
+      if(r.meaningErr === "quota") quota = true;
+      if(!c.example && r.cands.length){ const cd = r.cands[0]; c.example = cd.text; c.form = cd.form; c.src = cd.id; c.audio = cd.audio || null; try{ c.exampleKo = await trOf(cd); }catch(e){} }
+      saveCard(c); filled++;
+    }catch(e){}
+    await sleep(400);
+  }
+  b.disabled = false; note.textContent = x.bulkDone(added.length, filled, quota); renderAll();
+}
+function seedExamples(){
+  t().seedData.forEach(([word, meaning, example, exampleKo, form]) => { if(!findDup(word)) saveCard(newCard({ word, meaning, example, exampleKo, form, lang:"es" })); });
+  toast(t().seeded); renderAll();
+}
+
+/* ───────── 単語ポップアップ ───────── */
+const WIKT_NAMES = { es:"Spanish", fr:"French", de:"German", it:"Italian", pt:"Portuguese", en:"English", ko:"Korean", ja:"Japanese" };
+function cardForToken(w){
+  const n = stripAcc(norm(w));
+  const here = cardsHere();
+  return here.find(c => stripAcc(norm(searchTerm(c.word))) === n || stripAcc(norm(c.form)) === n)
+      || here.find(c => n.length >= 3 && findForm(w, c.word) && stripAcc(norm(findForm(w, c.word))) === n)
+      || null;
+}
+let POP = null;
+function closePop(){ if(POP){ POP.remove(); POP = null; document.removeEventListener("keydown", popKey); } }
+function popKey(e){ if(e.key === "Escape") closePop(); }
+async function openPop(word, context){
+  const x = t(); closePop();
+  const bg = document.createElement("div"); bg.className = "sheet-bg"; POP = bg;
+  const card = cardForToken(word);
+  const dictUrl = "https://en.wiktionary.org/wiki/" + encodeURIComponent(word.toLowerCase()) + "#" + (WIKT_NAMES[S.meta.settings.lang] || "");
+  bg.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(word)}">
+    <button class="x" type="button" aria-label="${esc(x.popClose)}">✕</button>
+    <div class="pw">${esc(word)}</div>
+    ${card ? `<div class="row"><span class="chip done">${esc(x.popInDeck)}</span><span class="small muted">${esc(card.word)}</span></div>` : ""}
+    <p id="popMeaning">${card && card.meaning ? esc(card.meaning) : `<span class="muted">${esc(x.translating)}</span>`}</p>
+    <div class="row">${listenBtn(word, x.listen)}</div>
+    <div class="row"><button class="btn primary" id="popMore" type="button">${esc(x.popDetail)}</button>${card ? "" : `<button class="btn" id="popAdd" type="button">${esc(x.popAdd)}</button>`}<a class="small" href="${dictUrl}" target="_blank" rel="noopener">${esc(x.popDict)}</a></div>
+    <div id="popDetail" class="hidden"></div>
+  </div>`;
+  document.body.appendChild(bg);
+  bindSay(bg);
+  bg.addEventListener("click", e => { if(e.target === bg || e.target.closest(".x")) closePop(); });
+  document.addEventListener("keydown", popKey);
+  bg.querySelector(".x").focus();
+  speak(word);
+  let meaning = card && card.meaning || "";
+  if(!meaning){
+    try{ meaning = await translate(word, L().mm); }catch(e){ meaning = ""; }
+    if(POP !== bg) return;
+    $("#popMeaning").innerHTML = meaning ? esc(meaning) : `<span class="muted">${esc(x.popNoMeaning)}</span>`;
+  }
+  const add = bg.querySelector("#popAdd");
+  if(add) add.onclick = async () => {
+    if(findDup(word)){ toast(x.dup); return; }
+    const c = newCard({ word, meaning, example: context || "", form: word, audio: context ? audioFor(context) : null });
+    saveCard(c); add.disabled = true; toast(x.popAdded(word)); updateStats();
+    if(context){ try{ c.exampleKo = await translate(context, L().mm); saveCard(c); }catch(e){} }
+  };
+  bg.querySelector("#popMore").onclick = async () => {
+    const box = bg.querySelector("#popDetail"); box.classList.remove("hidden");
+    bg.querySelector("#popMore").classList.add("hidden");
+    const n = stripAcc(norm(word));
+    const own = cardsHere().filter(c => c.example && stripAcc(norm(c.example)).split(" ").includes(n)).map(c => ({ text: c.example, tr: c.exampleKo, audio: c.audio }));
+    const render = (list, loading) => {
+      box.innerHTML = `<h2>${esc(x.popExamples)}</h2><div class="exlist">` + list.map((e,i) => `<div class="ex"><span class="sentence" style="font-size:1.05rem">${tokHTML(e.text)}</span>${e.tr ? `<span class="small muted">${esc(e.tr)}</span>` : ""}<div class="row"><button class="btn sm ghost" type="button" data-pi="${i}">${esc(x.listen)}</button><button class="btn sm ghost" type="button" data-pi="${i}" data-slow="1">${esc(x.slow)}</button></div></div>`).join("") + `</div>` + (loading ? `<p class="muted small">${esc(x.popLoading)}</p>` : (list.length ? "" : `<p class="muted small">${esc(x.popNoEx)}</p>`));
+      box.querySelectorAll("[data-pi]").forEach(b => b.onclick = () => { const e = list[+b.dataset.pi]; speak(e.text, { audio: e.audio, slow: b.dataset.slow === "1" }); });
+    };
+    render(own, true);
+    let more = [];
+    try{ more = (await tatoeba(word)).map(cd => ({ text: cd.text, tr: cd.tr || (cd.en ? x.enPrefix + cd.en : ""), audio: cd.audio })); }catch(e){}
+    if(POP !== bg) return;
+    const seen = new Set(own.map(e => e.text));
+    render(own.concat(more.filter(e => !seen.has(e.text))), false);
+  };
+}
+document.addEventListener("click", e => {
+  const tk = e.target.closest(".tok"); if(!tk) return;
+  const ctx = tk.closest(".sentence, .ex, .feedback, p");
+  openPop(tk.dataset.w, ctx ? ctx.textContent.replace(/\s+/g," ").trim() : "");
+});
+document.addEventListener("keydown", e => { const tk = e.target.closest && e.target.closest(".tok"); if(tk && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); tk.click(); } });
+
+/* ───────── 単語帳 ───────── */
+let FILTER = "all";
+function renderList(){
+  const x = t(), q = stripAcc(norm($("#search").value));
+  let arr = cardsHere().sort((a,b) => b.created - a.created);
+  if(FILTER === "learning") arr = arr.filter(c => !c.mastered);
+  if(FILTER === "leech") arr = arr.filter(isLeech);
+  if(FILTER === "mastered") arr = arr.filter(c => c.mastered);
+  if(q) arr = arr.filter(c => stripAcc(norm(c.word)).includes(q) || norm(c.meaning).includes(q));
+  document.querySelectorAll("#filters button").forEach(b => b.classList.toggle("primary", b.dataset.f === FILTER));
+  $("#wordList").innerHTML = arr.length ? arr.map(c => `<button class="item" type="button" data-id="${c.id}"><span style="min-width:0"><span class="w">${esc(c.word)}</span><span class="m">${esc(c.meaning || x.noMeaningShort)}</span></span><span class="right">${levelChip(c)}<span>${c.mastered ? "" : c.isNew ? x.waiting : esc(x.nextOn(c.due))}</span></span></button>`).join("") : `<p class="muted small">${x.none}</p>`;
+  $("#wordList").querySelectorAll(".item").forEach(el => el.onclick = () => openEdit(el.dataset.id));
+}
+function openEdit(id){
+  const c = S.cards[id], x = t(); if(!c) return;
+  const box = $("#editBox"); box.classList.remove("hidden");
+  const hist = c.log.slice(-10).map(l => `<span class="chip ${l.ok ? "done" : "leech"}">${esc(l.d.slice(5))} ${l.ok ? "○" : "×"}</span>`).join(" ");
+  box.innerHTML = `<div class="modehead"><h2>${esc(c.word)}</h2><span>${levelChip(c)}</span></div>
+    <p class="muted small">${esc(x.reviews(c.reps, c.lapses))}${c.due && !c.mastered ? " · " + esc(x.nextOn(c.due)) : ""}</p>
+    ${hist ? `<div class="row">${hist}</div>` : ""}
+    <label for="eWord">${x.eWord}<input type="text" id="eWord" value="${esc(c.word)}" autocapitalize="off" spellcheck="false"></label>
+    <label for="eMeaning">${x.eMeaning}<input type="text" id="eMeaning" value="${esc(c.meaning)}"></label>
+    <label for="eExample">${x.eExample}<textarea id="eExample">${esc(c.example)}</textarea></label>
+    <label for="eExampleTr">${x.eExampleTr}<input type="text" id="eExampleTr" value="${esc(c.exampleKo)}"></label>
+    <label for="eForm">${x.eForm}<input type="text" id="eForm" value="${esc(c.form)}" autocapitalize="off" spellcheck="false"></label>
+    ${srcLine(c)}
+    <div class="row"><button class="btn" id="eFind" type="button">${x.findOther}</button><button class="btn" id="eReset" type="button">${x.reset}</button></div>
+    <div id="eCands"></div>
+    <div class="row"><button class="btn bad" id="eDel" type="button">${x.del}</button><span class="grow"></span><button class="btn ghost" id="eClose" type="button">${x.close}</button><button class="btn primary" id="eSave" type="button">${x.save}</button></div>`;
+  box.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  let eSrc = c.src, eAudio = c.audio || null;
+  $("#eExample").oninput = () => { eSrc = null; eAudio = null; };
+  $("#eClose").onclick = closeEdit;
+  $("#eSave").onclick = () => { const cur = S.cards[id]; if(!cur) return; cur.word = $("#eWord").value.trim() || cur.word; cur.meaning = $("#eMeaning").value.trim(); cur.example = $("#eExample").value.trim(); cur.exampleKo = $("#eExampleTr").value.trim(); cur.form = $("#eForm").value.trim() || findForm(cur.example, cur.word); cur.src = eSrc; cur.audio = eAudio; saveCard(cur); toast(x.savedShort); closeEdit(); renderAll(); };
+  $("#eReset").onclick = () => { const cur = S.cards[id]; Object.assign(cur, { level:0, isNew:true, mastered:false, due:null, introduced:null, relearn:false }); saveCard(cur); toast(x.resetDone); openEdit(id); renderAll(); };
+  $("#eFind").onclick = async () => {
+    const b = $("#eFind"); b.disabled = true; b.textContent = x.finding;
+    let cands = []; try{ cands = await tatoeba($("#eWord").value.trim()); }catch(e){}
+    b.disabled = false; b.textContent = x.findOther;
+    const wrap = $("#eCands");
+    if(!cands.length){ wrap.innerHTML = `<p class="muted small">${x.noneFound}</p>`; return; }
+    wrap.innerHTML = candList(cands);
+    wrap.querySelectorAll(".cand").forEach(el => el.onclick = async () => {
+      const cd = cands[+el.dataset.i]; wrap.querySelectorAll(".cand").forEach(o => o.setAttribute("aria-pressed", o === el ? "true" : "false"));
+      $("#eExample").value = cd.text; $("#eForm").value = cd.form; eSrc = cd.id; eAudio = cd.audio || null; $("#eExampleTr").value = cd.tr || x.translating;
+      if(!cd.tr){ $("#eExampleTr").value = await trOf(cd); }
+    });
+  };
+  const del = $("#eDel"); let armed = false;
+  del.onclick = () => { if(!armed){ armed = true; del.textContent = x.delConfirm; setTimeout(() => { armed = false; if(del.isConnected) del.textContent = x.del; }, 3000); return; } removeCard(id); toast(x.deleted); closeEdit(); renderAll(); };
+}
+function closeEdit(){ $("#editBox").classList.add("hidden"); $("#editBox").innerHTML = ""; }
+$("#search").oninput = renderList;
+document.querySelectorAll("#filters button").forEach(b => b.onclick = () => { FILTER = b.dataset.f; renderList(); });
+
+/* ───────── しくみ・設定 ───────── */
+function renderHow(){
+  const x = t(), counts = [0,0,0,0,0,0]; let mastered = 0;
+  cardsHere().forEach(c => { if(c.mastered) mastered++; else counts[Math.min(c.level, 5)]++; });
+  $("#ladder").innerHTML = x.levels.map((n,i) => `<div class="rung${counts[i] ? " hi" : ""}"><b>${counts[i]}</b><span>${n}</span></div>`).join("") + `<div class="rung${mastered ? " hi" : ""}"><b>${mastered}</b><span>${x.chipDone}</span></div>`;
+  const d0 = today(), days = [];
+  for(let i = 0; i < 7; i++){ const d = addDays(d0, i); days.push({ d, n: cardsHere().filter(c => !c.mastered && !c.isNew && c.due && (i === 0 ? c.due <= d : c.due === d)).length + (i === 0 ? Math.min(newQuota(), newCandidates().length) : 0) }); }
+  const max = Math.max(1, ...days.map(v => v.n));
+  $("#forecast").innerHTML = days.map((v,i) => { const [y,m,dd] = v.d.split("-").map(Number); return `<div class="fc${i ? "" : " today"}"><em>${v.n}</em><i style="height:${Math.round(v.n/max*62)}px"></i><span>${i ? x.week[new Date(y,m-1,dd).getDay()] : x.todayShort}</span></div>`; }).join("");
+  const st = S.meta.settings;
+  $("#setUi").value = st.ui; $("#setNew").value = st.newLimit; $("#setWrite").checked = st.writing; $("#setHf").checked = !!st.handsFree; $("#setSpeak").checked = st.speaking; $("#setAccent").checked = st.strictAccent; $("#setEmail").value = st.email || ""; $("#setRate").value = st.rate || 0.8; $("#rateOut").textContent = "×" + Number(st.rate || 0.8).toFixed(2); fillVoices();
+}
+$("#setUi").onchange = e => { if(SES){ toast(t().noLangSwitch); e.target.value = S.meta.settings.ui; return; } S.meta.settings.ui = e.target.value; save(); applyUi(); };
+$("#setNew").onchange = e => { S.meta.settings.newLimit = Math.max(1, Math.min(30, parseInt(e.target.value, 10) || 7)); save(); renderAll(); };
+$("#setHf").onchange = e => { S.meta.settings.handsFree = e.target.checked; save(); };
+$("#setWrite").onchange = e => { S.meta.settings.writing = e.target.checked; save(); };
+$("#setSpeak").onchange = e => { S.meta.settings.speaking = e.target.checked; save(); };
+$("#setAccent").onchange = e => { S.meta.settings.strictAccent = e.target.checked; save(); };
+$("#setVoice").onchange = e => { S.meta.settings.voices = S.meta.settings.voices || {}; S.meta.settings.voices[S.meta.settings.lang] = e.target.value; save(); };
+$("#setRate").oninput = e => { S.meta.settings.rate = Number(e.target.value); $("#rateOut").textContent = "×" + Number(e.target.value).toFixed(2); save(); };
+$("#btnPreview").onclick = () => { const sample = { es: t().previewText, fr:"Bonjour, comment ça va ? Il fait très beau aujourd'hui.", de:"Hallo, wie geht's? Heute ist das Wetter sehr schön.", it:"Ciao, come stai? Oggi fa bel tempo.", pt:"Olá, tudo bem? Hoje está um dia muito bonito.", en:"Hi, how are you? The weather is lovely today.", ko:"안녕하세요, 오늘 날씨가 정말 좋네요.", ja:"こんにちは、今日はとてもいい天気ですね。" }[S.meta.settings.lang]; if(!speak(sample, { audio: null })) toast(t().noVoice); };
+$("#setEmail").onchange = e => { S.meta.settings.email = e.target.value.trim(); save(); };
+const exportData = () => JSON.stringify({ app: "focus-vocab", version: 2, exported: new Date().toISOString(), cards: Object.values(S.cards), settings: S.meta.settings, days: S.meta.days });
+$("#btnExport").onclick = () => {
+  try{ const blob = new Blob([exportData()], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = t().backupName + today() + ".json"; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); }
+  catch(e){ toast(t().exportFail); }
+};
+$("#btnCopy").onclick = async () => { const d = exportData(); try{ await navigator.clipboard.writeText(d); toast(t().copied(Object.keys(S.cards).length)); }catch(e){ $("#importBox").value = d; toast(t().copyFail); } };
+function importJSON(text){
+  try{
+    const d = JSON.parse(text); const arr = Array.isArray(d) ? d : (d.cards || []); let n = 0;
+    arr.forEach(c => { if(!c || !c.word) return; const lang = c.lang || "es"; const ex = Object.values(S.cards).find(o => (o.lang||"es") === lang && norm(o.word) === norm(c.word)); const card = Object.assign(newCard(c), c, { id: ex ? ex.id : (c.id || uid()), lang }); if(!Array.isArray(card.log)) card.log = []; S.cards[card.id] = card; n++; });
+    if(d.settings) S.meta.settings = Object.assign({}, DEFAULT_SETTINGS, S.meta.settings, d.settings);
+    if(d.days) S.meta.days = Object.assign(S.meta.days, d.days);
+    save(); applyUi(); toast(t().imported(n)); return true;
+  }catch(e){ toast(t().importFail); return false; }
+}
+$("#btnImport").onclick = () => { if(importJSON($("#importBox").value)) $("#importBox").value = ""; };
+$("#importFile").onchange = e => { const f = e.target.files[0]; if(!f) return; f.text().then(tx => { importJSON(tx); e.target.value = ""; }); };
+
+/* ───────── 画面 ───────── */
+function applyUi(){
+  const x = t();
+  document.documentElement.lang = S.meta.settings.ui;
+  document.title = x.appName;
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = x[el.dataset.i18n]; });
+  document.querySelectorAll("[data-i18n-html]").forEach(el => { el.innerHTML = x[el.dataset.i18nHtml]; });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el => { el.placeholder = x[el.dataset.i18nPh]; });
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => { el.setAttribute("aria-label", x[el.dataset.i18nAria]); });
+  fillLangs(); closeEdit(); renderAll();
+}
+function fillLangs(){
+  const sel = $("#langPick"), x = t();
+  sel.innerHTML = Object.keys(LANGS).filter(k => k !== S.meta.settings.ui || Object.values(S.cards).some(c => c.lang === k)).map(k => { const n = Object.values(S.cards).filter(c => (c.lang||"es") === k).length; return `<option value="${k}">${x.langNames[k]}${n ? x.langCount(n) : ""}</option>`; }).join("");
+  sel.value = S.meta.settings.lang;
+  $("#fWord").placeholder = L().ph;
+}
+$("#langPick").onchange = e => { if(SES){ toast(t().noLangSwitch); e.target.value = S.meta.settings.lang; return; } S.meta.settings.lang = e.target.value; save(); fillLangs(); fillVoices(); closeEdit(); renderAll(); };
+function showView(v){
+  document.querySelectorAll(".view").forEach(s => s.classList.add("hidden"));
+  $("#view-" + v).classList.remove("hidden");
+  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v ? "true" : "false"));
+  if(v === "list") renderList(); if(v === "how") renderHow();
+}
+document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => showView(b.dataset.view));
+function updateStats(){
+  const all = cardsHere();
+  $("#sDue").textContent = dueCards().length;
+  $("#sNew").textContent = Math.min(newQuota(), newCandidates().length);
+  $("#sLearning").textContent = all.filter(c => !c.mastered && !c.isNew).length;
+  $("#sMastered").textContent = all.filter(c => c.mastered).length;
+}
+function renderAll(){
+  const d = new Date(), x = t();
+  $("#todayLabel").textContent = x.dateLabel(d.getMonth()+1, d.getDate(), x.week[d.getDay()]);
+  updateStats(); if(!SES) renderStart();
+  if(!$("#view-list").classList.contains("hidden")) renderList();
+  if(!$("#view-how").classList.contains("hidden")) renderHow();
+}
+document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
+
+load(); applyUi();
+try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
+if("serviceWorker" in navigator && location.protocol === "https:"){ navigator.serviceWorker.register("sw.js").catch(() => {}); }
+})();
+</script>
+</body>
+</html>
