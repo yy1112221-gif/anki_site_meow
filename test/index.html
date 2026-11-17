@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-visual">
 <meta name="theme-color" content="#69a795">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="ANKI MEOW">
@@ -583,15 +583,15 @@ body.dropping::after{content:"📥";position:fixed;inset:10px;z-index:90;display
 
 /* ══════════ UX 監査の修正 ══════════ */
 /* 小さい画面: 解答後に問題文が上に流れないよう、ねこの吹き出しを省く */
-@media (max-height:760px), (max-width:360px){
-  body.focus #sessionBox > .say, body.focus .stage > .say{display:none}
-  body.focus .feedback img.nm{display:none}
-  body.focus .stage .sentence{font-size:1.18rem}
-  body.focus #sessionBox{gap:8px;padding:12px 12px 10px}
-  body.focus .dock .kbd{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
-  body.focus .dock .kbd button{flex-shrink:0}
-  body.focus .dock{gap:8px;padding-top:8px}
-}
+
+  html.short body.focus #sessionBox > .say, html.short body.focus .stage > .say{display:none}
+  html.short body.focus .feedback img.nm{display:none}
+  html.short body.focus .stage .sentence{font-size:1.18rem}
+  html.short body.focus #sessionBox{gap:8px;padding:12px 12px 10px}
+  html.short body.focus .dock .kbd{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  html.short body.focus .dock .kbd button{flex-shrink:0}
+  html.short body.focus .dock{gap:8px;padding-top:8px}
+
 .stage:has(#fb .feedback) .q-hint{display:none}
 @media (max-width:360px){ nav.tabs button{font-size:.72rem;letter-spacing:.02em;padding:9px 2px} .bignums span{letter-spacing:.06em} }
 .bignums span{font-size:.7rem}
@@ -599,6 +599,23 @@ body.dropping::after{content:"📥";position:fixed;inset:10px;z-index:90;display
 .pitem .btn.sm, .langbtn, .iconbtn, .chiptog, .fchip{min-height:40px}
 .oq-x{width:28px;height:28px;line-height:28px}
 .startopts{display:flex;flex-direction:column;gap:8px;align-items:stretch;max-width:340px}
+
+/* ══════════ 解答画面 v2: 上半分＝問題と答え（固定）、下半分＝答える操作。キーボードで動かない ══════════ */
+body.focus{overflow:hidden;overscroll-behavior:none}
+body.focus #sessionBox{top:calc(8px + env(safe-area-inset-top));height:calc(var(--sh,100vh) - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
+body.focus .stage{flex:0 0 auto;height:calc(var(--sh,100vh) * .5 - 168px);min-height:120px;max-height:460px}
+body.focus .dock{flex:1 1 auto;min-height:0;justify-content:flex-start;overflow-y:auto}
+.ansrow{display:flex;gap:8px;align-items:stretch}
+.ansrow .answer{flex:1 1 auto;min-width:0}
+.ansrow .btn{flex:0 0 auto;white-space:nowrap;min-height:48px}
+.answer.done{border-color:var(--good)!important;background:rgba(0,105,69,.08)}
+.answer.miss{border-color:var(--bad)!important}
+html.short body.focus .stage{height:calc(var(--sh,100vh) * .5 - 150px)}
+.stage:has(#fb .feedback) > .say{display:none}
+body.focus .feedback img.nm{display:none}
+body.focus .feedback{padding:12px 14px;gap:2px}
+body.focus .feedback .fb-note{display:none}
+body.focus .feedback .fb-answer{font-size:1.35rem}
 h1 .logo .testtag{font-size:.55rem;letter-spacing:.1em;background:var(--accent);color:#fff;border-radius:999px;padding:2px 7px;margin-left:6px}
 </style>
 </head>
@@ -1205,24 +1222,26 @@ async function playEq(url){
   src.start();
 }
 function plainAudio(url, text, opts){
-  const a = new Audio(url); AUDIO_EL = a;
-  a.playbackRate = opts.slow ? 0.7 : 1;
-  try{ a.preservesPitch = true; a.webkitPreservesPitch = true; }catch(e){}
+  const a = new Audio(url); AUDIO_EL = a; const rate = opts.slow ? 0.65 : 1;
+  try{ a.preservesPitch = true; a.webkitPreservesPitch = true; a.mozPreservesPitch = true; }catch(e){}
+  a.defaultPlaybackRate = rate; a.playbackRate = rate;   // iOS は読み込み時に速度を戻すので、読み込み後・再生開始時にもう一度
+  const keep = () => { if(a.playbackRate !== rate) a.playbackRate = rate; }; a.addEventListener("loadedmetadata", keep); a.addEventListener("playing", keep); a.addEventListener("ratechange", () => { if(Math.abs(a.playbackRate - rate) > .01) setTimeout(keep, 0); });
   a.play().catch(() => ttsSpeak(text, opts.slow));
   a.onerror = () => ttsSpeak(text, opts.slow);
 }
 function fixAudioUrl(u){ const m = String(u||"").match(/api\.tatoeba\.org\/v1\/audio\/(\d+)\/file/); return m ? "https://tatoeba.org/audio/download/" + m[1] : u; }
 function audioFor(text){ const c = Object.values(S.cards).find(c => c.audio && c.example === text); return c ? c.audio : null; }
 const UI_SPEECH = { ja:"ja-JP", ko:"ko-KR" };
+function ttsGo(u){ if(speechSynthesis.speaking || speechSynthesis.pending){ speechSynthesis.cancel(); setTimeout(() => speechSynthesis.speak(u), 140); } else speechSynthesis.speak(u); }
 function ttsSpeak(text, slow, uiLang){
   if(!canSpeak()) return false;
-  speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text); u.lang = L().speech;
-  if(uiLang){ const want = UI_SPEECH[uiLang] || "ja-JP"; u.lang = want; const vv = voicesFor(want).sort((a,b) => voiceScore(b, want) - voiceScore(a, want))[0]; if(vv) u.voice = vv; u.rate = Number(S.meta.settings.rate) || 0.8; speechSynthesis.speak(u); return true; }
+  if(uiLang){ const want = UI_SPEECH[uiLang] || "ja-JP"; u.lang = want; const vv = voicesFor(want).sort((a,b) => voiceScore(b, want) - voiceScore(a, want))[0]; if(vv) u.voice = vv; u.rate = Number(S.meta.settings.rate) || 0.8; ttsGo(u); return true; }
   const base = Number(S.meta.settings.rate) || 0.8;
-  u.rate = Math.max(0.3, slow ? base * 0.65 : base);
+  u.rate = slow ? Math.max(0.35, Math.min(0.55, base * 0.6)) : base;
   const v = pickVoice(); if(v){ u.voice = v; u.lang = v.lang; }
-  speechSynthesis.speak(u); return true;
+  // Safari: cancel の直後に speak すると捨てられることがあるので、話している最中なら少し待つ
+  ttsGo(u); return true;
 }
 function speak(text, opts){
   opts = opts || {};
@@ -1230,10 +1249,9 @@ function speak(text, opts){
     if(!text) return false;
     if(AUDIO_EL){ try{ AUDIO_EL.pause(); }catch(e){} AUDIO_EL = null; }
     if(EQ_SRC){ try{ EQ_SRC.stop(); }catch(e){} EQ_SRC = null; }
-    try{ if(canSpeak()) speechSynthesis.cancel(); }catch(e){}
     if(opts.lang) return ttsSpeak(text, false, opts.lang);
     const url = opts.audio === undefined ? audioFor(text) : opts.audio;
-    if(url){ plainAudio(fixAudioUrl(url), text, opts); return true; }
+    if(url){ try{ if(canSpeak()) speechSynthesis.cancel(); }catch(e){} plainAudio(fixAudioUrl(url), text, opts); return true; }
     if(url){
       const a = new Audio(url); AUDIO_EL = a;
       const base = Number(S.meta.settings.rate) || 0.8;
@@ -1359,7 +1377,9 @@ function nextItem(){
   if(!c){ SES.queue.shift(); return nextItem(); }
   if(c.lazy && !it.waited){ it.waited = 1; document.body.classList.add("focus"); $("#sessionBox").innerHTML = `<div class="stage">${say("load_run", esc(t().prepping))}</div>`;
     Promise.race([fillLazy(c), sleep(3000)]).then(() => { if(SES && SES.queue[0] === it) nextItem(); }); return; }
-  SES.state = { answered: false }; document.body.classList.add("focus"); renderItem(c, it.mode); centerBox($("#sessionBox"));
+  SES.state = { answered: false }; document.body.classList.add("focus"); renderItem(c, it.mode);
+  { const bx = $("#sessionBox"), sy = bx.querySelector(":scope > .say"), st = bx.querySelector(".stage"); if(sy && st) st.prepend(sy); }   // ねこの吹き出しは問題エリアの中へ（入力欄の位置を一定に）
+  centerBox($("#sessionBox"));
 }
 function saveSession(){
   if(!SES){ delete S.meta.session; save(); return; }
@@ -1442,27 +1462,29 @@ const srcLine = c => c.src ? `<a class="tiny" href="https://tatoeba.org/sentence
 function askTyped(c, mode, promptHTML, target, isGuess){
   const box = $("#sessionBox"), x = t();
   box.innerHTML = head(c, mode) + `<div class="stage">${promptHTML}<div id="fb"></div></div><div class="dock">
-    <form id="ansForm" autocomplete="off"><input type="text" id="ans" class="answer" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${isGuess ? x.guessType : x.answerPh}" aria-label="${x.answer}" enterkeyhint="done"></form>
+    <form id="ansForm" autocomplete="off" class="ansrow"><input type="text" id="ans" class="answer" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${isGuess ? x.guessType : x.answerPh}" aria-label="${x.answer}" enterkeyhint="go"><button class="btn primary" type="button" id="chk">${isGuess ? x.guessBtn : x.check}</button></form>
     ${kbdHTML()}
-    <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${isGuess ? x.guessSkip : x.idk}</button><span class="grow"></span><button class="btn primary" type="button" id="chk">${isGuess ? x.guessBtn : x.check}</button></div></div>`;
+    <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${isGuess ? x.guessSkip : x.idk}</button></div></div>`;
   const input = $("#ans"); bindKbd(box, input); input.focus({ preventScroll: true });
   let phase = "answer";
   const blank = box.querySelector(".stage .blank");
   // 答えは問題の空欄にそのまま入れる。フィードバックには「単語・意味」だけ（例文は上に出ているので繰り返さない）
   const answerBlock = () => `<span class="fb-answer">${esc(target)}${norm(target) !== norm(c.word) ? ` <span class="fb-base">${x.baseForm} ${esc(c.word)}</span>` : ""}</span>${c.meaning ? `<span class="fb-mean">${esc(c.meaning)}</span>` : ""}${siblings(c)}${!blank && c.example ? `<span class="fb-ex">${highlight(c)}</span><span class="fb-mean">${esc(c.exampleKo)}</span>` : ""}`;
   const fillBlank = ok => { if(blank){ blank.textContent = target; blank.classList.add("filled", ok ? "ok" : "no"); } };
-  const showFb = () => { const fb = $("#fb"); if(fb) requestAnimationFrame(() => fb.scrollIntoView({ block: "nearest", behavior: "smooth" })); };
+  const showFb = () => { const fb = $("#fb"), st = box.querySelector(".stage"); if(!fb || !st) return;   // 入りきるなら問題文が見える一番上のまま。入らないときだけ必要な分だけ動かす
+    requestAnimationFrame(() => { if(st.scrollHeight - st.clientHeight <= 4) st.scrollTop = 0; else fb.scrollIntoView({ block: "nearest", behavior: "smooth" }); }); };
   const finish = ok => settleItem(isGuess ? true : ok);
   const reveal = res => {
     SES.state.answered = true;
     const ok = res !== "no";
     if(ok){
-      input.disabled = true;
+      input.classList.add("done");
       const title = isGuess ? x.guessRight : (res === "ok" ? x.correct : x.correctAccent);
       fillBlank(true);
       $("#fb").innerHTML = `<div class="feedback ${res === "accent" ? "meh" : "ok"}">${fbh(res === "accent" ? "st_surprised" : "st_happy", title)}${answerBlock()}</div>`; showFb();
-      $("#acts").innerHTML = `${listenBtn(c.example || c.word)}<span class="grow"></span><button class="btn primary" type="button" id="nx">${x.next}</button>`;
-      bindSay(box); const nx = $("#nx"); nx.onclick = () => finish(true); nx.focus();
+      $("#acts").innerHTML = `${listenBtn(c.example || c.word)}`;
+      const nb = $("#chk"); nb.id = "nx"; nb.textContent = x.next; nb.onclick = () => finish(true);
+      bindSay(box); input.focus({ preventScroll: true });   // キーボードは出したまま。Enter でも次へ
       speak(mode === "recall" ? c.word : (c.example || c.word));
       return;
     }
@@ -1470,21 +1492,24 @@ function askTyped(c, mode, promptHTML, target, isGuess){
     phase = "copy";
     fillBlank(false);
     $("#fb").innerHTML = `<div class="feedback ${isGuess ? "meh" : "no"}">${fbh(isGuess ? "st_default" : "st_surprised", isGuess ? x.guessWrong : x.wrong)}${answerBlock()}<span class="fb-note"><b>${x.copyPrompt}</b>${isGuess ? "" : " " + x.retryLater}</span></div>`; showFb();
-    input.value = ""; input.disabled = false; input.placeholder = x.copyPh; input.focus();
-    $("#acts").innerHTML = `${listenBtn(target)}<button class="btn ghost" type="button" id="skipCopy">${x.skipCopy}</button><span class="grow"></span><button class="btn primary" type="button" id="chk">${x.check}</button>`;
+    input.value = ""; input.classList.add("miss"); input.placeholder = x.copyPh; input.focus({ preventScroll: true });
+    $("#acts").innerHTML = `${listenBtn(target)}<span class="grow"></span><button class="btn ghost" type="button" id="skipCopy">${x.skipCopy}</button>`;
     bindSay(box);
     $("#skipCopy").onclick = () => finish(false);
-    $("#chk").onclick = submit;
+    $("#chk").textContent = x.check; $("#chk").onclick = submit;
     speak(target);
   };
   function submit(){
-    if(!input.value.trim()){ input.focus(); return; }
+    if(phase === "answer" && SES.state.answered){ const nb = $("#nx"); if(nb) nb.click(); return; }
+    if(!input.value.trim()){ input.focus({ preventScroll: true }); return; }
     if(phase === "answer"){ if(SES.state.answered) return; reveal(check(input.value, target)); return; }
     if(check(input.value, target) !== "no"){ toast(x.copyOk); finish(false); }
     else { input.value = ""; input.placeholder = x.copyAgain; input.focus(); toast(x.copyAgain); }
   }
   $("#ansForm").onsubmit = e => { e.preventDefault(); submit(); };
   $("#chk").onclick = submit;
+  box.querySelectorAll(".dock button").forEach(b => b.addEventListener("pointerdown", e => { if(document.activeElement === input) e.preventDefault(); }));
+  new MutationObserver(() => box.querySelectorAll(".dock button:not([data-keep])").forEach(b => { b.dataset.keep = 1; b.addEventListener("pointerdown", e => { if(document.activeElement === input) e.preventDefault(); }); })).observe(box.querySelector(".dock"), { childList: true, subtree: true });
   $("#idk").onclick = () => { if(phase === "answer" && !SES.state.answered) reveal("no"); };
 }
 /* 入力なしモード（歩きながら・電車用）：考える → 答えを聞く → 自己採点 */
@@ -2458,10 +2483,12 @@ document.addEventListener("visibilitychange", () => {
   else syncNow();
 });
 
-function syncViewport(){ const vv = window.visualViewport; const r = document.documentElement.style;
-  r.setProperty("--vvh", (vv ? vv.height : window.innerHeight) + "px"); r.setProperty("--vvt", (vv ? vv.offsetTop : 0) + "px"); }
-if(window.visualViewport){ visualViewport.addEventListener("resize", syncViewport); visualViewport.addEventListener("scroll", syncViewport); }
-window.addEventListener("resize", syncViewport); syncViewport();
+function syncViewport(){ const el = document.activeElement, typing = el && /^(INPUT|TEXTAREA)$/.test(el.tagName);
+  const w = window.innerWidth; if(typing && w === syncViewport.w) return;   // 入力中のリサイズ（＝キーボード）は無視
+  syncViewport.w = w; const de = document.documentElement; de.style.setProperty("--sh", window.innerHeight + "px"); de.classList.toggle("short", window.innerHeight <= 760 || w <= 360); }
+window.addEventListener("resize", syncViewport); window.addEventListener("orientationchange", () => setTimeout(() => { syncViewport.w = 0; syncViewport(); }, 300)); syncViewport();
+/* iOS: 入力欄にフォーカスしたとき画面ごとスクロールされるのを戻す */
+document.addEventListener("focusin", e => { if(document.body.classList.contains("focus") && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)){ const fix = () => { if(window.scrollY) window.scrollTo(0, 0); }; fix(); setTimeout(fix, 60); setTimeout(fix, 300); } });
 /* ═══════════ ごほうび: おやつを 암기냥이 のおなかに投げる ═══════════
    レベル設計
    ・連続学習日数で「おやつランク」が上がり、豪華なおやつが解禁（0/3/7/14/30/60/100日）
@@ -3022,14 +3049,15 @@ function askScript(c, mode){
   const answerHTML = ok => `<div class="feedback ${ok === undefined ? "meh" : ok ? "ok" : "no"}">${ok === undefined ? "" : `<strong>${esc(ok ? x.scriptOk : x.scriptNo)}</strong>`}<span class="fb-answer">${esc(c.meaning)}</span>${sc.ex ? `<span class="fb-mean">${esc(x.scriptEx)}: ${esc(sc.ex)}</span>` : ""}</div>`;
   box.innerHTML = head(c, isNew ? "scriptNew" : "script") + `<div class="stage"><div class="script-big" lang="${esc(c.lang)}">${esc(c.word)}</div><div class="row" style="justify-content:center"><button class="btn sm" type="button" id="scSay">${esc(x.scriptSound)}</button></div><div id="fb">${isNew ? answerHTML() : ""}</div></div>
     <div class="dock">${isNew ? `<div class="row" id="acts"><span class="grow"></span><button class="btn primary" type="button" id="scOk">${esc(x.scriptGotIt)}</button></div>`
-      : `<form id="ansForm" autocomplete="off"><input type="text" id="ans" class="answer" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${esc(x.scriptPh)}" enterkeyhint="done"></form><div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${x.idk}</button><span class="grow"></span><button class="btn primary" type="button" id="chk">${x.check}</button></div>`}</div>`;
+      : `<form id="ansForm" autocomplete="off" class="ansrow"><input type="text" id="ans" class="answer" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${esc(x.scriptPh)}" enterkeyhint="go"><button class="btn primary" type="button" id="chk">${x.check}</button></form><div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${x.idk}</button></div>`}</div>`;
   const play = () => speak(sc.say || c.word); $("#scSay").onclick = play;
   if(isNew){ setTimeout(play, 250); $("#scOk").onclick = () => settleItem(true); return; }
   const input = $("#ans"); input.focus({ preventScroll: true });
-  const done = ok => { if(SES.state.answered) return; SES.state.answered = true; input.disabled = true; $("#fb").innerHTML = answerHTML(ok); play();
-    $("#acts").innerHTML = `<span class="grow"></span><button class="btn primary" type="button" id="nx">${x.next}</button>`; $("#nx").onclick = () => settleItem(ok); $("#nx").focus(); };
+  const done = ok => { if(SES.state.answered) return; SES.state.answered = true; input.classList.add(ok ? "done" : "miss"); $("#fb").innerHTML = answerHTML(ok); play();
+    $("#acts").innerHTML = ""; const nb = $("#chk"); nb.id = "nx"; nb.textContent = x.next; nb.onclick = () => settleItem(ok); input.focus({ preventScroll: true }); };
+  box.querySelectorAll(".dock button").forEach(b => b.addEventListener("pointerdown", e => { if(document.activeElement === input) e.preventDefault(); }));
   const check = () => { const v = input.value.trim().toLowerCase().replace(/[\s\-ー]/g, ""); if(!v){ input.focus(); return; } done(sc.ans.some(a => a.toLowerCase().replace(/-/g, "") === v || (a === "-" && /^(0|x|なし|無音|무음)$/.test(v)))); };
-  $("#ansForm").onsubmit = e => { e.preventDefault(); if(SES.state.answered) $("#nx").click(); else check(); }; $("#chk").onclick = check; $("#idk").onclick = () => done(false);
+  $("#ansForm").onsubmit = e => { e.preventDefault(); if(SES.state.answered) $("#nx").click(); else check(); }; $("#chk").onclick = () => { if(SES.state.answered) $("#nx").click(); else check(); }; $("#idk").onclick = () => done(false);
 }
 function petStar(ctx, x, y, r){ ctx.beginPath(); for(let i = 0; i < 8; i++){ const a = i * Math.PI / 4, rr = i % 2 ? r * .38 : r; ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } ctx.closePath(); ctx.fill(); }
 function petDrawItem(ctx, it, x, y, sz, rot){
@@ -3041,7 +3069,7 @@ function petDrawItem(ctx, it, x, y, sz, rot){
   ctx.restore();
 }
 
-if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, pawStamp, startSession };
+if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, pawStamp, startSession, speak, plainAudio };
 load(); slimPresets(); setTimeout(topUpPresets, 800); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
