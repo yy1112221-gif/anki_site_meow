@@ -145,6 +145,25 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .say.big .bubble::after{left:50%;top:-6px;bottom:auto;transform:translateX(-50%);border:7px solid transparent;border-bottom-color:var(--surface);border-top:0}
 .fbh{display:flex;align-items:center;gap:8px}
 .blank{background:var(--cream);border-radius:6px 6px 0 0}
+.titlebar{display:flex;align-items:center;gap:8px}
+.langbtn{display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:99px;padding:3px 9px 3px 6px;cursor:pointer;font:600 .8rem var(--body)}
+.flag{font-size:1.15rem;line-height:1}
+.iconbtn{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:6px 10px;cursor:pointer;font:600 .78rem var(--body);margin-left:auto}
+.top{align-items:center}
+.top #todayLabel{flex-basis:100%;margin-top:-6px}
+.opt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:12px 10px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font:500 1rem var(--body);cursor:pointer}
+.opt[aria-current="true"]{font-weight:700;color:var(--accent)}
+.opt .grow{flex:1}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chiptog{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:99px;padding:5px 11px;font:600 .8rem var(--body);cursor:pointer}
+.chiptog[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.deckrow{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.deckrow:last-child{border-bottom:0}
+.deckrow input[type=text]{flex:1;padding:7px 10px}
+.ocrimg{max-width:100%;max-height:220px;border-radius:10px;border:1px solid var(--line);align-self:flex-start}
+.chk{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line);font-weight:400;color:var(--ink);flex-direction:row}
+.chk input{width:20px;height:20px;accent-color:var(--accent);flex-shrink:0}
+.sib{font-size:.82rem;color:var(--muted)}
 .hidden{display:none!important}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 @media (max-width:400px){.word{font-size:1.8rem}}
@@ -153,11 +172,12 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 <body>
 <div class="wrap">
   <header class="top">
-    <div>
+    <div class="titlebar">
       <h1 data-i18n="appName"></h1>
-      <p class="muted small" id="todayLabel"></p>
+      <button id="langBtn" class="langbtn" type="button" data-i18n-aria="learnLang"><span id="langFlag" class="flag"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg></button>
     </div>
-    <div class="pickers"><select id="uiPick" class="langpick" aria-label="表示言語 · 화면 언어"><option value="ja">日本語</option><option value="ko">한국어</option></select><select id="langPick" class="langpick" data-i18n-aria="learnLang"></select></div>
+    <button id="uiBtn" class="iconbtn" type="button" aria-label="表示言語 · 화면 언어"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19"/><path d="M12 2.5c2.8 2.6 4.2 5.8 4.2 9.5s-1.4 6.9-4.2 9.5c-2.8-2.6-4.2-5.8-4.2-9.5S9.2 5.1 12 2.5z"/></svg><span id="uiCode"></span></button>
+    <p class="muted small" id="todayLabel"></p>
   </header>
 
   <section class="stats" data-i18n-aria="summary">
@@ -181,6 +201,10 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 
   <section id="view-add" class="view hidden">
     <div class="card">
+      <label for="addDeck"><span data-i18n="addTo"></span><select id="addDeck"></select></label>
+      <div class="row hidden" id="newDeckRow"><input type="text" id="newDeckInline" data-i18n-ph="deckNamePh" style="flex:1"><button class="btn sm primary" id="newDeckInlineOk" type="button" data-i18n="create"></button></div>
+    </div>
+    <div class="card">
       <h2 data-i18n="addOne"></h2>
       <form id="findForm" autocomplete="off">
         <label for="fWord"><span data-i18n="fWord"></span>
@@ -201,6 +225,20 @@ input[type=range]{width:100%;accent-color:var(--accent)}
       <div class="row end"><button class="btn primary" id="btnSave" type="button" data-i18n="save"></button></div>
     </div>
     <div class="card">
+      <h2 data-i18n="photoTitle"></h2>
+      <p class="muted small" data-i18n="photoHelp"></p>
+      <label class="btn" for="ocrFile" style="display:inline-flex;flex-direction:row;align-self:flex-start;color:var(--ink);font-size:.95rem"><span data-i18n="photoPick"></span><input type="file" id="ocrFile" accept="image/*" class="hidden"></label>
+      <div id="ocrBox" class="hidden"></div>
+    </div>
+    <div class="card">
+      <h2 data-i18n="impTitle"></h2>
+      <p class="muted small" data-i18n="impHelp"></p>
+      <label for="impFrom"><span data-i18n="impFrom"></span><select id="impFrom"></select></label>
+      <div id="impList" class="list"></div>
+      <div class="row"><button class="btn sm" id="impAll" type="button" data-i18n="impAll"></button><span class="grow"></span><button class="btn primary" id="impGo" type="button" data-i18n="impGo"></button></div>
+      <p class="muted small" id="impNote" aria-live="polite"></p>
+    </div>
+    <div class="card">
       <h2 data-i18n="addBulk"></h2>
       <p class="muted small" data-i18n-html="bulkHelp"></p>
       <label for="fBulk"><span data-i18n="bulkLabel"></span>
@@ -214,6 +252,13 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 
   <section id="view-list" class="view hidden">
     <div class="card">
+      <h2 data-i18n="decksTitle"></h2>
+      <p class="muted small" data-i18n="decksHelp"></p>
+      <div id="deckMgr" class="list"></div>
+      <div class="row"><input type="text" id="newDeckName" data-i18n-ph="deckNamePh" style="flex:1"><button class="btn sm" id="btnNewDeck" type="button" data-i18n="create"></button></div>
+    </div>
+    <div class="card">
+      <div class="row" id="deckFilter"></div>
       <input type="text" id="search" data-i18n-ph="phSearch" data-i18n-aria="phSearch">
       <div class="row" id="filters">
         <button class="btn sm" data-f="all" type="button" data-i18n="fAll"></button>
@@ -322,6 +367,11 @@ ja: {
   modes:{ study:"まず当ててみる", cloze:"穴埋め", recall:"意味から書く", write:"作文", speak:"スピーキング" },
   left:n=>`残り${n}枚`, listen:"発音を聞く", listenEx:"例文を聞く", listenAgain:"もう一度聞く", listenMine:"自分の文を聞く",
   noExample:"例文がありません。単語帳で追加すると穴埋め問題が出ます。", gotIt:"覚えた、次へ",
+  meaningAlts:"意味の候補：", meanRefetch:"意味の候補を取り直す", uiLangTitle:"表示言語", learnLangTitle:"学習する言語", deckDefault:"基本", addTo:"追加先の単語帳", newDeck:"＋ 新しい単語帳…", deckNamePh:"単語帳の名前（例：旅行、ビジネス）", create:"作成", deckCreated:n=>`「${n}」を作りました。`,
+  decksTitle:"単語帳", decksHelp:"チェックした単語帳だけが今日の学習に出ます。範囲をしぼると覚えやすくなります。", deckWords:n=>`${n}語`, deckDelete:"削除", deckDeleteConfirm:"もう一度押すと削除（単語は「基本」へ移動）", deckDeleted:"単語帳を削除し、単語は「基本」に移しました。", studyDecks:"学習する単語帳：", deckOf:"単語帳",
+  photoTitle:"写真から追加", photoHelp:"本や画面を撮ると、端末の中で文字を読み取ります（AIサービスには送りません）。読み取った単語から覚えたいものを選んでください。", photoPick:"写真を撮る・選ぶ",
+  ocrLoading:"文字認識エンジンを準備中…（初回だけ数秒かかります）", ocrReading:n=>`読み取り中… ${n}%`, ocrFail:"読み取れませんでした。明るい場所で、文字が大きく写るように撮ってみてください。", ocrText:"読み取った文（間違いは直せます）", ocrReparse:"この文から単語を拾い直す", ocrPickWords:"覚えたい単語をタップ", ocrUseLine:"写真の文を例文にする", ocrAdd:n=>`選んだ${n}語を追加`, ocrInDeck:"登録済み", ocrNone:"単語が見つかりませんでした。",
+  impTitle:"ほかの言語から取り込む", impHelp:"別の言語で覚えている単語を、この言語に訳して追加します。同じ意味の単語どうしがつながり、カードに並んで表示されます。", impFrom:"取り込み元", impAll:"すべて選択", impGo:"選んだ単語を取り込む", impNoSource:"ほかの言語の単語がまだありません。", impWorking:(i,n)=>`訳しています（${i}/${n}）…`, impDone:(n,f)=>`${n}語を取り込みました。${f ? "訳せなかった単語は単語帳で直せます。" : ""}`, impPickSome:"取り込む単語を選んでください。",
   nmAsk:{ study:l=>"はじめて見る単語だよ。カンでいいから書いてみて！", cloze:l=>"空いてるところ、なんて入るかな？", recall:l=>`この意味、${l}でなんて言う？`, write:l=>"この単語で、一文つくってみて〜", speak:l=>"声に出して言ってみて。ちゃんと聞いてるよ" },
   nmToday:(a,b)=>`今日は復習${a}枚と、新しい単語${b}つ。いっしょにやろ！`, nmEmpty:"ふぁ…まだ単語がないみたい。覚えたい単語を教えて？", nmNone:"今日の分はないよ。ネミミはちょっと寝るね…", nmDone:"今日もおつかれさま！また明日ね", nmResume:"おかえり！さっきの続きからできるよ",
   nmFinishAll:"ぜんぶ一発で正解！すごい！", nmFinishSome:"おつかれさま！間違えたのは明日もう一回出すね", resumeTitle:"途中から再開できます", resumeBody:(n,d)=>`前回の続きです。終わった問題 ${d}・残り ${n}問。答えた分はすべて保存されています。`, resume:"続きから", restart:"最初からやり直す", guessLead:"初めての単語です。答えを見る前に、まず推測して書いてみましょう。", copyPrompt:"正解を1回書いてから次へ進みましょう。", copyPh:"正解を書き写す", copyAgain:"もう一度、正解をそのまま書いてみましょう", copyOk:"OK、書けました", skipCopy:"入力せずに次へ", hfOn:"入力なし ON", hfOff:"入力なし", hfHelp:"歩きながら・電車で：書かずに、答えを聞いて自己採点", remembered:"覚えてた", forgot:"忘れてた", setHf:"入力なしモード（答えを聞いて自己採点）", slow:"ゆっくり", popDetail:"詳細を見る", popAdd:"単語帳に追加", popInDeck:"単語帳にあり", popNoMeaning:"意味を取得できませんでした", popDict:"辞書で調べる", popExamples:"例文", popLoading:"例文を探しています…", popNoEx:"ほかの例文は見つかりませんでした。", popAdded:w=>`「${w}」を単語帳に追加しました。`, popClose:"閉じる", popHint:"文中の単語をタップすると意味と発音が見られます。", voice:"読み上げの声", voiceAuto:"自動（いちばん自然な声）", rate:"読み上げの速さ", preview:"試しに聞く", voiceTip:"iPhoneは「設定 › アクセシビリティ › 読み上げコンテンツ › 声」で「拡張」や「プレミアム」の声をダウンロードすると、ずっと聞き取りやすくなります。ネイティブ録音がある例文は録音を優先して再生します。", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"空欄に入る単語はどれ？ 初めてでもOK、まず推測してみましょう。", guessMCm:(m,l)=>`「${m}」は${l}でどれ？ まず推測してみましょう。`, guessType:"推測して入力（間違えて大丈夫）", guessBtn:"これだと思う", guessRight:"すごい、当たり！", guessWrong:"答えはこれ！先に考えたから、もう覚えやすくなってるよ", guessSkip:"見当もつかない",
@@ -387,6 +437,11 @@ ko: {
   modes:{ study:"먼저 맞혀보기", cloze:"빈칸 채우기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
   left:n=>`남은 ${n}장`, listen:"발음 듣기", listenEx:"예문 듣기", listenAgain:"다시 듣기", listenMine:"내 문장 듣기",
   noExample:"예문이 없어요. 단어장에서 넣으면 빈칸 문제가 생깁니다.", gotIt:"외웠어요, 다음",
+  meaningAlts:"뜻 후보:", meanRefetch:"뜻 후보 다시 가져오기", uiLangTitle:"화면 언어", learnLangTitle:"학습 언어", deckDefault:"기본", addTo:"추가할 단어장", newDeck:"＋ 새 단어장…", deckNamePh:"단어장 이름 (예: 여행, 비즈니스)", create:"만들기", deckCreated:n=>`"${n}" 단어장을 만들었어요.`,
+  decksTitle:"단어장", decksHelp:"체크한 단어장만 오늘 학습에 나와요. 범위를 좁히면 더 잘 외워집니다.", deckWords:n=>`${n}개`, deckDelete:"삭제", deckDeleteConfirm:"한 번 더 누르면 삭제 (단어는 「기본」으로 이동)", deckDeleted:"단어장을 지우고 단어는 「기본」으로 옮겼어요.", studyDecks:"학습할 단어장:", deckOf:"단어장",
+  photoTitle:"사진으로 추가", photoHelp:"책이나 화면을 찍으면 기기 안에서 글자를 읽어요 (AI 서비스로 보내지 않아요). 읽힌 단어 중 외울 단어를 골라 주세요.", photoPick:"사진 찍기·고르기",
+  ocrLoading:"글자 인식 엔진 준비 중… (처음 한 번만 몇 초 걸려요)", ocrReading:n=>`읽는 중… ${n}%`, ocrFail:"글자를 읽지 못했어요. 밝은 곳에서 글자가 크게 나오게 찍어 보세요.", ocrText:"읽은 문장 (틀린 곳은 고칠 수 있어요)", ocrReparse:"이 문장에서 단어 다시 뽑기", ocrPickWords:"외울 단어를 눌러 고르세요", ocrUseLine:"사진 속 문장을 예문으로 쓰기", ocrAdd:n=>`고른 ${n}개 추가`, ocrInDeck:"이미 있음", ocrNone:"단어를 찾지 못했어요.",
+  impTitle:"다른 언어에서 가져오기", impHelp:"다른 언어로 외우고 있는 단어를 이 언어로 옮겨 추가해요. 같은 뜻의 단어끼리 연결돼서 카드에 함께 보여요.", impFrom:"가져올 언어", impAll:"전체 선택", impGo:"고른 단어 가져오기", impNoSource:"다른 언어 단어가 아직 없어요.", impWorking:(i,n)=>`번역 중 (${i}/${n})…`, impDone:(n,f)=>`${n}개 가져왔어요.${f ? " 번역 못 한 단어는 단어장에서 고칠 수 있어요." : ""}`, impPickSome:"가져올 단어를 골라 주세요.",
   nmAsk:{ study:l=>"처음 보는 단어야. 감으로라도 써 봐!", cloze:l=>"빈칸에 뭐가 들어갈까?", recall:l=>`이 뜻, ${l}로 뭐라고 할까?`, write:l=>"이 단어로 문장 하나 만들어 봐~", speak:l=>"소리 내서 말해 봐. 잘 듣고 있을게" },
   nmToday:(a,b)=>`오늘은 복습 ${a}장, 새 단어 ${b}개. 같이 하자!`, nmEmpty:"하암… 아직 단어가 없네. 외우고 싶은 단어 알려 줄래?", nmNone:"오늘 할 건 없어. 네미미는 잠깐 잘게…", nmDone:"오늘도 수고했어! 내일 또 봐", nmResume:"어서 와! 아까 하던 데서 이어서 할 수 있어",
   nmFinishAll:"전부 한 번에 맞혔어! 대단해!", nmFinishSome:"수고했어! 틀린 건 내일 한 번 더 낼게", resumeTitle:"이어서 할 수 있어요", resumeBody:(n,d)=>`지난번에 하던 거예요. 끝낸 문제 ${d}개 · 남은 문제 ${n}개. 답한 건 모두 저장돼 있어요.`, resume:"이어서 하기", restart:"처음부터 다시", guessLead:"처음 보는 단어예요. 답을 보기 전에 먼저 짐작해서 써보세요.", copyPrompt:"정답을 한 번 따라 쓰고 넘어가요.", copyPh:"정답 따라 쓰기", copyAgain:"정답을 그대로 한 번 더 써보세요", copyOk:"좋아요, 썼어요", skipCopy:"안 쓰고 넘어가기", hfOn:"입력 없이 ON", hfOff:"입력 없이", hfHelp:"걸으면서·지하철에서: 쓰지 않고 정답 듣고 직접 채점", remembered:"기억났어요", forgot:"까먹었어요", setHf:"입력 없이 모드 (정답 듣고 직접 채점)", slow:"느리게", popDetail:"상세 보기", popAdd:"단어장에 추가", popInDeck:"단어장에 있음", popNoMeaning:"뜻을 가져오지 못했어요", popDict:"사전에서 찾기", popExamples:"예문", popLoading:"예문 찾는 중…", popNoEx:"다른 예문을 찾지 못했어요.", popAdded:w=>`"${w}"을(를) 단어장에 추가했어요.`, popClose:"닫기", popHint:"문장 속 단어를 누르면 뜻과 발음을 볼 수 있어요.", voice:"읽어주는 목소리", voiceAuto:"자동 (가장 자연스러운 목소리)", rate:"읽기 속도", preview:"들어보기", voiceTip:"아이폰은 설정 › 손쉬운 사용 › 콘텐츠 말하기 › 음성에서 「향상된」·「프리미엄」 음성을 내려받으면 훨씬 잘 들립니다. 원어민 녹음이 있는 예문은 녹음을 먼저 재생합니다.", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"빈칸에 들어갈 단어는? 처음이어도 괜찮아요, 먼저 짐작해 보세요.", guessMCm:(m,l)=>`"${m}"은(는) ${l}로 뭘까요? 먼저 짐작해 보세요.`, guessType:"짐작해서 입력 (틀려도 괜찮아요)", guessBtn:"이거 같아요", guessRight:"맞혔어요!", guessWrong:"정답은 이거! 먼저 생각해 봐서 벌써 더 잘 기억될 거야", guessSkip:"전혀 모르겠어요",
@@ -448,7 +503,7 @@ function dayStr(d){ const t = new Date(d.getTime() - 4*3600*1000); return t.getF
 const today = () => dayStr(new Date());
 function addDays(ds, n){ const [y,m,d] = ds.split("-").map(Number); const t = new Date(y, m-1, d+n, 12); return t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0"); }
 function diffDays(a, b){ const pa=a.split("-").map(Number), pb=b.split("-").map(Number); return Math.round((Date.UTC(pb[0],pb[1]-1,pb[2]) - Date.UTC(pa[0],pa[1]-1,pa[2]))/86400000); }
-const stripAcc = s => String(s||"").normalize("NFD").replace(/[̀-ͯ]/g, "");
+const stripAcc = s => String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g, "").normalize("NFC");
 const norm = s => String(s||"").toLowerCase().replace(/[¿¡.,!?;:"«»()「」。、！？（）]/g, " ").replace(/\s+/g, " ").trim();
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"), 2800); }
 
@@ -463,6 +518,23 @@ function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e)
 function load(){ try{ const raw = localStorage.getItem(LS_KEY); if(!raw) return; const d = JSON.parse(raw); S.cards = d.cards || {}; S.meta = Object.assign(S.meta, d.meta||{}); S.meta.settings = Object.assign({}, DEFAULT_SETTINGS, (d.meta||{}).settings||{}); }catch(e){} }
 try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){}
 const cardsHere = () => Object.values(S.cards).filter(c => (c.lang||"es") === S.meta.settings.lang);
+const FLAGS = { es:"🇪🇸", fr:"🇫🇷", de:"🇩🇪", it:"🇮🇹", pt:"🇧🇷", en:"🇺🇸", ko:"🇰🇷", ja:"🇯🇵" };
+function currentAddDeck(){ const v = $("#addDeck") && $("#addDeck").value; return v && v !== "__new" ? v : "default"; }
+function decks(){ if(!Array.isArray(S.meta.decks) || !S.meta.decks.length) S.meta.decks = [{ id:"default", name:"", on:true }]; return S.meta.decks; }
+const deckName = d => d.name || t().deckDefault;
+const deckOf = c => c.deck || "default";
+const deckOn = id => { const d = decks().find(d => d.id === id); return d ? d.on !== false : true; };
+const activeCards = () => cardsHere().filter(c => deckOn(deckOf(c)));
+function addDeck(name){ const d = { id: "d" + Date.now().toString(36), name: name.trim(), on: true }; decks().push(d); save(); return d; }
+function deckChips(){
+  const ds = decks(); if(ds.length < 2) return "";
+  return `<div class="chips" aria-label="${esc(t().studyDecks)}"><span class="tiny muted" style="align-self:center">${esc(t().studyDecks)}</span>` + ds.map(d => `<button type="button" class="chiptog" data-deck="${d.id}" aria-pressed="${d.on !== false}">${esc(deckName(d))} <span class="tiny">${cardsHere().filter(c => deckOf(c) === d.id).length}</span></button>`).join("") + `</div>`;
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest(".chiptog[data-deck]"); if(!b || SES) return;
+  const d = decks().find(d => d.id === b.dataset.deck); if(!d) return;
+  d.on = d.on === false; save(); renderAll();
+});
 function saveCard(c){ S.cards[c.id] = c; save(); }
 function removeCard(id){ delete S.cards[id]; save(); }
 
@@ -481,10 +553,31 @@ async function translate(text, from){
   if(S.meta.settings.email) p.set("de", S.meta.settings.email);
   const d = await getJSON("https://api.mymemory.translated.net/get?" + p.toString());
   if(d && d.quotaFinished) throw new Error("quota");
-  let out = (d && d.responseData && d.responseData.translatedText) || "";
-  if(/MYMEMORY WARNING|QUERY LENGTH/i.test(out)) throw new Error("quota");
-  out = out.replace(/&#39;/g,"'").replace(/&quot;/g,'"').replace(/&amp;/g,"&");
+  const first = (d && d.responseData && d.responseData.translatedText) || "";
+  if(/MYMEMORY WARNING|QUERY LENGTH/i.test(first)) throw new Error("quota");
+  const ranked = rankTranslations(text, to, first, (d && d.matches) || []);
+  ALTS[key] = ranked.slice(0, 5);
+  const out = ranked[0] || "";
   trCache[key] = out; return out;
+}
+const ALTS = {};
+const altsFor = (text, from) => ALTS[from + "|" + U().mm + "|" + text] || [];
+const clean = t0 => String(t0||"").replace(/&#39;/g,"'").replace(/&quot;/g,'"').replace(/&amp;/g,"&").replace(/^[\[「『(（]+|[\]」』)）]+$/g, "").replace(/[.。]$/, "").trim();
+/* 翻訳メモリの候補を採点: 一致度・品質・複数回出たもの・言語らしさ */
+function rankTranslations(src, to, first, matches){
+  const score = new Map();
+  const add = (tx, sc) => { tx = clean(tx); if(!tx || tx.length > 60) return; const k = tx.toLowerCase(); const cur = score.get(k); score.set(k, cur ? { tx: cur.tx, sc: cur.sc + 15 + Math.max(0, sc - cur.base) * 0, base: cur.base } : { tx, sc, base: sc }); };
+  const nativeSrc = /[\u3040-\u30ff\u4e00-\u9fff\uac00-\ud7af]/.test(src);
+  const penalty = tx => {
+    let pen = 0;
+    if(to === "ja" && /^[\u30a0-\u30ffー・\s]+$/.test(tx) && nativeSrc) pen += 20;     // 漢字・ハングルの語なのに全部カタカナ
+    if(to === "ko" && /^[A-Za-z\s]+$/.test(tx)) pen += 20;
+    if(to === "ja" && /^[A-Za-z\s]+$/.test(tx)) pen += 20;
+    return pen;
+  };
+  matches.forEach(m => { const tx = clean(m.translation); if(!tx) return; const q = Number(m.quality) || 0; add(tx, (Number(m.match) || 0) * 100 + q / 10 - penalty(tx)); });
+  if(first) add(first, 99 - penalty(clean(first)));
+  return [...score.values()].sort((a,b) => b.sc - a.sc).map(v => v.tx);
 }
 async function wiktionary(word){
   try{
@@ -533,7 +626,7 @@ async function trOf(cand){
 
 /* ───────── カード ───────── */
 function newCard(o){
-  return { id: uid(), lang: o.lang || S.meta.settings.lang, word: String(o.word||"").trim(), meaning: String(o.meaning||"").trim(), example: String(o.example||"").trim(), exampleKo: String(o.exampleKo||"").trim(), form: String(o.form||"").trim(), src: o.src || null, audio: o.audio || null,
+  return { id: uid(), lang: o.lang || S.meta.settings.lang, word: String(o.word||"").trim(), meaning: String(o.meaning||"").trim(), example: String(o.example||"").trim(), exampleKo: String(o.exampleKo||"").trim(), form: String(o.form||"").trim(), src: o.src || null, audio: o.audio || null, deck: o.deck || currentAddDeck(), group: o.group || null,
     level: 0, due: null, isNew: true, lapses: 0, reps: 0, created: Date.now(), introduced: null, mastered: false, relearn: false, log: [] };
 }
 /* exampleKo は「例文の訳」(旧バージョン互換のためキー名はそのまま) */
@@ -583,6 +676,11 @@ function tokHTML(text, hlFrom, hlTo){
   }
   out.push(esc(text.slice(last)));
   return out.join("");
+}
+function siblings(c){
+  if(!c.group) return "";
+  const sib = Object.values(S.cards).filter(o => o.group === c.group && o.id !== c.id && (o.lang||"es") !== (c.lang||"es"));
+  return sib.length ? `<span class="sib">${sib.map(o => `${FLAGS[o.lang||"es"] || ""} ${esc(o.word)}`).join(" · ")}</span>` : "";
 }
 function highlight(c){ const p = clozeParts(c); return p ? tokHTML(c.example, p.before.length, p.before.length + p.answer.length) : tokHTML(c.example); }
 function hlText(text, form){ if(!form) return esc(text); const i = stripAcc(text.toLowerCase()).indexOf(stripAcc(form.toLowerCase())); if(i < 0) return esc(text); return esc(text.slice(0,i)) + "<mark>" + esc(text.slice(i, i+form.length)) + "</mark>" + esc(text.slice(i+form.length)); }
@@ -683,9 +781,9 @@ function speak(text, opts){
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 
 /* ───────── 今日のセッション ───────── */
-const dueCards = () => { const d = today(); return cardsHere().filter(c => !c.mastered && !c.isNew && c.due && c.due <= d).sort((a,b)=> a.due < b.due ? -1 : 1); };
+const dueCards = () => { const d = today(); return activeCards().filter(c => !c.mastered && !c.isNew && c.due && c.due <= d).sort((a,b)=> a.due < b.due ? -1 : 1); };
 const introducedToday = () => cardsHere().filter(c => c.introduced === today()).length;
-const newCandidates = () => cardsHere().filter(c => c.isNew).sort((a,b)=>a.created-b.created);
+const newCandidates = () => activeCards().filter(c => c.isNew).sort((a,b)=>a.created-b.created);
 const newQuota = () => Math.max(0, S.meta.settings.newLimit - introducedToday());
 function reviewModes(c){
   const st = S.meta.settings, hasCloze = !!clozeParts(c);
@@ -722,7 +820,7 @@ function renderStart(){
     const next = cardsHere().filter(c => !c.mastered && c.due).map(c => c.due).sort()[0];
     box.innerHTML = `${say(S.meta.days[today()] ? "st_love" : "st_sleepy", esc(S.meta.days[today()] ? x.nmDone : x.nmNone), true)}<h2>${S.meta.days[today()] ? x.doneTitle : x.noneTitle}</h2>
       <p class="muted">${next ? esc(x.nextReview(next, diffDays(today(), next))) : x.nextNone}</p>
-      <p class="muted small">${x.streak(streak())}</p>
+      <p class="muted small">${x.streak(streak())}</p>${deckChips()}
       <div class="row"><button class="btn" id="goAdd2" type="button">${x.addMore}</button></div>`;
     $("#goAdd2").onclick = () => showView("add");
     return;
@@ -735,7 +833,7 @@ function renderStart(){
     $("#restartBtn").onclick = () => { delete S.meta.session; save(); startSession(); };
     return;
   }
-  box.innerHTML = `${say("cat_jpop", esc(x.nmToday(due, nq)), true)}<h2>${x.todayTitle}</h2><p>${x.todayCounts(due, nq)}</p><p class="muted small">${x.todayHint(streak())}</p>
+  box.innerHTML = `${say("cat_jpop", esc(x.nmToday(due, nq)), true)}<h2>${x.todayTitle}</h2><p>${x.todayCounts(due, nq)}</p><p class="muted small">${x.todayHint(streak())}</p>${deckChips()}
     <div class="row"><button class="btn primary" id="startBtn" type="button">${x.start}</button></div>`;
   $("#startBtn").onclick = startSession;
 }
@@ -819,7 +917,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
     <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${isGuess ? x.guessSkip : x.idk}</button><span class="grow"></span><button class="btn primary" type="button" id="chk">${isGuess ? x.guessBtn : x.check}</button></div>`;
   const input = $("#ans"); bindKbd(box, input); input.focus({ preventScroll: true });
   let phase = "answer";
-  const answerBlock = () => `<span class="sentence" style="font-size:1.15rem"><b>${esc(target)}</b>${norm(target) !== norm(c.word) ? ` <span class="muted small">(${x.baseForm} ${esc(c.word)})</span>` : ""}</span>${c.meaning ? `<span class="muted">${esc(c.meaning)}</span>` : ""}${c.example ? `<span class="small">${highlight(c)}</span><span class="small muted">${esc(c.exampleKo)}</span>` : ""}`;
+  const answerBlock = () => `<span class="sentence" style="font-size:1.15rem"><b>${esc(target)}</b>${norm(target) !== norm(c.word) ? ` <span class="muted small">(${x.baseForm} ${esc(c.word)})</span>` : ""}</span>${c.meaning ? `<span class="muted">${esc(c.meaning)}</span>` : ""}${siblings(c)}${c.example ? `<span class="small">${highlight(c)}</span><span class="small muted">${esc(c.exampleKo)}</span>` : ""}`;
   const finish = ok => settleItem(isGuess ? true : ok);
   const reveal = res => {
     SES.state.answered = true;
@@ -954,9 +1052,12 @@ async function runFind(){
   const r = await lookup(word);
   b.disabled = false; b.textContent = x.btnFindAgain;
   if(r.meaning && !$("#fMeaning").value.trim()) $("#fMeaning").value = r.meaning;
+  const alts = altsFor(searchTerm(word), L().mm);
+  const altHTML = alts.length > 1 ? `<div class="chips"><span class="tiny muted" style="align-self:center">${esc(x.meaningAlts)}</span>${alts.map(a => `<button type="button" class="chiptog" data-alt="${esc(a)}" aria-pressed="${a === $("#fMeaning").value}">${esc(a)}</button>`).join("")}</div>` : "";
   const wk = r.wikt.length ? `<p class="small"><span class="muted">${x.englishGloss}</span> ${r.wikt.map(w => `<span>${esc(w.pos ? "(" + w.pos + ") " : "")}${esc(w.def)}</span>`).join(" · ")}</p>` : "";
-  box.innerHTML = wk + (r.cands.length ? `<p class="muted small">${x.pickOne}</p>` + candList(r.cands) : `<p class="muted small">${r.candsErr ? x.candsErr : x.candsNone}</p>`);
+  box.innerHTML = altHTML + wk + (r.cands.length ? `<p class="muted small">${x.pickOne}</p>` + candList(r.cands) : `<p class="muted small">${r.candsErr ? x.candsErr : x.candsNone}</p>`);
   if(r.meaningErr === "quota") $("#findNote").textContent = x.quota;
+  box.querySelectorAll("[data-alt]").forEach(b => b.onclick = () => { $("#fMeaning").value = b.dataset.alt; box.querySelectorAll("[data-alt]").forEach(o => o.setAttribute("aria-pressed", o === b)); });
   box.querySelectorAll(".cand").forEach(el => el.onclick = async () => {
     const cd = r.cands[+el.dataset.i];
     box.querySelectorAll(".cand").forEach(o => o.setAttribute("aria-pressed", o === el ? "true" : "false"));
@@ -986,15 +1087,14 @@ function parseBulk(text){
     return { word, meaning, example: ex||"", exampleKo: tr||"" };
   }).filter(o => o.word);
 }
-$("#btnBulk").onclick = async () => {
-  const x = t(), rows = parseBulk($("#fBulk").value); if(!rows.length){ $("#fBulk").focus(); return; }
-  const added = []; let dup = 0;
-  rows.forEach(r => { if(findDup(r.word) || added.some(a => norm(a.word) === norm(r.word))){ dup++; return; } const c = newCard(Object.assign(r, { form: findForm(r.example, r.word) })); added.push(c); saveCard(c); });
-  $("#fBulk").value = ""; renderAll();
-  const note = $("#bulkNote"); note.textContent = x.bulkAdded(added.length, dup);
-  if(!$("#fBulkFill").checked) return;
-  const need = added.filter(c => !c.meaning || !c.example); if(!need.length) return;
-  const b = $("#btnBulk"); b.disabled = true; let filled = 0, quota = false;
+async function addMany(rows, note, b, fill){
+  const x = t(); const added = []; let dup = 0;
+  rows.forEach(r => { if(findDup(r.word) || added.some(a => norm(a.word) === norm(r.word))){ dup++; return; } const c = newCard(Object.assign(r, { form: r.form || findForm(r.example, r.word) })); added.push(c); saveCard(c); });
+  renderAll();
+  note.textContent = x.bulkAdded(added.length, dup);
+  if(!fill) return added;
+  const need = added.filter(c => !c.meaning || !c.example); if(!need.length) return added;
+  b.disabled = true; let filled = 0, quota = false;
   for(let i = 0; i < need.length; i++){
     note.textContent = x.bulkFilling(added.length, i+1, need.length);
     const c = S.cards[need[i].id]; if(!c) continue;
@@ -1008,7 +1108,167 @@ $("#btnBulk").onclick = async () => {
     await sleep(400);
   }
   b.disabled = false; note.textContent = x.bulkDone(added.length, filled, quota); renderAll();
+  return added;
 }
+$("#btnBulk").onclick = async () => {
+  const rows = parseBulk($("#fBulk").value); if(!rows.length){ $("#fBulk").focus(); return; }
+  $("#fBulk").value = "";
+  await addMany(rows, $("#bulkNote"), $("#btnBulk"), $("#fBulkFill").checked);
+};
+/* 追加先の単語帳 */
+function fillDeckSelects(){
+  const x = t(), sel = $("#addDeck"); const cur = sel.value || S.meta.lastDeck || "default";
+  sel.innerHTML = decks().map(d => `<option value="${d.id}">${esc(deckName(d))}</option>`).join("") + `<option value="__new">${esc(x.newDeck)}</option>`;
+  sel.value = decks().some(d => d.id === cur) ? cur : "default";
+}
+$("#addDeck").onchange = e => {
+  if(e.target.value === "__new"){ $("#newDeckRow").classList.remove("hidden"); $("#newDeckInline").focus(); return; }
+  $("#newDeckRow").classList.add("hidden"); S.meta.lastDeck = e.target.value; save();
+};
+$("#newDeckInlineOk").onclick = () => {
+  const n = $("#newDeckInline").value.trim(); if(!n){ $("#newDeckInline").focus(); return; }
+  const d = addDeck(n); S.meta.lastDeck = d.id; save(); $("#newDeckInline").value = ""; $("#newDeckRow").classList.add("hidden");
+  fillDeckSelects(); $("#addDeck").value = d.id; toast(t().deckCreated(n));
+};
+/* 単語帳の管理 */
+function renderDecks(){
+  const x = t();
+  $("#deckMgr").innerHTML = decks().map(d => `<div class="deckrow"><input type="checkbox" data-on="${d.id}" ${d.on !== false ? "checked" : ""} aria-label="${esc(deckName(d))}" style="width:20px;height:20px;accent-color:var(--accent)">
+    <input type="text" value="${esc(deckName(d))}" data-ren="${d.id}" aria-label="${esc(x.deckOf)}"><span class="tiny muted">${x.deckWords(cardsHere().filter(c => deckOf(c) === d.id).length)}</span>
+    ${d.id === "default" ? "" : `<button class="btn sm bad" type="button" data-del="${d.id}">${x.deckDelete}</button>`}</div>`).join("");
+  $("#deckMgr").querySelectorAll("[data-on]").forEach(el => el.onchange = () => { decks().find(d => d.id === el.dataset.on).on = el.checked; save(); updateStats(); });
+  $("#deckMgr").querySelectorAll("[data-ren]").forEach(el => el.onchange = () => { const d = decks().find(d => d.id === el.dataset.ren); d.name = el.value.trim(); save(); fillDeckSelects(); renderDeckFilter(); });
+  $("#deckMgr").querySelectorAll("[data-del]").forEach(el => { let armed = false; el.onclick = () => {
+    if(!armed){ armed = true; el.textContent = x.deckDeleteConfirm; setTimeout(() => { armed = false; if(el.isConnected) el.textContent = x.deckDelete; }, 3000); return; }
+    const id = el.dataset.del; Object.values(S.cards).forEach(c => { if(c.deck === id) c.deck = "default"; });
+    S.meta.decks = decks().filter(d => d.id !== id); save(); toast(x.deckDeleted); renderDecks(); fillDeckSelects(); renderDeckFilter(); renderList(); updateStats();
+  }; });
+}
+$("#btnNewDeck").onclick = () => { const n = $("#newDeckName").value.trim(); if(!n){ $("#newDeckName").focus(); return; } addDeck(n); $("#newDeckName").value = ""; toast(t().deckCreated(n)); renderDecks(); fillDeckSelects(); renderDeckFilter(); };
+let DECK_FILTER = "all";
+function renderDeckFilter(){
+  const box = $("#deckFilter"); const ds = decks();
+  if(ds.length < 2){ box.innerHTML = ""; DECK_FILTER = "all"; return; }
+  box.innerHTML = `<button type="button" class="chiptog" data-df="all" aria-pressed="${DECK_FILTER === "all"}">${esc(t().fAll)}</button>` + ds.map(d => `<button type="button" class="chiptog" data-df="${d.id}" aria-pressed="${DECK_FILTER === d.id}">${esc(deckName(d))}</button>`).join("");
+  box.querySelectorAll("[data-df]").forEach(b => b.onclick = () => { DECK_FILTER = b.dataset.df; renderDeckFilter(); renderList(); });
+}
+
+/* ════════ 写真から追加（端末内OCR: Tesseract） ════════ */
+const STOP = {
+  es:"el la los las un una unos unas de del al a en y o u e ni que se lo le les me te nos os su sus mi mis tu tus es son fue ser por para con sin sobre como más muy pero si no ya este esta esto estos estas ese esa eso hay he ha han yo tú él ella ellos usted",
+  en:"the a an of to in on at for and or but is are was were be been it its this that these those i you he she we they me him her us them my your his our their not no do does did have has had with as by from",
+  fr:"le la les un une des de du au aux et ou en à que qui ne pas se ce cet cette ces il elle ils elles je tu nous vous est sont être a ont son sa ses mon ma mes ton ta tes pour par avec sur dans",
+  de:"der die das den dem des ein eine einer einen einem und oder zu in im an am auf mit von für ist sind war nicht ich du er sie es wir ihr sich",
+  it:"il lo la i gli le un uno una di da in con su per tra fra e o che non è sono si mi ti ci vi del della dei al alla",
+  pt:"o a os as um uma de do da dos das em no na nos nas e ou que não se é são por para com me te lhe"
+};
+let TESS = null;
+function loadScript(src){ return new Promise((res, rej) => { const sc = document.createElement("script"); sc.src = src; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); }); }
+async function ensureTess(){ if(window.Tesseract) return window.Tesseract; if(!TESS) TESS = loadScript("https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"); await TESS; return window.Tesseract; }
+function prepImage(file){
+  return new Promise((res, rej) => {
+    const img = new Image(); const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const max = 2200, k = Math.min(1, max / Math.max(img.width, img.height)) * (Math.max(img.width, img.height) < 1000 ? 2 : 1);
+      const cv = document.createElement("canvas"); cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+      const g = cv.getContext("2d"); g.drawImage(img, 0, 0, cv.width, cv.height);
+      const d = g.getImageData(0, 0, cv.width, cv.height), a = d.data;
+      for(let i = 0; i < a.length; i += 4){ let y = 0.299*a[i] + 0.587*a[i+1] + 0.114*a[i+2]; y = Math.max(0, Math.min(255, (y - 128) * 1.35 + 128)); a[i] = a[i+1] = a[i+2] = y; }
+      g.putImageData(d, 0, 0); URL.revokeObjectURL(url); res({ canvas: cv, preview: cv.toDataURL("image/jpeg", 0.6) });
+    };
+    img.onerror = rej; img.src = url;
+  });
+}
+function wordsFromText(text){
+  const stop = new Set((STOP[S.meta.settings.lang] || "").split(" "));
+  const lines = text.split(/\n+/).map(l => l.replace(/\s+/g, " ").trim()).filter(Boolean);
+  const seen = new Map();
+  lines.forEach(line => { (line.match(/[\p{L}][\p{L}\p{M}'’\-]*/gu) || []).forEach(w => {
+    const k = w.toLowerCase(); if(k.length < 3 || stop.has(k) || seen.has(k)) return;
+    if(/^[A-ZÁÉÍÓÚÑ]{2,}$/.test(w) && w.length < 4) return;
+    seen.set(k, { word: k, line });
+  }); });
+  return [...seen.values()];
+}
+function renderOcrWords(text){
+  const x = t(), box = $("#ocrBox"), list = wordsFromText(text);
+  const area = box.querySelector("#ocrWords"); const picked = new Set();
+  if(!list.length){ area.innerHTML = `<p class="muted small">${x.ocrNone}</p>`; return; }
+  area.innerHTML = `<p class="small muted">${x.ocrPickWords}</p><div class="chips">` + list.map((w,i) => { const dupc = findDup(w.word); return `<button type="button" class="chiptog" data-ow="${i}" aria-pressed="false" ${dupc ? "disabled" : ""}>${esc(w.word)}${dupc ? ` <span class="tiny">${x.ocrInDeck}</span>` : ""}</button>`; }).join("") + `</div>
+    <label class="switch" for="ocrLine"><span>${x.ocrUseLine}</span><input type="checkbox" id="ocrLine" checked></label>
+    <div class="row end"><button class="btn primary" id="ocrAdd" type="button" disabled>${x.ocrAdd(0)}</button></div><p class="muted small" id="ocrNote" aria-live="polite"></p>`;
+  const btn = area.querySelector("#ocrAdd");
+  area.querySelectorAll("[data-ow]").forEach(b => b.onclick = () => { const i = +b.dataset.ow; if(picked.has(i)) picked.delete(i); else picked.add(i); b.setAttribute("aria-pressed", picked.has(i)); btn.textContent = x.ocrAdd(picked.size); btn.disabled = !picked.size; });
+  btn.onclick = async () => {
+    const useLine = area.querySelector("#ocrLine").checked;
+    const rows = [...picked].map(i => list[i]).map(w => ({ word: w.word, meaning: "", example: useLine && w.line.split(" ").length >= 4 ? w.line : "", exampleKo: "" }));
+    await addMany(rows, area.querySelector("#ocrNote"), btn, true);
+    renderOcrWords(box.querySelector("#ocrText").value);
+  };
+}
+$("#ocrFile").onchange = async e => {
+  const f = e.target.files[0]; if(!f) return; e.target.value = "";
+  const x = t(), box = $("#ocrBox"); box.classList.remove("hidden");
+  box.innerHTML = say("load_run", `<span id="ocrStatus">${esc(x.ocrLoading)}</span>`);
+  try{
+    const { canvas, preview } = await prepImage(f);
+    const T5 = await ensureTess();
+    const res = await T5.recognize(canvas, L().tatoeba, { logger: m => { if(m.status === "recognizing text"){ const st = $("#ocrStatus"); if(st) st.textContent = x.ocrReading(Math.round(m.progress * 100)); } } });
+    const text = (res && res.data && res.data.text || "").trim();
+    if(!text){ box.innerHTML = say("st_surprised", esc(x.ocrFail)); return; }
+    box.innerHTML = `<img class="ocrimg" src="${preview}" alt=""><label for="ocrText"><span>${x.ocrText}</span><textarea id="ocrText" spellcheck="false">${esc(text)}</textarea></label>
+      <div class="row"><button class="btn sm" type="button" id="ocrReparse">${x.ocrReparse}</button></div><div id="ocrWords"></div>`;
+    box.querySelector("#ocrReparse").onclick = () => renderOcrWords(box.querySelector("#ocrText").value);
+    renderOcrWords(text);
+  }catch(err){ box.innerHTML = say("st_surprised", esc(x.ocrFail)); }
+};
+
+/* ════════ ほかの言語から取り込む ════════ */
+async function translateTo(text, from, to){
+  if(from === to) return text;
+  const p = new URLSearchParams({ q: text.slice(0, 480), langpair: from + "|" + to });
+  if(S.meta.settings.email) p.set("de", S.meta.settings.email);
+  const d = await getJSON("https://api.mymemory.translated.net/get?" + p.toString());
+  if(d && d.quotaFinished) throw new Error("quota");
+  return ((d && d.responseData && d.responseData.translatedText) || "").replace(/&#39;/g,"'").replace(/&quot;/g,'"').replace(/&amp;/g,"&").replace(/[.。]$/, "").trim();
+}
+function fillImport(){
+  const x = t(), sel = $("#impFrom"), here = S.meta.settings.lang;
+  const langs = Object.keys(LANGS).filter(k => k !== here && Object.values(S.cards).some(c => (c.lang||"es") === k));
+  if(!langs.length){ sel.innerHTML = ""; sel.disabled = true; $("#impList").innerHTML = `<p class="muted small">${x.impNoSource}</p>`; $("#impGo").disabled = true; $("#impAll").disabled = true; return; }
+  sel.disabled = false; $("#impGo").disabled = false; $("#impAll").disabled = false;
+  const cur = sel.value && langs.includes(sel.value) ? sel.value : langs[0];
+  sel.innerHTML = langs.map(k => `<option value="${k}">${FLAGS[k]} ${esc(x.langNames[k])}</option>`).join(""); sel.value = cur;
+  renderImportList();
+}
+function renderImportList(){
+  const x = t(), from = $("#impFrom").value, here = S.meta.settings.lang;
+  const src = Object.values(S.cards).filter(c => (c.lang||"es") === from).sort((a,b) => b.created - a.created);
+  const linked = c => c.group && Object.values(S.cards).some(o => o.group === c.group && (o.lang||"es") === here);
+  $("#impList").innerHTML = src.map(c => `<label class="chk"><input type="checkbox" value="${c.id}" ${linked(c) ? "disabled" : ""}><span style="flex:1;min-width:0"><b>${esc(c.word)}</b> <span class="muted small">${esc(c.meaning)}</span></span>${linked(c) ? `<span class="tiny muted">${FLAGS[here]} ✓</span>` : ""}</label>`).join("");
+}
+$("#impFrom").onchange = renderImportList;
+$("#impAll").onclick = () => { const bs = [...$("#impList").querySelectorAll("input:not(:disabled)")]; const all = bs.every(b => b.checked); bs.forEach(b => b.checked = !all); };
+$("#impGo").onclick = async () => {
+  const x = t(), from = $("#impFrom").value, here = S.meta.settings.lang;
+  const ids = [...$("#impList").querySelectorAll("input:checked")].map(b => b.value);
+  if(!ids.length){ toast(x.impPickSome); return; }
+  const btn = $("#impGo"), note = $("#impNote"); btn.disabled = true; let failed = 0; const rows = [];
+  for(let i = 0; i < ids.length; i++){
+    note.textContent = x.impWorking(i+1, ids.length);
+    const src = S.cards[ids[i]]; if(!src) continue;
+    if(!src.group){ src.group = "g" + src.id; saveCard(src); }
+    let w = ""; try{ w = await translateTo(searchTerm2(src.word, from), LANGS[from].mm, L().mm); }catch(e){}
+    if(!w){ failed++; continue; }
+    rows.push({ word: w, meaning: src.meaning, example: "", exampleKo: "", group: src.group });
+    await sleep(250);
+  }
+  btn.disabled = false;
+  await addMany(rows, note, btn, true);
+  note.textContent = x.impDone(rows.length, failed);
+  renderImportList();
+};
+function searchTerm2(word, lang){ let w = String(word||"").trim(); const a = LANGS[lang] && LANGS[lang].articles; if(a) w = w.replace(a, ""); return w.trim(); }
 function seedExamples(){
   t().seedData.forEach(([word, meaning, example, exampleKo, form]) => { if(!findDup(word)) saveCard(newCard({ word, meaning, example, exampleKo, form, lang:"es" })); });
   toast(t().seeded); renderAll();
@@ -1088,6 +1348,7 @@ let FILTER = "all";
 function renderList(){
   const x = t(), q = stripAcc(norm($("#search").value));
   let arr = cardsHere().sort((a,b) => b.created - a.created);
+  if(DECK_FILTER !== "all") arr = arr.filter(c => deckOf(c) === DECK_FILTER);
   if(FILTER === "learning") arr = arr.filter(c => !c.mastered);
   if(FILTER === "leech") arr = arr.filter(isLeech);
   if(FILTER === "mastered") arr = arr.filter(c => c.mastered);
@@ -1104,7 +1365,8 @@ function openEdit(id){
     <p class="muted small">${esc(x.reviews(c.reps, c.lapses))}${c.due && !c.mastered ? " · " + esc(x.nextOn(c.due)) : ""}</p>
     ${hist ? `<div class="row">${hist}</div>` : ""}
     <label for="eWord">${x.eWord}<input type="text" id="eWord" value="${esc(c.word)}" autocapitalize="off" spellcheck="false"></label>
-    <label for="eMeaning">${x.eMeaning}<input type="text" id="eMeaning" value="${esc(c.meaning)}"></label>
+    <label for="eMeaning">${x.eMeaning}<input type="text" id="eMeaning" value="${esc(c.meaning)}"></label>${siblings(c)}<div class="row"><button class="btn sm" id="eMeanFix" type="button">${x.meanRefetch}</button></div><div id="eMeanAlts"></div>
+    <label for="eDeck">${x.deckOf}<select id="eDeck">${decks().map(d => `<option value="${d.id}" ${deckOf(c) === d.id ? "selected" : ""}>${esc(deckName(d))}</option>`).join("")}</select></label>
     <label for="eExample">${x.eExample}<textarea id="eExample">${esc(c.example)}</textarea></label>
     <label for="eExampleTr">${x.eExampleTr}<input type="text" id="eExampleTr" value="${esc(c.exampleKo)}"></label>
     <label for="eForm">${x.eForm}<input type="text" id="eForm" value="${esc(c.form)}" autocapitalize="off" spellcheck="false"></label>
@@ -1116,7 +1378,15 @@ function openEdit(id){
   let eSrc = c.src, eAudio = c.audio || null;
   $("#eExample").oninput = () => { eSrc = null; eAudio = null; };
   $("#eClose").onclick = closeEdit;
-  $("#eSave").onclick = () => { const cur = S.cards[id]; if(!cur) return; cur.word = $("#eWord").value.trim() || cur.word; cur.meaning = $("#eMeaning").value.trim(); cur.example = $("#eExample").value.trim(); cur.exampleKo = $("#eExampleTr").value.trim(); cur.form = $("#eForm").value.trim() || findForm(cur.example, cur.word); cur.src = eSrc; cur.audio = eAudio; saveCard(cur); toast(x.savedShort); closeEdit(); renderAll(); };
+  $("#eSave").onclick = () => { const cur = S.cards[id]; if(!cur) return; cur.word = $("#eWord").value.trim() || cur.word; cur.meaning = $("#eMeaning").value.trim(); cur.example = $("#eExample").value.trim(); cur.exampleKo = $("#eExampleTr").value.trim(); cur.form = $("#eForm").value.trim() || findForm(cur.example, cur.word); cur.src = eSrc; cur.audio = eAudio; cur.deck = $("#eDeck").value; saveCard(cur); toast(x.savedShort); closeEdit(); renderAll(); };
+  $("#eMeanFix").onclick = async () => {
+    const b = $("#eMeanFix"); b.disabled = true; const w = searchTerm($("#eWord").value.trim());
+    try{ delete trCache[L().mm + "|" + U().mm + "|" + w]; await translate(w, L().mm); }catch(e){}
+    b.disabled = false;
+    const alts = altsFor(w, L().mm);
+    $("#eMeanAlts").innerHTML = alts.length ? `<div class="chips">${alts.map(a => `<button type="button" class="chiptog" data-alt="${esc(a)}" aria-pressed="false">${esc(a)}</button>`).join("")}</div>` : `<p class="muted small">${esc(x.popNoMeaning)}</p>`;
+    $("#eMeanAlts").querySelectorAll("[data-alt]").forEach(o => o.onclick = () => { $("#eMeaning").value = o.dataset.alt; $("#eMeanAlts").querySelectorAll("[data-alt]").forEach(z => z.setAttribute("aria-pressed", z === o)); });
+  };
   $("#eReset").onclick = () => { const cur = S.cards[id]; Object.assign(cur, { level:0, isNew:true, mastered:false, due:null, introduced:null, relearn:false }); saveCard(cur); toast(x.resetDone); openEdit(id); renderAll(); };
   $("#eFind").onclick = async () => {
     const b = $("#eFind"); b.disabled = true; b.textContent = x.finding;
@@ -1155,7 +1425,7 @@ function setUiLang(v){
   if(SES){ const it = SES.queue[0]; const c = it && S.cards[it.id]; if(c && !SES.state.answered) renderItem(c, it.mode); }
 }
 $("#setUi").onchange = e => setUiLang(e.target.value);
-$("#uiPick").onchange = e => setUiLang(e.target.value);
+
 $("#setNew").onchange = e => { S.meta.settings.newLimit = Math.max(1, Math.min(30, parseInt(e.target.value, 10) || 7)); save(); renderAll(); };
 $("#setHf").onchange = e => { S.meta.settings.handsFree = e.target.checked; save(); };
 $("#setWrite").onchange = e => { S.meta.settings.writing = e.target.checked; save(); };
@@ -1192,21 +1462,48 @@ function applyUi(){
   document.querySelectorAll("[data-i18n-html]").forEach(el => { el.innerHTML = x[el.dataset.i18nHtml]; });
   document.querySelectorAll("[data-i18n-ph]").forEach(el => { el.placeholder = x[el.dataset.i18nPh]; });
   document.querySelectorAll("[data-i18n-aria]").forEach(el => { el.setAttribute("aria-label", x[el.dataset.i18nAria]); });
-  $("#uiPick").value = S.meta.settings.ui; const su = $("#setUi"); if(su) su.value = S.meta.settings.ui;
+  const su = $("#setUi"); if(su) su.value = S.meta.settings.ui;
   fillLangs(); closeEdit(); renderAll();
 }
+function openSheet(html){
+  closePop(); const bg = document.createElement("div"); bg.className = "sheet-bg"; POP = bg;
+  bg.innerHTML = `<div class="sheet" role="dialog" aria-modal="true"><button class="x" type="button" aria-label="${esc(t().popClose)}">✕</button>${html}</div>`;
+  document.body.appendChild(bg);
+  bg.addEventListener("click", e => { if(e.target === bg || e.target.closest(".x")) closePop(); });
+  document.addEventListener("keydown", popKey); bg.querySelector(".x").focus();
+  return bg;
+}
+$("#uiBtn").onclick = () => {
+  const x = t();
+  const bg = openSheet(`<h2>${x.uiLangTitle}</h2><div>` + [["ja","日本語"],["ko","한국어"]].map(([k,n]) => `<button class="opt" type="button" data-ui="${k}" aria-current="${S.meta.settings.ui === k}">${FLAGS[k]} <span class="grow">${n}</span>${S.meta.settings.ui === k ? "✓" : ""}</button>`).join("") + `</div>`);
+  bg.querySelectorAll("[data-ui]").forEach(b => b.onclick = () => { closePop(); setUiLang(b.dataset.ui); });
+};
+$("#langBtn").onclick = () => {
+  const x = t(); if(SES){ toast(x.noLangSwitch); return; }
+  const bg = openSheet(`<h2>${x.learnLangTitle}</h2><div>` + Object.keys(LANGS).filter(k => k !== S.meta.settings.ui || Object.values(S.cards).some(c => c.lang === k)).map(k => { const n = Object.values(S.cards).filter(c => (c.lang||"es") === k).length; return `<button class="opt" type="button" data-lang="${k}" aria-current="${S.meta.settings.lang === k}"><span class="flag">${FLAGS[k]}</span><span class="grow">${esc(x.langNames[k])}</span><span class="tiny muted">${n ? x.deckWords(n) : ""}</span>${S.meta.settings.lang === k ? " ✓" : ""}</button>`; }).join("") + `</div>`);
+  bg.querySelectorAll("[data-lang]").forEach(b => b.onclick = () => { closePop(); S.meta.settings.lang = b.dataset.lang; save(); fillLangs(); fillVoices(); closeEdit(); renderAll(); });
+};
 function fillLangs(){
-  const sel = $("#langPick"), x = t();
+  const x = t();
+  $("#langFlag").textContent = FLAGS[S.meta.settings.lang] || "";
+  $("#langBtn").title = x.langNames[S.meta.settings.lang];
+  $("#uiCode").textContent = S.meta.settings.ui.toUpperCase();
+  fillDeckSelects(); fillImport();
+  if(!$("#view-list").classList.contains("hidden")){ renderDecks(); renderDeckFilter(); }
+  $("#fWord").placeholder = L().ph;
+}
+function fillLangsOld(){
+  const sel = document.createElement("select");
   sel.innerHTML = Object.keys(LANGS).filter(k => k !== S.meta.settings.ui || Object.values(S.cards).some(c => c.lang === k)).map(k => { const n = Object.values(S.cards).filter(c => (c.lang||"es") === k).length; return `<option value="${k}">${x.langNames[k]}${n ? x.langCount(n) : ""}</option>`; }).join("");
   sel.value = S.meta.settings.lang;
   $("#fWord").placeholder = L().ph;
 }
-$("#langPick").onchange = e => { if(SES){ toast(t().noLangSwitch); e.target.value = S.meta.settings.lang; return; } S.meta.settings.lang = e.target.value; save(); fillLangs(); fillVoices(); closeEdit(); renderAll(); };
+
 function showView(v){
   document.querySelectorAll(".view").forEach(s => s.classList.add("hidden"));
   $("#view-" + v).classList.remove("hidden");
   document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v ? "true" : "false"));
-  if(v === "list") renderList(); if(v === "how") renderHow();
+  if(v === "list"){ renderDecks(); renderDeckFilter(); renderList(); } if(v === "how") renderHow(); if(v === "add"){ fillDeckSelects(); fillImport(); }
   if(v === "today" && SES){ document.body.classList.add("focus"); centerBox($("#sessionBox")); }
   else { document.body.classList.remove("focus"); const first = $("#view-" + v + " .card"); if(first && first.getBoundingClientRect().top < 0 || v !== "today") window.scrollTo({ top: 0 }); }
 }
