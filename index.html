@@ -373,6 +373,35 @@ textarea{border-radius:22px}
 .modehead .muted.small{letter-spacing:.12em;min-width:0}
 .modehead .btn.sm, #homeBtn, #gradBtn{white-space:nowrap;padding:5px 12px;flex-shrink:0}
 .toast{border-radius:999px;padding:12px 20px;background:var(--ink);color:var(--bg);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 10px 30px rgba(6,30,24,.25);text-align:center;max-width:min(90vw,420px)}
+
+/* ══════════ 今日の横（PC）/ 下（スマホ）のパネル ══════════ */
+body:not(.focus) #view-today::before{height:min(12vh,110px)}
+body.focus #todaySide{display:none}
+.side{gap:18px}
+.side .eyebrow{font-size:.68rem;letter-spacing:.26em;opacity:.8}
+.side .fc i{background:var(--accent);opacity:.55;border-radius:6px 6px 2px 2px}
+.side .fc.today i{opacity:1}
+.side .forecast{height:110px}
+.streak{display:grid;grid-template-columns:repeat(7,minmax(0,20px));justify-content:space-between;gap:8px 6px}
+.streak span{aspect-ratio:1;border-radius:50%;background:var(--line)}
+.streak span.on{background:var(--accent)}
+.streak span.today{outline:2px solid var(--accent);outline-offset:2px}
+.mini-ladder{display:flex;gap:6px}
+.mini-ladder div{flex:1;border-radius:14px;background:var(--field);border:1px solid var(--line);padding:8px 4px;text-align:center}
+.mini-ladder b{display:block;font-size:1.15rem;font-weight:700}
+.mini-ladder span{font-size:.66rem;color:var(--muted)}
+.side .sidebig{display:flex;align-items:baseline;gap:8px}
+.side .sidebig b{font-size:2.4rem;font-weight:700;line-height:1;color:var(--accent)}
+@media (min-width: 900px){
+  html{font-size:17px}
+  .wrap{max-width:1040px}
+  #view-today:not(.hidden){display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px;align-items:start}
+  body:not(.focus) #view-today::before{grid-column:1 / -1;height:min(16vh,140px)}
+  #sessionBox{grid-column:1 / -1;max-width:680px;width:100%;justify-self:center}
+  body.focus #view-today:not(.hidden){display:block}
+  #view-add,#view-list,#view-how{max-width:680px;width:100%;margin:0 auto}
+  .top,nav.tabs{max-width:100%}
+}
 </style>
 </head>
 <body>
@@ -404,6 +433,7 @@ textarea{border-radius:22px}
   <section id="view-today" class="view">
     <div id="sessionStart" class="card"></div>
     <div id="sessionBox" class="card hidden"></div>
+    <aside id="todaySide" class="card side" aria-label="今週"></aside>
   </section>
 
   <section id="view-add" class="view hidden">
@@ -580,7 +610,7 @@ ja: {
   modes:{ study:"まず当ててみる", cloze:"穴埋め", recall:"意味から書く", write:"作文", speak:"スピーキング" },
   left:n=>`残り${n}枚`, listen:"発音を聞く", listenEx:"例文を聞く", listenAgain:"もう一度聞く", listenMine:"自分の文を聞く",
   noExample:"例文がありません。単語帳で追加すると穴埋め問題が出ます。", gotIt:"覚えた、次へ",
-  meaningAlts:"意味の候補：", syncTitle:"端末間で同期", syncNotReady:"同期サーバーを準備中です。もうすぐ使えるようになります。", syncHelp:"同期コードを発行すると、ほかの端末でも同じ単語と進み具合で続けられます。メールや名前は不要です。", syncStart:"同期を始める（コードを発行）", syncHaveCode:"別の端末で発行したコードがある場合", syncJoin:"このコードでつなぐ", syncBadCode:"コードは英数字8文字です（例：K7P2-QX9M）。", syncWorking:"つないでいます…", syncNotFound:"このコードは見つかりませんでした。もう一度確かめてください。", syncErr:"同期できませんでした。ネット接続を確認して、少ししてから試してください。", syncStarted:"同期を始めました。コードをメモしておいてください。", syncJoined:"つながりました！両方の端末の単語をまとめました。", syncOnHelp:"このコードをほかの端末で入れると、同じ単語帳で続けられます。変更は自動で同期されます。コードはパスワード代わりなので、人に教えないでください。", syncYourCode:"同期コード", syncBusy:"同期しています…", syncLast:t0=>`最後に同期：${t0}`, syncNowBtn:"今すぐ同期", syncOff:"この端末の同期をやめる", syncOffConfirm:"もう一度押すと解除（単語はこの端末に残ります）", syncCopied:"コードをコピーしました。", grad:"卒業", gradTitle:"もう完璧に覚えた単語を、毎日の復習から外します", gradAsk:w=>`「${w}」はもう完璧？ 卒業させる？`, gradSafe:"卒業した単語は「単語帳 › 卒業」に入るだけなので、いつでも復活させられます。安心してね！", gradCancel:"まだ続ける", gradDo:"卒業させる", gradDone:w=>`「${w}」は卒業！単語帳からいつでも復活できます。`, revive:"復活させる", revived:w=>`「${w}」を復活させました。今日の復習に入ります。`, home:"ホーム", pausedToast:"ここまで保存しました。「続きから」で再開できます。", setOrder:"新しい単語を出す順番", orderAdded:"追加した順", orderEasy:"よく使う単語から", orderHelp:"どちらの場合も、おたがいの例文に出てくる単語や、いま覚えている単語とつながる単語は、まとめて先に出します。", todayNewList:"今日の新しい単語：", linkedHint:"🔗 は例文でつながっている単語です。いっしょに覚えると効率的です。", levelsFreq:["基本","よく使う","中級","難しめ"], meanRefetch:"意味の候補を取り直す", uiLangTitle:"表示言語", learnLangTitle:"学習する言語", deckDefault:"基本", addTo:"追加先の単語帳", newDeck:"＋ 新しい単語帳…", deckNamePh:"単語帳の名前（例：旅行、ビジネス）", create:"作成", deckCreated:n=>`「${n}」を作りました。`,
+  meaningAlts:"意味の候補：", sideStreak:"日 連続学習", sideWeek:"これからの7日", sideLadder:"復習のはしご", syncTitle:"端末間で同期", syncNotReady:"同期サーバーを準備中です。もうすぐ使えるようになります。", syncHelp:"同期コードを発行すると、ほかの端末でも同じ単語と進み具合で続けられます。メールや名前は不要です。", syncStart:"同期を始める（コードを発行）", syncHaveCode:"別の端末で発行したコードがある場合", syncJoin:"このコードでつなぐ", syncBadCode:"コードは英数字8文字です（例：K7P2-QX9M）。", syncWorking:"つないでいます…", syncNotFound:"このコードは見つかりませんでした。もう一度確かめてください。", syncErr:"同期できませんでした。ネット接続を確認して、少ししてから試してください。", syncStarted:"同期を始めました。コードをメモしておいてください。", syncJoined:"つながりました！両方の端末の単語をまとめました。", syncOnHelp:"このコードをほかの端末で入れると、同じ単語帳で続けられます。変更は自動で同期されます。コードはパスワード代わりなので、人に教えないでください。", syncYourCode:"同期コード", syncBusy:"同期しています…", syncLast:t0=>`最後に同期：${t0}`, syncNowBtn:"今すぐ同期", syncOff:"この端末の同期をやめる", syncOffConfirm:"もう一度押すと解除（単語はこの端末に残ります）", syncCopied:"コードをコピーしました。", grad:"卒業", gradTitle:"もう完璧に覚えた単語を、毎日の復習から外します", gradAsk:w=>`「${w}」はもう完璧？ 卒業させる？`, gradSafe:"卒業した単語は「単語帳 › 卒業」に入るだけなので、いつでも復活させられます。安心してね！", gradCancel:"まだ続ける", gradDo:"卒業させる", gradDone:w=>`「${w}」は卒業！単語帳からいつでも復活できます。`, revive:"復活させる", revived:w=>`「${w}」を復活させました。今日の復習に入ります。`, home:"ホーム", pausedToast:"ここまで保存しました。「続きから」で再開できます。", setOrder:"新しい単語を出す順番", orderAdded:"追加した順", orderEasy:"よく使う単語から", orderHelp:"どちらの場合も、おたがいの例文に出てくる単語や、いま覚えている単語とつながる単語は、まとめて先に出します。", todayNewList:"今日の新しい単語：", linkedHint:"🔗 は例文でつながっている単語です。いっしょに覚えると効率的です。", levelsFreq:["基本","よく使う","中級","難しめ"], meanRefetch:"意味の候補を取り直す", uiLangTitle:"表示言語", learnLangTitle:"学習する言語", deckDefault:"基本", addTo:"追加先の単語帳", newDeck:"＋ 新しい単語帳…", deckNamePh:"単語帳の名前（例：旅行、ビジネス）", create:"作成", deckCreated:n=>`「${n}」を作りました。`,
   decksTitle:"単語帳", decksHelp:"チェックした単語帳だけが今日の学習に出ます。範囲をしぼると覚えやすくなります。", deckWords:n=>`${n}語`, deckDelete:"削除", deckDeleteConfirm:"もう一度押すと削除（単語は「基本」へ移動）", deckDeleted:"単語帳を削除し、単語は「基本」に移しました。", studyDecks:"学習する単語帳：", deckOf:"単語帳",
   photoTitle:"写真から追加", photoHelp:"本や画面を撮ると、端末の中で文字を読み取ります（AIサービスには送りません）。読み取った単語から覚えたいものを選んでください。", photoPick:"写真を撮る・選ぶ",
   ocrLoading:"文字認識エンジンを準備中…（初回だけ数秒かかります）", ocrReading:n=>`読み取り中… ${n}%`, ocrFail:"読み取れませんでした。明るい場所で、文字が大きく写るように撮ってみてください。", ocrText:"読み取った文（間違いは直せます）", ocrReparse:"この文から単語を拾い直す", ocrPickWords:"覚えたい単語をタップ", ocrUseLine:"写真の文を例文にする", ocrAdd:n=>`選んだ${n}語を追加`, ocrInDeck:"登録済み", ocrNone:"単語が見つかりませんでした。",
@@ -650,7 +680,7 @@ ko: {
   modes:{ study:"먼저 맞혀보기", cloze:"빈칸 채우기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
   left:n=>`남은 ${n}장`, listen:"발음 듣기", listenEx:"예문 듣기", listenAgain:"다시 듣기", listenMine:"내 문장 듣기",
   noExample:"예문이 없어요. 단어장에서 넣으면 빈칸 문제가 생깁니다.", gotIt:"외웠어요, 다음",
-  meaningAlts:"뜻 후보:", syncTitle:"기기 간 동기화", syncNotReady:"동기화 서버를 준비 중이에요. 곧 쓸 수 있어요.", syncHelp:"동기화 코드를 만들면 다른 기기에서도 같은 단어와 진도로 이어서 할 수 있어요. 이메일이나 이름은 필요 없어요.", syncStart:"동기화 시작 (코드 만들기)", syncHaveCode:"다른 기기에서 만든 코드가 있다면", syncJoin:"이 코드로 연결", syncBadCode:"코드는 영문·숫자 8자예요 (예: K7P2-QX9M).", syncWorking:"연결하는 중…", syncNotFound:"이 코드를 찾지 못했어요. 다시 확인해 주세요.", syncErr:"동기화하지 못했어요. 인터넷 연결을 확인하고 잠시 뒤 다시 해 주세요.", syncStarted:"동기화를 시작했어요. 코드를 메모해 두세요.", syncJoined:"연결됐어요! 두 기기의 단어를 합쳤어요.", syncOnHelp:"이 코드를 다른 기기에 입력하면 같은 단어장으로 이어서 할 수 있어요. 바뀐 내용은 자동으로 동기화돼요. 코드는 비밀번호 대신이니 남에게 알려 주지 마세요.", syncYourCode:"동기화 코드", syncBusy:"동기화하는 중…", syncLast:t0=>`마지막 동기화: ${t0}`, syncNowBtn:"지금 동기화", syncOff:"이 기기 동기화 끄기", syncOffConfirm:"한 번 더 누르면 해제 (단어는 이 기기에 남아요)", syncCopied:"코드를 복사했어요.", grad:"졸업", gradTitle:"이미 완벽하게 외운 단어를 매일 복습에서 뺍니다", gradAsk:w=>`"${w}"은(는) 이제 완벽해? 졸업시킬까?`, gradSafe:"졸업한 단어는 「단어장 › 졸업」에 들어갈 뿐이라 언제든 다시 살릴 수 있어요. 안심해!", gradCancel:"계속할래", gradDo:"졸업시키기", gradDone:w=>`"${w}" 졸업! 단어장에서 언제든 다시 살릴 수 있어요.`, revive:"다시 살리기", revived:w=>`"${w}"을(를) 다시 살렸어요. 오늘 복습에 들어갑니다.`, home:"홈", pausedToast:"여기까지 저장했어요. 「이어서 하기」로 다시 시작할 수 있어요.", setOrder:"새 단어를 내는 순서", orderAdded:"추가한 순서", orderEasy:"자주 쓰는 단어부터", orderHelp:"어느 쪽이든 서로의 예문에 나오는 단어나 지금 외우는 단어와 이어진 단어는 묶어서 먼저 냅니다.", todayNewList:"오늘의 새 단어:", linkedHint:"🔗 는 예문으로 이어진 단어예요. 같이 외우면 효율적이에요.", levelsFreq:["기본","자주 씀","중급","어려움"], meanRefetch:"뜻 후보 다시 가져오기", uiLangTitle:"화면 언어", learnLangTitle:"학습 언어", deckDefault:"기본", addTo:"추가할 단어장", newDeck:"＋ 새 단어장…", deckNamePh:"단어장 이름 (예: 여행, 비즈니스)", create:"만들기", deckCreated:n=>`"${n}" 단어장을 만들었어요.`,
+  meaningAlts:"뜻 후보:", sideStreak:"일 연속 학습", sideWeek:"앞으로 7일", sideLadder:"복습 사다리", syncTitle:"기기 간 동기화", syncNotReady:"동기화 서버를 준비 중이에요. 곧 쓸 수 있어요.", syncHelp:"동기화 코드를 만들면 다른 기기에서도 같은 단어와 진도로 이어서 할 수 있어요. 이메일이나 이름은 필요 없어요.", syncStart:"동기화 시작 (코드 만들기)", syncHaveCode:"다른 기기에서 만든 코드가 있다면", syncJoin:"이 코드로 연결", syncBadCode:"코드는 영문·숫자 8자예요 (예: K7P2-QX9M).", syncWorking:"연결하는 중…", syncNotFound:"이 코드를 찾지 못했어요. 다시 확인해 주세요.", syncErr:"동기화하지 못했어요. 인터넷 연결을 확인하고 잠시 뒤 다시 해 주세요.", syncStarted:"동기화를 시작했어요. 코드를 메모해 두세요.", syncJoined:"연결됐어요! 두 기기의 단어를 합쳤어요.", syncOnHelp:"이 코드를 다른 기기에 입력하면 같은 단어장으로 이어서 할 수 있어요. 바뀐 내용은 자동으로 동기화돼요. 코드는 비밀번호 대신이니 남에게 알려 주지 마세요.", syncYourCode:"동기화 코드", syncBusy:"동기화하는 중…", syncLast:t0=>`마지막 동기화: ${t0}`, syncNowBtn:"지금 동기화", syncOff:"이 기기 동기화 끄기", syncOffConfirm:"한 번 더 누르면 해제 (단어는 이 기기에 남아요)", syncCopied:"코드를 복사했어요.", grad:"졸업", gradTitle:"이미 완벽하게 외운 단어를 매일 복습에서 뺍니다", gradAsk:w=>`"${w}"은(는) 이제 완벽해? 졸업시킬까?`, gradSafe:"졸업한 단어는 「단어장 › 졸업」에 들어갈 뿐이라 언제든 다시 살릴 수 있어요. 안심해!", gradCancel:"계속할래", gradDo:"졸업시키기", gradDone:w=>`"${w}" 졸업! 단어장에서 언제든 다시 살릴 수 있어요.`, revive:"다시 살리기", revived:w=>`"${w}"을(를) 다시 살렸어요. 오늘 복습에 들어갑니다.`, home:"홈", pausedToast:"여기까지 저장했어요. 「이어서 하기」로 다시 시작할 수 있어요.", setOrder:"새 단어를 내는 순서", orderAdded:"추가한 순서", orderEasy:"자주 쓰는 단어부터", orderHelp:"어느 쪽이든 서로의 예문에 나오는 단어나 지금 외우는 단어와 이어진 단어는 묶어서 먼저 냅니다.", todayNewList:"오늘의 새 단어:", linkedHint:"🔗 는 예문으로 이어진 단어예요. 같이 외우면 효율적이에요.", levelsFreq:["기본","자주 씀","중급","어려움"], meanRefetch:"뜻 후보 다시 가져오기", uiLangTitle:"화면 언어", learnLangTitle:"학습 언어", deckDefault:"기본", addTo:"추가할 단어장", newDeck:"＋ 새 단어장…", deckNamePh:"단어장 이름 (예: 여행, 비즈니스)", create:"만들기", deckCreated:n=>`"${n}" 단어장을 만들었어요.`,
   decksTitle:"단어장", decksHelp:"체크한 단어장만 오늘 학습에 나와요. 범위를 좁히면 더 잘 외워집니다.", deckWords:n=>`${n}개`, deckDelete:"삭제", deckDeleteConfirm:"한 번 더 누르면 삭제 (단어는 「기본」으로 이동)", deckDeleted:"단어장을 지우고 단어는 「기본」으로 옮겼어요.", studyDecks:"학습할 단어장:", deckOf:"단어장",
   photoTitle:"사진으로 추가", photoHelp:"책이나 화면을 찍으면 기기 안에서 글자를 읽어요 (AI 서비스로 보내지 않아요). 읽힌 단어 중 외울 단어를 골라 주세요.", photoPick:"사진 찍기·고르기",
   ocrLoading:"글자 인식 엔진 준비 중… (처음 한 번만 몇 초 걸려요)", ocrReading:n=>`읽는 중… ${n}%`, ocrFail:"글자를 읽지 못했어요. 밝은 곳에서 글자가 크게 나오게 찍어 보세요.", ocrText:"읽은 문장 (틀린 곳은 고칠 수 있어요)", ocrReparse:"이 문장에서 단어 다시 뽑기", ocrPickWords:"외울 단어를 눌러 고르세요", ocrUseLine:"사진 속 문장을 예문으로 쓰기", ocrAdd:n=>`고른 ${n}개 추가`, ocrInDeck:"이미 있음", ocrNone:"단어를 찾지 못했어요.",
@@ -1025,10 +1055,30 @@ function buildSession(){
 function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1); while(S.meta.days[d]){ n++; d = addDays(d, -1); } return n; }
 
 function renderStart(){
-  renderStartInner();
+  renderStartInner(); renderSide();
   const box = $("#sessionStart"), pos = box.querySelector(".poster");
   if(pos){ const rest = [...box.children].filter(el => el !== pos); if(rest.length){ const w = document.createElement("div"); w.className = "after-poster"; rest.forEach(el => w.appendChild(el)); box.appendChild(w); } }
   else box.style.background = "";
+}
+function renderSide(){
+  const box = $("#todaySide"); if(!box) return;
+  const x = t(), all = cardsHere();
+  if(!all.length){ box.classList.add("hidden"); return; }
+  box.classList.remove("hidden");
+  // これからの7日の復習量
+  const d0 = today(), days = [];
+  for(let i = 0; i < 7; i++){ const d = addDays(d0, i); days.push({ d, n: activeCards().filter(c => !c.mastered && !c.isNew && c.due && (i === 0 ? c.due <= d : c.due === d)).length + (i === 0 ? Math.min(newQuota(), newCandidates().length) : 0) }); }
+  const max = Math.max(1, ...days.map(v => v.n));
+  const fc = days.map((v,i) => { const [y,m,dd] = v.d.split("-").map(Number); return `<div class="fc${i ? "" : " today"}"><em>${v.n}</em><i style="height:${Math.round(v.n/max*70)}px"></i><span>${i ? x.week[new Date(y,m-1,dd).getDay()] : x.todayShort}</span></div>`; }).join("");
+  // 最近4週間の学習した日
+  const cells = []; for(let i = 27; i >= 0; i--){ const d = addDays(d0, -i); cells.push(`<span class="${S.meta.days[d] ? "on" : ""}${i === 0 ? " today" : ""}" title="${d}"></span>`); }
+  // はしごの段ごとの数
+  const counts = [0,0,0,0,0,0]; let mastered = 0; all.forEach(c => { if(c.mastered) mastered++; else counts[Math.min(c.level, 5)]++; });
+  const lad = x.levels.map((n,i) => `<div><b>${counts[i]}</b><span>${esc(n)}</span></div>`).join("") + `<div><b>${mastered}</b><span>${esc(x.chipDone)}</span></div>`;
+  box.innerHTML = `<div class="sidebig"><b>${streak()}</b><span class="eyebrow">${esc(x.sideStreak)}</span></div>
+    <div class="streak">${cells.join("")}</div>
+    <span class="eyebrow">${esc(x.sideWeek)}</span><div class="forecast">${fc}</div>
+    <span class="eyebrow">${esc(x.sideLadder)}</span><div class="mini-ladder">${lad}</div>`;
 }
 function renderStartInner(){
   const box = $("#sessionStart"), x = t();
