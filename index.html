@@ -42,7 +42,7 @@ html[lang="ko"]{ --body:"IBM Plex Sans KR", "Apple SD Gothic Neo", system-ui, sa
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-text-size-adjust:100%}
 .wrap{max-width:620px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) calc(96px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));display:flex;flex-direction:column;gap:16px}
 h1,h2{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.25}
-h1{font-size:1.5rem;font-weight:700;letter-spacing:-.01em}
+h1{font-size:1.2rem;font-weight:700;letter-spacing:-.01em}
 h2{font-size:1.15rem;font-weight:700}
 p{margin:0}
 a{color:var(--accent)}
@@ -51,11 +51,15 @@ a{color:var(--accent)}
 .tiny{font-size:.75rem}
 .top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
 .pickers{display:flex;gap:6px}
-.langpick{font:600 .85rem var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 8px;text-align:center}
-.stat b{display:block;font-family:var(--display);font-size:1.35rem;font-variant-numeric:tabular-nums}
-.stat span{font-size:.75rem;color:var(--muted)}
+.langpick{min-width:7.6em;font:600 .85rem var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
+.stats{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.78rem;color:var(--muted);margin-top:-8px}
+.stat{display:inline-flex;align-items:baseline;gap:4px}
+.stat b{order:2;font-family:var(--display);font-size:.9rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.stat span{order:1}
+/* 問題を解いている間は上部を隠して、問題を画面の真ん中に */
+body.focus .top, body.focus .stats{display:none}
+#sessionBox, .view .card:first-child{scroll-margin-top:72px}
+.modehead .btn.sm{min-height:30px;padding:4px 10px;font-size:.78rem}
 nav.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;position:sticky;top:calc(8px + env(safe-area-inset-top));z-index:5}
 nav.tabs button{flex:1;border:0;background:transparent;color:var(--muted);font:600 .88rem var(--body);padding:9px 4px;border-radius:9px;cursor:pointer}
 nav.tabs button[aria-selected="true"]{background:var(--accent);color:var(--on-accent,#fff)}
@@ -143,7 +147,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .blank{background:var(--cream);border-radius:6px 6px 0 0}
 .hidden{display:none!important}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
-@media (max-width:400px){.stats{grid-template-columns:repeat(2,1fr)} .word{font-size:1.8rem}}
+@media (max-width:400px){.word{font-size:1.8rem}}
 </style>
 </head>
 <body>
@@ -320,7 +324,7 @@ ja: {
   noExample:"例文がありません。単語帳で追加すると穴埋め問題が出ます。", gotIt:"覚えた、次へ",
   nmAsk:{ study:l=>"はじめて見る単語だよ。カンでいいから書いてみて！", cloze:l=>"空いてるところ、なんて入るかな？", recall:l=>`この意味、${l}でなんて言う？`, write:l=>"この単語で、一文つくってみて〜", speak:l=>"声に出して言ってみて。ちゃんと聞いてるよ" },
   nmToday:(a,b)=>`今日は復習${a}枚と、新しい単語${b}つ。いっしょにやろ！`, nmEmpty:"ふぁ…まだ単語がないみたい。覚えたい単語を教えて？", nmNone:"今日の分はないよ。ネミミはちょっと寝るね…", nmDone:"今日もおつかれさま！また明日ね", nmResume:"おかえり！さっきの続きからできるよ",
-  nmFinishAll:"ぜんぶ一発で正解！すごい！", nmFinishSome:"おつかれさま！間違えたのは明日もう一回出すね", resumeTitle:"途中から再開できます", resumeBody:(n,d)=>`前回の続きです。終わった問題 ${d}・残り ${n}問。答えた分はすべて保存されています。`, resume:"続きから", restart:"最初からやり直す", guessLead:"初めての単語です。答えを見る前に、まず推測して書いてみましょう。", copyPrompt:"正解を1回書いてから次へ進みましょう。", copyPh:"正解を書き写す", copyAgain:"もう一度、正解をそのまま書いてみましょう", copyOk:"OK、書けました", skipCopy:"入力せずに次へ", hfOn:"入力なしモード：オン", hfOff:"入力なしモード（歩きながら・電車で）", remembered:"覚えてた", forgot:"忘れてた", setHf:"入力なしモード（答えを聞いて自己採点）", slow:"ゆっくり", popDetail:"詳細を見る", popAdd:"単語帳に追加", popInDeck:"単語帳にあり", popNoMeaning:"意味を取得できませんでした", popDict:"辞書で調べる", popExamples:"例文", popLoading:"例文を探しています…", popNoEx:"ほかの例文は見つかりませんでした。", popAdded:w=>`「${w}」を単語帳に追加しました。`, popClose:"閉じる", popHint:"文中の単語をタップすると意味と発音が見られます。", voice:"読み上げの声", voiceAuto:"自動（いちばん自然な声）", rate:"読み上げの速さ", preview:"試しに聞く", voiceTip:"iPhoneは「設定 › アクセシビリティ › 読み上げコンテンツ › 声」で「拡張」や「プレミアム」の声をダウンロードすると、ずっと聞き取りやすくなります。ネイティブ録音がある例文は録音を優先して再生します。", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"空欄に入る単語はどれ？ 初めてでもOK、まず推測してみましょう。", guessMCm:(m,l)=>`「${m}」は${l}でどれ？ まず推測してみましょう。`, guessType:"推測して入力（間違えて大丈夫）", guessBtn:"これだと思う", guessRight:"すごい、当たり！", guessWrong:"答えはこれ！先に考えたから、もう覚えやすくなってるよ", guessSkip:"見当もつかない",
+  nmFinishAll:"ぜんぶ一発で正解！すごい！", nmFinishSome:"おつかれさま！間違えたのは明日もう一回出すね", resumeTitle:"途中から再開できます", resumeBody:(n,d)=>`前回の続きです。終わった問題 ${d}・残り ${n}問。答えた分はすべて保存されています。`, resume:"続きから", restart:"最初からやり直す", guessLead:"初めての単語です。答えを見る前に、まず推測して書いてみましょう。", copyPrompt:"正解を1回書いてから次へ進みましょう。", copyPh:"正解を書き写す", copyAgain:"もう一度、正解をそのまま書いてみましょう", copyOk:"OK、書けました", skipCopy:"入力せずに次へ", hfOn:"入力なし ON", hfOff:"入力なし", hfHelp:"歩きながら・電車で：書かずに、答えを聞いて自己採点", remembered:"覚えてた", forgot:"忘れてた", setHf:"入力なしモード（答えを聞いて自己採点）", slow:"ゆっくり", popDetail:"詳細を見る", popAdd:"単語帳に追加", popInDeck:"単語帳にあり", popNoMeaning:"意味を取得できませんでした", popDict:"辞書で調べる", popExamples:"例文", popLoading:"例文を探しています…", popNoEx:"ほかの例文は見つかりませんでした。", popAdded:w=>`「${w}」を単語帳に追加しました。`, popClose:"閉じる", popHint:"文中の単語をタップすると意味と発音が見られます。", voice:"読み上げの声", voiceAuto:"自動（いちばん自然な声）", rate:"読み上げの速さ", preview:"試しに聞く", voiceTip:"iPhoneは「設定 › アクセシビリティ › 読み上げコンテンツ › 声」で「拡張」や「プレミアム」の声をダウンロードすると、ずっと聞き取りやすくなります。ネイティブ録音がある例文は録音を優先して再生します。", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"空欄に入る単語はどれ？ 初めてでもOK、まず推測してみましょう。", guessMCm:(m,l)=>`「${m}」は${l}でどれ？ まず推測してみましょう。`, guessType:"推測して入力（間違えて大丈夫）", guessBtn:"これだと思う", guessRight:"すごい、当たり！", guessWrong:"答えはこれ！先に考えたから、もう覚えやすくなってるよ", guessSkip:"見当もつかない",
   hint:(m,c)=>`ヒント：${m} · 「${c}」で始まる`, recallQ:l=>`この意味の${l}の単語は？`, noMeaning:"（意味なし）",
   answerPh:"答えを入力", answer:"答え", idk:"わからない", check:"確認", next:"次へ",
   correct:"せいかい！", correctAccent:"おしい！アクセント記号だけ気をつけてね", wrong:"だいじょうぶ、答えはこれだよ", baseForm:"原形", retryLater:"3枚後にもう一度出ます。",
@@ -385,7 +389,7 @@ ko: {
   noExample:"예문이 없어요. 단어장에서 넣으면 빈칸 문제가 생깁니다.", gotIt:"외웠어요, 다음",
   nmAsk:{ study:l=>"처음 보는 단어야. 감으로라도 써 봐!", cloze:l=>"빈칸에 뭐가 들어갈까?", recall:l=>`이 뜻, ${l}로 뭐라고 할까?`, write:l=>"이 단어로 문장 하나 만들어 봐~", speak:l=>"소리 내서 말해 봐. 잘 듣고 있을게" },
   nmToday:(a,b)=>`오늘은 복습 ${a}장, 새 단어 ${b}개. 같이 하자!`, nmEmpty:"하암… 아직 단어가 없네. 외우고 싶은 단어 알려 줄래?", nmNone:"오늘 할 건 없어. 네미미는 잠깐 잘게…", nmDone:"오늘도 수고했어! 내일 또 봐", nmResume:"어서 와! 아까 하던 데서 이어서 할 수 있어",
-  nmFinishAll:"전부 한 번에 맞혔어! 대단해!", nmFinishSome:"수고했어! 틀린 건 내일 한 번 더 낼게", resumeTitle:"이어서 할 수 있어요", resumeBody:(n,d)=>`지난번에 하던 거예요. 끝낸 문제 ${d}개 · 남은 문제 ${n}개. 답한 건 모두 저장돼 있어요.`, resume:"이어서 하기", restart:"처음부터 다시", guessLead:"처음 보는 단어예요. 답을 보기 전에 먼저 짐작해서 써보세요.", copyPrompt:"정답을 한 번 따라 쓰고 넘어가요.", copyPh:"정답 따라 쓰기", copyAgain:"정답을 그대로 한 번 더 써보세요", copyOk:"좋아요, 썼어요", skipCopy:"안 쓰고 넘어가기", hfOn:"입력 없이 모드: 켜짐", hfOff:"입력 없이 모드 (걸으면서·지하철)", remembered:"기억났어요", forgot:"까먹었어요", setHf:"입력 없이 모드 (정답 듣고 직접 채점)", slow:"느리게", popDetail:"상세 보기", popAdd:"단어장에 추가", popInDeck:"단어장에 있음", popNoMeaning:"뜻을 가져오지 못했어요", popDict:"사전에서 찾기", popExamples:"예문", popLoading:"예문 찾는 중…", popNoEx:"다른 예문을 찾지 못했어요.", popAdded:w=>`"${w}"을(를) 단어장에 추가했어요.`, popClose:"닫기", popHint:"문장 속 단어를 누르면 뜻과 발음을 볼 수 있어요.", voice:"읽어주는 목소리", voiceAuto:"자동 (가장 자연스러운 목소리)", rate:"읽기 속도", preview:"들어보기", voiceTip:"아이폰은 설정 › 손쉬운 사용 › 콘텐츠 말하기 › 음성에서 「향상된」·「프리미엄」 음성을 내려받으면 훨씬 잘 들립니다. 원어민 녹음이 있는 예문은 녹음을 먼저 재생합니다.", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"빈칸에 들어갈 단어는? 처음이어도 괜찮아요, 먼저 짐작해 보세요.", guessMCm:(m,l)=>`"${m}"은(는) ${l}로 뭘까요? 먼저 짐작해 보세요.`, guessType:"짐작해서 입력 (틀려도 괜찮아요)", guessBtn:"이거 같아요", guessRight:"맞혔어요!", guessWrong:"정답은 이거! 먼저 생각해 봐서 벌써 더 잘 기억될 거야", guessSkip:"전혀 모르겠어요",
+  nmFinishAll:"전부 한 번에 맞혔어! 대단해!", nmFinishSome:"수고했어! 틀린 건 내일 한 번 더 낼게", resumeTitle:"이어서 할 수 있어요", resumeBody:(n,d)=>`지난번에 하던 거예요. 끝낸 문제 ${d}개 · 남은 문제 ${n}개. 답한 건 모두 저장돼 있어요.`, resume:"이어서 하기", restart:"처음부터 다시", guessLead:"처음 보는 단어예요. 답을 보기 전에 먼저 짐작해서 써보세요.", copyPrompt:"정답을 한 번 따라 쓰고 넘어가요.", copyPh:"정답 따라 쓰기", copyAgain:"정답을 그대로 한 번 더 써보세요", copyOk:"좋아요, 썼어요", skipCopy:"안 쓰고 넘어가기", hfOn:"입력 없이 ON", hfOff:"입력 없이", hfHelp:"걸으면서·지하철에서: 쓰지 않고 정답 듣고 직접 채점", remembered:"기억났어요", forgot:"까먹었어요", setHf:"입력 없이 모드 (정답 듣고 직접 채점)", slow:"느리게", popDetail:"상세 보기", popAdd:"단어장에 추가", popInDeck:"단어장에 있음", popNoMeaning:"뜻을 가져오지 못했어요", popDict:"사전에서 찾기", popExamples:"예문", popLoading:"예문 찾는 중…", popNoEx:"다른 예문을 찾지 못했어요.", popAdded:w=>`"${w}"을(를) 단어장에 추가했어요.`, popClose:"닫기", popHint:"문장 속 단어를 누르면 뜻과 발음을 볼 수 있어요.", voice:"읽어주는 목소리", voiceAuto:"자동 (가장 자연스러운 목소리)", rate:"읽기 속도", preview:"들어보기", voiceTip:"아이폰은 설정 › 손쉬운 사용 › 콘텐츠 말하기 › 음성에서 「향상된」·「프리미엄」 음성을 내려받으면 훨씬 잘 들립니다. 원어민 녹음이 있는 예문은 녹음을 먼저 재생합니다.", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"빈칸에 들어갈 단어는? 처음이어도 괜찮아요, 먼저 짐작해 보세요.", guessMCm:(m,l)=>`"${m}"은(는) ${l}로 뭘까요? 먼저 짐작해 보세요.`, guessType:"짐작해서 입력 (틀려도 괜찮아요)", guessBtn:"이거 같아요", guessRight:"맞혔어요!", guessWrong:"정답은 이거! 먼저 생각해 봐서 벌써 더 잘 기억될 거야", guessSkip:"전혀 모르겠어요",
   hint:(m,c)=>`힌트: ${m} · ${c}로 시작`, recallQ:l=>`이 뜻의 ${l} 단어는?`, noMeaning:"(뜻 없음)",
   answerPh:"정답 입력", answer:"정답", idk:"모르겠어요", check:"확인", next:"다음",
   correct:"정답!", correctAccent:"아깝다! 악센트만 조심해", wrong:"괜찮아, 정답은 이거야", baseForm:"기본형", retryLater:"3장 뒤에 다시 나옵니다.",
@@ -740,11 +744,19 @@ function startSession(){
   saveSession();
   $("#sessionStart").classList.add("hidden"); $("#sessionBox").classList.remove("hidden"); nextItem();
 }
+function centerBox(el){
+  if(!el) return;
+  requestAnimationFrame(() => {
+    const r = el.getBoundingClientRect(), vh = window.innerHeight;
+    const top = r.height < vh - 90 ? window.scrollY + r.top - (vh - r.height) / 2 : window.scrollY + r.top - 72;
+    window.scrollTo({ top: Math.max(0, top), behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  });
+}
 function nextItem(){
   if(!SES.queue.length) return finishSession();
   const it = SES.queue[0], c = S.cards[it.id];
   if(!c){ SES.queue.shift(); return nextItem(); }
-  SES.state = { answered: false }; renderItem(c, it.mode);
+  SES.state = { answered: false }; document.body.classList.add("focus"); renderItem(c, it.mode); centerBox($("#sessionBox"));
 }
 function saveSession(){
   if(!SES){ delete S.meta.session; save(); return; }
@@ -780,14 +792,15 @@ function finishSession(){
   save();
   const ok = SES.finished.filter(f => f.ok).length, ng = SES.finished.length - ok;
   const rows = SES.finished.map(f => { const c = S.cards[f.id]; if(!c) return ""; return `<div class="item" style="cursor:default"><span style="min-width:0"><span class="w">${esc(c.word)}</span><span class="m">${esc(c.meaning)}</span></span><span class="right">${f.ok ? `<span class="chip done">${x.firstTry}</span>` : `<span class="chip leech">${x.tomorrow}</span>`}<span>${c.mastered ? x.graduated : esc(x.nextOn(c.due))}</span></span></div>`; }).join("");
+  document.body.classList.remove("focus");
   const box = $("#sessionBox");
   box.innerHTML = `${say(ng ? "st_happy" : "st_love", esc(ng ? x.nmFinishSome : x.nmFinishAll), true)}<h2>${x.finishTitle}</h2><p>${x.finishSum(ok, ng)}</p><div class="list">${rows}</div><div class="row"><button class="btn primary" id="backHome" type="button">${x.ok}</button></div>`;
-  $("#backHome").onclick = () => { SES = null; box.classList.add("hidden"); $("#sessionStart").classList.remove("hidden"); renderAll(); };
+  $("#backHome").onclick = () => { SES = null; document.body.classList.remove("focus"); box.classList.add("hidden"); $("#sessionStart").classList.remove("hidden"); renderAll(); };
 }
 
 const kbdHTML = () => L().chars.length ? '<div class="kbd">' + L().chars.map(ch => `<button type="button" data-ch="${ch}">${ch}</button>`).join("") + "</div>" : "";
 function bindKbd(box, input){ box.querySelectorAll(".kbd button").forEach(b => b.onclick = () => { const s = input.selectionStart ?? input.value.length, e = input.selectionEnd ?? s; input.value = input.value.slice(0,s) + b.dataset.ch + input.value.slice(e); input.focus(); try{ input.setSelectionRange(s+1, s+1); }catch(_){} }); }
-function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="progress" aria-hidden="true"><i style="width:${pct}%"></i></div><div class="modehead"><span class="muted small">${t().modes[mode]} · ${t().left(SES.queue.length)}</span><span>${levelChip(c)}</span></div><div class="row"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}">${hf ? t().hfOn : t().hfOff}</button></div>${say(MODE_NM[mode] || "st_default", esc(t().nmAsk[mode](langName())))}`; }
+function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="progress" aria-hidden="true"><i style="width:${pct}%"></i></div><div class="modehead"><span class="muted small">${t().modes[mode]} · ${t().left(SES.queue.length)}</span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}" title="${esc(t().hfHelp)}">${hf ? t().hfOn : t().hfOff}</button>${levelChip(c)}</span></div>${say(MODE_NM[mode] || "st_default", esc(t().nmAsk[mode](langName())))}`; }
 document.addEventListener("click", e => {
   if(!e.target.closest("#hfToggle") || !SES || SES.state.answered) return;
   S.meta.settings.handsFree = !S.meta.settings.handsFree; save();
@@ -804,7 +817,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
     <form id="ansForm" autocomplete="off"><input type="text" id="ans" class="answer" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${isGuess ? x.guessType : x.answerPh}" aria-label="${x.answer}" enterkeyhint="done"></form>
     ${kbdHTML()}<div id="fb"></div>
     <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${isGuess ? x.guessSkip : x.idk}</button><span class="grow"></span><button class="btn primary" type="button" id="chk">${isGuess ? x.guessBtn : x.check}</button></div>`;
-  const input = $("#ans"); bindKbd(box, input); input.focus();
+  const input = $("#ans"); bindKbd(box, input); input.focus({ preventScroll: true });
   let phase = "answer";
   const answerBlock = () => `<span class="sentence" style="font-size:1.15rem"><b>${esc(target)}</b>${norm(target) !== norm(c.word) ? ` <span class="muted small">(${x.baseForm} ${esc(c.word)})</span>` : ""}</span>${c.meaning ? `<span class="muted">${esc(c.meaning)}</span>` : ""}${c.example ? `<span class="small">${highlight(c)}</span><span class="small muted">${esc(c.exampleKo)}</span>` : ""}`;
   const finish = ok => settleItem(isGuess ? true : ok);
@@ -882,7 +895,7 @@ function renderItem(c, mode){
       <label for="wr">${x.myText}<textarea id="wr" spellcheck="false"></textarea></label>
       ${kbdHTML()}<div id="fb"></div>
       <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${x.idk}</button><span class="grow"></span><button class="btn primary" type="button" id="chk">${x.wrote}</button></div>`;
-    const ta = $("#wr"); bindKbd(box, ta); ta.focus();
+    const ta = $("#wr"); bindKbd(box, ta); ta.focus({ preventScroll: true });
     $("#idk").onclick = () => { if(SES.state.answered) return; SES.state.answered = true; ta.disabled = true;
       $("#fb").innerHTML = `<div class="feedback no">${fbh("st_default", x.seeExample)}<span>${highlight(c)}</span><span class="small muted">${esc(c.exampleKo)}</span></div>`;
       $("#acts").innerHTML = `<span class="grow"></span><button class="btn primary" type="button" id="nx">${x.next}</button>`; $("#nx").onclick = () => settleItem(false); };
@@ -1194,6 +1207,8 @@ function showView(v){
   $("#view-" + v).classList.remove("hidden");
   document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v ? "true" : "false"));
   if(v === "list") renderList(); if(v === "how") renderHow();
+  if(v === "today" && SES){ document.body.classList.add("focus"); centerBox($("#sessionBox")); }
+  else { document.body.classList.remove("focus"); const first = $("#view-" + v + " .card"); if(first && first.getBoundingClientRect().top < 0 || v !== "today") window.scrollTo({ top: 0 }); }
 }
 document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => showView(b.dataset.view));
 function updateStats(){
