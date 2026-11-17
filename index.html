@@ -473,6 +473,13 @@ p.muted,.muted.small{font-weight:400}
 .kbd button{color:var(--ink);font-weight:500}
 h2{color:var(--ink)}
 body.focus #toast{bottom:auto;top:calc(var(--vvt,0px) + 64px + env(safe-area-inset-top))}
+/* ロゴ遊び */
+h1 .logo{display:inline-flex;align-items:center;white-space:nowrap}
+h1 .logo .lo{width:1.25em;height:1.25em;margin:0 .26em 0 .02em;color:var(--ink);transform:translateY(-.06em)}
+h1 .logo .lt{width:.8em;height:1em;margin-left:-.1em;transform:translateY(-.25em)}
+h1 .logo-sub{display:inline-flex;align-items:center;gap:5px}
+h1 .logo-sub .lp{width:.95em;height:.95em;color:var(--accent);transform:rotate(-14deg)}
+img.nm[src$=".svg"]{image-rendering:auto}
 </style>
 </head>
 <body>
@@ -480,7 +487,7 @@ body.focus #toast{bottom:auto;top:calc(var(--vvt,0px) + 64px + env(safe-area-ins
 <div class="wrap">
   <header class="top">
     <div class="titlebar">
-      <h1><span class="logo">ANKI SITE MEOW</span><span class="logo-sub" data-i18n="appName"></span></h1>
+      <h1><span class="logo" aria-label="ANKI SITE MEOW">ANKI SITE ME<svg class="lo" viewBox="0 0 26 26" aria-hidden="true"><path d="M4.5 10 L6 2.5 L11 6.5 Z M21.5 10 L20 2.5 L15 6.5 Z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="13" cy="14.5" r="9.6" fill="none" stroke="currentColor" stroke-width="2.6"/><circle cx="9.6" cy="13.6" r="1.4" fill="currentColor"/><circle cx="16.4" cy="13.6" r="1.4" fill="currentColor"/><path d="M10.6 17.4 Q11.8 18.8 13 17.4 Q14.2 18.8 15.4 17.4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M0.6 15 L4.4 15.6 M25.4 15 L21.6 15.6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>W<svg class="lt" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 22 C12 24 18 18 15 11 C13 6 17 2 20 4" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round"/></svg></span><span class="logo-sub"><svg class="lp" viewBox="0 0 20 20" aria-hidden="true"><ellipse cx="10" cy="13" rx="4.6" ry="3.8" fill="currentColor"/><circle cx="4.2" cy="8.2" r="2" fill="currentColor"/><circle cx="8" cy="4.6" r="2" fill="currentColor"/><circle cx="12.4" cy="4.6" r="2" fill="currentColor"/><circle cx="16" cy="8.2" r="2" fill="currentColor"/></svg><span data-i18n="appName"></span></span></h1>
       <button id="langBtn" class="langbtn" type="button" data-i18n-aria="learnLang"><span id="langFlag" class="flag"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg></button>
     </div>
     <button id="uiBtn" class="iconbtn" type="button" aria-label="表示言語 · 화면 언어"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19"/><path d="M12 2.5c2.8 2.6 4.2 5.8 4.2 9.5s-1.4 6.9-4.2 9.5c-2.8-2.6-4.2-5.8-4.2-9.5S9.2 5.1 12 2.5z"/></svg><span id="uiCode"></span></button>
@@ -799,10 +806,11 @@ const LANGS = {
   ja: { tatoeba:"jpn", mm:"ja", speech:"ja-JP", wikt:"ja", chars:[], articles:null, ph:"活用する" }
 };
 const LADDER = [1, 7, 21, 60, 150];
-/* ネミミ（nemimi.net の絵をそのまま参照。描き直すと全部に反映される） */
-const NM_BASE = "https://nemimi.net/nemimi/koala-v2-lavender/";
+/* 암기냥이（cat/melt/ のSVG。cat/melt_wobble.py で生成） */
+const NM_BASE = "cat/";
+const CAT_OF = { cat_jpop:"ask", st_default:"ask", st_happy:"happy", st_surprised:"surprised", st_sleepy:"sleepy", st_love:"love", st_listening:"listen", listen_airpods:"listen", load_run:"think", load_done:"happy" };
 const NM_EXT = { cat_jpop:"gif", listen_airpods:"gif", load_run:"gif", load_done:"gif" };
-const nm = (name, px) => `<img class="nm" src="${NM_BASE}${name}.${NM_EXT[name] || "png"}" width="${px}" height="${px}" alt="" loading="lazy" decoding="async">`;
+const nm = (name, px) => `<img class="nm" src="${NM_BASE}melt/cat_${CAT_OF[name] || "ask"}.svg" width="${Math.round(px*1.36)}" height="${px}" alt="" decoding="async">`;
 const say = (name, text, big) => `<div class="say${big ? " big" : ""}">${nm(name, big ? 128 : 64)}<div class="bubble">${text}</div></div>`;
 const fbh = (name, text) => `<div class="fbh">${nm(name, 64)}<strong>${text}</strong></div>`;
 const MODE_NM = { study:"cat_jpop", cloze:"st_default", recall:"st_listening", write:"st_default", speak:"listen_airpods" };
