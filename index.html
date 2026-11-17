@@ -535,6 +535,36 @@ body.petopen{overflow:hidden}
 #pawFx .pf-stamp{position:absolute;inset:8%;display:grid;place-items:center} #pawFx .pf-stamp svg{width:100%;height:100%;opacity:1}
 #pawFx .pf-paw{position:fixed;pointer-events:none;filter:drop-shadow(0 30px 40px rgba(0,0,0,.35));will-change:transform;transform:translateY(-200vh)}
 #pawFx .pf-paw svg{width:100%;height:100%}
+
+.ocrq{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+.oq-head{display:flex;align-items:center;justify-content:space-between;gap:8px} .oq-head b{font-size:.92rem}
+.oq-bar{height:6px;border-radius:999px;background:var(--field);overflow:hidden} .oq-bar i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.oq-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:6px}
+.oq-it{position:relative;aspect-ratio:3/4;border-radius:12px;overflow:hidden;background:var(--field)}
+.oq-it img{width:100%;height:100%;object-fit:cover;display:block}
+.oq-it.wait img{opacity:.5} .oq-it.run img{opacity:.75} .oq-it.err img,.oq-it.empty img{filter:grayscale(1);opacity:.5}
+.oq-st{position:absolute;left:4px;bottom:4px;padding:1px 6px;border-radius:999px;background:rgba(0,0,0,.6);color:#fff;font-size:.66rem;font-weight:700}
+.oq-it.ok .oq-st{background:var(--accent)}
+.oq-x{position:absolute;right:3px;top:3px;width:22px;height:22px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:.8rem;line-height:22px;padding:0;cursor:pointer}
+.oq-text{margin-top:10px} .oq-text summary{cursor:pointer;font-size:.85rem;color:var(--muted);font-weight:600} .oq-text textarea{min-height:120px;margin-top:6px}
+body.dropping::after{content:"📥";position:fixed;inset:10px;z-index:90;display:grid;place-items:center;font-size:4rem;border:3px dashed var(--accent);border-radius:28px;background:rgba(105,167,149,.25);pointer-events:none}
+#camOv{position:fixed;inset:0;z-index:85;background:#000;display:flex;flex-direction:column}
+#camOv video{flex:1;min-height:0;width:100%;object-fit:cover;cursor:pointer}
+#camOv .cam-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+#camOv .cam-hint{position:absolute;left:12px;right:12px;top:calc(12px + env(safe-area-inset-top));margin:0;padding:8px 12px;border-radius:14px;background:rgba(0,0,0,.45);color:#fff;font-size:.8rem;text-align:center}
+#camOv .cam-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px calc(16px + env(safe-area-inset-bottom));background:#000}
+#camOv .cam-thumbs{display:flex;gap:4px;width:110px;overflow:hidden} #camOv .cam-thumbs img{width:34px;height:46px;object-fit:cover;border-radius:6px;border:1px solid rgba(255,255,255,.5)}
+#camOv .cam-shut{width:76px;height:76px;border-radius:50%;border:5px solid #fff;background:#fff;box-shadow:inset 0 0 0 4px #000;color:#000;font:800 1.1rem system-ui;cursor:pointer;flex-shrink:0}
+#camOv .cam-shut:active{transform:scale(.92)}
+#camOv #camDone{width:110px;background:#fff;color:#000}
+
+.ofilt{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}
+.ofilt .ofl{font-size:.75rem;color:var(--muted);font-weight:600}
+.fchip{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:4px 10px;font:600 .78rem var(--body);cursor:pointer}
+.fchip[aria-pressed="true"]{background:var(--ink);color:var(--bg,#fff);border-color:var(--ink)} .fchip i{font-style:normal;opacity:.7;font-weight:500}
+.ofilt input[type=search]{flex:1 1 140px;min-width:120px;padding:7px 12px;border-radius:999px}
+.chiptog.ban{border-style:dashed;border-color:var(--bad)} .chiptog.ban:hover{background:rgba(125,42,31,.12)}
+.linkbtn{border:0;background:none;padding:0;color:var(--accent);font:inherit;text-decoration:underline;cursor:pointer}
 </style>
 </head>
 <body>
@@ -597,7 +627,11 @@ body.petopen{overflow:hidden}
     <div class="card">
       <h2 data-i18n="photoTitle"></h2>
       <p class="muted small" data-i18n="photoHelp"></p>
-      <label class="btn" for="ocrFile" style="display:inline-flex;flex-direction:row;align-self:flex-start;color:var(--ink);font-size:.95rem"><span data-i18n="photoPick"></span><input type="file" id="ocrFile" accept="image/*" class="hidden"></label>
+      <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn primary" type="button" id="camBtn"><span data-i18n="camBtn"></span></button>
+        <label class="btn" for="ocrFile" style="display:inline-flex;flex-direction:row;color:var(--ink)"><span data-i18n="pickMany"></span><input type="file" id="ocrFile" accept="image/*" multiple class="hidden"></label>
+        <input type="file" id="ocrCam" accept="image/*" capture="environment" class="hidden"></div>
+      <p class="tiny muted" data-i18n="dropHint"></p>
+      <div id="ocrQueue" class="ocrq hidden"></div>
       <div id="ocrBox" class="hidden"></div>
     </div>
     <div class="card">
@@ -745,7 +779,8 @@ ja: {
   noExample:"例文がありません。単語帳で追加すると穴埋め問題が出ます。", gotIt:"覚えた、次へ",
   meaningAlts:"意味の候補：", sideStreak:"日 連続学習", sideWeek:"これからの7日", sideLadder:"復習のはしご", syncTitle:"端末間で同期", syncNotReady:"同期サーバーを準備中です。もうすぐ使えるようになります。", syncHelp:"同期コードを発行すると、ほかの端末でも同じ単語と進み具合で続けられます。メールや名前は不要です。", syncStart:"同期を始める（コードを発行）", syncHaveCode:"別の端末で発行したコードがある場合", syncJoin:"このコードでつなぐ", syncBadCode:"コードは英数字8文字です（例：K7P2-QX9M）。", syncWorking:"つないでいます…", syncNotFound:"このコードは見つかりませんでした。もう一度確かめてください。", syncErr:"同期できませんでした。ネット接続を確認して、少ししてから試してください。", syncStarted:"同期を始めました。コードをメモしておいてください。", syncJoined:"つながりました！両方の端末の単語をまとめました。", syncOnHelp:"このコードをほかの端末で入れると、同じ単語帳で続けられます。変更は自動で同期されます。コードはパスワード代わりなので、人に教えないでください。", syncYourCode:"同期コード", syncBusy:"同期しています…", syncLast:t0=>`最後に同期：${t0}`, syncNowBtn:"今すぐ同期", syncOff:"この端末の同期をやめる", syncOffConfirm:"もう一度押すと解除（単語はこの端末に残ります）", syncCopied:"コードをコピーしました。", grad:"卒業", gradTitle:"もう完璧に覚えた単語を、毎日の復習から外します", gradAsk:w=>`「${w}」はもう完璧？ 卒業させる？`, gradSafe:"卒業した単語は「単語帳 › 卒業」に入るだけなので、いつでも復活させられます。安心してね！", gradCancel:"まだ続ける", gradDo:"卒業させる", gradDone:w=>`「${w}」は卒業！単語帳からいつでも復活できます。`, revive:"復活させる", revived:w=>`「${w}」を復活させました。今日の復習に入ります。`, home:"ホーム", pausedToast:"ここまで保存しました。「続きから」で再開できます。", setOrder:"新しい単語を出す順番", orderAdded:"追加した順", orderEasy:"よく使う単語から", orderHelp:"どちらの場合も、おたがいの例文に出てくる単語や、いま覚えている単語とつながる単語は、まとめて先に出します。", todayNewList:"今日の新しい単語：", linkedHint:"🔗 は例文でつながっている単語です。いっしょに覚えると効率的です。", levelsFreq:["基本","よく使う","中級","難しめ"], meanRefetch:"意味の候補を取り直す", uiLangTitle:"表示言語", learnLangTitle:"学習する言語", deckDefault:"基本", addTo:"追加先の単語帳", newDeck:"＋ 新しい単語帳…", deckNamePh:"単語帳の名前（例：旅行、ビジネス）", create:"作成", deckCreated:n=>`「${n}」を作りました。`,
   decksTitle:"単語帳", decksHelp:"チェックした単語帳だけが今日の学習に出ます。範囲をしぼると覚えやすくなります。", deckWords:n=>`${n}語`, deckDelete:"削除", deckDeleteConfirm:"もう一度押すと削除（単語は「基本」へ移動）", deckDeleted:"単語帳を削除し、単語は「基本」に移しました。", studyDecks:"学習する単語帳：", deckOf:"単語帳",
-  photoTitle:"写真から追加", photoHelp:"本や画面を撮ると、端末の中で文字を読み取ります（AIサービスには送りません）。読み取った単語から覚えたいものを選んでください。", photoPick:"写真を撮る・選ぶ",
+  photoTitle:"写真から追加", photoHelp:"本や画面を撮ると、端末の中で文字を読み取ります（AIサービスには送りません）。読み取った単語から覚えたいものを選んでください。", photoPick:"写真を撮る・選ぶ", camBtn:"📷 連写で撮る", fLevel:"表示:", fEasy:"A やさしい", fShowDup:"登録済みも表示", fSearch:"単語で絞り込み", fStar:"おすすめに戻す", fAll:"表示中を全部選ぶ", fNone:"全部外す", fBan:"除外モード", fNoneShown:"条件に合う単語がありません", fInfo:(v,n)=>`表示 ${v} / ${n}語（タップで選択。除外モードでタップすると次から出しません）`, fUnban:n=>`除外した${n}語を戻す`, pickMany:"🖼 まとめて選ぶ", dropHint:"何枚でもOK。撮った順に裏で読み取ります。PCはドラッグ＆ドロップ・貼り付けもできます。",
+  qTitle:(d,n)=>`読み取り ${d}/${n}枚`, qClear:"写真をすべて消す", qDone:"ぜんぶ読み取りました", camDone:"完了", camHint:"画面のどこをタップしても撮れます。どんどん撮ってOK（読み取りは裏で進みます）", textFold:"読み取った文を見る・直す", qEmpty:"文字なし", qErr:"失敗",
   ocrLoading:"文字認識エンジンを準備中…（初回だけ数秒かかります）", ocrReading:n=>`読み取り中… ${n}%`, ocrFail:"読み取れませんでした。明るい場所で、文字が大きく写るように撮ってみてください。", ocrText:"読み取った文（間違いは直せます）", ocrReparse:"この文から単語を拾い直す", ocrPickWords:"学習優先度の高い順。★はおすすめ（選択ずみ・タップで外せます）", ocrScoring:"単語の優先度を計算中…", ocrLvUnknown:"珍", ocrWhy:w=>`優先度 ${Math.round((w.score||0)*100)}${w.rank ? ` · 頻度 ${w.rank}位` : ""} · 抜くと意味が変わる度 ${Math.round((w.abl||0)*100)} · つながり ${Math.round((w.tr||0)*100)}${w.tf > 1 ? ` · 写真に${w.tf}回` : ""}`, ocrUseLine:"写真の文を例文にする", ocrAdd:n=>`選んだ${n}語を追加`, ocrInDeck:"登録済み", ocrNone:"単語が見つかりませんでした。",
   impTitle:"ほかの言語から取り込む", impHelp:"別の言語で覚えている単語を、この言語に訳して追加します。同じ意味の単語どうしがつながり、カードに並んで表示されます。", impFrom:"取り込み元", impAll:"すべて選択", impGo:"選んだ単語を取り込む", impNoSource:"ほかの言語の単語がまだありません。", impWorking:(i,n)=>`訳しています（${i}/${n}）…`, impDone:(n,f)=>`${n}語を取り込みました。${f ? "訳せなかった単語は単語帳で直せます。" : ""}`, impPickSome:"取り込む単語を選んでください。",
   nmAsk:{ study:l=>"はじめて見る単語だよ。カンでいいから書いてみて！", cloze:l=>"空いてるところ、なんて入るかな？", recall:l=>`この意味、${l}でなんて言う？`, write:l=>"この単語で、一文つくってみて〜", speak:l=>"声に出して言ってみて。ちゃんと聞いてるよ" },
@@ -815,7 +850,8 @@ ko: {
   noExample:"예문이 없어요. 단어장에서 넣으면 빈칸 문제가 생깁니다.", gotIt:"외웠어요, 다음",
   meaningAlts:"뜻 후보:", sideStreak:"일 연속 학습", sideWeek:"앞으로 7일", sideLadder:"복습 사다리", syncTitle:"기기 간 동기화", syncNotReady:"동기화 서버를 준비 중이에요. 곧 쓸 수 있어요.", syncHelp:"동기화 코드를 만들면 다른 기기에서도 같은 단어와 진도로 이어서 할 수 있어요. 이메일이나 이름은 필요 없어요.", syncStart:"동기화 시작 (코드 만들기)", syncHaveCode:"다른 기기에서 만든 코드가 있다면", syncJoin:"이 코드로 연결", syncBadCode:"코드는 영문·숫자 8자예요 (예: K7P2-QX9M).", syncWorking:"연결하는 중…", syncNotFound:"이 코드를 찾지 못했어요. 다시 확인해 주세요.", syncErr:"동기화하지 못했어요. 인터넷 연결을 확인하고 잠시 뒤 다시 해 주세요.", syncStarted:"동기화를 시작했어요. 코드를 메모해 두세요.", syncJoined:"연결됐어요! 두 기기의 단어를 합쳤어요.", syncOnHelp:"이 코드를 다른 기기에 입력하면 같은 단어장으로 이어서 할 수 있어요. 바뀐 내용은 자동으로 동기화돼요. 코드는 비밀번호 대신이니 남에게 알려 주지 마세요.", syncYourCode:"동기화 코드", syncBusy:"동기화하는 중…", syncLast:t0=>`마지막 동기화: ${t0}`, syncNowBtn:"지금 동기화", syncOff:"이 기기 동기화 끄기", syncOffConfirm:"한 번 더 누르면 해제 (단어는 이 기기에 남아요)", syncCopied:"코드를 복사했어요.", grad:"졸업", gradTitle:"이미 완벽하게 외운 단어를 매일 복습에서 뺍니다", gradAsk:w=>`"${w}"은(는) 이제 완벽해? 졸업시킬까?`, gradSafe:"졸업한 단어는 「단어장 › 졸업」에 들어갈 뿐이라 언제든 다시 살릴 수 있어요. 안심해!", gradCancel:"계속할래", gradDo:"졸업시키기", gradDone:w=>`"${w}" 졸업! 단어장에서 언제든 다시 살릴 수 있어요.`, revive:"다시 살리기", revived:w=>`"${w}"을(를) 다시 살렸어요. 오늘 복습에 들어갑니다.`, home:"홈", pausedToast:"여기까지 저장했어요. 「이어서 하기」로 다시 시작할 수 있어요.", setOrder:"새 단어를 내는 순서", orderAdded:"추가한 순서", orderEasy:"자주 쓰는 단어부터", orderHelp:"어느 쪽이든 서로의 예문에 나오는 단어나 지금 외우는 단어와 이어진 단어는 묶어서 먼저 냅니다.", todayNewList:"오늘의 새 단어:", linkedHint:"🔗 는 예문으로 이어진 단어예요. 같이 외우면 효율적이에요.", levelsFreq:["기본","자주 씀","중급","어려움"], meanRefetch:"뜻 후보 다시 가져오기", uiLangTitle:"화면 언어", learnLangTitle:"학습 언어", deckDefault:"기본", addTo:"추가할 단어장", newDeck:"＋ 새 단어장…", deckNamePh:"단어장 이름 (예: 여행, 비즈니스)", create:"만들기", deckCreated:n=>`"${n}" 단어장을 만들었어요.`,
   decksTitle:"단어장", decksHelp:"체크한 단어장만 오늘 학습에 나와요. 범위를 좁히면 더 잘 외워집니다.", deckWords:n=>`${n}개`, deckDelete:"삭제", deckDeleteConfirm:"한 번 더 누르면 삭제 (단어는 「기본」으로 이동)", deckDeleted:"단어장을 지우고 단어는 「기본」으로 옮겼어요.", studyDecks:"학습할 단어장:", deckOf:"단어장",
-  photoTitle:"사진으로 추가", photoHelp:"책이나 화면을 찍으면 기기 안에서 글자를 읽어요 (AI 서비스로 보내지 않아요). 읽힌 단어 중 외울 단어를 골라 주세요.", photoPick:"사진 찍기·고르기",
+  photoTitle:"사진으로 추가", photoHelp:"책이나 화면을 찍으면 기기 안에서 글자를 읽어요 (AI 서비스로 보내지 않아요). 읽힌 단어 중 외울 단어를 골라 주세요.", photoPick:"사진 찍기·고르기", camBtn:"📷 연속으로 찍기", fLevel:"표시:", fEasy:"A 쉬움", fShowDup:"이미 등록한 것도 보기", fSearch:"단어로 좁히기", fStar:"추천으로 되돌리기", fAll:"보이는 것 모두 선택", fNone:"모두 해제", fBan:"제외 모드", fNoneShown:"조건에 맞는 단어가 없어요", fInfo:(v,n)=>`표시 ${v} / ${n}개 (탭해서 선택. 제외 모드에서 탭하면 다음부터 안 나와요)`, fUnban:n=>`제외한 ${n}개 되돌리기`, pickMany:"🖼 여러 장 고르기", dropHint:"몇 장이든 OK. 찍은 순서대로 뒤에서 읽어요. PC는 끌어다 놓기·붙여넣기도 돼요.",
+  qTitle:(d,n)=>`읽는 중 ${d}/${n}장`, qClear:"사진 모두 지우기", qDone:"모두 읽었어요", camDone:"완료", camHint:"화면 아무 데나 탭하면 찍혀요. 마구 찍어도 OK (읽기는 뒤에서 진행돼요)", textFold:"읽은 문장 보기·고치기", qEmpty:"글자 없음", qErr:"실패",
   ocrLoading:"글자 인식 엔진 준비 중… (처음 한 번만 몇 초 걸려요)", ocrReading:n=>`읽는 중… ${n}%`, ocrFail:"글자를 읽지 못했어요. 밝은 곳에서 글자가 크게 나오게 찍어 보세요.", ocrText:"읽은 문장 (틀린 곳은 고칠 수 있어요)", ocrReparse:"이 문장에서 단어 다시 뽑기", ocrPickWords:"학습 우선순위 높은 순. ★는 추천(미리 선택됨 · 눌러서 빼기)", ocrScoring:"단어 우선순위 계산 중…", ocrLvUnknown:"희귀", ocrWhy:w=>`우선순위 ${Math.round((w.score||0)*100)}${w.rank ? ` · 빈도 ${w.rank}위` : ""} · 빼면 의미가 바뀌는 정도 ${Math.round((w.abl||0)*100)} · 연결성 ${Math.round((w.tr||0)*100)}${w.tf > 1 ? ` · 사진에 ${w.tf}번` : ""}`, ocrUseLine:"사진 속 문장을 예문으로 쓰기", ocrAdd:n=>`고른 ${n}개 추가`, ocrInDeck:"이미 있음", ocrNone:"단어를 찾지 못했어요.",
   impTitle:"다른 언어에서 가져오기", impHelp:"다른 언어로 외우고 있는 단어를 이 언어로 옮겨 추가해요. 같은 뜻의 단어끼리 연결돼서 카드에 함께 보여요.", impFrom:"가져올 언어", impAll:"전체 선택", impGo:"고른 단어 가져오기", impNoSource:"다른 언어 단어가 아직 없어요.", impWorking:(i,n)=>`번역 중 (${i}/${n})…`, impDone:(n,f)=>`${n}개 가져왔어요.${f ? " 번역 못 한 단어는 단어장에서 고칠 수 있어요." : ""}`, impPickSome:"가져올 단어를 골라 주세요.",
   nmAsk:{ study:l=>"처음 보는 단어야. 감으로라도 써 봐!", cloze:l=>"빈칸에 뭐가 들어갈까?", recall:l=>`이 뜻, ${l}로 뭐라고 할까?`, write:l=>"이 단어로 문장 하나 만들어 봐~", speak:l=>"소리 내서 말해 봐. 잘 듣고 있을게" },
@@ -1722,6 +1758,15 @@ function sentencesOf(text){ return text.replace(/\s+/g, " ").replace(/([.!?。�
 async function scoreOcrWords(text){
   const lang = S.meta.settings.lang, stop = new Set((STOP[lang] || "").split(" "));
   const m = await freqMap(lang).catch(() => null);
+  // 写真の背景が読み取りゴミになった行を捨てる: 行の中で「ちゃんとした単語」の割合が低い行は使わない
+  const okTok = w => /^[\p{L}][\p{L}\p{M}'’\-]*[.,;:!?»”"]?$/u.test(w);
+  text = text.split(/\n/).filter(line => { const tk = line.trim().split(/\s+/).filter(Boolean); if(!tk.length) return true;
+    const good = tk.filter(w => okTok(w) && w.replace(/[^\p{L}]/gu, "").length >= 2), known = m ? good.filter(w => m.has(w.replace(/[^\p{L}\p{M}'’\-]/gu, "").toLowerCase())).length : good.length;
+    const q = good.length / tk.length, kq = good.length ? known / good.length : 0; return good.length >= 2 && q >= .7 && kq >= .6; }).join("\n");
+  // 文の途中で大文字で始まる語（固有名詞らしい）
+  const proper = new Set(), lowSeen = new Set();
+  sentencesOf(text).forEach(sn => (sn.match(/[\p{L}][\p{L}\p{M}'’\-]*/gu) || []).forEach((w, i) => { if(/^\p{Ll}/u.test(w)) lowSeen.add(w.toLowerCase()); else if(i > 0 && /^\p{Lu}\p{Ll}/u.test(w)) proper.add(w.toLowerCase()); }));
+  lowSeen.forEach(w => proper.delete(w));
   const sents = sentencesOf(text).map(line => { const toks = (line.match(/[\p{L}][\p{L}\p{M}'’\-]*/gu) || []).map(w => w.toLowerCase()); return { line, toks, content: toks.filter(k => k.length >= 3 && !stop.has(k)) }; });
   const rank0 = k => m ? (m.get(k) || null) : null;
   // 活用形 → 辞書形（頻度表に載っていて、元の形より順位が上の候補だけ採用）
@@ -1751,48 +1796,147 @@ async function scoreOcrWords(text){
     const line = w.lines.slice().sort((a, b) => { const fa = a.split(" ").length, fb = b.split(" ").length; const ga = fa >= 5 && fa <= 18 ? 0 : 1, gb = fb >= 5 && fb <= 18 ? 0 : 1; return ga - gb || fb - fa; })[0];
     const lv = !m ? "" : !r ? "?" : r < 800 ? "A" : r < 3000 ? "B1" : r < 8000 ? "B2" : "C";
     return { word: w.word, line, score, rank: r, lv, tf: w.tf, abl: ab, tr };
-  }).filter(w => !(/^\d/.test(w.word)));
+  }).filter(w => !(/^\d/.test(w.word)) && !proper.has(w.word) && !(w.word.length <= 3 && !w.rank));
   out.sort((a, b) => b.score - a.score);
   return out;
 }
+/* 読み取りゴミ（母音なし・同じ文字の連続・数字まじり・大文字小文字がでたらめ）を落とす */
+function ocrJunk(w, lang){
+  if(/\d/.test(w)) return true; if(/(.)\1\1/.test(w)) return true;
+  if(/^(es|fr|it|pt|en|de)$/.test(lang) && !/[aeiouyáéíóúàèìòùâêîôûäöüœ]/i.test(w)) return true;
+  if(w.length > 22) return true; return false;
+}
+const ocrIgnore = () => { const ig = S.meta.ignore || (S.meta.ignore = {}); return ig[S.meta.settings.lang] || (ig[S.meta.settings.lang] = []); };
+const OCRF_DEF = { A: false, B1: true, B2: true, C: true, q: false, dup: false, q2: "" };
 async function renderOcrWords(text){
   const x = t(), box = $("#ocrBox"); const area = box.querySelector("#ocrWords"); const picked = new Set();
   area.innerHTML = `<p class="muted small">${x.ocrScoring}</p>`;
   let list = await scoreOcrWords(text).catch(() => null);
   if(!list) list = wordsFromText(text).map(w => Object.assign(w, { score: 0, lv: "" }));
+  const lang = S.meta.settings.lang; list = list.filter(w => !ocrJunk(w.word, lang));
   if(!list.length){ area.innerHTML = `<p class="muted small">${x.ocrNone}</p>`; return; }
+  const F = Object.assign({}, OCRF_DEF, S.meta.settings.ocrFilter || {}); F.q2 = "";
+  const saveF = () => { const { q2, ...keep } = F; S.meta.settings.ocrFilter = keep; save(); };
+  let banMode = false;
   const fresh = list.filter(w => !findDup(w.word)); const topN = Math.min(Math.max(3, S.meta.settings.newLimit || 7), fresh.length);
   const cut = fresh.length ? fresh[topN - 1].score : 1;
-  list.forEach((w, i) => { w.star = !findDup(w.word) && w.score > 0 && w.score >= cut && i < 40; if(w.star) picked.add(i); });
+  list.forEach((w, i) => { w.star = !findDup(w.word) && w.score > 0 && w.score >= cut && i < 40; const u = OCRQ.user.get(w.word); if(!findDup(w.word) && (u === undefined ? w.star : u)) picked.add(i); });
+  const lvKey = w => !w.lv ? "B1" : w.lv === "?" ? "q" : w.lv;
+  const visible = (w, i) => !ocrIgnore().includes(w.word) && F[lvKey(w)] !== false && (F.dup || !findDup(w.word)) && (!F.q2 || w.word.includes(F.q2.toLowerCase()));
   const lvTxt = lv => lv ? `<span class="olv olv-${lv === "?" ? "q" : lv[0]}">${lv === "?" ? x.ocrLvUnknown : lv}</span>` : "";
-  area.innerHTML = `<p class="small muted">${x.ocrPickWords}</p><div class="chips">` + list.map((w,i) => { const dupc = findDup(w.word); return `<button type="button" class="chiptog${w.star ? " star" : ""}" data-ow="${i}" aria-pressed="${picked.has(i)}" ${dupc ? "disabled" : ""} title="${esc(x.ocrWhy(w))}">${w.star ? "★ " : ""}${esc(w.word)}${lvTxt(w.lv)}${dupc ? ` <span class="tiny">${x.ocrInDeck}</span>` : ""}</button>`; }).join("") + `</div>
+  const cnt = k => list.filter(w => lvKey(w) === k && !ocrIgnore().includes(w.word) && !findDup(w.word)).length;
+  area.innerHTML = `<p class="small muted">${x.ocrPickWords}</p>
+    <div class="ofilt"><span class="ofl">${esc(x.fLevel)}</span>${[["A", x.fEasy], ["B1", "B1"], ["B2", "B2"], ["C", "C"], ["q", x.ocrLvUnknown]].map(([k, lab]) => `<button type="button" class="fchip" data-f="${k}" aria-pressed="${F[k] !== false}">${esc(lab)} <i>${cnt(k)}</i></button>`).join("")}
+      <button type="button" class="fchip" data-f="dup" aria-pressed="${!!F.dup}">${esc(x.fShowDup)}</button></div>
+    <div class="ofilt"><input type="search" id="ocrQ" placeholder="${esc(x.fSearch)}" autocomplete="off" spellcheck="false">
+      <button type="button" class="btn sm" id="oStar">★ ${esc(x.fStar)}</button><button type="button" class="btn sm" id="oAll">${esc(x.fAll)}</button><button type="button" class="btn sm" id="oNone">${esc(x.fNone)}</button>
+      <button type="button" class="btn sm" id="oBan" aria-pressed="false">🚫 ${esc(x.fBan)}</button></div>
+    <p class="tiny muted" id="oInfo"></p><div class="chips" id="oChips"></div>
     <label class="switch" for="ocrLine"><span>${x.ocrUseLine}</span><input type="checkbox" id="ocrLine" checked></label>
-    <div class="row end"><button class="btn primary" id="ocrAdd" type="button" ${picked.size ? "" : "disabled"}>${x.ocrAdd(picked.size)}</button></div><p class="muted small" id="ocrNote" aria-live="polite"></p>`;
-  const btn = area.querySelector("#ocrAdd");
-  area.querySelectorAll("[data-ow]").forEach(b => b.onclick = () => { const i = +b.dataset.ow; if(picked.has(i)) picked.delete(i); else picked.add(i); b.setAttribute("aria-pressed", picked.has(i)); btn.textContent = x.ocrAdd(picked.size); btn.disabled = !picked.size; });
+    <div class="row end"><button class="btn primary" id="ocrAdd" type="button">${x.ocrAdd(0)}</button></div><p class="muted small" id="ocrNote" aria-live="polite"></p>`;
+  const btn = area.querySelector("#ocrAdd"), chipsEl = area.querySelector("#oChips");
+  const sel = () => [...picked].filter(i => visible(list[i], i));
+  const upd = () => { const n = sel().length; btn.textContent = x.ocrAdd(n); btn.disabled = !n; };
+  const draw = () => {
+    const vis = list.map((w, i) => [w, i]).filter(([w, i]) => visible(w, i));
+    chipsEl.innerHTML = vis.map(([w, i]) => { const dupc = findDup(w.word); return `<button type="button" class="chiptog${w.star ? " star" : ""}${banMode ? " ban" : ""}" data-ow="${i}" aria-pressed="${picked.has(i)}" ${dupc && !banMode ? "disabled" : ""} title="${esc(x.ocrWhy(w))}">${w.star ? "★ " : ""}${esc(w.word)}${lvTxt(w.lv)}${dupc ? ` <span class="tiny">${x.ocrInDeck}</span>` : ""}</button>`; }).join("") || `<p class="muted small">${esc(x.fNoneShown)}</p>`;
+    const ign = ocrIgnore().filter(w => list.some(l => l.word === w)).length, hidden = list.length - vis.length;
+    area.querySelector("#oInfo").innerHTML = `${esc(x.fInfo(vis.length, list.length))}${ign ? ` · <button type="button" class="linkbtn" id="oUnban">${esc(x.fUnban(ocrIgnore().length))}</button>` : ""}`;
+    const ub = area.querySelector("#oUnban"); if(ub) ub.onclick = () => { S.meta.ignore[S.meta.settings.lang] = []; save(); draw(); };
+    chipsEl.querySelectorAll("[data-ow]").forEach(b => b.onclick = () => { const i = +b.dataset.ow, w = list[i];
+      if(banMode){ ocrIgnore().push(w.word); picked.delete(i); save(); b.animate([{ opacity: 1, transform: "scale(1)" }, { opacity: 0, transform: "scale(.6)" }], { duration: 160 }).onfinish = () => { draw(); upd(); }; return; }
+      if(picked.has(i)) picked.delete(i); else picked.add(i); OCRQ.user.set(w.word, picked.has(i)); b.setAttribute("aria-pressed", picked.has(i)); upd(); });
+    upd();
+  };
+  area.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { const k = b.dataset.f; F[k] = k === "dup" ? !F.dup : F[k] === false; b.setAttribute("aria-pressed", k === "dup" ? F.dup : F[k] !== false); saveF(); draw(); });
+  area.querySelector("#ocrQ").oninput = e => { F.q2 = e.target.value.trim(); draw(); };
+  area.querySelector("#oStar").onclick = () => { picked.clear(); list.forEach((w, i) => { OCRQ.user.delete(w.word); if(w.star) picked.add(i); }); draw(); };
+  area.querySelector("#oAll").onclick = () => { list.forEach((w, i) => { if(visible(w, i) && !findDup(w.word)){ picked.add(i); OCRQ.user.set(w.word, true); } }); draw(); };
+  area.querySelector("#oNone").onclick = () => { list.forEach((w, i) => { if(visible(w, i)){ picked.delete(i); OCRQ.user.set(w.word, false); } }); draw(); };
+  area.querySelector("#oBan").onclick = e => { banMode = !banMode; e.currentTarget.setAttribute("aria-pressed", banMode); e.currentTarget.classList.toggle("bad", banMode); draw(); };
+  draw();
   btn.onclick = async () => {
     const useLine = area.querySelector("#ocrLine").checked;
-    const rows = [...picked].map(i => list[i]).map(w => ({ word: w.word, meaning: "", example: useLine && w.line && w.line.split(" ").length >= 4 ? w.line : "", exampleKo: "" }));
+    const rows = sel().map(i => list[i]).map(w => ({ word: w.word, meaning: "", example: useLine && w.line && w.line.split(" ").length >= 4 ? w.line : "", exampleKo: "" }));
     await addMany(rows, area.querySelector("#ocrNote"), btn, true);
     renderOcrWords(box.querySelector("#ocrText").value);
   };
 }
-$("#ocrFile").onchange = async e => {
-  const f = e.target.files[0]; if(!f) return; e.target.value = "";
-  const x = t(), box = $("#ocrBox"); box.classList.remove("hidden");
-  box.innerHTML = say("load_run", `<span id="ocrStatus">${esc(x.ocrLoading)}</span>`);
-  try{
-    const { canvas, preview } = await prepImage(f);
-    const T5 = await ensureTess();
-    const res = await T5.recognize(canvas, L().tatoeba, { logger: m => { if(m.status === "recognizing text"){ const st = $("#ocrStatus"); if(st) st.textContent = x.ocrReading(Math.round(m.progress * 100)); } } });
-    const text = (res && res.data && res.data.text || "").trim();
-    if(!text){ box.innerHTML = say("st_surprised", esc(x.ocrFail)); return; }
-    box.innerHTML = `<img class="ocrimg" src="${preview}" alt=""><label for="ocrText"><span>${x.ocrText}</span><textarea id="ocrText" spellcheck="false">${esc(text)}</textarea></label>
-      <div class="row"><button class="btn sm" type="button" id="ocrReparse">${x.ocrReparse}</button></div><div id="ocrWords"></div>`;
+/* ════════ 写真: 何枚でも。撮った順にキューへ入れて、1つの読み取りエンジンで裏で順番に処理 ════════ */
+const OCRQ = { items: [], busy: false, worker: null, wlang: null, cur: null, edited: false, user: new Map() };
+function ocrEnqueue(files){
+  files = [...(files || [])].filter(f => f && /^image\//.test(f.type)); if(!files.length) return;
+  files.forEach(f => OCRQ.items.push({ id: uid(), file: f, st: "wait", pct: 0, text: "", thumb: URL.createObjectURL(f) }));
+  renderOcrQueue(); ocrPump();
+}
+async function ocrWorker(){
+  const lang = L().tatoeba; if(OCRQ.worker && OCRQ.wlang === lang) return OCRQ.worker;
+  if(OCRQ.worker){ try{ await OCRQ.worker.terminate(); }catch(e){} OCRQ.worker = null; }
+  const T5 = await ensureTess();
+  OCRQ.worker = await T5.createWorker(lang, 1, { logger: m => { if(m.status === "recognizing text" && OCRQ.cur){ OCRQ.cur.pct = Math.round(m.progress * 100); renderOcrQueue(true); } } });
+  OCRQ.wlang = lang; return OCRQ.worker;
+}
+async function ocrPump(){
+  if(OCRQ.busy) return; OCRQ.busy = true;
+  try{ let it;
+    while((it = OCRQ.items.find(i => i.st === "wait"))){
+      it.st = "run"; it.pct = 0; OCRQ.cur = it; renderOcrQueue();
+      try{ const w = await ocrWorker(); const { canvas } = await prepImage(it.file); const r = await w.recognize(canvas); it.text = (r && r.data && r.data.text || "").trim(); it.st = it.text ? "ok" : "empty"; }
+      catch(e){ it.st = "err"; }
+      OCRQ.cur = null; renderOcrQueue(); ocrMergeText(it);
+    }
+  } finally { OCRQ.busy = false; }
+}
+let OCRQ_T = null;
+function renderOcrQueue(light){
+  const q = $("#ocrQueue"); if(!q) return; const x = t(), n = OCRQ.items.length; q.classList.toggle("hidden", !n); if(!n){ q.innerHTML = ""; return; }
+  const done = OCRQ.items.filter(i => i.st !== "wait" && i.st !== "run").length, run = OCRQ.cur;
+  const pct = Math.round((done + (run ? run.pct / 100 : 0)) / n * 100);
+  if(light && q.querySelector(".oq-bar")){ q.querySelector(".oq-bar i").style.width = pct + "%"; const c = run && q.querySelector(`[data-q="${run.id}"] .oq-st`); if(c) c.textContent = run.pct + "%"; return; }
+  q.innerHTML = `<div class="oq-head"><b>${done === n ? "✓ " + esc(x.qDone) : esc(x.qTitle(done, n))}</b><button class="btn sm ghost" type="button" id="oqClear">${esc(x.qClear)}</button></div>
+    <div class="oq-bar"><i style="width:${pct}%"></i></div>
+    <div class="oq-grid">${OCRQ.items.map(i => `<div class="oq-it ${i.st}" data-q="${i.id}"><img src="${i.thumb}" alt=""><span class="oq-st">${i.st === "run" ? i.pct + "%" : i.st === "ok" ? "✓" : i.st === "empty" ? esc(x.qEmpty) : i.st === "err" ? esc(x.qErr) : "…"}</span><button type="button" class="oq-x" data-qx="${i.id}" aria-label="×">×</button></div>`).join("")}</div>`;
+  q.querySelector("#oqClear").onclick = () => { OCRQ.items.forEach(i => URL.revokeObjectURL(i.thumb)); OCRQ.items = OCRQ.items.filter(i => i.st === "run"); OCRQ.edited = false; OCRQ.user.clear(); renderOcrQueue(); ocrMergeText(); };
+  q.querySelectorAll("[data-qx]").forEach(b => b.onclick = () => { const i = OCRQ.items.findIndex(k => k.id === b.dataset.qx); if(i < 0 || OCRQ.items[i].st === "run") return; URL.revokeObjectURL(OCRQ.items[i].thumb); OCRQ.items.splice(i, 1); renderOcrQueue(); ocrMergeText(); });
+}
+function ocrMergeText(added){
+  const box = $("#ocrBox"), x = t(); const all = OCRQ.items.filter(i => i.st === "ok").map(i => i.text).join("\n\n");
+  if(!box.querySelector("#ocrText")){
+    box.innerHTML = `<details class="oq-text"><summary>${esc(x.textFold)}</summary><textarea id="ocrText" spellcheck="false"></textarea><div class="row"><button class="btn sm" type="button" id="ocrReparse">${x.ocrReparse}</button></div></details><div id="ocrWords"></div>`;
+    box.querySelector("#ocrText").oninput = () => { OCRQ.edited = true; };
     box.querySelector("#ocrReparse").onclick = () => renderOcrWords(box.querySelector("#ocrText").value);
-    renderOcrWords(text);
-  }catch(err){ box.innerHTML = say("st_surprised", esc(x.ocrFail)); }
-};
+  }
+  const ta = box.querySelector("#ocrText");
+  if(OCRQ.edited){ if(added && added.st === "ok") ta.value += "\n\n" + added.text; } else ta.value = all;
+  box.classList.toggle("hidden", !ta.value.trim() && !OCRQ.items.length);
+  clearTimeout(OCRQ_T); OCRQ_T = setTimeout(() => { if(ta.value.trim()) renderOcrWords(ta.value); else box.querySelector("#ocrWords").innerHTML = OCRQ.items.length && !OCRQ.items.some(i => i.st === "wait" || i.st === "run") ? `<p class="muted small">${x.ocrNone}</p>` : ""; }, 350);
+}
+$("#ocrFile").onchange = e => { ocrEnqueue(e.target.files); e.target.value = ""; };
+$("#ocrCam").onchange = e => { ocrEnqueue(e.target.files); e.target.value = ""; $("#ocrCam").click(); };   // 端末のカメラ: 撮るたびにキューへ、続けて次の撮影
+/* 連写カメラ（アプリの中で、シャッターを押し続けるだけ） */
+function sfxShutter(){ if(!pa()) return; const t0 = PA.currentTime; pNoise("highpass", 2500, 6000, .7, t0, .05, .35); pNoise("bandpass", 1200, 600, 2, t0 + .05, .06, .25); }
+async function openCam(){
+  let stream = null;
+  try{ stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" }, width: { ideal: 1920 }, height: { ideal: 1440 } }, audio: false }); }
+  catch(e){ $("#ocrCam").click(); return; }
+  const x = t(), ov = document.createElement("div"); ov.id = "camOv";
+  ov.innerHTML = `<video playsinline muted autoplay></video><div class="cam-flash"></div><p class="cam-hint">${esc(x.camHint)}</p>
+    <div class="cam-bar"><div class="cam-thumbs" id="camThumbs"></div><button class="cam-shut" type="button" aria-label="📷"><span id="camCount">0</span></button><button class="btn" type="button" id="camDone">${esc(x.camDone)}</button></div>`;
+  document.body.appendChild(ov); document.body.classList.add("petopen");
+  const v = ov.querySelector("video"); v.srcObject = stream; let n = 0;
+  const shoot = () => { if(!v.videoWidth) return; const c = document.createElement("canvas"); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext("2d").drawImage(v, 0, 0);
+    ov.querySelector(".cam-flash").animate([{ opacity: .85 }, { opacity: 0 }], { duration: 220 }); sfxShutter(); buzz(18);
+    c.toBlob(b => { if(!b) return; ocrEnqueue([new File([b], `shot-${Date.now()}.jpg`, { type: "image/jpeg" })]); n++; ov.querySelector("#camCount").textContent = n;
+      const im = document.createElement("img"); im.src = URL.createObjectURL(b); const th = ov.querySelector("#camThumbs"); th.prepend(im); while(th.children.length > 6) th.lastChild.remove(); }, "image/jpeg", .9); };
+  v.onclick = shoot; ov.querySelector(".cam-shut").onclick = shoot;
+  ov.querySelector("#camDone").onclick = () => { stream.getTracks().forEach(tr => tr.stop()); ov.remove(); document.body.classList.remove("petopen"); const q = $("#ocrQueue"); if(q) q.scrollIntoView({ behavior: "smooth", block: "start" }); };
+}
+$("#camBtn").onclick = openCam;
+/* PC: ドラッグ＆ドロップ・貼り付け */
+document.addEventListener("dragover", e => { if([...(e.dataTransfer && e.dataTransfer.items || [])].some(i => i.kind === "file")){ e.preventDefault(); document.body.classList.add("dropping"); } });
+document.addEventListener("dragleave", e => { if(!e.relatedTarget) document.body.classList.remove("dropping"); });
+document.addEventListener("drop", e => { const fs = e.dataTransfer && e.dataTransfer.files; if(fs && fs.length){ e.preventDefault(); document.body.classList.remove("dropping"); showView("add"); ocrEnqueue(fs); const q = $("#ocrQueue"); if(q) q.scrollIntoView({ behavior: "smooth", block: "start" }); } });
+document.addEventListener("paste", e => { const fs = [...(e.clipboardData && e.clipboardData.files || [])].filter(f => /^image\//.test(f.type)); if(fs.length){ e.preventDefault(); showView("add"); ocrEnqueue(fs); } });
 
 /* ════════ 難易度の目安: OpenSubtitles 頻度リスト（hermitdave/FrequencyWords） ════════ */
 const FREQ = {}, FREQ_LOADING = {};
