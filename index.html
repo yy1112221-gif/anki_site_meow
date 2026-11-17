@@ -294,8 +294,10 @@ input[type=range]{width:100%;accent-color:var(--accent)}
       </label>
       <p class="muted tiny" data-i18n="uiHelp"></p>
       <label for="setNew"><span data-i18n="setNew"></span>
-        <input type="number" id="setNew" min="1" max="30" step="1" inputmode="numeric">
+        <input type="number" id="setNew" min="1" max="100" step="1" inputmode="numeric">
       </label>
+      <label for="setOrder"><span data-i18n="setOrder"></span><select id="setOrder"><option value="added" data-i18n="orderAdded"></option><option value="easy" data-i18n="orderEasy"></option></select></label>
+      <p class="muted tiny" data-i18n="orderHelp"></p>
       <label class="switch" for="setHf"><span data-i18n="setHf"></span><input type="checkbox" id="setHf"></label>
       <label class="switch" for="setWrite"><span data-i18n="setWrite"></span><input type="checkbox" id="setWrite"></label>
       <label class="switch" for="setSpeak"><span data-i18n="setSpeak"></span><input type="checkbox" id="setSpeak"></label>
@@ -354,7 +356,7 @@ ja: {
   emailHelp:"意味・例文の翻訳に使うMyMemoryは、メールアドレスを一緒に送ると1日の上限が約10倍になります。メールは翻訳リクエストにのみ使います。",
   backup:"バックアップ", backupHelp:"単語と進み具合はこの端末のブラウザにだけ保存されます。機種変更やブラウザのデータ削除の前にファイルで保存してください。",
   btnExport:"バックアップを保存", btnCopy:"コピー", importFile:"バックアップファイルから復元", importPaste:"または貼り付けて復元", btnImport:"貼り付けた内容を読み込む",
-  credits:'例文：<a href="https://tatoeba.org" target="_blank" rel="noopener">Tatoeba</a>（CC BY 2.0 FR、録音は各話者のライセンス）· 翻訳：<a href="https://mymemory.translated.net" target="_blank" rel="noopener">MyMemory</a> · 英語の意味：<a href="https://en.wiktionary.org" target="_blank" rel="noopener">Wiktionary</a>（CC BY-SA）',
+  credits:'例文：<a href="https://tatoeba.org" target="_blank" rel="noopener">Tatoeba</a>（CC BY 2.0 FR、録音は各話者のライセンス）· 翻訳：<a href="https://mymemory.translated.net" target="_blank" rel="noopener">MyMemory</a> · 英語の意味：<a href="https://en.wiktionary.org" target="_blank" rel="noopener">Wiktionary</a>（CC BY-SA）· 難易度の目安：<a href="https://github.com/hermitdave/FrequencyWords" target="_blank" rel="noopener">FrequencyWords</a>（OpenSubtitles 2018）',
   dateLabel:(m,d,w)=>`${m}月${d}日（${w}）· 1日は朝4時に切り替わります`, week:["日","月","火","水","木","金","土"], todayShort:"今日",
   levels:["新出","1日","7日","21日","60日","150日"], levelSuffix:"の段", chipNew:"新出", chipDone:"卒業", chipLeech:"苦手",
   emptyTitle:"単語を入れるだけで、復習スケジュールは自動で組みます",
@@ -367,7 +369,7 @@ ja: {
   modes:{ study:"まず当ててみる", cloze:"穴埋め", recall:"意味から書く", write:"作文", speak:"スピーキング" },
   left:n=>`残り${n}枚`, listen:"発音を聞く", listenEx:"例文を聞く", listenAgain:"もう一度聞く", listenMine:"自分の文を聞く",
   noExample:"例文がありません。単語帳で追加すると穴埋め問題が出ます。", gotIt:"覚えた、次へ",
-  meaningAlts:"意味の候補：", meanRefetch:"意味の候補を取り直す", uiLangTitle:"表示言語", learnLangTitle:"学習する言語", deckDefault:"基本", addTo:"追加先の単語帳", newDeck:"＋ 新しい単語帳…", deckNamePh:"単語帳の名前（例：旅行、ビジネス）", create:"作成", deckCreated:n=>`「${n}」を作りました。`,
+  meaningAlts:"意味の候補：", grad:"卒業", gradTitle:"もう完璧に覚えた単語を、毎日の復習から外します", gradAsk:w=>`「${w}」はもう完璧？ 卒業させる？`, gradSafe:"卒業した単語は「単語帳 › 卒業」に入るだけなので、いつでも復活させられます。安心してね！", gradCancel:"まだ続ける", gradDo:"卒業させる", gradDone:w=>`「${w}」は卒業！単語帳からいつでも復活できます。`, revive:"復活させる", revived:w=>`「${w}」を復活させました。今日の復習に入ります。`, home:"ホーム", pausedToast:"ここまで保存しました。「続きから」で再開できます。", setOrder:"新しい単語を出す順番", orderAdded:"追加した順", orderEasy:"よく使う単語から", orderHelp:"どちらの場合も、おたがいの例文に出てくる単語や、いま覚えている単語とつながる単語は、まとめて先に出します。", todayNewList:"今日の新しい単語：", linkedHint:"🔗 は例文でつながっている単語です。いっしょに覚えると効率的です。", levelsFreq:["基本","よく使う","中級","難しめ"], meanRefetch:"意味の候補を取り直す", uiLangTitle:"表示言語", learnLangTitle:"学習する言語", deckDefault:"基本", addTo:"追加先の単語帳", newDeck:"＋ 新しい単語帳…", deckNamePh:"単語帳の名前（例：旅行、ビジネス）", create:"作成", deckCreated:n=>`「${n}」を作りました。`,
   decksTitle:"単語帳", decksHelp:"チェックした単語帳だけが今日の学習に出ます。範囲をしぼると覚えやすくなります。", deckWords:n=>`${n}語`, deckDelete:"削除", deckDeleteConfirm:"もう一度押すと削除（単語は「基本」へ移動）", deckDeleted:"単語帳を削除し、単語は「基本」に移しました。", studyDecks:"学習する単語帳：", deckOf:"単語帳",
   photoTitle:"写真から追加", photoHelp:"本や画面を撮ると、端末の中で文字を読み取ります（AIサービスには送りません）。読み取った単語から覚えたいものを選んでください。", photoPick:"写真を撮る・選ぶ",
   ocrLoading:"文字認識エンジンを準備中…（初回だけ数秒かかります）", ocrReading:n=>`読み取り中… ${n}%`, ocrFail:"読み取れませんでした。明るい場所で、文字が大きく写るように撮ってみてください。", ocrText:"読み取った文（間違いは直せます）", ocrReparse:"この文から単語を拾い直す", ocrPickWords:"覚えたい単語をタップ", ocrUseLine:"写真の文を例文にする", ocrAdd:n=>`選んだ${n}語を追加`, ocrInDeck:"登録済み", ocrNone:"単語が見つかりませんでした。",
@@ -424,7 +426,7 @@ ko: {
   emailHelp:"뜻·예문 번역에 쓰는 MyMemory는 이메일을 함께 보내면 하루 번역 한도가 약 10배로 늘어납니다. 이메일은 번역 요청에만 쓰입니다.",
   backup:"백업", backupHelp:"단어와 진도는 이 기기 브라우저에만 저장됩니다. 기기를 바꾸거나 브라우저 데이터를 지우기 전에 파일로 받아두세요.",
   btnExport:"백업 파일 받기", btnCopy:"복사", importFile:"백업 파일로 복원", importPaste:"또는 붙여넣어 복원", btnImport:"붙여넣은 내용 가져오기",
-  credits:'예문: <a href="https://tatoeba.org" target="_blank" rel="noopener">Tatoeba</a> (CC BY 2.0 FR, 녹음은 각 화자의 라이선스) · 번역: <a href="https://mymemory.translated.net" target="_blank" rel="noopener">MyMemory</a> · 영어 뜻: <a href="https://en.wiktionary.org" target="_blank" rel="noopener">Wiktionary</a> (CC BY-SA)',
+  credits:'예문: <a href="https://tatoeba.org" target="_blank" rel="noopener">Tatoeba</a> (CC BY 2.0 FR, 녹음은 각 화자의 라이선스) · 번역: <a href="https://mymemory.translated.net" target="_blank" rel="noopener">MyMemory</a> · 영어 뜻: <a href="https://en.wiktionary.org" target="_blank" rel="noopener">Wiktionary</a> (CC BY-SA) · 난이도 기준: <a href="https://github.com/hermitdave/FrequencyWords" target="_blank" rel="noopener">FrequencyWords</a> (OpenSubtitles 2018)',
   dateLabel:(m,d,w)=>`${m}월 ${d}일 (${w}) · 하루는 새벽 4시에 바뀝니다`, week:["일","월","화","수","목","금","토"], todayShort:"오늘",
   levels:["새 단어","1일","7일","21일","60일","150일"], levelSuffix:" 칸", chipNew:"새 단어", chipDone:"졸업", chipLeech:"약점",
   emptyTitle:"단어를 넣으면 복습 일정은 알아서 짭니다",
@@ -437,7 +439,7 @@ ko: {
   modes:{ study:"먼저 맞혀보기", cloze:"빈칸 채우기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
   left:n=>`남은 ${n}장`, listen:"발음 듣기", listenEx:"예문 듣기", listenAgain:"다시 듣기", listenMine:"내 문장 듣기",
   noExample:"예문이 없어요. 단어장에서 넣으면 빈칸 문제가 생깁니다.", gotIt:"외웠어요, 다음",
-  meaningAlts:"뜻 후보:", meanRefetch:"뜻 후보 다시 가져오기", uiLangTitle:"화면 언어", learnLangTitle:"학습 언어", deckDefault:"기본", addTo:"추가할 단어장", newDeck:"＋ 새 단어장…", deckNamePh:"단어장 이름 (예: 여행, 비즈니스)", create:"만들기", deckCreated:n=>`"${n}" 단어장을 만들었어요.`,
+  meaningAlts:"뜻 후보:", grad:"졸업", gradTitle:"이미 완벽하게 외운 단어를 매일 복습에서 뺍니다", gradAsk:w=>`"${w}"은(는) 이제 완벽해? 졸업시킬까?`, gradSafe:"졸업한 단어는 「단어장 › 졸업」에 들어갈 뿐이라 언제든 다시 살릴 수 있어요. 안심해!", gradCancel:"계속할래", gradDo:"졸업시키기", gradDone:w=>`"${w}" 졸업! 단어장에서 언제든 다시 살릴 수 있어요.`, revive:"다시 살리기", revived:w=>`"${w}"을(를) 다시 살렸어요. 오늘 복습에 들어갑니다.`, home:"홈", pausedToast:"여기까지 저장했어요. 「이어서 하기」로 다시 시작할 수 있어요.", setOrder:"새 단어를 내는 순서", orderAdded:"추가한 순서", orderEasy:"자주 쓰는 단어부터", orderHelp:"어느 쪽이든 서로의 예문에 나오는 단어나 지금 외우는 단어와 이어진 단어는 묶어서 먼저 냅니다.", todayNewList:"오늘의 새 단어:", linkedHint:"🔗 는 예문으로 이어진 단어예요. 같이 외우면 효율적이에요.", levelsFreq:["기본","자주 씀","중급","어려움"], meanRefetch:"뜻 후보 다시 가져오기", uiLangTitle:"화면 언어", learnLangTitle:"학습 언어", deckDefault:"기본", addTo:"추가할 단어장", newDeck:"＋ 새 단어장…", deckNamePh:"단어장 이름 (예: 여행, 비즈니스)", create:"만들기", deckCreated:n=>`"${n}" 단어장을 만들었어요.`,
   decksTitle:"단어장", decksHelp:"체크한 단어장만 오늘 학습에 나와요. 범위를 좁히면 더 잘 외워집니다.", deckWords:n=>`${n}개`, deckDelete:"삭제", deckDeleteConfirm:"한 번 더 누르면 삭제 (단어는 「기본」으로 이동)", deckDeleted:"단어장을 지우고 단어는 「기본」으로 옮겼어요.", studyDecks:"학습할 단어장:", deckOf:"단어장",
   photoTitle:"사진으로 추가", photoHelp:"책이나 화면을 찍으면 기기 안에서 글자를 읽어요 (AI 서비스로 보내지 않아요). 읽힌 단어 중 외울 단어를 골라 주세요.", photoPick:"사진 찍기·고르기",
   ocrLoading:"글자 인식 엔진 준비 중… (처음 한 번만 몇 초 걸려요)", ocrReading:n=>`읽는 중… ${n}%`, ocrFail:"글자를 읽지 못했어요. 밝은 곳에서 글자가 크게 나오게 찍어 보세요.", ocrText:"읽은 문장 (틀린 곳은 고칠 수 있어요)", ocrReparse:"이 문장에서 단어 다시 뽑기", ocrPickWords:"외울 단어를 눌러 고르세요", ocrUseLine:"사진 속 문장을 예문으로 쓰기", ocrAdd:n=>`고른 ${n}개 추가`, ocrInDeck:"이미 있음", ocrNone:"단어를 찾지 못했어요.",
@@ -508,7 +510,7 @@ const norm = s => String(s||"").toLowerCase().replace(/[¿¡.,!?;:"«»()「」�
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"), 2800); }
 
 /* ───────── 保存（この端末のブラウザ） ───────── */
-const DEFAULT_SETTINGS = { ui:"ja", lang:"es", rate:0.8, handsFree:false, voices:{}, newLimit:7, writing:true, speaking:true, strictAccent:false, email:"" };
+const DEFAULT_SETTINGS = { ui:"ja", lang:"es", rate:0.8, handsFree:false, newOrder:"added", voices:{}, newLimit:7, writing:true, speaking:true, strictAccent:false, email:"" };
 const S = { cards:{}, meta:{ days:{}, settings:Object.assign({}, DEFAULT_SETTINGS) } };
 const t = () => T[S.meta.settings.ui] || T.ja;
 const U = () => UI_LANG[S.meta.settings.ui] || UI_LANG.ja;
@@ -526,6 +528,11 @@ const deckOf = c => c.deck || "default";
 const deckOn = id => { const d = decks().find(d => d.id === id); return d ? d.on !== false : true; };
 const activeCards = () => cardsHere().filter(c => deckOn(deckOf(c)));
 function addDeck(name){ const d = { id: "d" + Date.now().toString(36), name: name.trim(), on: true }; decks().push(d); save(); return d; }
+function todayNewPreview(){
+  const list = newCandidates().slice(0, newQuota()); if(!list.length) return "";
+  const x = t();
+  return `<div class="chips"><span class="tiny muted" style="align-self:center">${esc(x.todayNewList)}</span>${list.map(c => `<span class="chip" style="background:var(--accent-soft)">${c._linked ? "🔗 " : ""}${esc(c.word)}</span>`).join("")}</div>${list.some(c => c._linked) ? `<p class="tiny muted">${esc(x.linkedHint)}</p>` : ""}`;
+}
 function deckChips(){
   const ds = decks(); if(ds.length < 2) return "";
   return `<div class="chips" aria-label="${esc(t().studyDecks)}"><span class="tiny muted" style="align-self:center">${esc(t().studyDecks)}</span>` + ds.map(d => `<button type="button" class="chiptog" data-deck="${d.id}" aria-pressed="${d.on !== false}">${esc(deckName(d))} <span class="tiny">${cardsHere().filter(c => deckOf(c) === d.id).length}</span></button>`).join("") + `</div>`;
@@ -783,7 +790,7 @@ const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 /* ───────── 今日のセッション ───────── */
 const dueCards = () => { const d = today(); return activeCards().filter(c => !c.mastered && !c.isNew && c.due && c.due <= d).sort((a,b)=> a.due < b.due ? -1 : 1); };
 const introducedToday = () => cardsHere().filter(c => c.introduced === today()).length;
-const newCandidates = () => activeCards().filter(c => c.isNew).sort((a,b)=>a.created-b.created);
+const newCandidates = () => orderNew(activeCards().filter(c => c.isNew));
 const newQuota = () => Math.max(0, S.meta.settings.newLimit - introducedToday());
 function reviewModes(c){
   const st = S.meta.settings, hasCloze = !!clozeParts(c);
@@ -833,7 +840,7 @@ function renderStart(){
     $("#restartBtn").onclick = () => { delete S.meta.session; save(); startSession(); };
     return;
   }
-  box.innerHTML = `${say("cat_jpop", esc(x.nmToday(due, nq)), true)}<h2>${x.todayTitle}</h2><p>${x.todayCounts(due, nq)}</p><p class="muted small">${x.todayHint(streak())}</p>${deckChips()}
+  box.innerHTML = `${say("cat_jpop", esc(x.nmToday(due, nq)), true)}<h2>${x.todayTitle}</h2><p>${x.todayCounts(due, nq)}</p><p class="muted small">${x.todayHint(streak())}</p>${todayNewPreview()}${deckChips()}
     <div class="row"><button class="btn primary" id="startBtn" type="button">${x.start}</button></div>`;
   $("#startBtn").onclick = startSession;
 }
@@ -889,7 +896,7 @@ function finishSession(){
   const keys = Object.keys(S.meta.days).sort(); if(keys.length > 400) keys.slice(0, keys.length-400).forEach(k => delete S.meta.days[k]);
   save();
   const ok = SES.finished.filter(f => f.ok).length, ng = SES.finished.length - ok;
-  const rows = SES.finished.map(f => { const c = S.cards[f.id]; if(!c) return ""; return `<div class="item" style="cursor:default"><span style="min-width:0"><span class="w">${esc(c.word)}</span><span class="m">${esc(c.meaning)}</span></span><span class="right">${f.ok ? `<span class="chip done">${x.firstTry}</span>` : `<span class="chip leech">${x.tomorrow}</span>`}<span>${c.mastered ? x.graduated : esc(x.nextOn(c.due))}</span></span></div>`; }).join("");
+  const rows = SES.finished.map(f => { const c = S.cards[f.id]; if(!c) return ""; return `<div class="item" style="cursor:default"><span style="min-width:0"><span class="w">${esc(c.word)}</span><span class="m">${esc(c.meaning)}</span></span><span class="right">${f.grad ? `<span class="chip done">🎓 ${x.graduated}</span>` : f.ok ? `<span class="chip done">${x.firstTry}</span>` : `<span class="chip leech">${x.tomorrow}</span>`}<span>${c.mastered ? x.graduated : esc(x.nextOn(c.due))}</span></span></div>`; }).join("");
   document.body.classList.remove("focus");
   const box = $("#sessionBox");
   box.innerHTML = `${say(ng ? "st_happy" : "st_love", esc(ng ? x.nmFinishSome : x.nmFinishAll), true)}<h2>${x.finishTitle}</h2><p>${x.finishSum(ok, ng)}</p><div class="list">${rows}</div><div class="row"><button class="btn primary" id="backHome" type="button">${x.ok}</button></div>`;
@@ -898,7 +905,29 @@ function finishSession(){
 
 const kbdHTML = () => L().chars.length ? '<div class="kbd">' + L().chars.map(ch => `<button type="button" data-ch="${ch}">${ch}</button>`).join("") + "</div>" : "";
 function bindKbd(box, input){ box.querySelectorAll(".kbd button").forEach(b => b.onclick = () => { const s = input.selectionStart ?? input.value.length, e = input.selectionEnd ?? s; input.value = input.value.slice(0,s) + b.dataset.ch + input.value.slice(e); input.focus(); try{ input.setSelectionRange(s+1, s+1); }catch(_){} }); }
-function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="progress" aria-hidden="true"><i style="width:${pct}%"></i></div><div class="modehead"><span class="muted small">${t().modes[mode]} · ${t().left(SES.queue.length)}</span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}" title="${esc(t().hfHelp)}">${hf ? t().hfOn : t().hfOff}</button>${levelChip(c)}</span></div>${say(MODE_NM[mode] || "st_default", esc(t().nmAsk[mode](langName())))}`; }
+function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="row" style="flex-wrap:nowrap;gap:10px"><button class="btn sm ghost" type="button" id="homeBtn">‹ ${esc(t().home)}</button><div class="progress grow" aria-hidden="true"><i style="width:${pct}%"></i></div><button class="btn sm ghost" type="button" id="gradBtn" title="${esc(t().gradTitle)}">🎓 ${esc(t().grad)}</button></div><div class="modehead"><span class="muted small">${t().modes[mode]} · ${t().left(SES.queue.length)}</span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}" title="${esc(t().hfHelp)}">${hf ? t().hfOn : t().hfOff}</button>${levelChip(c)}</span></div>${say(MODE_NM[mode] || "st_default", esc(t().nmAsk[mode](langName())))}`; }
+document.addEventListener("click", e => {
+  if(!e.target.closest("#gradBtn") || !SES) return;
+  const it = SES.queue[0]; const c = it && S.cards[it.id]; if(!c) return;
+  const x = t();
+  const bg = openSheet(`${say("st_happy", esc(x.gradAsk(c.word)), true)}<p class="small muted" style="text-align:center">${esc(x.gradSafe)}</p>
+    <div class="row" style="justify-content:center"><button class="btn ghost" type="button" id="gradNo">${esc(x.gradCancel)}</button><button class="btn primary" type="button" id="gradYes">🎓 ${esc(x.gradDo)}</button></div>`);
+  bg.querySelector("#gradNo").onclick = closePop;
+  bg.querySelector("#gradYes").onclick = () => {
+    closePop();
+    c.mastered = true; c.manualGrad = true; c.due = null; if(c.isNew){ c.isNew = false; c.introduced = today(); }
+    c.log.push({ d: today(), ok: true, grad: true }); saveCard(c);
+    SES.queue = SES.queue.filter(q => q.id !== c.id); SES.remaining[c.id] = 0;
+    SES.finished.push({ id: c.id, ok: true, grad: true });
+    saveSession(); updateStats(); toast(x.gradDone(c.word)); nextItem();
+  };
+});
+document.addEventListener("click", e => {
+  if(!e.target.closest("#homeBtn") || !SES) return;
+  saveSession(); SES = null; closePop();
+  document.body.classList.remove("focus"); $("#sessionBox").classList.add("hidden"); $("#sessionStart").classList.remove("hidden");
+  renderAll(); window.scrollTo({ top: 0 }); toast(t().pausedToast);
+});
 document.addEventListener("click", e => {
   if(!e.target.closest("#hfToggle") || !SES || SES.state.answered) return;
   S.meta.settings.handsFree = !S.meta.settings.handsFree; save();
@@ -1223,6 +1252,57 @@ $("#ocrFile").onchange = async e => {
   }catch(err){ box.innerHTML = say("st_surprised", esc(x.ocrFail)); }
 };
 
+/* ════════ 難易度の目安: OpenSubtitles 頻度リスト（hermitdave/FrequencyWords） ════════ */
+const FREQ = {}, FREQ_LOADING = {};
+async function freqMap(lang){
+  if(FREQ[lang]) return FREQ[lang];
+  if(lang === "ja") return null;
+  if(!FREQ_LOADING[lang]) FREQ_LOADING[lang] = (async () => {
+    const url = `https://raw.githubusercontent.com/hermitdave/FrequencyWords/master/content/2018/${lang}/${lang}_50k.txt`;
+    let text = "";
+    try{ if("caches" in window){ const cc = await caches.open("focus-vocab-freq"); let r = await cc.match(url); if(!r){ await cc.add(url); r = await cc.match(url); } text = await r.text(); } }catch(e){}
+    if(!text){ const r = await fetch(url); if(!r.ok) throw new Error("freq"); text = await r.text(); }
+    const m = new Map(); let i = 0;
+    for(const line of text.split("\n")){ const w = line.split(" ")[0]; if(!w) continue; i++; if(!m.has(w)) m.set(w, i); }
+    FREQ[lang] = m; return m;
+  })().catch(() => { delete FREQ_LOADING[lang]; return null; });
+  return FREQ_LOADING[lang];
+}
+function rankOf(m, word){
+  const parts = searchTerm(word).toLowerCase().split(/\s+/).filter(Boolean);
+  if(!parts.length) return null;
+  let worst = 0;
+  for(const w of parts){ const r = m.get(w) || m.get(stripAcc(w)); if(!r) return 60000; worst = Math.max(worst, r); }
+  return worst;
+}
+async function ensureRanks(){
+  const lang = S.meta.settings.lang; const need = cardsHere().filter(c => c.rank === undefined);
+  if(!need.length) return;
+  const m = await freqMap(lang); if(!m) return;
+  need.forEach(c => { c.rank = rankOf(m, c.word); S.cards[c.id] = c; });
+  save(); if(!SES) renderAll();
+}
+function levelOfRank(r){ if(r == null) return null; return r <= 1000 ? 1 : r <= 4000 ? 2 : r <= 12000 ? 3 : 4; }
+const rankChip = c => { const lv = levelOfRank(c.rank); return lv ? `<span class="chip" style="background:transparent;border:1px solid var(--line);color:var(--muted)" title="#${c.rank >= 60000 ? "—" : c.rank}">${esc(t().levelsFreq[lv-1])}</span>` : ""; };
+
+/* ════════ 新しい単語の順番: 例文でつながる単語をまとめて出す ════════ */
+function related(a, b){
+  const hit = (word, ex) => { if(!ex) return false; const f = findForm(ex, word); return !!f && stripAcc(f.toLowerCase()).slice(0, 4) === stripAcc(searchTerm(word).toLowerCase()).slice(0, 4); };
+  return hit(a.word, b.example) || hit(b.word, a.example);
+}
+function orderNew(list){
+  const easy = S.meta.settings.newOrder === "easy";
+  const base = list.slice().sort((a,b) => easy ? ((a.rank ?? 99999) - (b.rank ?? 99999)) || (a.created - b.created) : a.created - b.created);
+  const known = activeCards().filter(c => !c.isNew);
+  const linkedToKnown = new Set(base.filter(c => known.some(k => related(c, k))).map(c => c.id));
+  const seeds = base.filter(c => linkedToKnown.has(c.id)).concat(base.filter(c => !linkedToKnown.has(c.id)));
+  const out = [], used = new Set();
+  const take = c => { if(used.has(c.id)) return; used.add(c.id); out.push(c); base.filter(o => !used.has(o.id) && related(c, o)).forEach(take); };
+  seeds.forEach(take);
+  out.forEach(c => { c._linked = linkedToKnown.has(c.id) || out.some(o => o !== c && related(o, c)); });
+  return out;
+}
+
 /* ════════ ほかの言語から取り込む ════════ */
 async function translateTo(text, from, to){
   if(from === to) return text;
@@ -1354,7 +1434,7 @@ function renderList(){
   if(FILTER === "mastered") arr = arr.filter(c => c.mastered);
   if(q) arr = arr.filter(c => stripAcc(norm(c.word)).includes(q) || norm(c.meaning).includes(q));
   document.querySelectorAll("#filters button").forEach(b => b.classList.toggle("primary", b.dataset.f === FILTER));
-  $("#wordList").innerHTML = arr.length ? arr.map(c => `<button class="item" type="button" data-id="${c.id}"><span style="min-width:0"><span class="w">${esc(c.word)}</span><span class="m">${esc(c.meaning || x.noMeaningShort)}</span></span><span class="right">${levelChip(c)}<span>${c.mastered ? "" : c.isNew ? x.waiting : esc(x.nextOn(c.due))}</span></span></button>`).join("") : `<p class="muted small">${x.none}</p>`;
+  $("#wordList").innerHTML = arr.length ? arr.map(c => `<button class="item" type="button" data-id="${c.id}"><span style="min-width:0"><span class="w">${esc(c.word)}</span><span class="m">${esc(c.meaning || x.noMeaningShort)}</span></span><span class="right"><span>${rankChip(c)} ${levelChip(c)}</span><span>${c.mastered ? "" : c.isNew ? x.waiting : esc(x.nextOn(c.due))}</span></span></button>`).join("") : `<p class="muted small">${x.none}</p>`;
   $("#wordList").querySelectorAll(".item").forEach(el => el.onclick = () => openEdit(el.dataset.id));
 }
 function openEdit(id){
@@ -1362,7 +1442,7 @@ function openEdit(id){
   const box = $("#editBox"); box.classList.remove("hidden");
   const hist = c.log.slice(-10).map(l => `<span class="chip ${l.ok ? "done" : "leech"}">${esc(l.d.slice(5))} ${l.ok ? "○" : "×"}</span>`).join(" ");
   box.innerHTML = `<div class="modehead"><h2>${esc(c.word)}</h2><span>${levelChip(c)}</span></div>
-    <p class="muted small">${esc(x.reviews(c.reps, c.lapses))}${c.due && !c.mastered ? " · " + esc(x.nextOn(c.due)) : ""}</p>
+    <p class="muted small">${rankChip(c)} ${esc(x.reviews(c.reps, c.lapses))}${c.due && !c.mastered ? " · " + esc(x.nextOn(c.due)) : ""}</p>
     ${hist ? `<div class="row">${hist}</div>` : ""}
     <label for="eWord">${x.eWord}<input type="text" id="eWord" value="${esc(c.word)}" autocapitalize="off" spellcheck="false"></label>
     <label for="eMeaning">${x.eMeaning}<input type="text" id="eMeaning" value="${esc(c.meaning)}"></label>${siblings(c)}<div class="row"><button class="btn sm" id="eMeanFix" type="button">${x.meanRefetch}</button></div><div id="eMeanAlts"></div>
@@ -1371,14 +1451,14 @@ function openEdit(id){
     <label for="eExampleTr">${x.eExampleTr}<input type="text" id="eExampleTr" value="${esc(c.exampleKo)}"></label>
     <label for="eForm">${x.eForm}<input type="text" id="eForm" value="${esc(c.form)}" autocapitalize="off" spellcheck="false"></label>
     ${srcLine(c)}
-    <div class="row"><button class="btn" id="eFind" type="button">${x.findOther}</button><button class="btn" id="eReset" type="button">${x.reset}</button></div>
+    <div class="row"><button class="btn" id="eFind" type="button">${x.findOther}</button>${c.mastered ? `<button class="btn primary" id="eRevive" type="button">${x.revive}</button>` : ""}<button class="btn" id="eReset" type="button">${x.reset}</button></div>
     <div id="eCands"></div>
     <div class="row"><button class="btn bad" id="eDel" type="button">${x.del}</button><span class="grow"></span><button class="btn ghost" id="eClose" type="button">${x.close}</button><button class="btn primary" id="eSave" type="button">${x.save}</button></div>`;
   box.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
   let eSrc = c.src, eAudio = c.audio || null;
   $("#eExample").oninput = () => { eSrc = null; eAudio = null; };
   $("#eClose").onclick = closeEdit;
-  $("#eSave").onclick = () => { const cur = S.cards[id]; if(!cur) return; cur.word = $("#eWord").value.trim() || cur.word; cur.meaning = $("#eMeaning").value.trim(); cur.example = $("#eExample").value.trim(); cur.exampleKo = $("#eExampleTr").value.trim(); cur.form = $("#eForm").value.trim() || findForm(cur.example, cur.word); cur.src = eSrc; cur.audio = eAudio; cur.deck = $("#eDeck").value; saveCard(cur); toast(x.savedShort); closeEdit(); renderAll(); };
+  $("#eSave").onclick = () => { const cur = S.cards[id]; if(!cur) return; cur.word = $("#eWord").value.trim() || cur.word; cur.meaning = $("#eMeaning").value.trim(); cur.example = $("#eExample").value.trim(); cur.exampleKo = $("#eExampleTr").value.trim(); cur.form = $("#eForm").value.trim() || findForm(cur.example, cur.word); cur.src = eSrc; cur.audio = eAudio; cur.deck = $("#eDeck").value; delete cur.rank; saveCard(cur); ensureRanks(); toast(x.savedShort); closeEdit(); renderAll(); };
   $("#eMeanFix").onclick = async () => {
     const b = $("#eMeanFix"); b.disabled = true; const w = searchTerm($("#eWord").value.trim());
     try{ delete trCache[L().mm + "|" + U().mm + "|" + w]; await translate(w, L().mm); }catch(e){}
@@ -1387,6 +1467,7 @@ function openEdit(id){
     $("#eMeanAlts").innerHTML = alts.length ? `<div class="chips">${alts.map(a => `<button type="button" class="chiptog" data-alt="${esc(a)}" aria-pressed="false">${esc(a)}</button>`).join("")}</div>` : `<p class="muted small">${esc(x.popNoMeaning)}</p>`;
     $("#eMeanAlts").querySelectorAll("[data-alt]").forEach(o => o.onclick = () => { $("#eMeaning").value = o.dataset.alt; $("#eMeanAlts").querySelectorAll("[data-alt]").forEach(z => z.setAttribute("aria-pressed", z === o)); });
   };
+  const rv = $("#eRevive"); if(rv) rv.onclick = () => { const cur = S.cards[id]; cur.mastered = false; cur.manualGrad = false; cur.level = Math.max(1, Math.min(cur.level, LADDER.length - 1)); cur.due = today(); saveCard(cur); toast(x.revived(cur.word)); openEdit(id); renderAll(); };
   $("#eReset").onclick = () => { const cur = S.cards[id]; Object.assign(cur, { level:0, isNew:true, mastered:false, due:null, introduced:null, relearn:false }); saveCard(cur); toast(x.resetDone); openEdit(id); renderAll(); };
   $("#eFind").onclick = async () => {
     const b = $("#eFind"); b.disabled = true; b.textContent = x.finding;
@@ -1418,7 +1499,7 @@ function renderHow(){
   const max = Math.max(1, ...days.map(v => v.n));
   $("#forecast").innerHTML = days.map((v,i) => { const [y,m,dd] = v.d.split("-").map(Number); return `<div class="fc${i ? "" : " today"}"><em>${v.n}</em><i style="height:${Math.round(v.n/max*62)}px"></i><span>${i ? x.week[new Date(y,m-1,dd).getDay()] : x.todayShort}</span></div>`; }).join("");
   const st = S.meta.settings;
-  $("#setUi").value = st.ui; $("#setNew").value = st.newLimit; $("#setWrite").checked = st.writing; $("#setHf").checked = !!st.handsFree; $("#setSpeak").checked = st.speaking; $("#setAccent").checked = st.strictAccent; $("#setEmail").value = st.email || ""; $("#setRate").value = st.rate || 0.8; $("#rateOut").textContent = "×" + Number(st.rate || 0.8).toFixed(2); fillVoices();
+  $("#setUi").value = st.ui; $("#setNew").value = st.newLimit; $("#setWrite").checked = st.writing; $("#setOrder").value = st.newOrder || "added"; $("#setHf").checked = !!st.handsFree; $("#setSpeak").checked = st.speaking; $("#setAccent").checked = st.strictAccent; $("#setEmail").value = st.email || ""; $("#setRate").value = st.rate || 0.8; $("#rateOut").textContent = "×" + Number(st.rate || 0.8).toFixed(2); fillVoices();
 }
 function setUiLang(v){
   S.meta.settings.ui = v; save(); applyUi();
@@ -1426,7 +1507,8 @@ function setUiLang(v){
 }
 $("#setUi").onchange = e => setUiLang(e.target.value);
 
-$("#setNew").onchange = e => { S.meta.settings.newLimit = Math.max(1, Math.min(30, parseInt(e.target.value, 10) || 7)); save(); renderAll(); };
+$("#setNew").onchange = e => { S.meta.settings.newLimit = Math.max(1, Math.min(100, parseInt(e.target.value, 10) || 7)); save(); renderAll(); };
+$("#setOrder").onchange = e => { S.meta.settings.newOrder = e.target.value; save(); renderAll(); };
 $("#setHf").onchange = e => { S.meta.settings.handsFree = e.target.checked; save(); };
 $("#setWrite").onchange = e => { S.meta.settings.writing = e.target.checked; save(); };
 $("#setSpeak").onchange = e => { S.meta.settings.speaking = e.target.checked; save(); };
@@ -1516,6 +1598,7 @@ function updateStats(){
   $("#sMastered").textContent = all.filter(c => c.mastered).length;
 }
 function renderAll(){
+  if(!renderAll._r){ renderAll._r = 1; setTimeout(() => { renderAll._r = 0; ensureRanks(); }, 50); }
   const d = new Date(), x = t();
   $("#todayLabel").textContent = x.dateLabel(d.getMonth()+1, d.getDate(), x.week[d.getDay()]);
   updateStats(); if(!SES) renderStart();
