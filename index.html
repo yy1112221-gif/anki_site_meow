@@ -289,6 +289,62 @@ mark,.tok.hl{background:transparent;color:var(--accent);border-bottom:2px solid 
 .poster .pruler i{position:absolute;top:-2px;bottom:-2px;width:5px;background:var(--accent);opacity:1}
 .poster + *{margin-top:10px}
 .after-poster{background:var(--surface);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:14px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+
+/* ══════════ 液体ガラス: 文字のある場所はすりガラスの板に載せる ══════════ */
+:root{
+  --glass:rgba(244,250,247,.55); --glass-strong:rgba(248,252,250,.72); --glass-edge:rgba(255,255,255,.65); --glass-shadow:0 10px 30px rgba(6,30,24,.16), 0 1px 2px rgba(6,30,24,.08);
+  --ink:#0b1a16; --muted:#3d524b; --line:rgba(11,26,22,.14);
+  --field:rgba(255,255,255,.7);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --glass:rgba(16,36,31,.58); --glass-strong:rgba(14,32,28,.74); --glass-edge:rgba(255,255,255,.14); --glass-shadow:0 10px 30px rgba(0,0,0,.35);
+  --ink:#eef7f3; --muted:#b4c8c1; --line:rgba(238,247,243,.14); --field:rgba(0,0,0,.25); } }
+:root[data-theme="dark"]{
+  --glass:rgba(16,36,31,.58); --glass-strong:rgba(14,32,28,.74); --glass-edge:rgba(255,255,255,.14); --glass-shadow:0 10px 30px rgba(0,0,0,.35);
+  --ink:#eef7f3; --muted:#b4c8c1; --line:rgba(238,247,243,.14); --field:rgba(0,0,0,.25); }
+body{line-height:1.7;color:var(--ink)}
+.muted{color:var(--muted)}
+.glass, .card, #sessionStart.card, .top, nav.tabs, .sheet, .toast{
+  background:var(--glass);
+  -webkit-backdrop-filter:blur(22px) saturate(170%); backdrop-filter:blur(22px) saturate(170%);
+  border:1px solid var(--glass-edge);
+  box-shadow:var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,.55), inset 0 -1px 0 rgba(255,255,255,.12);
+}
+.card, #sessionStart.card{border-radius:24px;padding:22px}
+#sessionStart.card{padding-left:22px;padding-right:22px}
+/* 上の見出しとタブもガラスの帯に */
+.top{border-radius:22px;padding:14px 16px;margin-bottom:-4px}
+.top #todayLabel{opacity:1;color:var(--muted)}
+nav.tabs{border-radius:999px;padding:5px;gap:4px;top:calc(10px + env(safe-area-inset-top))}
+nav.tabs button{border-radius:999px;border-bottom:0;color:var(--muted);letter-spacing:.08em}
+nav.tabs button[aria-selected="true"]{background:var(--glass-strong);color:var(--ink);box-shadow:0 2px 8px rgba(6,30,24,.12), inset 0 1px 0 rgba(255,255,255,.7)}
+/* 「今日」: 上は雨を見せる余白、題名から下はガラスの板 */
+body:not(.focus) #view-today::before{content:"";display:block;height:min(24vh,200px)}
+.poster{padding-top:0}
+.poster .pweek,.poster .ptitle,.poster .psub{color:var(--ink);opacity:1}
+.poster .psub{color:var(--muted)}
+.after-poster{background:transparent;padding:0;-webkit-backdrop-filter:none;backdrop-filter:none;border-top:1px solid var(--line);padding-top:16px;border-radius:0}
+/* 入力欄は白っぽく、くっきり */
+input[type=text],input[type=email],textarea,select,input[type=number]{background:var(--field);border:1px solid var(--line);border-radius:12px;color:var(--ink)}
+.kbd button{background:var(--field);border-color:var(--line);border-radius:10px}
+.btn{border-radius:14px;border-color:var(--line);background:var(--field)}
+.btn.ghost{background:transparent}
+.btn.primary,.btn.good{background:var(--accent);border-color:transparent;color:#fff;box-shadow:0 4px 14px rgba(0,105,69,.28), inset 0 1px 0 rgba(255,255,255,.25)}
+.langbtn,.iconbtn{background:var(--field);border-color:var(--line)}
+.chip,.chiptog{border-radius:999px}
+.feedback{border-radius:16px}
+.feedback.ok{background:rgba(0,105,69,.12)} .feedback.no{background:rgba(125,42,31,.1)} .feedback.meh{background:rgba(11,26,22,.06)}
+.bubble{background:var(--glass-strong);border:1px solid var(--glass-edge);color:var(--ink);box-shadow:0 6px 18px rgba(6,30,24,.14)}
+.bubble::before{display:none}
+.bubble::after{border-right-color:var(--glass-strong)!important}
+.say.big .bubble::after{border-bottom-color:var(--glass-strong)!important;border-right-color:transparent!important}
+.sentence{line-height:1.75}
+.small{line-height:1.65}
+.toast{color:var(--ink);background:var(--glass-strong)}
+.sheet{border-radius:28px 28px 0 0}
+.sheet-bg{background:rgba(6,20,17,.25);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.ex,.cand{background:var(--field);border-radius:14px}
+.progress{opacity:.7}
 </style>
 </head>
 <body>
@@ -1377,14 +1433,14 @@ function drawRain(){
   g.fillStyle = col("--bg"); g.fillRect(0, 0, w, h);
   const r = seededRand(today() + "rain" + S.meta.settings.lang);
   const cols = [[col("--rain1"), .8], [col("--rain2"), .8], [col("--rain3"), .5], [col("--rain1"), .5]];
-  const lean = 0.16 + r() * 0.1, n = Math.round((w * h) / 4200);
+  const lean = 0.16 + r() * 0.1, n = Math.round((w * h) / 9000);
   for(let i = 0; i < n; i++){
-    const thick = r() < 0.18; const [c, op] = cols[Math.floor(r() * cols.length)];
+    const thick = r() < 0.12; const [c, op] = cols[Math.floor(r() * cols.length)];
     const x = r() * (w + h * lean) - h * lean * 0.2, y = -40 + r() * h * 1.05, len = 60 + r() * (thick ? 260 : 420);
     const bend = (r() - 0.5) * 30;
     g.beginPath(); g.moveTo(x, y);
     g.quadraticCurveTo(x - len * lean * 0.5 + bend, y + len * 0.5, x - len * lean, y + len);
-    g.strokeStyle = c; g.globalAlpha = op * (thick ? 0.55 : 0.75); g.lineWidth = thick ? 3 + r() * 6 : 0.5 + r() * 1.6; g.lineCap = "round"; g.stroke();
+    g.strokeStyle = c; g.globalAlpha = op * (thick ? 0.28 : 0.45); g.lineWidth = thick ? 2.5 + r() * 4 : 0.5 + r() * 1.2; g.lineCap = "round"; g.stroke();
   }
   for(let i = 0; i < 2; i++){ const x = r() * w, y = r() * h * 0.6, len = 120 + r() * 160; g.beginPath(); g.moveTo(x, y); g.lineTo(x - len * lean, y + len); g.strokeStyle = col("--rainHi"); g.globalAlpha = 0.9; g.lineWidth = 2.5; g.stroke(); }
   g.globalAlpha = 1;
