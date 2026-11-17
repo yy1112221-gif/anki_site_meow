@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#69a795">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="集中暗記">
-<title>集中暗記</title>
+<meta name="apple-mobile-web-app-title" content="ANKI MEOW">
+<title>暗記して ミヤオウ</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -402,6 +402,29 @@ body.focus #todaySide{display:none}
   #view-add,#view-list,#view-how{max-width:680px;width:100%;margin:0 auto}
   .top,nav.tabs{max-width:100%}
 }
+
+/* ══════════ ロゴ・スマホの余白 ══════════ */
+h1{display:flex;flex-direction:column;gap:2px;letter-spacing:0}
+h1 .logo{font-size:.95rem;font-weight:700;letter-spacing:.34em;line-height:1.2}
+h1 .logo-sub{font-size:.74rem;font-weight:600;letter-spacing:.18em;color:var(--muted)}
+@media (max-width: 899px){
+  body:not(.focus) #view-today::before{height:0;display:none}
+  .top{padding:12px 16px;gap:6px}
+  .top #todayLabel{font-size:.66rem;letter-spacing:.24em;margin-top:0}
+  .poster .ptitle{font-size:clamp(1.6rem,7.2vw,2.3rem)}
+  .poster .pweek{font-size:.72rem;letter-spacing:.22em}
+  .card, #sessionStart.card{padding:18px}
+  nav.tabs button{font-size:.8rem;letter-spacing:.04em;padding:9px 2px}
+}
+
+@media (max-width: 899px){
+  .top{flex-wrap:wrap;align-items:center}
+  .titlebar{flex:1;min-width:0;gap:6px}
+  h1 .logo{font-size:.8rem;letter-spacing:.2em;white-space:nowrap}
+  h1 .logo-sub{font-size:.68rem;letter-spacing:.12em}
+  .langbtn{padding:2px 7px 2px 5px}
+  .iconbtn{padding:5px 9px}
+}
 </style>
 </head>
 <body>
@@ -409,7 +432,7 @@ body.focus #todaySide{display:none}
 <div class="wrap">
   <header class="top">
     <div class="titlebar">
-      <h1 data-i18n="appName"></h1>
+      <h1><span class="logo">ANKI SITE MEOW</span><span class="logo-sub" data-i18n="appName"></span></h1>
       <button id="langBtn" class="langbtn" type="button" data-i18n-aria="learnLang"><span id="langFlag" class="flag"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg></button>
     </div>
     <button id="uiBtn" class="iconbtn" type="button" aria-label="表示言語 · 화면 언어"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19"/><path d="M12 2.5c2.8 2.6 4.2 5.8 4.2 9.5s-1.4 6.9-4.2 9.5c-2.8-2.6-4.2-5.8-4.2-9.5S9.2 5.1 12 2.5z"/></svg><span id="uiCode"></span></button>
@@ -575,7 +598,7 @@ body.focus #todaySide{display:none}
 /* ───────── 表示言語 (日本語が基本、韓国語はオプション) ───────── */
 const T = {
 ja: {
-  appName:"集中暗記", learnLang:"学習する言語", summary:"今日のまとめ",
+  appName:"暗記して ミヤオウ", learnLang:"学習する言語", summary:"今日のまとめ",
   statDue:"今日の復習", statNew:"今日の新出", statLearning:"学習中", statMastered:"卒業",
   tabToday:"今日", tabAdd:"単語を追加", tabList:"単語帳", tabHow:"設定",
   addOne:"1語ずつ追加", fWord:"単語", btnFind:"意味・例文を探す", btnFindAgain:"もう一度探す", finding:"探しています…",
@@ -640,12 +663,12 @@ ja: {
   savedShort:"保存しました。", resetDone:"新しい単語に戻しました。", deleted:"削除しました。", noneFound:"例文が見つかりませんでした。",
   storageFull:"保存容量が足りません。バックアップしてから不要な単語を削除してください。", exportFail:"ファイルで保存できません。コピーを使ってください。",
   copied:n=>`${n}語をコピーしました。`, copyFail:"コピーできなかったので下の欄に入れました。", imported:n=>`${n}語を読み込みました。`, importFail:"バックアップの形式ではありません。保存したファイルかコピーした内容をそのまま入れてください。",
-  noLangSwitch:"学習中は言語を切り替えられません。", backupName:"集中暗記-バックアップ-", langCount:n=>` · ${n}`,
+  noLangSwitch:"学習中は言語を切り替えられません。", backupName:"anki-meow-backup-", langCount:n=>` · ${n}`,
   langNames:{ es:"スペイン語", fr:"フランス語", de:"ドイツ語", it:"イタリア語", pt:"ポルトガル語", en:"英語", ko:"韓国語", ja:"日本語" },
   seedData:[["aprovechar","(機会を)活かす","Hay que aprovechar el buen tiempo para salir.","いい天気を活かして出かけなきゃ。","aprovechar"],["madrugar","早起きする","Mañana tengo que madrugar para ir al aeropuerto.","明日は空港に行くので早起きしないと。","madrugar"],["quedar","待ち合わせる、残る","Quedamos a las ocho delante del cine.","8時に映画館の前で会おう。","Quedamos"],["el sueldo","給料","Con este sueldo no puedo pagar el alquiler.","この給料じゃ家賃が払えない。","sueldo"],["agotado","くたくたの、売り切れの","Después del trabajo llegué a casa agotado.","仕事のあと、くたくたで家に帰った。","agotado"]]
 },
 ko: {
-  appName:"집중 암기", learnLang:"학습 언어", summary:"오늘 요약",
+  appName:"암기해냥", learnLang:"학습 언어", summary:"오늘 요약",
   statDue:"오늘 복습", statNew:"오늘 새 단어", statLearning:"외우는 중", statMastered:"졸업",
   tabToday:"오늘", tabAdd:"단어 추가", tabList:"단어장", tabHow:"원리·설정",
   addOne:"한 단어씩", fWord:"단어", btnFind:"뜻·예문 찾기", btnFindAgain:"다시 찾기", finding:"찾는 중…",
@@ -710,7 +733,7 @@ ko: {
   savedShort:"저장했어요.", resetDone:"새 단어로 되돌렸어요.", deleted:"삭제했어요.", noneFound:"찾은 예문이 없어요.",
   storageFull:"저장 공간이 부족해요. 백업 후 안 쓰는 단어를 지워주세요.", exportFail:"파일로 받을 수 없어요. 복사 버튼을 써주세요.",
   copied:n=>`단어 ${n}개를 복사했어요.`, copyFail:"복사가 막혀 있어 아래 칸에 넣었어요.", imported:n=>`${n}개 가져왔어요.`, importFail:"백업 형식이 아니에요. 받은 파일이나 복사한 내용을 그대로 넣어주세요.",
-  noLangSwitch:"학습 중에는 언어를 바꿀 수 없어요.", backupName:"집중암기-백업-", langCount:n=>` · ${n}`,
+  noLangSwitch:"학습 중에는 언어를 바꿀 수 없어요.", backupName:"anki-meow-backup-", langCount:n=>` · ${n}`,
   langNames:{ es:"스페인어", fr:"프랑스어", de:"독일어", it:"이탈리아어", pt:"포르투갈어", en:"영어", ko:"한국어", ja:"일본어" },
   seedData:[["aprovechar","(기회를) 활용하다","Hay que aprovechar el buen tiempo para salir.","좋은 날씨를 이용해서 나가야 해.","aprovechar"],["madrugar","일찍 일어나다","Mañana tengo que madrugar para ir al aeropuerto.","내일 공항에 가려면 일찍 일어나야 해.","madrugar"],["quedar","만나기로 하다, 남다","Quedamos a las ocho delante del cine.","8시에 영화관 앞에서 만나자.","Quedamos"],["el sueldo","월급","Con este sueldo no puedo pagar el alquiler.","이 월급으로는 월세를 낼 수 없어.","sueldo"],["agotado","녹초가 된, 매진된","Después del trabajo llegué a casa agotado.","일 끝나고 녹초가 돼서 집에 왔어.","agotado"]]
 }};

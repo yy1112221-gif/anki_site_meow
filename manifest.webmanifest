@@ -1,6 +1,6 @@
 {
-  "name": "集中暗記",
-  "short_name": "集中暗記",
+  "name": "暗記して ミヤオウ · ANKI SITE MEOW",
+  "short_name": "ANKI MEOW",
   "description": "単語を入れるだけで間隔反復の復習スケジュールを組む暗記アプリ",
   "start_url": "./",
   "scope": "./",
@@ -9,8 +9,21 @@
   "theme_color": "#69a795",
   "lang": "ja",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
