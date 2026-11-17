@@ -16,3 +16,8 @@
 - 例文: Tatoeba API（CC BY 2.0 FR）
 - 翻訳: MyMemory
 - 英語の意味: Wiktionary REST API
+
+## 単語セットの出典 / 단어 세트 출처
+- スペイン語 / 스페인어: ELELex (CEFRLex, UCLouvain) — CC BY-NC-SA 4.0 — https://cental.uclouvain.be/cefrlex/elelex/ （各語の最初に出たレベルで分類・内容語のみ）
+- 日本語 / 일본어: JLPT 語彙（tanos.co.uk, Jonathan Waller, CC BY）via open-anki-jlpt-decks (MIT) — https://github.com/jamsinclair/open-anki-jlpt-decks
+- 韓国語 / 한국어: 한국어기초사전 (국립국어원) — CC BY-SA 2.0 KR — https://krdict.korean.go.kr/ （日本語訳・例文を含む）

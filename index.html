@@ -565,6 +565,17 @@ body.dropping::after{content:"📥";position:fixed;inset:10px;z-index:90;display
 .ofilt input[type=search]{flex:1 1 140px;min-width:120px;padding:7px 12px;border-radius:999px}
 .chiptog.ban{border-style:dashed;border-color:var(--bad)} .chiptog.ban:hover{background:rgba(125,42,31,.12)}
 .linkbtn{border:0;background:none;padding:0;color:var(--accent);font:inherit;text-decoration:underline;cursor:pointer}
+
+.plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin:12px 0 6px}
+.pitem{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:18px;border:1px solid var(--line);background:var(--glass-strong)}
+.pitem b{font-size:1rem;color:var(--ink)} .pitem .btn{white-space:nowrap} .pitem span{font-size:.75rem;color:var(--muted);flex:1}
+.pitem.rec{outline:2px solid #e8a400;background:#fff6d6}
+.diag{margin-top:12px;padding:14px;border-radius:20px;background:var(--glass-strong);border:1px solid var(--glass-edge);display:flex;flex-direction:column;gap:10px}
+.dres{font-size:1.2rem;color:var(--ink)}
+.dbars{display:flex;flex-direction:column;gap:6px}
+.dbar{display:grid;grid-template-columns:52px 1fr 40px;gap:8px;align-items:center;font-size:.8rem}
+.dbar div{height:10px;border-radius:999px;background:var(--field);overflow:hidden} .dbar i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.dbar.rec span{color:#c47f00;font-weight:700} .dbar em{font-style:normal;color:var(--muted);text-align:right}
 </style>
 </head>
 <body>
@@ -623,6 +634,11 @@ body.dropping::after{content:"📥";position:fixed;inset:10px;z-index:90;display
         <input type="text" id="fExampleTr" autocomplete="off" data-i18n-ph="phExampleTr">
       </label>
       <div class="row end"><button class="btn primary" id="btnSave" type="button" data-i18n="save"></button></div>
+    </div>
+    <div class="card" id="presetCard">
+      <h2 data-i18n="presetTitle"></h2>
+      <p class="muted small" data-i18n="presetHelp"></p>
+      <div id="presetBox"></div>
     </div>
     <div class="card">
       <h2 data-i18n="photoTitle"></h2>
@@ -779,7 +795,12 @@ ja: {
   noExample:"例文がありません。単語帳で追加すると穴埋め問題が出ます。", gotIt:"覚えた、次へ",
   meaningAlts:"意味の候補：", sideStreak:"日 連続学習", sideWeek:"これからの7日", sideLadder:"復習のはしご", syncTitle:"端末間で同期", syncNotReady:"同期サーバーを準備中です。もうすぐ使えるようになります。", syncHelp:"同期コードを発行すると、ほかの端末でも同じ単語と進み具合で続けられます。メールや名前は不要です。", syncStart:"同期を始める（コードを発行）", syncHaveCode:"別の端末で発行したコードがある場合", syncJoin:"このコードでつなぐ", syncBadCode:"コードは英数字8文字です（例：K7P2-QX9M）。", syncWorking:"つないでいます…", syncNotFound:"このコードは見つかりませんでした。もう一度確かめてください。", syncErr:"同期できませんでした。ネット接続を確認して、少ししてから試してください。", syncStarted:"同期を始めました。コードをメモしておいてください。", syncJoined:"つながりました！両方の端末の単語をまとめました。", syncOnHelp:"このコードをほかの端末で入れると、同じ単語帳で続けられます。変更は自動で同期されます。コードはパスワード代わりなので、人に教えないでください。", syncYourCode:"同期コード", syncBusy:"同期しています…", syncLast:t0=>`最後に同期：${t0}`, syncNowBtn:"今すぐ同期", syncOff:"この端末の同期をやめる", syncOffConfirm:"もう一度押すと解除（単語はこの端末に残ります）", syncCopied:"コードをコピーしました。", grad:"卒業", gradTitle:"もう完璧に覚えた単語を、毎日の復習から外します", gradAsk:w=>`「${w}」はもう完璧？ 卒業させる？`, gradSafe:"卒業した単語は「単語帳 › 卒業」に入るだけなので、いつでも復活させられます。安心してね！", gradCancel:"まだ続ける", gradDo:"卒業させる", gradDone:w=>`「${w}」は卒業！単語帳からいつでも復活できます。`, revive:"復活させる", revived:w=>`「${w}」を復活させました。今日の復習に入ります。`, home:"ホーム", pausedToast:"ここまで保存しました。「続きから」で再開できます。", setOrder:"新しい単語を出す順番", orderAdded:"追加した順", orderEasy:"よく使う単語から", orderHelp:"どちらの場合も、おたがいの例文に出てくる単語や、いま覚えている単語とつながる単語は、まとめて先に出します。", todayNewList:"今日の新しい単語：", linkedHint:"🔗 は例文でつながっている単語です。いっしょに覚えると効率的です。", levelsFreq:["基本","よく使う","中級","難しめ"], meanRefetch:"意味の候補を取り直す", uiLangTitle:"表示言語", learnLangTitle:"学習する言語", deckDefault:"基本", addTo:"追加先の単語帳", newDeck:"＋ 新しい単語帳…", deckNamePh:"単語帳の名前（例：旅行、ビジネス）", create:"作成", deckCreated:n=>`「${n}」を作りました。`,
   decksTitle:"単語帳", decksHelp:"チェックした単語帳だけが今日の学習に出ます。範囲をしぼると覚えやすくなります。", deckWords:n=>`${n}語`, deckDelete:"削除", deckDeleteConfirm:"もう一度押すと削除（単語は「基本」へ移動）", deckDeleted:"単語帳を削除し、単語は「基本」に移しました。", studyDecks:"学習する単語帳：", deckOf:"単語帳",
-  photoTitle:"写真から追加", photoHelp:"本や画面を撮ると、端末の中で文字を読み取ります（AIサービスには送りません）。読み取った単語から覚えたいものを選んでください。", photoPick:"写真を撮る・選ぶ", camBtn:"📷 連写で撮る", fLevel:"表示:", fEasy:"A やさしい", fShowDup:"登録済みも表示", fSearch:"単語で絞り込み", fStar:"おすすめに戻す", fAll:"表示中を全部選ぶ", fNone:"全部外す", fBan:"除外モード", fNoneShown:"条件に合う単語がありません", fInfo:(v,n)=>`表示 ${v} / ${n}語（タップで選択。除外モードでタップすると次から出しません）`, fUnban:n=>`除外した${n}語を戻す`, pickMany:"🖼 まとめて選ぶ", dropHint:"何枚でもOK。撮った順に裏で読み取ります。PCはドラッグ＆ドロップ・貼り付けもできます。",
+  photoTitle:"写真から追加", photoHelp:"本や画面を撮ると、端末の中で文字を読み取ります（AIサービスには送りません）。読み取った単語から覚えたいものを選んでください。", photoPick:"写真を撮る・選ぶ", camBtn:"📷 連写で撮る", presetTitle:"レベル別セット", presetHelp:"公開されているレベル別の単語リストから、まとめて追加できます。意味と例文は勉強するときに少しずつ取りに行きます。", diagBtn:"🧪 レベル診断（1分）",
+  presetNone:"この言語のセットはまだありません。", presetAdd:"追加", presetAdded:"追加ずみ", presetLoading:"読み込み中…", presetDone:(n,d,k)=>`${n}語を「${d}」に追加しました${k ? `（わかる単語${k}語は除外）` : ""}。毎日の新しい単語に少しずつ出てきます。`,
+  presetSrc:"出典", lastDiag:(lv,d)=>`前回の診断: ${lv}（${d}）`, prepping:"この単語の意味と例文を準備中…",
+  diagTitle:"レベル診断", diagHelp:"意味がわかる単語だけタップしてください。存在しない単語もまざっているので、カンで押さないでね。", diagJudge:"判定する", diagCancel:"やめる",
+  diagEst:lv=>`あなたのレベル: ${lv} くらい`, diagStart:"入門", diagRec:lv=>`おすすめ: ${lv} のセットから`, diagAll:"全レベルほぼOK！ 上級セットや写真・自分の単語で広げましょう", diagRecAdd:lv=>`${lv} を追加（わかる単語は除く）`,
+  diagFake:"存在しない単語にも○が付いていたので、低めに見積もっています。", diagAgain:"もう一度", fLevel:"表示:", fEasy:"A やさしい", fShowDup:"登録済みも表示", fSearch:"単語で絞り込み", fStar:"おすすめに戻す", fAll:"表示中を全部選ぶ", fNone:"全部外す", fBan:"除外モード", fNoneShown:"条件に合う単語がありません", fInfo:(v,n)=>`表示 ${v} / ${n}語（タップで選択。除外モードでタップすると次から出しません）`, fUnban:n=>`除外した${n}語を戻す`, pickMany:"🖼 まとめて選ぶ", dropHint:"何枚でもOK。撮った順に裏で読み取ります。PCはドラッグ＆ドロップ・貼り付けもできます。",
   qTitle:(d,n)=>`読み取り ${d}/${n}枚`, qClear:"写真をすべて消す", qDone:"ぜんぶ読み取りました", camDone:"完了", camHint:"画面のどこをタップしても撮れます。どんどん撮ってOK（読み取りは裏で進みます）", textFold:"読み取った文を見る・直す", qEmpty:"文字なし", qErr:"失敗",
   ocrLoading:"文字認識エンジンを準備中…（初回だけ数秒かかります）", ocrReading:n=>`読み取り中… ${n}%`, ocrFail:"読み取れませんでした。明るい場所で、文字が大きく写るように撮ってみてください。", ocrText:"読み取った文（間違いは直せます）", ocrReparse:"この文から単語を拾い直す", ocrPickWords:"学習優先度の高い順。★はおすすめ（選択ずみ・タップで外せます）", ocrScoring:"単語の優先度を計算中…", ocrLvUnknown:"珍", ocrWhy:w=>`優先度 ${Math.round((w.score||0)*100)}${w.rank ? ` · 頻度 ${w.rank}位` : ""} · 抜くと意味が変わる度 ${Math.round((w.abl||0)*100)} · つながり ${Math.round((w.tr||0)*100)}${w.tf > 1 ? ` · 写真に${w.tf}回` : ""}`, ocrUseLine:"写真の文を例文にする", ocrAdd:n=>`選んだ${n}語を追加`, ocrInDeck:"登録済み", ocrNone:"単語が見つかりませんでした。",
   impTitle:"ほかの言語から取り込む", impHelp:"別の言語で覚えている単語を、この言語に訳して追加します。同じ意味の単語どうしがつながり、カードに並んで表示されます。", impFrom:"取り込み元", impAll:"すべて選択", impGo:"選んだ単語を取り込む", impNoSource:"ほかの言語の単語がまだありません。", impWorking:(i,n)=>`訳しています（${i}/${n}）…`, impDone:(n,f)=>`${n}語を取り込みました。${f ? "訳せなかった単語は単語帳で直せます。" : ""}`, impPickSome:"取り込む単語を選んでください。",
@@ -850,7 +871,12 @@ ko: {
   noExample:"예문이 없어요. 단어장에서 넣으면 빈칸 문제가 생깁니다.", gotIt:"외웠어요, 다음",
   meaningAlts:"뜻 후보:", sideStreak:"일 연속 학습", sideWeek:"앞으로 7일", sideLadder:"복습 사다리", syncTitle:"기기 간 동기화", syncNotReady:"동기화 서버를 준비 중이에요. 곧 쓸 수 있어요.", syncHelp:"동기화 코드를 만들면 다른 기기에서도 같은 단어와 진도로 이어서 할 수 있어요. 이메일이나 이름은 필요 없어요.", syncStart:"동기화 시작 (코드 만들기)", syncHaveCode:"다른 기기에서 만든 코드가 있다면", syncJoin:"이 코드로 연결", syncBadCode:"코드는 영문·숫자 8자예요 (예: K7P2-QX9M).", syncWorking:"연결하는 중…", syncNotFound:"이 코드를 찾지 못했어요. 다시 확인해 주세요.", syncErr:"동기화하지 못했어요. 인터넷 연결을 확인하고 잠시 뒤 다시 해 주세요.", syncStarted:"동기화를 시작했어요. 코드를 메모해 두세요.", syncJoined:"연결됐어요! 두 기기의 단어를 합쳤어요.", syncOnHelp:"이 코드를 다른 기기에 입력하면 같은 단어장으로 이어서 할 수 있어요. 바뀐 내용은 자동으로 동기화돼요. 코드는 비밀번호 대신이니 남에게 알려 주지 마세요.", syncYourCode:"동기화 코드", syncBusy:"동기화하는 중…", syncLast:t0=>`마지막 동기화: ${t0}`, syncNowBtn:"지금 동기화", syncOff:"이 기기 동기화 끄기", syncOffConfirm:"한 번 더 누르면 해제 (단어는 이 기기에 남아요)", syncCopied:"코드를 복사했어요.", grad:"졸업", gradTitle:"이미 완벽하게 외운 단어를 매일 복습에서 뺍니다", gradAsk:w=>`"${w}"은(는) 이제 완벽해? 졸업시킬까?`, gradSafe:"졸업한 단어는 「단어장 › 졸업」에 들어갈 뿐이라 언제든 다시 살릴 수 있어요. 안심해!", gradCancel:"계속할래", gradDo:"졸업시키기", gradDone:w=>`"${w}" 졸업! 단어장에서 언제든 다시 살릴 수 있어요.`, revive:"다시 살리기", revived:w=>`"${w}"을(를) 다시 살렸어요. 오늘 복습에 들어갑니다.`, home:"홈", pausedToast:"여기까지 저장했어요. 「이어서 하기」로 다시 시작할 수 있어요.", setOrder:"새 단어를 내는 순서", orderAdded:"추가한 순서", orderEasy:"자주 쓰는 단어부터", orderHelp:"어느 쪽이든 서로의 예문에 나오는 단어나 지금 외우는 단어와 이어진 단어는 묶어서 먼저 냅니다.", todayNewList:"오늘의 새 단어:", linkedHint:"🔗 는 예문으로 이어진 단어예요. 같이 외우면 효율적이에요.", levelsFreq:["기본","자주 씀","중급","어려움"], meanRefetch:"뜻 후보 다시 가져오기", uiLangTitle:"화면 언어", learnLangTitle:"학습 언어", deckDefault:"기본", addTo:"추가할 단어장", newDeck:"＋ 새 단어장…", deckNamePh:"단어장 이름 (예: 여행, 비즈니스)", create:"만들기", deckCreated:n=>`"${n}" 단어장을 만들었어요.`,
   decksTitle:"단어장", decksHelp:"체크한 단어장만 오늘 학습에 나와요. 범위를 좁히면 더 잘 외워집니다.", deckWords:n=>`${n}개`, deckDelete:"삭제", deckDeleteConfirm:"한 번 더 누르면 삭제 (단어는 「기본」으로 이동)", deckDeleted:"단어장을 지우고 단어는 「기본」으로 옮겼어요.", studyDecks:"학습할 단어장:", deckOf:"단어장",
-  photoTitle:"사진으로 추가", photoHelp:"책이나 화면을 찍으면 기기 안에서 글자를 읽어요 (AI 서비스로 보내지 않아요). 읽힌 단어 중 외울 단어를 골라 주세요.", photoPick:"사진 찍기·고르기", camBtn:"📷 연속으로 찍기", fLevel:"표시:", fEasy:"A 쉬움", fShowDup:"이미 등록한 것도 보기", fSearch:"단어로 좁히기", fStar:"추천으로 되돌리기", fAll:"보이는 것 모두 선택", fNone:"모두 해제", fBan:"제외 모드", fNoneShown:"조건에 맞는 단어가 없어요", fInfo:(v,n)=>`표시 ${v} / ${n}개 (탭해서 선택. 제외 모드에서 탭하면 다음부터 안 나와요)`, fUnban:n=>`제외한 ${n}개 되돌리기`, pickMany:"🖼 여러 장 고르기", dropHint:"몇 장이든 OK. 찍은 순서대로 뒤에서 읽어요. PC는 끌어다 놓기·붙여넣기도 돼요.",
+  photoTitle:"사진으로 추가", photoHelp:"책이나 화면을 찍으면 기기 안에서 글자를 읽어요 (AI 서비스로 보내지 않아요). 읽힌 단어 중 외울 단어를 골라 주세요.", photoPick:"사진 찍기·고르기", camBtn:"📷 연속으로 찍기", presetTitle:"레벨별 세트", presetHelp:"공개된 레벨별 단어 목록을 한꺼번에 추가할 수 있어요. 뜻과 예문은 공부할 때 조금씩 가져와요.", diagBtn:"🧪 레벨 진단 (1분)",
+  presetNone:"이 언어의 세트는 아직 없어요.", presetAdd:"추가", presetAdded:"추가됨", presetLoading:"불러오는 중…", presetDone:(n,d,k)=>`${n}개를 「${d}」에 추가했어요${k ? ` (아는 단어 ${k}개는 제외)` : ""}. 매일 새 단어로 조금씩 나와요.`,
+  presetSrc:"출처", lastDiag:(lv,d)=>`지난 진단: ${lv} (${d})`, prepping:"이 단어의 뜻과 예문을 준비 중…",
+  diagTitle:"레벨 진단", diagHelp:"뜻을 아는 단어만 눌러 주세요. 없는 단어도 섞여 있으니 감으로 누르지 마세요.", diagJudge:"판정하기", diagCancel:"그만",
+  diagEst:lv=>`당신의 레벨: ${lv} 정도`, diagStart:"입문", diagRec:lv=>`추천: ${lv} 세트부터`, diagAll:"전 레벨 거의 OK! 상급 세트나 사진·내 단어로 넓혀 봐요", diagRecAdd:lv=>`${lv} 추가 (아는 단어 제외)`,
+  diagFake:"없는 단어에도 ○가 있어서 낮게 잡았어요.", diagAgain:"다시 하기", fLevel:"표시:", fEasy:"A 쉬움", fShowDup:"이미 등록한 것도 보기", fSearch:"단어로 좁히기", fStar:"추천으로 되돌리기", fAll:"보이는 것 모두 선택", fNone:"모두 해제", fBan:"제외 모드", fNoneShown:"조건에 맞는 단어가 없어요", fInfo:(v,n)=>`표시 ${v} / ${n}개 (탭해서 선택. 제외 모드에서 탭하면 다음부터 안 나와요)`, fUnban:n=>`제외한 ${n}개 되돌리기`, pickMany:"🖼 여러 장 고르기", dropHint:"몇 장이든 OK. 찍은 순서대로 뒤에서 읽어요. PC는 끌어다 놓기·붙여넣기도 돼요.",
   qTitle:(d,n)=>`읽는 중 ${d}/${n}장`, qClear:"사진 모두 지우기", qDone:"모두 읽었어요", camDone:"완료", camHint:"화면 아무 데나 탭하면 찍혀요. 마구 찍어도 OK (읽기는 뒤에서 진행돼요)", textFold:"읽은 문장 보기·고치기", qEmpty:"글자 없음", qErr:"실패",
   ocrLoading:"글자 인식 엔진 준비 중… (처음 한 번만 몇 초 걸려요)", ocrReading:n=>`읽는 중… ${n}%`, ocrFail:"글자를 읽지 못했어요. 밝은 곳에서 글자가 크게 나오게 찍어 보세요.", ocrText:"읽은 문장 (틀린 곳은 고칠 수 있어요)", ocrReparse:"이 문장에서 단어 다시 뽑기", ocrPickWords:"학습 우선순위 높은 순. ★는 추천(미리 선택됨 · 눌러서 빼기)", ocrScoring:"단어 우선순위 계산 중…", ocrLvUnknown:"희귀", ocrWhy:w=>`우선순위 ${Math.round((w.score||0)*100)}${w.rank ? ` · 빈도 ${w.rank}위` : ""} · 빼면 의미가 바뀌는 정도 ${Math.round((w.abl||0)*100)} · 연결성 ${Math.round((w.tr||0)*100)}${w.tf > 1 ? ` · 사진에 ${w.tf}번` : ""}`, ocrUseLine:"사진 속 문장을 예문으로 쓰기", ocrAdd:n=>`고른 ${n}개 추가`, ocrInDeck:"이미 있음", ocrNone:"단어를 찾지 못했어요.",
   impTitle:"다른 언어에서 가져오기", impHelp:"다른 언어로 외우고 있는 단어를 이 언어로 옮겨 추가해요. 같은 뜻의 단어끼리 연결돼서 카드에 함께 보여요.", impFrom:"가져올 언어", impAll:"전체 선택", impGo:"고른 단어 가져오기", impNoSource:"다른 언어 단어가 아직 없어요.", impWorking:(i,n)=>`번역 중 (${i}/${n})…`, impDone:(n,f)=>`${n}개 가져왔어요.${f ? " 번역 못 한 단어는 단어장에서 고칠 수 있어요." : ""}`, impPickSome:"가져올 단어를 골라 주세요.",
@@ -1284,6 +1310,7 @@ function renderStartInner(){
 }
 function startSession(){
   SES = buildSession(); if(!SES.queue.length){ SES = null; renderStart(); return; }
+  prefetchLazy([...new Set(SES.queue.map(it => it.id))]);
   saveSession();
   $("#sessionStart").classList.add("hidden"); $("#sessionBox").classList.remove("hidden"); nextItem();
 }
@@ -1299,6 +1326,8 @@ function nextItem(){
   if(!SES.queue.length) return finishSession();
   const it = SES.queue[0], c = S.cards[it.id];
   if(!c){ SES.queue.shift(); return nextItem(); }
+  if(c.lazy && !it.waited){ it.waited = 1; document.body.classList.add("focus"); $("#sessionBox").innerHTML = `<div class="stage">${say("load_run", esc(t().prepping))}</div>`;
+    Promise.race([fillLazy(c), sleep(7000)]).then(() => { if(SES && SES.queue[0] === it) nextItem(); }); return; }
   SES.state = { answered: false }; document.body.classList.add("focus"); renderItem(c, it.mode); centerBox($("#sessionBox"));
 }
 function saveSession(){
@@ -2249,7 +2278,7 @@ $("#uiBtn").onclick = () => {
 $("#langBtn").onclick = () => {
   const x = t(); if(SES){ toast(x.noLangSwitch); return; }
   const bg = openSheet(`<h2>${x.learnLangTitle}</h2><div>` + Object.keys(LANGS).filter(k => k !== S.meta.settings.ui || Object.values(S.cards).some(c => c.lang === k)).map(k => { const n = Object.values(S.cards).filter(c => (c.lang||"es") === k).length; return `<button class="opt" type="button" data-lang="${k}" aria-current="${S.meta.settings.lang === k}"><span class="flag">${FLAGS[k]}</span><span class="grow">${esc(x.langNames[k])}</span><span class="tiny muted">${n ? x.deckWords(n) : ""}</span>${S.meta.settings.lang === k ? " ✓" : ""}</button>`; }).join("") + `</div>`);
-  bg.querySelectorAll("[data-lang]").forEach(b => b.onclick = () => { closePop(); S.meta.settings.lang = b.dataset.lang; save(); fillLangs(); fillVoices(); closeEdit(); renderAll(); drawRain(); });
+  bg.querySelectorAll("[data-lang]").forEach(b => b.onclick = () => { closePop(); S.meta.settings.lang = b.dataset.lang; save(); fillLangs(); fillVoices(); closeEdit(); renderAll(); drawRain(); if(!$("#view-add").classList.contains("hidden")) renderPresets(); });
 };
 function fillLangs(){
   const x = t();
@@ -2271,7 +2300,7 @@ function showView(v){
   document.querySelectorAll(".view").forEach(s => s.classList.add("hidden"));
   $("#view-" + v).classList.remove("hidden");
   document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v ? "true" : "false"));
-  if(v === "list"){ renderDecks(); renderDeckFilter(); renderList(); } if(v === "how"){ renderHow(); renderSync(); } if(v === "add"){ fillDeckSelects(); fillImport(); }
+  if(v === "list"){ renderDecks(); renderDeckFilter(); renderList(); } if(v === "how"){ renderHow(); renderSync(); } if(v === "add"){ fillDeckSelects(); fillImport(); renderPresets(); }
   if(v === "today" && SES){ document.body.classList.add("focus"); centerBox($("#sessionBox")); }
   else { document.body.classList.remove("focus"); const first = $("#view-" + v + " .card"); if(first && first.getBoundingClientRect().top < 0 || v !== "today") window.scrollTo({ top: 0 }); }
 }
@@ -2805,6 +2834,86 @@ function pawStamp(){
     fx.onclick = () => { fx.remove(); res(); };   // タップで飛ばせる
   });
 }
+
+/* ════════ レベル別セット（公開リスト）とレベル診断 ════════ */
+let PRESET_IDX = null;
+async function presetIndex(){ if(PRESET_IDX) return PRESET_IDX; const r = await fetch("presets/index.json"); if(!r.ok) throw new Error("preset"); PRESET_IDX = await r.json(); return PRESET_IDX; }
+const lvLabel = (lv) => S.meta.settings.ui === "ko" && lv.labelKo ? lv.labelKo : lv.label;
+function presetDeckName(lang, lv){ return ({ es: "ELELex ", ja: "JLPT " , ko: "한국어 " })[lang] + lvLabel(lv); }
+async function renderPresets(){
+  const box = $("#presetBox"); if(!box) return; const x = t(), lang = S.meta.settings.lang;
+  box.innerHTML = `<p class="muted small">${esc(x.presetLoading)}</p>`;
+  let idx; try{ idx = await presetIndex(); }catch(e){ box.innerHTML = ""; $("#presetCard").classList.add("hidden"); return; }
+  const set = idx.sets[lang]; $("#presetCard").classList.toggle("hidden", !set); if(!set){ box.innerHTML = ""; return; }
+  const dg = (S.meta.diag || {})[lang];
+  box.innerHTML = `<div class="row" style="gap:8px;flex-wrap:wrap;align-items:center"><button class="btn primary" type="button" id="diagBtn">${esc(x.diagBtn)}</button>${dg ? `<span class="small muted">${esc(x.lastDiag(dg.est, dg.date.slice(5).replace("-", "/")))}</span>` : ""}</div>
+    <div id="diagBox"></div>
+    <div class="plist">${set.levels.map(lv => { const done = decks().some(d => d.preset === lang + "-" + lv.id); return `<div class="pitem${dg && dg.rec === lv.id ? " rec" : ""}"><b>${esc(lvLabel(lv))}</b><span>${lv.n.toLocaleString()}</span><button class="btn sm${done ? "" : " primary"}" type="button" data-pre="${lv.id}" ${done ? "disabled" : ""}>${done ? "✓" : esc(x.presetAdd)}</button></div>`; }).join("")}</div>
+    <p class="tiny muted">${esc(x.presetSrc)}: <a href="${set.url}" target="_blank" rel="noopener">${esc(set.src)}</a></p><p class="small" id="presetNote" aria-live="polite"></p>`;
+  box.querySelectorAll("[data-pre]").forEach(b => b.onclick = () => addPreset(lang, b.dataset.pre, b));
+  $("#diagBtn").onclick = () => startDiag(lang);
+}
+async function addPreset(lang, lvId, btn, skip){
+  const x = t(), idx = await presetIndex(), set = idx.sets[lang], lv = set.levels.find(l => l.id === lvId); if(!lv) return;
+  if(btn){ btn.disabled = true; btn.textContent = x.presetLoading; }
+  try{
+    const r = await fetch(`presets/${lang}-${lvId}.json`); const data = await r.json();
+    const name = presetDeckName(lang, lv); const d = addDeck(name); d.preset = lang + "-" + lvId;
+    const ui = S.meta.settings.ui, now = Date.now(), skipSet = new Set((skip || []).map(w => w.toLowerCase())); let n = 0, k = 0;
+    data.items.forEach((it, i) => {
+      const [w] = it; if(!w || findDup(w)) return; if(skipSet.has(w.toLowerCase())){ k++; return; }
+      let o = { word: w, deck: d.id, lang };
+      if(lang === "ja"){ o.reading = it[1] || ""; o.meaning = (it[1] ? it[1] + " · " : "") + (it[2] || ""); o.lazy = 1; }
+      else if(lang === "ko"){ o.meaning = ui === "ja" ? (it[1] || it[2] || "") : (it[2] || it[1] || ""); o.example = it[3] || ""; o.lazy = o.meaning ? 0 : 1; }
+      else { o.lazy = 1; }
+      const c = newCard(o); c.created = now + i; c.reading = o.reading || ""; if(o.lazy) c.lazy = 1; if(c.example) c.form = findForm(c.example, c.word); S.cards[c.id] = c; n++;
+    });
+    save(); renderAll(); const nt = $("#presetNote"); if(nt) nt.textContent = x.presetDone(n, name, k); toast(x.presetDone(n, name, k));
+  }catch(e){ if(btn){ btn.disabled = false; btn.textContent = x.presetAdd; } toast(x.ocrFail); }
+  renderPresets();
+}
+/* 勉強するときに、意味（表示言語）と例文を取りに行く */
+const LAZY = new Map();
+function fillLazy(c){
+  if(!c || !c.lazy) return Promise.resolve(); if(LAZY.has(c.id)) return LAZY.get(c.id);
+  const p = (async () => { try{
+    const r = await lookup(c.word); const cur = S.cards[c.id]; if(!cur) return;
+    if(r.meaning) cur.meaning = (cur.reading ? cur.reading + " · " : "") + r.meaning;
+    if(!cur.example && r.cands && r.cands.length){ const cd = r.cands[0]; cur.example = cd.text; cur.form = cd.form; cur.src = cd.id; cur.audio = cd.audio || null; try{ cur.exampleKo = await trOf(cd); }catch(e){} }
+    if(r.meaning || cur.meaning) delete cur.lazy; saveCard(cur);
+  }catch(e){} finally { LAZY.delete(c.id); } })();
+  LAZY.set(c.id, p); return p;
+}
+async function prefetchLazy(ids){ for(const id of ids){ const c = S.cards[id]; if(c && c.lazy){ await fillLazy(c); await sleep(300); } } }
+/* レベル診断: 各レベルから数語＋存在しない単語。わかる率を「うそ○」で補正（yes/no 語彙テスト） */
+async function startDiag(lang){
+  const x = t(), idx = await presetIndex(), dg = idx.diag[lang], set = idx.sets[lang]; if(!dg) return;
+  const per = set.levels.length >= 5 ? 6 : 9, pick = (a, n) => a.slice().sort(() => Math.random() - .5).slice(0, n);
+  const items = [];
+  set.levels.forEach(lv => pick(dg.levels[lv.id], per).forEach(w => items.push({ w: Array.isArray(w) ? w[0] : w, r: Array.isArray(w) ? w[1] : "", lv: lv.id })));
+  pick(dg.fake, 8).forEach(w => items.push({ w: Array.isArray(w) ? w[0] : w, r: "", fake: 1 }));
+  items.sort(() => Math.random() - .5);
+  const box = $("#diagBox"); const known = new Set();
+  box.innerHTML = `<div class="diag"><b>${esc(x.diagTitle)}</b><p class="small muted">${esc(x.diagHelp)}</p><div class="chips">${items.map((it, i) => `<button type="button" class="chiptog" data-di="${i}" aria-pressed="false">${esc(it.w)}${it.r && lang === "ja" ? `<span class="tiny muted"> ${esc(it.r)}</span>` : ""}</button>`).join("")}</div>
+    <div class="row" style="gap:8px"><button class="btn ghost" type="button" id="diagX">${esc(x.diagCancel)}</button><span class="grow"></span><button class="btn primary" type="button" id="diagGo">${esc(x.diagJudge)}</button></div></div>`;
+  box.querySelectorAll("[data-di]").forEach(b => b.onclick = () => { const i = +b.dataset.di; if(known.has(i)) known.delete(i); else known.add(i); b.setAttribute("aria-pressed", known.has(i)); });
+  $("#diagX").onclick = () => { box.innerHTML = ""; };
+  $("#diagGo").onclick = () => {
+    const fakes = items.filter(it => it.fake), fa = fakes.filter(it => known.has(items.indexOf(it))).length, f = fa / fakes.length;
+    const res = set.levels.map(lv => { const its = items.filter(it => it.lv === lv.id), h = its.filter(it => known.has(items.indexOf(it))).length / its.length; return { lv, h, adj: f >= 1 ? 0 : Math.max(0, (h - f) / (1 - f)) }; });
+    let est = null, rec = null; for(const r of res){ if(r.adj >= .7) est = r; else { rec = r; break; } }
+    const knownWords = items.filter((it, i) => known.has(i) && !it.fake).map(it => it.w);
+    S.meta.diag = S.meta.diag || {}; S.meta.diag[lang] = { date: today(), est: est ? lvLabel(est.lv) : x.diagStart, rec: rec ? rec.lv.id : null, adj: res.map(r => Math.round(r.adj * 100)) }; save();
+    box.innerHTML = `<div class="diag"><b class="dres">${esc(x.diagEst(est ? lvLabel(est.lv) : x.diagStart))}</b>
+      <div class="dbars">${res.map(r => `<div class="dbar${rec && r.lv.id === rec.lv.id ? " rec" : ""}"><span>${esc(lvLabel(r.lv))}</span><div><i style="width:${Math.round(r.adj * 100)}%"></i></div><em>${Math.round(r.adj * 100)}%</em></div>`).join("")}</div>
+      ${f >= .3 ? `<p class="small" style="color:var(--bad)">${esc(x.diagFake)}</p>` : ""}
+      <p>${rec ? esc(x.diagRec(lvLabel(rec.lv))) : esc(x.diagAll)}</p>
+      <div class="row" style="gap:8px;flex-wrap:wrap">${rec && !decks().some(d => d.preset === lang + "-" + rec.lv.id) ? `<button class="btn primary" type="button" id="diagAdd">${esc(x.diagRecAdd(lvLabel(rec.lv)))}</button>` : ""}<button class="btn ghost" type="button" id="diagRe">${esc(x.diagAgain)}</button></div></div>`;
+    const da = $("#diagAdd"); if(da) da.onclick = () => addPreset(lang, rec.lv.id, da, knownWords);
+    $("#diagRe").onclick = () => startDiag(lang);
+    box.querySelectorAll(".pitem").forEach(() => {}); document.querySelectorAll(".pitem").forEach((el, i) => el.classList.toggle("rec", rec && set.levels[i].id === rec.lv.id));
+  };
+}
 function petStar(ctx, x, y, r){ ctx.beginPath(); for(let i = 0; i < 8; i++){ const a = i * Math.PI / 4, rr = i % 2 ? r * .38 : r; ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } ctx.closePath(); ctx.fill(); }
 function petDrawItem(ctx, it, x, y, sz, rot){
   ctx.save(); ctx.translate(x, y); ctx.rotate(rot);
@@ -2815,7 +2924,7 @@ function petDrawItem(ctx, it, x, y, sz, rot){
   ctx.restore();
 }
 
-if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, pawStamp };
+if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, pawStamp, startSession };
 load(); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
