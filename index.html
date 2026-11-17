@@ -519,6 +519,22 @@ body.petopen{overflow:hidden}
 .chiptog.star{border-color:var(--accent);font-weight:700}
 .olv{margin-left:5px;font-size:.62rem;font-weight:700;padding:1px 5px;border-radius:999px;background:var(--field);color:var(--muted);vertical-align:1px}
 .olv-B{color:#2f8a5f} .olv-C{color:#b4572e} .olv-q{opacity:.6}
+
+.streak span.on{background:var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23fff'%3E%3Cpath d='M50 46c14 0 27 13 27 27 0 11-9 17-18 15-4-1-6-3-9-3s-5 2-9 3c-9 2-18-4-18-15 0-14 13-27 27-27z'/%3E%3Cellipse cx='22' cy='44' rx='9' ry='11'/%3E%3Cellipse cx='38' cy='26' rx='9.5' ry='12'/%3E%3Cellipse cx='62' cy='26' rx='9.5' ry='12'/%3E%3Cellipse cx='78' cy='44' rx='9' ry='11'/%3E%3C/g%3E%3C/svg%3E") center/68% no-repeat}
+.streak span.on.frz{background-color:#78bee6}
+#pawFx{position:fixed;inset:0;z-index:80;display:grid;place-items:center;overflow:hidden;cursor:pointer}
+#pawFx .pf-card{width:min(340px,88vw);padding:18px 16px 16px;border-radius:26px;background:#fbf8f2;box-shadow:0 20px 50px rgba(0,0,0,.25);color:#1d2b27}
+#pawFx .pf-head{display:flex;justify-content:space-between;align-items:baseline;margin:0 4px 12px} #pawFx .pf-head b{font-size:1.25rem;letter-spacing:.06em} #pawFx .pf-head span{font-size:.85rem;font-weight:700;color:#006945}
+#pawFx .pf-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+#pawFx .pf-grid b{font-size:.62rem;text-align:center;color:#8a9590;font-weight:600}
+#pawFx .pf-grid span{position:relative;aspect-ratio:1;border-radius:10px;background:#eef1ec;display:grid;place-items:center}
+#pawFx .pf-grid span em{position:absolute;left:4px;top:2px;font-size:.55rem;font-style:normal;color:#8a9590}
+#pawFx .pf-grid span svg{width:72%;height:72%;opacity:.85}
+#pawFx .pf-grid span.today{outline:2px solid #e8486a;outline-offset:1px;background:#fff}
+#pawFx .pf-grid span.frz{background:#dff1fb}
+#pawFx .pf-stamp{position:absolute;inset:8%;display:grid;place-items:center} #pawFx .pf-stamp svg{width:100%;height:100%;opacity:1}
+#pawFx .pf-paw{position:fixed;pointer-events:none;filter:drop-shadow(0 30px 40px rgba(0,0,0,.35));will-change:transform;transform:translateY(-200vh)}
+#pawFx .pf-paw svg{width:100%;height:100%}
 </style>
 </head>
 <body>
@@ -1277,7 +1293,7 @@ function settleItem(correct){
   saveSession(); updateStats(); nextItem();
 }
 function finishSession(){
-  const x = t();
+  const x = t(), firstToday = !S.meta.days[today()] || S.meta.days[today()] === "freeze";
   S.meta.days[today()] = true; delete S.meta.session;
   const keys = Object.keys(S.meta.days).sort(); if(keys.length > 400) keys.slice(0, keys.length-400).forEach(k => delete S.meta.days[k]);
   save();
@@ -1287,7 +1303,7 @@ function finishSession(){
   document.body.classList.remove("focus");
   const box = $("#sessionBox");
   box.innerHTML = `${heroHTML(x.finishTitle, "", 100)}${say(ng ? "st_happy" : "st_love", esc(ng ? x.nmFinishSome : x.nmFinishAll))}${petGrantHTML(PG)}<p>${x.finishSum(ok, ng)}</p><div class="list">${rows}</div><div class="row">${petCount() ? `<button class="btn primary" type="button" data-petopen>🍖 ${esc(pt().throwNow)}</button>` : ""}<span class="grow"></span><button class="btn${petCount() ? "" : " primary"}" id="backHome" type="button">${x.ok}</button></div>`;
-  bindPetOpen(box); if(PG) setTimeout(sfxFanfare, 200);
+  bindPetOpen(box); (firstToday ? pawStamp() : Promise.resolve()).then(() => { if(PG) sfxFanfare(); });
   paintHero(box);
   $("#backHome").onclick = () => { SES = null; document.body.classList.remove("focus"); box.classList.add("hidden"); $("#sessionStart").classList.remove("hidden"); renderAll(); };
 }
@@ -2601,6 +2617,50 @@ function petProjStep(st, q, dt){
   q.vy += 1400 * dt; q.x += q.vx * dt; q.y += q.vy * dt; q.sz = Math.max(14, q.sz - dt * (q.over ? 40 : 0));
   if(q.y > st.H + 60 || q.y < -80 || q.x < -80 || q.x > st.W + 80 || q.t > 2.6){ const p = petState(); p.inv[q.id] = (p.inv[q.id] || 0) + 1; petMsg(pt().miss, 1400); petTray(); return false; }
   return true; }
+
+/* ════════ 1日の学習を終えたら: 巨大な냥발が画面を覆って、今日の日付に肉球スタンプ ════════ */
+const PAW_SVG = (fill, pad, ink, sw) => `<svg viewBox="0 0 100 100" aria-hidden="true"><g stroke="${ink}" stroke-width="${sw}" stroke-linejoin="round">
+  <path d="M50 46c14 0 27 13 27 27 0 11-9 17-18 15-4-1-6-3-9-3s-5 2-9 3c-9 2-18-4-18-15 0-14 13-27 27-27z" fill="${fill}"/>
+  <ellipse cx="22" cy="44" rx="9" ry="11" transform="rotate(-25 22 44)" fill="${fill}"/><ellipse cx="38" cy="26" rx="9.5" ry="12" transform="rotate(-8 38 26)" fill="${fill}"/>
+  <ellipse cx="62" cy="26" rx="9.5" ry="12" transform="rotate(8 62 26)" fill="${fill}"/><ellipse cx="78" cy="44" rx="9" ry="11" transform="rotate(25 78 44)" fill="${fill}"/></g>
+  ${pad ? `<g fill="${pad}"><path d="M50 56c9 0 17 8 17 16 0 6-5 9-10 8-3-.6-4.5-2-7-2s-4 1.4-7 2c-5 1-10-2-10-8 0-8 8-16 17-16z"/><ellipse cx="22.5" cy="45" rx="4.6" ry="6" transform="rotate(-25 22.5 45)"/><ellipse cx="38" cy="27.5" rx="5" ry="6.4" transform="rotate(-8 38 27.5)"/><ellipse cx="62" cy="27.5" rx="5" ry="6.4" transform="rotate(8 62 27.5)"/><ellipse cx="77.5" cy="45" rx="4.6" ry="6" transform="rotate(25 77.5 45)"/></g>` : ""}</svg>`;
+function sfxStamp(){ if(!pa()) return; const t0 = PA.currentTime; pOsc("sine", 140, 40, t0, .35, .95); pNoise("lowpass", 900, 120, .8, t0, .22, .6); pOsc("sine", 520, 980, t0 + .08, .12, .22); pOsc("triangle", 1046, 1046, t0 + .2, .25, .16); }
+function pawStamp(){
+  return new Promise(res => {
+    if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches){ res(); return; }
+    const x = t(), d0 = today(), [Y, M] = d0.split("-").map(Number), first = new Date(Y, M - 1, 1), dow = first.getDay(), days = new Date(Y, M, 0).getDate();
+    const wk = (S.meta.settings.ui === "ko" ? "일월화수목금토" : "日月火水木金土").split("");
+    let cells = wk.map(w => `<b>${w}</b>`).join("") + "<i></i>".repeat(dow);
+    for(let dd = 1; dd <= days; dd++){ const key = `${Y}-${String(M).padStart(2, "0")}-${String(dd).padStart(2, "0")}`, v = S.meta.days[key];
+      cells += `<span class="${key === d0 ? "today" : ""}${v === "freeze" ? " frz" : v && key !== d0 ? " done" : ""}" data-d="${key}"><em>${dd}</em>${v && key !== d0 ? PAW_SVG("#006945", "", "none", 0) : ""}</span>`; }
+    const fx = document.createElement("div"); fx.id = "pawFx";
+    fx.innerHTML = `<div class="pf-card"><div class="pf-head"><b>${Y}.${String(M).padStart(2, "0")}</b><span>🔥 ${esc(pt().streakN(streak()))}</span></div><div class="pf-grid">${cells}</div></div><div class="pf-paw">${PAW_SVG("#f8f3ea", "#f2a1b4", "#1d2b27", 3.2)}</div>`;
+    document.body.appendChild(fx);
+    const cell = fx.querySelector(".today"), paw = fx.querySelector(".pf-paw"), card = fx.querySelector(".pf-card");
+    requestAnimationFrame(() => {
+      const r = cell.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, size = Math.max(innerWidth, innerHeight) * 1.5;
+      // 肉球の中心（SVG の 50,70 付近）が今日のマスに来るように
+      paw.style.width = paw.style.height = size + "px"; paw.style.left = (cx - size * .5) + "px"; paw.style.top = (cy - size * .7) + "px";
+      fx.animate([{ background: "rgba(10,30,24,0)" }, { background: "rgba(10,30,24,.45)" }], { duration: 250, fill: "forwards" });
+      card.animate([{ opacity: 0, transform: "translateY(18px) scale(.96)" }, { opacity: 1, transform: "none" }], { duration: 300, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" });
+      const down = paw.animate([{ transform: `translateY(-${size}px) rotate(-14deg) scale(1.15)` }, { transform: "translateY(-6%) rotate(-4deg) scale(1.05)", offset: .75 }, { transform: "translateY(0) rotate(0) scale(1)" }],
+        { duration: 520, delay: 380, easing: "cubic-bezier(.55,0,.9,.4)", fill: "forwards" });
+      down.onfinish = () => {
+        sfxStamp(); buzz([50, 30, 30]);
+        card.animate([{ translate: "0 0" }, { translate: "-6px 4px" }, { translate: "5px -3px" }, { translate: "-2px 1px" }, { translate: "0 0" }], { duration: 260 });
+        paw.animate([{ transform: "scale(1)" }, { transform: "scale(1.04,.95)" }, { transform: "scale(1)" }], { duration: 180 });
+        const st = document.createElement("div"); st.className = "pf-stamp"; st.innerHTML = PAW_SVG("#e8486a", "", "none", 0); cell.appendChild(st); cell.classList.add("done");
+        st.animate([{ transform: "scale(1.5)", opacity: .2 }, { transform: "scale(.92)", opacity: 1, offset: .6 }, { transform: "scale(1)", opacity: 1 }], { duration: 320, fill: "forwards" });
+        setTimeout(() => {
+          const up = paw.animate([{ transform: "translateY(0) rotate(0)" }, { transform: `translateY(-${size * 1.1}px) rotate(10deg)` }], { duration: 480, easing: "cubic-bezier(.3,0,.6,1)", fill: "forwards" });
+          up.onfinish = () => { cell.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 360, easing: "cubic-bezier(.3,1.6,.5,1)" });
+            setTimeout(() => { const out = fx.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 320, fill: "forwards" }); out.onfinish = () => { fx.remove(); res(); }; }, 1100); };
+        }, 260);
+      };
+    });
+    fx.onclick = () => { fx.remove(); res(); };   // タップで飛ばせる
+  });
+}
 function petStar(ctx, x, y, r){ ctx.beginPath(); for(let i = 0; i < 8; i++){ const a = i * Math.PI / 4, rr = i % 2 ? r * .38 : r; ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } ctx.closePath(); ctx.fill(); }
 function petDrawItem(ctx, it, x, y, sz, rot){
   ctx.save(); ctx.translate(x, y); ctx.rotate(rot);
@@ -2611,7 +2671,7 @@ function petDrawItem(ctx, it, x, y, sz, rot){
   ctx.restore();
 }
 
-if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET };
+if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, pawStamp };
 load(); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
