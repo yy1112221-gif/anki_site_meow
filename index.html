@@ -1697,15 +1697,15 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 端末間の同期（Supabase・同期コード方式） ════════ */
-const SB_URL = "";      // 例: https://xxxx.supabase.co
-const SB_KEY = "";      // anon public key（公開用のキー）
+const SB_URL = "https://cgupivfptuzqyadhqhiz.supabase.co";
+const SB_KEY = "sb_publishable_N-aZnP5Sdvuk5bjsNKE3mw_2dmnqgd2";   // 公開用のキー（ページに置いてよい種類）
 const syncReady = () => !!(SB_URL && SB_KEY);
 const CODE_ABC = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
 function newCode(){ const b = crypto.getRandomValues(new Uint8Array(8)); const c = [...b].map(v => CODE_ABC[v % 32]).join(""); return c.slice(0,4) + "-" + c.slice(4); }
 const normCode = c => String(c||"").toUpperCase().replace(/[^0-9A-Z]/g, "").replace(/O/g, "0").replace(/I/g, "1");
 async function codeId(code){ const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("focus-vocab:" + normCode(code))); return [...new Uint8Array(d)].map(b => b.toString(16).padStart(2, "0")).join(""); }
 async function sbRpc(fn, body, keepalive){
-  const r = await fetch(`${SB_URL}/rest/v1/rpc/${fn}`, { method: "POST", keepalive: !!keepalive, headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const r = await fetch(`${SB_URL}/rest/v1/rpc/${fn}`, { method: "POST", keepalive: !!keepalive, headers: { apikey: SB_KEY, "Content-Type": "application/json" }, body: JSON.stringify(body) });
   if(!r.ok) throw new Error("sync " + r.status);
   const tx = await r.text(); return tx ? JSON.parse(tx) : null;
 }
