@@ -92,16 +92,52 @@ def ex_score(s, term, lang):
     if DEF[lang].search(s): sc -= 2
     if not re.search(r"[.!?。！？다요]\s*$", s): sc -= 1.5
     return sc
+TATO = {"ko": "kor", "ja": "jpn", "en": "eng", "es": "spa"}
+def term_links(term, lang):
+    """그 슬랭으로 다시 검색해서 '본문'이 있는 기사 주소를 모음"""
+    try:
+        if lang == "ko": h = get(f"https://search.daum.net/search?w=news&q={urllib.parse.quote(term)}"); return list(dict.fromkeys(re.findall(r"https?://v\.daum\.net/v/\w+", h)))[:6]
+        if lang == "ja": h = get(f"https://news.yahoo.co.jp/search?p={urllib.parse.quote(term)}&ei=utf-8"); return list(dict.fromkeys(re.findall(r"https://news\.yahoo\.co\.jp/articles/\w+", h)))[:6]
+        q = f'"{term}" ' + ("slang" if lang == "en" else "significa")
+        return [u for _, u in m_bing_rss(q, lang)][:6]
+    except Exception: return []
+def m_bing_rss(q, lang):
+    h, g = HL[lang]; out = []
+    for txt, link in rss_items(get(f"https://www.bing.com/news/search?q={urllib.parse.quote(q)}&format=rss&setmkt={h}-{g}")):
+        out.append((txt, urllib.parse.parse_qs(urllib.parse.urlparse(link).query).get("url", [link])[0]))
+    return out
+def wiktionary_defs(term, lang):
+    try:
+        j = json.loads(get(f"https://en.wiktionary.org/api/rest_v1/page/definition/{urllib.parse.quote(term)}"))
+        out = []
+        for e in j.get(lang, []):
+            for d in e.get("definitions", [])[:3]:
+                t = strip(d.get("definition", "")); ex = [strip(x) for x in d.get("examples", []) if x]
+                if t: out.append((t, ex))
+        return out
+    except Exception: return []
+def tatoeba(term, lang):
+    try:
+        j = json.loads(get(f"https://tatoeba.org/eng/api_v0/search?from={TATO[lang]}&query={urllib.parse.quote('=' + term)}&orphans=no&unapproved=no&sort=relevance"))
+        return [r["text"] for r in j.get("results", [])][:5]
+    except Exception: return []
+END = {"ko": re.compile(r"(다|요|죠|까|네|어|아|지)[.!?…]?\s*$|[.!?]\s*$"), "ja": re.compile(r"[。！？]\s*$"), "en": re.compile(r"[.!?]\"?\s*$"), "es": re.compile(r"[.!?]\"?\s*$")}
+def good_sentence(x, lang):
+    if re.search(r"https?:|\||&nbsp;|</?[a-z]", x): return False
+    if lang in ("en", "es"): w = len(x.split()); return 5 <= w <= 28 and bool(END[lang].search(x))
+    return 10 <= len(x) <= 80 and bool(END[lang].search(x))
 def gather(term, lang, links, docs):
-    sents = []
-    for d, _ in docs:
-        if term in (d.lower() if lang in ("en", "es") else d): sents += [x.strip() for x in SENT[lang].split(d) if x.strip()]
-    for u in links[:6]: sents += article_sentences(u, lang); time.sleep(.5)
     key = (lambda s: term in s.lower()) if lang in ("en", "es") else (lambda s: term in s)
-    hit = list(dict.fromkeys(s for s in sents if key(s)))
-    defs = sorted([s for s in hit if DEF[lang].search(s) and len(s) < 220], key=len)[:2]
-    exs = sorted([s for s in hit if s not in defs], key=lambda s: -ex_score(s, term, lang))[:3]
-    return defs, [s for s in exs if ex_score(s, term, lang) > -9]
+    heads = {d for d, _ in docs}   # 뉴스 제목은 예문으로 안 씀
+    body = []
+    for u in list(dict.fromkeys(links + term_links(term, lang)))[:8]: body += article_sentences(u, lang); time.sleep(.4)
+    hit = [x for x in dict.fromkeys(body) if key(x) and not any(x in h for h in heads)]
+    wk = wiktionary_defs(term, lang); tt = [x for x in tatoeba(term, lang) if good_sentence(x, lang)]
+    defs = [d for d, _ in wk][:2] + sorted([x for x in hit if DEF[lang].search(x) and good_sentence(x, lang) and len(x) < 200], key=len)[:2]
+    wex = [x for _, exs in wk for x in exs if key(x) and good_sentence(x, lang)]
+    news = sorted([x for x in hit if good_sentence(x, lang) and x not in defs], key=lambda x: -ex_score(x, term, lang))
+    exs = tt[:2] + wex[:2] + [x for x in news if ex_score(x, term, lang) > -6][:3]   # 우선순위: Tatoeba(일반 문장) > 위키낱말사전 용례 > 뉴스 본문
+    return list(dict.fromkeys(defs))[:3], list(dict.fromkeys(exs))[:4]
 
 def main():
     report = {"time": datetime.datetime.utcnow().isoformat() + "Z", "probe": TARGET, "methods": {}}
@@ -126,7 +162,7 @@ def main():
             links = [u for d, u in alldocs if u and x["t"] in (d.lower() if lang in ("en", "es") else d)]
             try:
                 defs, exs = gather(x["t"], lang, links, alldocs)
-                x["def"] = list(dict.fromkeys(x["def"] + defs))[:3]; x["ex"] = list(dict.fromkeys(exs + x["ex"]))[:4]
+                x["def"] = list(dict.fromkeys(defs + [d for d in x["def"] if '<' not in d]))[:3]; x["ex"] = list(dict.fromkeys(exs + [e for e in x["ex"] if good_sentence(e, lang)]))[:4]
             except Exception as e: print("gather", x["t"], e)
         seen = {x["t"] for x in ranked}; keep = [v for k, v in old.items() if k not in seen and (v.get("ex") or v.get("def"))][:60]
         json.dump({"updated": report["time"], "lang": lang, "terms": ranked + keep}, open(os.path.join(OUT, f"{lang}.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
