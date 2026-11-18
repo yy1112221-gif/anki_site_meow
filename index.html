@@ -1831,7 +1831,7 @@ function renderItem(c, mode){
     const target = p ? p.answer : c.word;
     const promptHTML = p
       ? `<p class="sentence">${tokHTML(p.before)}<span class="blank">____</span>${tokHTML(p.after)}</p><p class="q-sub">${esc(c.exampleKo)}</p><p class="q-hint">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p>`
-      : `<div><div class="word" style="font-size:1.6rem">${esc(c.meaning || x.noMeaning)}</div><p class="q-hint">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p></div>`;
+      : `<div><div class="word" style="font-size:1.6rem">${esc((c.reading ? String(c.meaning || "").replace(/^[^·]*·\s*/, "") : c.meaning) || x.noMeaning)}</div><p class="q-hint">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p></div>`;
     return (hf ? askHandsFree : askTyped)(c, mode, promptHTML, target, isGuess);
   }
   if(mode === "meaning"){
@@ -1842,7 +1842,7 @@ function renderItem(c, mode){
   }
   if(mode === "recall"){
     const leech = (c.lapses || 0) >= 3, ch = Array.from(c.word);
-    const promptHTML = `<div><div class="word" style="font-size:1.6rem">${esc(c.meaning || x.noMeaning)}</div>${leech ? `<p class="q-hint">${esc(x.leechHint(ch[0], ch.length))}</p>` : ""}</div>`;
+    const promptHTML = `<div><div class="word" style="font-size:1.6rem">${esc((c.reading ? String(c.meaning || "").replace(/^[^·]*·\s*/, "") : c.meaning) || x.noMeaning)}</div>${leech ? `<p class="q-hint">${esc(x.leechHint(ch[0], ch.length))}</p>` : ""}</div>`;
     return (hf ? askHandsFree : askTyped)(c, mode, promptHTML, c.word, false);
   }
   if(mode === "write"){
