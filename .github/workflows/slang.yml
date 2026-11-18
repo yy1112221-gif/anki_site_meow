@@ -1,0 +1,15 @@
+name: slang-collector
+on:
+  schedule: [{ cron: "17 21 * * *" }]   # 매일 06:17 KST
+  workflow_dispatch: {}
+  push: { paths: ["tools/slang_collect.py", ".github/workflows/slang.yml"] }
+permissions: { contents: write }
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/slang_collect.py
+      - run: |
+          git config user.name "slang-bot"; git config user.email "slang-bot@users.noreply.github.com"
+          git add slang && (git diff --cached --quiet || (git commit -m "slang: daily update" && git push))
