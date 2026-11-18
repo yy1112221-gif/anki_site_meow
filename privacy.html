@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>개인정보처리방침 · 암기냥이</title>
+<style>
+body{max-width:720px;margin:0 auto;padding:28px 20px 60px;font:16px/1.75 "Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;color:#1d2b27;background:#f3f3f0}
+h1{font-size:1.6rem;margin:0 0 4px} h2{font-size:1.1rem;margin:28px 0 6px} .muted{color:#6b665c;font-size:.9rem}
+ul{padding-left:1.2em} a{color:#1f8a63} hr{border:0;border-top:1px solid #ddd8cc;margin:36px 0}
+@media (prefers-color-scheme: dark){ body{background:#121317;color:#e8e6df} .muted{color:#9a958b} a{color:#5fd3a4} hr{border-color:#2a2c33} }
+</style>
+</head>
+<body>
+<p><a href="./">← 암기냥이로 돌아가기</a></p>
+<h1>개인정보처리방침</h1>
+<p class="muted">시행일: 2026년 11월 19일</p>
+
+<p>암기냥이(이하 "서비스")는 회원가입 없이 쓰는 단어 암기 웹앱입니다. 서비스는 이름, 전화번호, 주소 같은 개인정보를 수집하지 않으며, 필요한 최소한의 정보만 아래와 같이 처리합니다.</p>
+
+<h2>1. 내 기기에 저장되는 정보</h2>
+<ul>
+<li>추가한 단어, 학습 기록, 설정, 냥이 간식 정보는 이용자의 브라우저(localStorage)에만 저장됩니다.</li>
+<li>브라우저 데이터를 지우면 함께 삭제됩니다. 서비스 운영자는 이 정보를 볼 수 없습니다.</li>
+</ul>
+
+<h2>2. 기기 간 동기화(선택)</h2>
+<ul>
+<li>'동기화 코드'를 직접 켠 경우에만, 학습 데이터(단어·학습 기록·설정)가 클라우드 데이터베이스(Supabase)에 저장됩니다.</li>
+<li>동기화 코드 자체는 저장하지 않고, 코드를 일방향으로 변환한 값으로만 데이터를 구분합니다. 코드를 아는 사람만 데이터를 불러올 수 있으니 코드를 다른 사람에게 알려 주지 마세요.</li>
+<li>설정에서 동기화를 끄면 더 이상 업로드되지 않습니다. 저장된 데이터 삭제를 원하면 아래 문의처로 요청해 주세요.</li>
+</ul>
+
+<h2>3. 외부 서비스로 보내는 정보</h2>
+<ul>
+<li><b>번역·예문 조회</b>: 단어 뜻이나 예문을 찾을 때, 그 단어(또는 문장)가 MyMemory 번역 API, Tatoeba, Wiktionary로 전송됩니다.</li>
+<li><b>이메일(선택)</b>: 설정에 이메일을 직접 입력한 경우, 번역 사용 한도를 늘리기 위해 그 이메일이 MyMemory 번역 API로 함께 전송됩니다. 입력하지 않으면 전송되지 않습니다.</li>
+<li><b>음성</b>: 발음 듣기는 기기에 내장된 음성 합성 기능을 사용합니다.</li>
+<li><b>호스팅·글꼴</b>: 서비스는 GitHub Pages에서 제공되고 Google Fonts 글꼴을 불러옵니다. 이 과정에서 각 업체가 일반적인 접속 기록(IP 주소 등)을 처리할 수 있습니다.</li>
+</ul>
+
+<h2>4. 쿠키·광고·분석</h2>
+<p>서비스는 광고를 표시하지 않으며, 광고·추적 목적의 쿠키나 분석 도구를 사용하지 않습니다. 추후 도입할 경우 이 문서를 먼저 고지합니다.</p>
+
+<h2>5. 결제(도입 시)</h2>
+<p>유료 상품이 도입되면 결제는 결제대행사(PG)를 통해 처리되며, 카드 정보 등 결제 정보는 서비스가 직접 저장하지 않습니다. 도입 시 이 문서에 구체적으로 추가합니다.</p>
+
+<h2>6. 만 14세 미만 이용자</h2>
+<p>서비스는 개인정보를 수집하지 않으므로 별도의 법정대리인 동의 절차가 없습니다. 동기화 기능도 이름·연락처 없이 동작합니다.</p>
+
+<h2>7. 문의</h2>
+<p>개인정보 관련 문의·삭제 요청: <span id="contact">(준비 중 — 곧 이메일 주소를 안내합니다)</span></p>
+
+<hr>
+<p class="muted">学習データは基本的にお使いのブラウザ内にのみ保存されます。同期コードを有効にした場合のみ、学習データがクラウド(Supabase)に保存されます。単語の意味や例文の検索時には、その単語がMyMemory・Tatoeba・Wiktionaryに送信されます。広告・追跡用のCookieは使用しません。</p>
+</body>
+</html>

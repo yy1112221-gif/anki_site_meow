@@ -1,13 +1,13 @@
 {
-  "name": "暗記して ミヤオウ · ANKI SITE MEOW",
-  "short_name": "ANKI MEOW",
-  "description": "単語を入れるだけで間隔反復の復習スケジュールを組む暗記アプリ",
+  "name": "암기냥이 — 진짜로 외우는 냥이",
+  "short_name": "암기냥이",
+  "description": "잊어버리기 직전에 다시 물어보는 단어 암기 앱 (JLPT·스페인어·한국어)",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#69a795",
   "theme_color": "#69a795",
-  "lang": "ja",
+  "lang": "ko",
   "icons": [
     {
       "src": "icon-192.png",
