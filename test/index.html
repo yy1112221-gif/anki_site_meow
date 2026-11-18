@@ -2751,14 +2751,14 @@ function petStart(){
   st.gl = jellyGL(gcv);
   const resize = () => { const r = cv.getBoundingClientRect(), dpr = Math.min(2.5, window.devicePixelRatio || 1); cv.width = r.width * dpr; cv.height = r.height * dpr; gcv.width = r.width * dpr; gcv.height = r.height * dpr; st.W = r.width; st.H = r.height; st.dpr = dpr;
     st.s = Math.min(st.W * .82 / 136, st.H * .36 / 70); st.cx = st.W / 2; st.by = st.H * .64;
-    st.TS = Math.max(3, Math.min(8, st.s * dpr * 1.05)); st.tex.width = Math.round((JX1 - JX0) * st.TS); st.tex.height = Math.round((JY1 - JY0) * st.TS); };
+    st.TS = Math.max(3, Math.min(5.5, st.s * dpr * .8)); st.tex.width = Math.round((JX1 - JX0) * st.TS); st.tex.height = Math.round((JY1 - JY0) * st.TS); };
   resize(); st.onResize = resize; window.addEventListener("resize", resize);
   st.toScr = (ux, uy) => ({ x: st.cx + (ux - 64) * st.s * st.bw, y: st.by + (uy - 120) * st.s * st.bh });
   // タッチ（指ごとに別々）: ほっぺ=つまんで引っぱる/寄せる（両手でも可） · おなか=つつく/なでる/一か所長押しでむぎゅっ
   st.pulls = []; st.hpid = null;
   const toU = e => { const r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top; return { px, py, ux: (px - st.cx) / (st.s * st.bw) + 64, uy: (py - st.by) / (st.s * st.bh) + 120 }; };
-  cv.onpointerdown = e => { pa(); const { px, py, ux, uy } = toU(e); if(!st.mctx.isPointInPath(st.upath, ux, uy) && !(ux > -2 && ux < 130 && uy > 52 && uy < 124)) return;
-    if((ux < 51 || ux > 77) && uy > 70 && uy < 104 && st.pulls.length < 2){ st.pulls.push({ pid: e.pointerId, x0: ux, y0: uy, ox: 0, oy: 0, on: false, side: ux < 64 ? -1 : 1, t0: performance.now() }); try{ cv.setPointerCapture(e.pointerId); }catch(_){} return; }
+  cv.onpointerdown = e => { pa(); const { px, py, ux, uy } = toU(e); st.mctx.lineWidth = 22; if(!st.mctx.isPointInPath(st.upath, ux, uy) && !st.mctx.isPointInStroke(st.upath, ux, uy) && !(ux > -10 && ux < 138 && uy > 44 && uy < 128)) return;
+    if((ux < 53 || ux > 75) && uy > 66 && uy < 106 && st.pulls.length < 2){ st.pulls.push({ pid: e.pointerId, x0: ux, y0: uy, ox: 0, oy: 0, on: false, side: ux < 64 ? -1 : 1, t0: performance.now() }); try{ cv.setPointerCapture(e.pointerId); }catch(_){} return; }
     if(st.holding) return;
     st.holding = true; st.hpid = e.pointerId; st.hold0 = st.still0 = performance.now(); st.hx = ux; st.hy = uy; st.ax = px; st.ay = py; st.rubbed = false; st.rvx = st.rvy = 0;
     try{ cv.setPointerCapture(e.pointerId); }catch(_){} };
@@ -2814,7 +2814,7 @@ function jellyStep(st, h){
     if(st.pin[k]){ vx[k] += (-KA * 4 * (dx[k] - tx * .3) + KS * (lx - n * dx[k]) * .5 - C * 2 * vx[k]) * h; vy[k] = 0; dy[k] = 0; continue; }
     vx[k] += (-ka * (dx[k] - tx) + KS * (lx - n * dx[k]) - C * vx[k]) * h;
     vy[k] += (-ka * (dy[k] - ty) + KS * (ly - n * dy[k]) - C * vy[k]) * h; }
-  for(let k = 0; k < N; k++){ dx[k] += vx[k] * h; dy[k] += vy[k] * h; if(!st.pin[k]){ const lim = 120 - st.ry[k]; if(dy[k] > lim){ dy[k] = lim; if(vy[k] > 0) vy[k] *= -.2; } } }
+  for(let k = 0; k < N; k++){ dx[k] += vx[k] * h; dy[k] += vy[k] * h; if(!st.pin[k]){ const lim = 120 - st.ry[k]; if(dy[k] > lim){ dy[k] = lim; if(vy[k] > 0) vy[k] *= -.2; } if(dy[k] < -20){ dy[k] = -20; if(vy[k] < 0) vy[k] *= .3; } } }
 }
 function petLoop(now){
   const st = PET; if(!st) return; let dt = Math.min(.05, (now - st.last) / 1000); st.last = now; st.t += dt;
@@ -2830,6 +2830,7 @@ function petLoop(now){
   st.flies = st.flies.filter(f => { f.t += dt / f.dur; if(f.t >= 1){ petImpact(f.it.F, f.hx, f.hy, f.it); return false; } return true; });
   st.parts = st.parts.filter(q => { q.life -= dt * 1.4; q.vy += 700 * dt; q.x += q.vx * dt; q.y += q.vy * dt; return q.life > 0 && q.y < st.H + 20; });
   st.texts = st.texts.filter(x => (x.t += dt * (x.big ? .9 : 1.2)) < 1);
+  if(st.whale) whaleStep(st, dt);
   st.hit = Math.max(0, st.hit - dt * 3.5); st.flap = Math.max(0, st.flap - dt * .9); st.shake = Math.max(0, st.shake - dt * 14);
   petDraw(); st.raf = requestAnimationFrame(petLoop);
 }
@@ -2879,11 +2880,11 @@ function drawCatTex(st){
   const fur = g.createRadialGradient(50, 74, 4, 64, 98, 74); fur.addColorStop(0, "#fffdf8"); fur.addColorStop(.55, "#f8f0e3"); fur.addColorStop(1, "#ecdfcb");
   g.fillStyle = fur; g.fill(body); ears.forEach(e => g.fill(e.P));
   g.globalCompositeOperation = "source-atop";
-  if(!st.tex3 || st.tex3.width !== W || st.tex3.height !== H){ st.tex3 = document.createElement("canvas"); st.tex3.width = W; st.tex3.height = H; st.t3 = st.tex3.getContext("2d"); }
-  arms.forEach(a => { const g3 = st.t3; g3.setTransform(1, 0, 0, 1, 0, 0); g3.clearRect(0, 0, W, H); g3.setTransform(...M);   // 落ち影: 根元に向かってすっと消える
+  const BW = 44, BH = 40; if(!st.tex3 || st.tex3.width !== Math.round(BW * TS)){ st.tex3 = document.createElement("canvas"); st.tex3.width = Math.round(BW * TS); st.tex3.height = Math.round(BH * TS); st.t3 = st.tex3.getContext("2d"); }
+  arms.forEach(a => { const g3 = st.t3, ox = a.bx - BW / 2, oy = a.by - 28; g3.setTransform(1, 0, 0, 1, 0, 0); g3.clearRect(0, 0, st.tex3.width, st.tex3.height); g3.setTransform(TS, 0, 0, TS, -ox * TS, -oy * TS);   // 落ち影（小さい下書きで作る）: 根元に向かってすっと消える
     g3.shadowColor = "rgba(105,75,45,.42)"; g3.shadowBlur = 3.2 * TS; g3.shadowOffsetY = 1.8 * TS; g3.shadowOffsetX = -a.dir * .4 * TS; g3.fillStyle = "#000"; g3.fill(a.P); g3.shadowColor = "transparent";
-    g3.globalCompositeOperation = "destination-in"; const mg = g3.createLinearGradient(a.t0[0], a.t0[1], a.t1[0], a.t1[1]); mg.addColorStop(0, "rgba(0,0,0,0)"); mg.addColorStop(.55, "rgba(0,0,0,1)"); mg.addColorStop(1, "rgba(0,0,0,1)"); g3.fillStyle = mg; g3.fillRect(a.bx - 40, a.by - 40, 80, 80); g3.globalCompositeOperation = "source-over";
-    g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(st.tex3, 0, 0); g.restore(); g.fillStyle = fur; g.fill(a.P);
+    g3.globalCompositeOperation = "destination-in"; const mg = g3.createLinearGradient(a.t0[0], a.t0[1], a.t1[0], a.t1[1]); mg.addColorStop(0, "rgba(0,0,0,0)"); mg.addColorStop(.55, "rgba(0,0,0,1)"); mg.addColorStop(1, "rgba(0,0,0,1)"); g3.fillStyle = mg; g3.fillRect(ox, oy, BW, BH); g3.globalCompositeOperation = "source-over";
+    g.drawImage(st.tex3, ox, oy, BW, BH); g.fillStyle = fur; g.fill(a.P);
     g.save(); g.clip(a.P); const rg = g.createLinearGradient(a.t0[0], a.t0[1], a.t1[0], a.t1[1]); rg.addColorStop(0, "rgba(140,105,75,0)"); rg.addColorStop(.45, "rgba(140,105,75,.10)"); rg.addColorStop(1, "rgba(140,105,75,.30)");
     g.strokeStyle = rg; g.lineWidth = 4; g.stroke(a.side); g.restore(); });
   const bt = g.createLinearGradient(0, 98, 0, 121); bt.addColorStop(0, "rgba(150,118,84,0)"); bt.addColorStop(1, "rgba(150,118,84,.26)"); g.fillStyle = bt; g.fillRect(-20, 90, 170, 40);
@@ -2926,6 +2927,7 @@ function petDraw(){
     let my = 0, c = 0; for(let k = 0; k < st.N; k++) if(st.ry[k] < 80){ my += st.dy[k]; c++; } my /= Math.max(1, c);
     const sq = Math.max(-.4, Math.min(.4, my / 50)); ctx.save(); ctx.translate(st.cx + shx, st.by + shy); ctx.scale(st.bw * (1 + sq * .6), st.bh * (1 - sq)); ctx.translate(-st.cx, -st.by);
     ctx.drawImage(st.tex, st.cx + (JX0 - 64) * s, st.by + (JY0 - 120) * s, (JX1 - JX0) * s, (JY1 - JY0) * s); ctx.restore(); }
+  if(st.whale) whaleDraw(st, ctx);
   // 狙いの輪（つかんでいる間・飛んでいる間）
   if(st.grab || st.proj.length){ const c = st.toScr(64, 98), R = petRingR(st) * st.s * st.bw, R0 = 30 * st.s * st.bw;
     ctx.lineWidth = 3; ctx.strokeStyle = "rgba(255,255,255,.8)"; ctx.beginPath(); ctx.ellipse(c.x, c.y, R0, R0 * .62, 0, 0, Math.PI * 2); ctx.stroke();
@@ -2956,8 +2958,33 @@ function petThrow(id, fromEl){
   sfxWhoosh(); const b = fromEl.querySelector("i"); if(b) b.textContent = p.inv[id] || 0; if(!p.inv[id]) setTimeout(petTray, 60);
   return true;
 }
+/* 🐋 이스터에그: 하늘에서 거대한 그림자 → 초거대 고래가 덮침 → 첨벙 */
+const WH_SH = 1.05, WH_FALL = .42;
+function whaleSil(st, sz){ if(st.whSil) return st.whSil; const c = document.createElement("canvas"); c.width = c.height = sz; const g = c.getContext("2d");
+  petDrawItem(g, PET_IT.whale, sz / 2, sz / 2, sz * .82, 0); g.globalCompositeOperation = "source-in"; g.fillStyle = "#0b1d2a"; g.fillRect(0, 0, sz, sz); return (st.whSil = c); }
+function whaleStep(st, dt){ const w = st.whale; w.t += dt;
+  if(w.t < WH_SH && Math.random() < dt * 30) buzz(6);
+  if(!w.slam && w.t >= WH_SH + WH_FALL){ w.slam = true; st.shake = 26;
+    petImpact(Math.min(3.6, w.F * 1.3), 64, 90, w.it, (w.mul || 1) * 3, (w.labels || []).concat([S.meta.settings.ui === "ko" ? "🐋 첨벙!!" : "🐋 ドッボーン!!"]));
+    sfxPoyon(1); setTimeout(() => sfxPoyon(.7), 120); buzz([80, 40, 120, 40, 60]);
+    const c = st.toScr(64, 112); for(let i = 0; i < 70; i++){ const a = -Math.PI * Math.random(), sp = 250 + Math.random() * 650; w.drops.push({ x: c.x + (Math.random() - .5) * st.W * .8, y: c.y, vx: Math.cos(a) * sp * .8, vy: Math.sin(a) * sp, r: 3 + Math.random() * 9, life: 1 }); } }
+  w.drops.forEach(d => { d.vy += 1300 * dt; d.x += d.vx * dt; d.y += d.vy * dt; d.life -= dt * .7; }); w.drops = w.drops.filter(d => d.life > 0 && d.y < st.H + 40);
+  if(w.t > WH_SH + WH_FALL + 1.6 && !w.drops.length) st.whale = null; }
+function whaleDraw(st, ctx){ const w = st.whale, W = st.W, H = st.H, t = w.t, c = st.toScr(64, 95), big = Math.max(W, H) * 1.25;
+  const sil = whaleSil(st, 512);
+  if(t < WH_SH + WH_FALL){   // 1) 하늘에서 다가오는 그림자: 화면이 어두워지고 그림자가 점점 커짐
+    const k = Math.min(1, t / WH_SH); ctx.fillStyle = `rgba(5,15,25,${.38 * k})`; ctx.fillRect(0, 0, W, H);
+    const sz = big * (.25 + .55 * k * k); ctx.globalAlpha = .2 + .45 * k; ctx.save(); ctx.translate(c.x + Math.sin(t * 3) * 8, c.y - 20); ctx.rotate(-.12); ctx.drawImage(sil, -sz / 2, -sz / 2, sz, sz); ctx.restore(); ctx.globalAlpha = 1;
+    if(t > WH_SH){ const f = (t - WH_SH) / WH_FALL, e = f * f, sz2 = big * 1.15, y = -sz2 * .6 + (c.y + sz2 * .05 + sz2 * .6) * e;   // 2) 초거대 고래 낙하
+      petDrawItem(ctx, PET_IT.whale, c.x, y, sz2, -.35 + .25 * e); } }
+  else { const u = t - WH_SH - WH_FALL;   // 3) 첨벙: 번쩍 + 물기둥 + 고래가 가라앉으며 사라짐
+    if(u < .25){ ctx.fillStyle = `rgba(220,245,255,${.85 * (1 - u / .25)})`; ctx.fillRect(0, 0, W, H); }
+    if(u < 1.1){ const sz2 = big * 1.15, v = Math.max(0, u - .18); ctx.globalAlpha = Math.max(0, 1 - v * 1.3); petDrawItem(ctx, PET_IT.whale, c.x, c.y + sz2 * .05 + v * v * H * 1.1, sz2 * (1 - u * .15), -.1); ctx.globalAlpha = 1; }
+    const rg = Math.min(1, u / 1.2); ctx.strokeStyle = `rgba(200,240,255,${.8 * (1 - rg)})`; ctx.lineWidth = 10 * (1 - rg) + 2; ctx.beginPath(); ctx.ellipse(c.x, st.toScr(64, 120).y, W * .15 + W * .9 * rg, (W * .15 + W * .9 * rg) * .22, 0, 0, Math.PI * 2); ctx.stroke(); }
+  w.drops.forEach(d => { ctx.globalAlpha = Math.max(0, Math.min(1, d.life * 1.4)); ctx.fillStyle = "#bfeaff"; ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "rgba(255,255,255,.8)"; ctx.beginPath(); ctx.arc(d.x - d.r * .3, d.y - d.r * .3, d.r * .35, 0, Math.PI * 2); ctx.fill(); }); ctx.globalAlpha = 1; }
 function petImpact(F, hx, hy, it, mul, labels){
   const st = PET, now = performance.now();
+  if(it && it.id === "whale" && !it._egg && !st.whale){ st.whale = { t: 0, F, mul, labels, it: Object.assign({}, it, { _egg: 1 }), slam: false, drops: [] }; sfxWhoosh(); buzz(20); return; }
   st.combo = it && now - st.lastHit < 750 ? st.combo + 1 : it ? 1 : st.combo; if(it) st.lastHit = now;
   jellyHit(st, F, hx, hy); st.hit = 1; st.flap = 1; st.shake = Math.max(st.shake, F > 1.4 ? F * 3 : F * .8);
   const c = st.toScr(hx, hy), n = Math.round(6 + F * 8);
@@ -3267,7 +3294,7 @@ function petDrawItem(ctx, it, x, y, sz, rot){
   ctx.restore();
 }
 
-if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, openPet, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 load(); slimPresets(); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
