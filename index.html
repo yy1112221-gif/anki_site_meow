@@ -666,12 +666,7 @@ h1 .logo{display:flex;flex-direction:column;align-items:flex-start;gap:0;letter-
 .logo .logo-s{font-size:.72rem;font-weight:700;letter-spacing:.22em;color:var(--muted);text-transform:none;margin:0 0 2px 2px}
 .logo .logo-b{display:inline-flex;align-items:center;font-size:2.15rem;font-weight:900;letter-spacing:.01em;line-height:1;color:var(--ink);font-family:"Arial Rounded MT Bold","SF Pro Rounded",ui-rounded,var(--display)}
 .logo .lo2{width:.98em;height:.98em;margin:0 .02em;transform:translateY(-.07em);color:var(--ink)} .logo .lx{width:.5em;height:.92em;margin-left:-.02em;color:var(--ink);transform:translateY(-.02em)}
-.catbar{position:relative;height:30px;min-width:120px}
-.catbar .cb-body{position:absolute;left:0;bottom:0;height:13px;width:calc((100% - 74px) * var(--p) / 100 + 26px);background:linear-gradient(#fbf6ec,#efe4d2);border:1.7px solid #2a221c;border-right:0;border-radius:9px 0 0 9px;transition:width .6s cubic-bezier(.3,1.4,.5,1)}
-.catbar .cb-head{position:absolute;bottom:0;left:calc((100% - 74px) * var(--p) / 100 + 6px);width:40px;height:30px;transition:left .6s cubic-bezier(.3,1.4,.5,1);transform-origin:50% 100%;animation:cbChomp .55s ease-in-out infinite}
-@keyframes cbChomp{0%,100%{transform:scale(1,1)}50%{transform:scale(1.04,.95)}}
-.catbar .cb-churu{position:absolute;top:17.5px;right:0;height:9px;left:calc((100% - 74px) * var(--p) / 100 + 42px);transition:left .6s cubic-bezier(.3,1.4,.5,1);background:linear-gradient(90deg,#f2b98f 0 5px,#fff 5px);border:1.4px solid #e46b8a;border-left:0;border-radius:0 6px 6px 0;overflow:hidden;min-width:0}
-.catbar .cb-churu b{position:absolute;left:8px;right:6px;top:2px;height:2px;background:repeating-linear-gradient(90deg,#f6b7c8 0 6px,transparent 6px 9px);opacity:.9}
+.catbar{position:relative;height:44px;min-width:120px;margin:-7px 0} .catbar .cb-cv{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
 .poster .catbar{margin-top:14px}
 </style>
 </head>
@@ -895,7 +890,8 @@ ja: {
   nextReview:(d,n)=>`次の復習：${d}（${n}日後）`, nextNone:"新しい単語を追加するとすぐ学習に入ります。",
   streak:n=>`連続学習 ${n}日`, todayTitle:"今日の学習", todayCounts:(a,b)=>`復習 <b>${a}</b>枚 · 新しい単語 <b>${b}</b>語`,
   todayHint:n=>`最初に間違えたカードは正解するまで繰り返し出ます。連続学習 ${n}日。`, start:"はじめる",
-  modes:{ scriptNew:"文字を覚える", script:"文字を読む", study:"まず当ててみる", cloze:"穴埋め", recall:"意味から書く", write:"作文", speak:"スピーキング" },
+  meanPh:"意味を日本語で", meanSame:"合ってた（意味は同じ）", meanDiff:"違った", meanMeh:"答えはこれだ。…貴様の答え、意味は同じか？",
+  modes:{ meaning:"意味を答える", scriptNew:"文字を覚える", script:"文字を読む", study:"まず当ててみる", cloze:"穴埋め", recall:"意味から書く", write:"作文", speak:"スピーキング" },
   left:n=>`残り${n}枚`, listen:"発音を聞く", listenEx:"例文を聞く", listenAgain:"もう一度聞く", listenMine:"自分の文を聞く",
   noExample:"例文がありません。単語帳で追加すると穴埋め問題が出ます。", gotIt:"覚えた、次へ",
   setSign:"看板ねこが通る間隔（ペット画面）", signOff:"出さない", sign30:"30秒ごと", sign60:"1分ごと", sign180:"3分ごと", sign600:"10分ごと",
@@ -916,7 +912,7 @@ ja: {
   qTitle:(d,n)=>`読み取り ${d}/${n}枚`, qClear:"写真をすべて消す", qDone:"ぜんぶ読み取りました", camDone:"完了", camHint:"画面のどこをタップしても撮れます。どんどん撮ってOK（読み取りは裏で進みます）", textFold:"読み取った文を見る・直す", qEmpty:"文字なし", qErr:"失敗",
   ocrLoading:"文字認識エンジンを準備中…（初回だけ数秒かかります）", ocrReading:n=>`読み取り中… ${n}%`, ocrFail:"読み取れませんでした。明るい場所で、文字が大きく写るように撮ってみてください。", ocrText:"読み取った文（間違いは直せます）", ocrReparse:"この文から単語を拾い直す", ocrPickWords:"学習優先度の高い順。★はおすすめ（選択ずみ・タップで外せます）", ocrScoring:"単語の優先度を計算中…", ocrLvUnknown:"珍", ocrWhy:w=>`優先度 ${Math.round((w.score||0)*100)}${w.rank ? ` · 頻度 ${w.rank}位` : ""} · 抜くと意味が変わる度 ${Math.round((w.abl||0)*100)} · つながり ${Math.round((w.tr||0)*100)}${w.tf > 1 ? ` · 写真に${w.tf}回` : ""}`, ocrUseLine:"写真の文を例文にする", ocrAdd:n=>`選んだ${n}語を追加`, ocrInDeck:"登録済み", ocrNone:"単語が見つかりませんでした。",
   impTitle:"ほかの言語から取り込む", impHelp:"別の言語で覚えている単語を、この言語に訳して追加します。同じ意味の単語どうしがつながり、カードに並んで表示されます。", impFrom:"取り込み元", impAll:"すべて選択", impGo:"選んだ単語を取り込む", impNoSource:"ほかの言語の単語がまだありません。", impWorking:(i,n)=>`訳しています（${i}/${n}）…`, impDone:(n,f)=>`${n}語を取り込みました。${f ? "訳せなかった単語は単語帳で直せます。" : ""}`, impPickSome:"取り込む単語を選んでください。",
-  nmAsk:{ scriptNew:l=>"新たなる文字だ…形と音、共に刻め", script:l=>"この文字…読んでみろ", study:l=>"初めて見る単語か…勘でいい、書け。迷いは敗北だ", cloze:l=>"空白…埋めてみせろ", recall:l=>`この意味…${l}で言ってみろ`, write:l=>"この単語で一文…創ってみせろ", speak:l=>"声に出せ。…聞いているぞ" },
+  nmAsk:{ meaning:l=>"この単語…意味は何だ？ 己の言葉で答えろ", scriptNew:l=>"新たなる文字だ…形と音、共に刻め", script:l=>"この文字…読んでみろ", study:l=>"初めて見る単語か…勘でいい、書け。迷いは敗北だ", cloze:l=>"空白…埋めてみせろ", recall:l=>`この意味…${l}で言ってみろ`, write:l=>"この単語で一文…創ってみせろ", speak:l=>"声に出せ。…聞いているぞ" },
   nmToday:(a,b)=>`今日は復習${a}枚、新しい単語${b}つ。…覚悟はいいか？`, nmEmpty:"…まだ単語がないようだな。覚えたい単語を持ってこい", nmNone:"今日やることはない。我は…少し目を閉じる", nmDone:"今日もよく耐えた…また明日来るがいい", nmResume:"戻ったか。さっきの続きから始めろ",
   nmFinishAll:"全て一発で…だと？ …認めよう。貴様は強い", nmFinishSome:"ご苦労だった。間違えた奴らは…明日また始末する", resumeTitle:"途中から再開できます", resumeBody:(n,d)=>`前回の続きです。終わった問題 ${d}・残り ${n}問。答えた分はすべて保存されています。`, resume:"続きから", restart:"最初からやり直す", guessLead:"初めての単語です。答えを見る前に、まず推測して書いてみましょう。", copyPrompt:"正解を1回書いてから次へ進みましょう。", copyPh:"正解を書き写す", copyAgain:"もう一度だ。正解をそのまま書け", copyOk:"よし。書けたな", skipCopy:"入力せずに次へ", hfOn:"入力なし ON", hfOff:"入力なし", hfHelp:"歩きながら・電車で：書かずに、答えを聞いて自己採点", remembered:"覚えてた", forgot:"忘れてた", setHf:"入力なしモード（答えを聞いて自己採点）", slow:"ゆっくり", popDetail:"詳細を見る", popAdd:"単語帳に追加", popInDeck:"単語帳にあり", popNoMeaning:"意味を取得できませんでした", popDict:"辞書で調べる", popExamples:"例文", popLoading:"例文を探しています…", popNoEx:"ほかの例文は見つかりませんでした。", popAdded:w=>`「${w}」を単語帳に追加しました。`, popClose:"閉じる", popHint:"文中の単語をタップすると意味と発音が見られます。", voice:"読み上げの声", voiceAuto:"自動（いちばん自然な声）", rate:"読み上げの速さ", preview:"試しに聞く", voiceTip:"iPhoneは「設定 › アクセシビリティ › 読み上げコンテンツ › 声」で「拡張」や「プレミアム」の声をダウンロードすると、ずっと聞き取りやすくなります。ネイティブ録音がある例文は録音を優先して再生します。", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"空欄に入る単語はどれ？ 初めてでもOK、まず推測してみましょう。", guessMCm:(m,l)=>`「${m}」は${l}でどれ？ まず推測してみましょう。`, guessType:"推測して入力（間違えて大丈夫）", guessBtn:"これだと思う", guessRight:"当てたか…やるな", guessWrong:"答えはこれだ。先に悩んだ分、すでに深く刻まれている", guessSkip:"見当もつかない",
   hint:(m,c)=>`ヒント：${m} · 「${c}」で始まる`, recallQ:l=>`この意味の${l}の単語は？`, noMeaning:"（意味なし）",
@@ -978,7 +974,8 @@ ko: {
   nextReview:(d,n)=>`다음 복습: ${d} (${n}일 뒤)`, nextNone:"새 단어를 추가하면 바로 학습에 들어갑니다.",
   streak:n=>`연속 학습 ${n}일`, todayTitle:"오늘의 학습", todayCounts:(a,b)=>`복습 <b>${a}</b>장 · 새 단어 <b>${b}</b>개`,
   todayHint:n=>`처음 틀린 카드는 맞힐 때까지 다시 나옵니다. 연속 학습 ${n}일.`, start:"시작하기",
-  modes:{ scriptNew:"글자 외우기", script:"글자 읽기", study:"먼저 맞혀보기", cloze:"빈칸 채우기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
+  meanPh:"뜻을 한국어로", meanSame:"맞았어 (뜻이 같아)", meanDiff:"틀렸어", meanMeh:"정답은 이것. …네 답, 뜻이 같나?",
+  modes:{ meaning:"뜻 말하기", scriptNew:"글자 외우기", script:"글자 읽기", study:"먼저 맞혀보기", cloze:"빈칸 채우기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
   left:n=>`남은 ${n}장`, listen:"발음 듣기", listenEx:"예문 듣기", listenAgain:"다시 듣기", listenMine:"내 문장 듣기",
   noExample:"예문이 없어요. 단어장에서 넣으면 빈칸 문제가 생깁니다.", gotIt:"외웠어요, 다음",
   setSign:"팻말 냥이 지나가는 간격 (펫 화면)", signOff:"안 나옴", sign30:"30초마다", sign60:"1분마다", sign180:"3분마다", sign600:"10분마다",
@@ -999,7 +996,7 @@ ko: {
   qTitle:(d,n)=>`읽는 중 ${d}/${n}장`, qClear:"사진 모두 지우기", qDone:"모두 읽었어요", camDone:"완료", camHint:"화면 아무 데나 탭하면 찍혀요. 마구 찍어도 OK (읽기는 뒤에서 진행돼요)", textFold:"읽은 문장 보기·고치기", qEmpty:"글자 없음", qErr:"실패",
   ocrLoading:"글자 인식 엔진 준비 중… (처음 한 번만 몇 초 걸려요)", ocrReading:n=>`읽는 중… ${n}%`, ocrFail:"글자를 읽지 못했어요. 밝은 곳에서 글자가 크게 나오게 찍어 보세요.", ocrText:"읽은 문장 (틀린 곳은 고칠 수 있어요)", ocrReparse:"이 문장에서 단어 다시 뽑기", ocrPickWords:"학습 우선순위 높은 순. ★는 추천(미리 선택됨 · 눌러서 빼기)", ocrScoring:"단어 우선순위 계산 중…", ocrLvUnknown:"희귀", ocrWhy:w=>`우선순위 ${Math.round((w.score||0)*100)}${w.rank ? ` · 빈도 ${w.rank}위` : ""} · 빼면 의미가 바뀌는 정도 ${Math.round((w.abl||0)*100)} · 연결성 ${Math.round((w.tr||0)*100)}${w.tf > 1 ? ` · 사진에 ${w.tf}번` : ""}`, ocrUseLine:"사진 속 문장을 예문으로 쓰기", ocrAdd:n=>`고른 ${n}개 추가`, ocrInDeck:"이미 있음", ocrNone:"단어를 찾지 못했어요.",
   impTitle:"다른 언어에서 가져오기", impHelp:"다른 언어로 외우고 있는 단어를 이 언어로 옮겨 추가해요. 같은 뜻의 단어끼리 연결돼서 카드에 함께 보여요.", impFrom:"가져올 언어", impAll:"전체 선택", impGo:"고른 단어 가져오기", impNoSource:"다른 언어 단어가 아직 없어요.", impWorking:(i,n)=>`번역 중 (${i}/${n})…`, impDone:(n,f)=>`${n}개 가져왔어요.${f ? " 번역 못 한 단어는 단어장에서 고칠 수 있어요." : ""}`, impPickSome:"가져올 단어를 골라 주세요.",
-  nmAsk:{ scriptNew:l=>"…새로운 글자다. 형태와 소리, 함께 새겨라", script:l=>"이 글자… 읽어 봐라", study:l=>"처음 보는 단어군. 감으로라도 써라. 망설임은 패배다", cloze:l=>"빈칸… 채워 봐라", recall:l=>`이 뜻을… ${l}로 말해 봐라`, write:l=>"이 단어로 문장 하나. 만들어라", speak:l=>"소리 내어 말해라. …듣고 있다" },
+  nmAsk:{ meaning:l=>"이 단어… 무슨 뜻이지? 네 말로 답해라", scriptNew:l=>"…새로운 글자다. 형태와 소리, 함께 새겨라", script:l=>"이 글자… 읽어 봐라", study:l=>"처음 보는 단어군. 감으로라도 써라. 망설임은 패배다", cloze:l=>"빈칸… 채워 봐라", recall:l=>`이 뜻을… ${l}로 말해 봐라`, write:l=>"이 단어로 문장 하나. 만들어라", speak:l=>"소리 내어 말해라. …듣고 있다" },
   nmToday:(a,b)=>`오늘은 복습 ${a}장, 새 단어 ${b}개. …각오는 됐나?`, nmEmpty:"…아직 단어가 없군. 외울 단어를 가져와라", nmNone:"오늘 할 일은 없다. 나는… 잠시 눈을 감겠다", nmDone:"오늘도 버텼군. …내일 다시 오너라", nmResume:"돌아왔군. 아까 멈춘 곳에서 이어가라",
   nmFinishAll:"전부 단번에…? …인정하지. 넌 강하다", nmFinishSome:"수고했다. 틀린 놈들은… 내일 다시 처리한다", resumeTitle:"이어서 할 수 있어요", resumeBody:(n,d)=>`지난번에 하던 거예요. 끝낸 문제 ${d}개 · 남은 문제 ${n}개. 답한 건 모두 저장돼 있어요.`, resume:"이어서 하기", restart:"처음부터 다시", guessLead:"처음 보는 단어예요. 답을 보기 전에 먼저 짐작해서 써보세요.", copyPrompt:"정답을 한 번 따라 쓰고 넘어가요.", copyPh:"정답 따라 쓰기", copyAgain:"다시. 정답을 그대로 써라", copyOk:"좋다. 써냈군", skipCopy:"안 쓰고 넘어가기", hfOn:"입력 없이 ON", hfOff:"입력 없이", hfHelp:"걸으면서·지하철에서: 쓰지 않고 정답 듣고 직접 채점", remembered:"기억났어요", forgot:"까먹었어요", setHf:"입력 없이 모드 (정답 듣고 직접 채점)", slow:"느리게", popDetail:"상세 보기", popAdd:"단어장에 추가", popInDeck:"단어장에 있음", popNoMeaning:"뜻을 가져오지 못했어요", popDict:"사전에서 찾기", popExamples:"예문", popLoading:"예문 찾는 중…", popNoEx:"다른 예문을 찾지 못했어요.", popAdded:w=>`"${w}"을(를) 단어장에 추가했어요.`, popClose:"닫기", popHint:"문장 속 단어를 누르면 뜻과 발음을 볼 수 있어요.", voice:"읽어주는 목소리", voiceAuto:"자동 (가장 자연스러운 목소리)", rate:"읽기 속도", preview:"들어보기", voiceTip:"아이폰은 설정 › 손쉬운 사용 › 콘텐츠 말하기 › 음성에서 「향상된」·「프리미엄」 음성을 내려받으면 훨씬 잘 들립니다. 원어민 녹음이 있는 예문은 녹음을 먼저 재생합니다.", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"빈칸에 들어갈 단어는? 처음이어도 괜찮아요, 먼저 짐작해 보세요.", guessMCm:(m,l)=>`"${m}"은(는) ${l}로 뭘까요? 먼저 짐작해 보세요.`, guessType:"짐작해서 입력 (틀려도 괜찮아요)", guessBtn:"이거 같아요", guessRight:"맞혔군. …제법이다", guessWrong:"정답은 이것. 먼저 고민한 만큼, 이미 더 깊이 새겨졌다", guessSkip:"전혀 모르겠어요",
   hint:(m,c)=>`힌트: ${m} · ${c}로 시작`, recallQ:l=>`이 뜻의 ${l} 단어는?`, noMeaning:"(뜻 없음)",
@@ -1049,7 +1046,7 @@ const NM_EXT = { cat_jpop:"gif", listen_airpods:"gif", load_run:"gif", load_done
 const nm = (name, px) => `<img class="nm" src="${NM_BASE}melt/cat_${CAT_OF[name] || "ask"}.svg" width="${Math.round(px*1.36)}" height="${px}" alt="" decoding="async">`;
 const say = (name, text, big) => `<div class="say${big ? " big" : ""}">${nm(name, big ? 128 : 64)}<div class="bubble">${text}</div></div>`;
 const fbh = (name, text) => `<div class="fbh">${nm(name, 64)}<strong>${text}</strong></div>`;
-const MODE_NM = { scriptNew:"st_love", script:"cat_jpop", study:"cat_jpop", cloze:"st_default", recall:"st_listening", write:"st_default", speak:"listen_airpods" };
+const MODE_NM = { meaning:"st_default", scriptNew:"st_love", script:"cat_jpop", study:"cat_jpop", cloze:"st_default", recall:"st_listening", write:"st_default", speak:"listen_airpods" };
 const LEECH = 3;
 const LS_KEY = "focus-vocab-v1";
 const $ = s => document.querySelector(s);
@@ -1371,23 +1368,29 @@ function recentAcc(){ const from = addDays(today(), -7); let n = 0, ok = 0; card
 const struggling = () => { const a = recentAcc(); return a !== null && a < .6; };
 const newLimitNow = () => struggling() ? Math.max(2, Math.ceil(S.meta.settings.newLimit / 2)) : S.meta.settings.newLimit;
 const newQuota = () => Math.max(0, newLimitNow() - introducedToday());
+/* 문제 고르기 (연구 근거: 수용 지식이 산출보다 먼저·빨리 붙고, 양방향 회상이 가장 효과적, 객관식보다 직접 떠올리기가 오래 감)
+   새 단어: 맞혀보기(사전 시도) → 뜻 말하기(외국어→내 언어) → 빈칸/뜻 보고 쓰기(내 언어→외국어)
+   복습: 단계가 낮을수록 '뜻 말하기' 비중↑, 올라갈수록 '쓰기·빈칸·문장'으로. 같은 방향만 계속 나오지 않게 돌아가며. */
 function reviewModes(c){
   if(c.script) return ["script"];
-  const st = S.meta.settings, hasCloze = !!clozeParts(c);
-  if(isLeech(c)) return hasCloze ? ["cloze","recall"] : ["recall"];
-  if(c.level <= 1) return [hasCloze ? "cloze" : "recall"];
-  if(c.level === 2) return ["recall"];
-  const pool = [];
+  const st = S.meta.settings, hasCloze = !!clozeParts(c), r = (c.reps || 0) + (c.level || 0);
+  if(isLeech(c)) return [r % 2 ? "meaning" : (hasCloze ? "cloze" : "recall"), "recall"];   // 자꾸 틀리는 단어: 양방향 둘 다
+  if(c.level <= 1) return [r % 2 ? (hasCloze ? "cloze" : "recall") : "meaning"];
+  if(c.level === 2) return [r % 3 === 0 ? "meaning" : "recall"];
+  const pool = ["meaning", "recall"]; if(hasCloze) pool.push("cloze", "recall");
   if(st.writing) pool.push("write");
   if(st.speaking && c.example && c.exampleKo) pool.push("speak");
-  pool.push("recall"); if(hasCloze) pool.push("cloze");
-  return [pool[(c.reps + c.level) % pool.length]];
+  return [pool[r % pool.length]];
 }
 let SES = null;
 function buildSession(){
   const items = [];
   dueCards().forEach(c => reviewModes(c).forEach(m => items.push({ id: c.id, mode: m })));
-  newCandidates().slice(0, newQuota()).forEach(c => { items.push({ id:c.id, mode:"study" }); if(clozeParts(c)) items.push({ id:c.id, mode:"cloze" }); items.push({ id:c.id, mode:"recall" }); });
+  // 새 단어는 3개씩 묶어 단계를 번갈아(같은 단어를 연달아 묻지 않고 짧게 간격을 둠): 맞혀보기 → 뜻 말하기 → 빈칸 → 뜻 보고 쓰기
+  const nw = newCandidates().slice(0, newQuota());
+  for(let i = 0; i < nw.length; i += 3){ const g = nw.slice(i, i + 3);
+    g.forEach(c => items.push({ id: c.id, mode: "study" })); g.forEach(c => items.push({ id: c.id, mode: "meaning" }));
+    g.forEach(c => { if(clozeParts(c)) items.push({ id: c.id, mode: "cloze" }); }); g.slice().reverse().forEach(c => items.push({ id: c.id, mode: "recall" })); }
   const ns = activeCards().filter(c => c.isNew && c.script).sort((a, b) => (a.created || 0) - (b.created || 0)).slice(0, scriptNewToday());
   ns.forEach(c => items.push({ id: c.id, mode: "scriptNew" })); ns.slice().sort(() => Math.random() - .5).forEach(c => items.push({ id: c.id, mode: "script" }));
   const remaining = {}; items.forEach(it => remaining[it.id] = (remaining[it.id]||0) + 1);
@@ -1544,17 +1547,43 @@ function finishSession(){
 const kbdHTML = () => L().chars.length ? '<div class="kbd">' + L().chars.map(ch => `<button type="button" data-ch="${ch}">${ch}</button>`).join("") + "</div>" : "";
 function bindKbd(box, input){ box.querySelectorAll(".kbd button").forEach(b => b.onclick = () => { const s = input.selectionStart ?? input.value.length, e = input.selectionEnd ?? s; input.value = input.value.slice(0,s) + b.dataset.ch + input.value.slice(e); input.focus(); try{ input.setSelectionRange(s+1, s+1); }catch(_){} }); }
 /* 오늘의 진척도: 위에서 본 냥이가 츄르를 먹어 나갈수록 몸통이 주욱 늘어남 */
-function catBarHTML(pct, cls){ const P = Math.max(0, Math.min(100, pct));   // 암기냥이가 츄르를 먹을수록 녹은 몸이 주우욱 늘어남
-  return `<div class="catbar ${cls || "grow"}" role="progressbar" aria-valuenow="${P}" aria-valuemin="0" aria-valuemax="100" style="--p:${P}">
-  <i class="cb-body"></i>
-  <svg class="cb-head" viewBox="0 0 40 30" aria-hidden="true"><path d="M1 30 C1 19 6 10 18 10 C29 10 35 16 36 23 L36 30 Z M8 13 L8.5 3.5 L15 9 Z M22 9 L28.5 3.5 L29 13 Z" fill="#fbf6ec"/>
-    <path d="M1 30 C1 19 6 10 18 10 C29 10 35 16 36 23 L36 30 M8.2 12 L8.5 3.5 L15 9 M22 9 L28.5 3.5 L28.8 12" fill="none" stroke="#2a221c" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/>
-    <path d="M9.6 10.6 L9.8 6.4 L12.6 8.7 Z M24.4 8.7 L27.4 6.4 L27.5 10.6 Z" fill="#f2a1b4"/>
-    <circle cx="19" cy="18.5" r="1.7" fill="#2a221c"/><circle cx="27.6" cy="18.5" r="1.7" fill="#2a221c"/><circle cx="18.5" cy="17.9" r=".55" fill="#fff"/><circle cx="27.1" cy="17.9" r=".55" fill="#fff"/>
-    <ellipse cx="15.4" cy="22" rx="2.4" ry="1.3" fill="#f2a1b4" opacity=".75"/><ellipse cx="31.2" cy="22" rx="1.8" ry="1.2" fill="#f2a1b4" opacity=".75"/>
-    <path class="cb-mouth" d="M30.4 21.6 Q31.3 23.4 32.4 22.2 Q33.5 23.4 34.4 21.6" fill="none" stroke="#2a221c" stroke-width="1.1" stroke-linecap="round"/>
-    <path d="M12 19.5 L5 18 M12 21.5 L5 22.5" stroke="#6b6158" stroke-width=".7" stroke-linecap="round"/></svg>
-  ${P < 100 ? `<i class="cb-churu"><b></b></i>` : ""}</div>`; }
+function catBarHTML(pct, cls){ const P = Math.max(0, Math.min(100, pct));   // 위에서 본 암기냥이(얼굴을 왼쪽으로 90° 돌린 모습)가 오른쪽으로 츄르를 먹어 나가며 젤리 몸이 늘어남. 몸은 위아래로 잡아당길 수 있음
+  setTimeout(catBarsStart, 0); return `<div class="catbar ${cls || "grow"}" role="progressbar" aria-valuenow="${P}" aria-valuemin="0" aria-valuemax="100" data-p="${P}"><canvas class="cb-cv"></canvas></div>`; }
+let CB_RAF = 0;
+function catBarsStart(){ if(!CB_RAF) CB_RAF = requestAnimationFrame(catBarsTick); }
+function catBarsTick(t){ const bars = document.querySelectorAll(".catbar[data-p]"); if(!bars.length){ CB_RAF = 0; return; } bars.forEach(el => catBarDraw(el, t / 1000)); CB_RAF = requestAnimationFrame(catBarsTick); }
+function catBarDraw(el, t){ const cv = el.firstElementChild; if(!cv || !el.offsetWidth) return; const N = 28;
+  let st = el._cb; if(!st){ st = el._cb = { cur: +el.dataset.p, off: new Float32Array(N), v: new Float32Array(N), drag: null, last: t };
+    const down = e => { e.preventDefault(); e.stopPropagation(); const r = cv.getBoundingClientRect(), x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left; const k = Math.round((x - st.x0) / Math.max(1, st.x1 - st.x0) * (N - 1)); if(k < -1 || k > N) return; st.drag = { k: Math.max(0, Math.min(N - 1, k)), y0: e.touches ? e.touches[0].clientY : e.clientY, dy: 0 }; try{ buzz(6); }catch(_){} };
+    const move = e => { if(!st.drag) return; e.preventDefault(); const y = e.touches ? e.touches[0].clientY : e.clientY; st.drag.dy = Math.max(-16, Math.min(16, (y - st.drag.y0) * .8)); };
+    const up = () => { if(st.drag){ st.drag = null; try{ sfxPoyon(.25); }catch(_){} } };
+    cv.addEventListener("touchstart", down, { passive: false }); cv.addEventListener("touchmove", move, { passive: false }); cv.addEventListener("touchend", up); cv.addEventListener("touchcancel", up);
+    cv.addEventListener("mousedown", down); window.addEventListener("mousemove", move); window.addEventListener("mouseup", up); }
+  const W = el.offsetWidth, H = el.offsetHeight, dpr = Math.min(3, devicePixelRatio || 1); if(cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)){ cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  const dt = Math.min(.05, Math.max(0, t - st.last)); st.last = t; st.cur += (+el.dataset.p - st.cur) * Math.min(1, dt * 4);
+  // 젤리 몸: 줄줄이 이어진 용수철 (잡아당긴 곳 주변이 따라오고, 놓으면 출렁)
+  const off = st.off, v = st.v, steps = 6, h = dt / steps;
+  for(let s2 = 0; s2 < steps; s2++) for(let i = 0; i < N; i++){ const l = i ? off[i - 1] : off[i] * .3, r = i < N - 1 ? off[i + 1] : off[i]; let tgt = 0, k = 60;
+    if(st.drag){ const g = Math.exp(-((i - st.drag.k) ** 2) / 40); tgt = st.drag.dy * g; k = 80 + 700 * g; }
+    v[i] += (-k * (off[i] - tgt) + 1400 * (l + r - 2 * off[i]) - 9 * v[i]) * h; off[i] += v[i] * h; }
+  const g = cv.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+  const cy = H / 2 + 1, th = 15, x0 = 3, hr = 14, hx = x0 + hr + 6 + (W - x0 - hr * 2 - 40) * st.cur / 100; st.x0 = x0; st.x1 = hx;
+  const Y = i => cy + off[i], X = i => x0 + (hx - x0) * i / (N - 1), chew = Math.sin(t * 11) * .5 + .5;
+  if(st.cur < 99.5){ const cx0 = hx + hr * .7, cw = W - 2 - cx0; if(cw > 4){ g.fillStyle = "#fff"; g.strokeStyle = "#e46b8a"; g.lineWidth = 1.4; g.beginPath(); g.roundRect(cx0, cy - 4.5, cw, 9, [0, 5, 5, 0]); g.fill(); g.stroke(); g.fillStyle = "#f2b98f"; g.fillRect(cx0, cy - 3.8, 5, 7.6); g.fillStyle = "#f6b7c8"; for(let x = cx0 + 9; x < cx0 + cw - 6; x += 9) g.fillRect(x, cy - 1, 6, 2); } }
+  // 몸통(위·아래 테두리가 노드를 따라 휨)
+  g.beginPath(); g.moveTo(X(0), Y(0) - th / 2); for(let i = 1; i < N; i++) g.lineTo(X(i), Y(i) - th / 2); g.lineTo(hx, Y(N - 1) + th / 2); for(let i = N - 1; i >= 0; i--) g.lineTo(X(i), Y(i) + th / 2);
+  g.quadraticCurveTo(X(0) - th * .7, Y(0), X(0), Y(0) - th / 2); g.closePath(); const bg = g.createLinearGradient(0, cy - th, 0, cy + th); bg.addColorStop(0, "#fffaf1"); bg.addColorStop(1, "#ecdfca"); g.fillStyle = bg; g.fill(); g.strokeStyle = "#2a221c"; g.lineWidth = 1.6; g.lineJoin = "round"; g.stroke();
+  g.strokeStyle = "rgba(255,255,255,.7)"; g.lineWidth = 2; g.beginPath(); for(let i = 1; i < N - 2; i++) g[i === 1 ? "moveTo" : "lineTo"](X(i), Y(i) - th * .22); g.stroke();
+  // 머리: 앞에서 본 얼굴을 왼쪽으로 90° 돌린 모습(귀가 뒤쪽=왼쪽, 입이 앞쪽=오른쪽)
+  g.save(); g.translate(hx, Y(N - 1)); g.rotate(-Math.PI / 2); const sc = 1 + chew * .03; g.scale(sc, 1 / sc);
+  const ear = (d) => { g.beginPath(); g.moveTo(d * 4, -hr * .7); g.lineTo(d * 11, -hr - 4); g.lineTo(d * 12.5, -hr * .2); g.closePath(); g.fillStyle = "#fbf6ec"; g.fill(); g.strokeStyle = "#2a221c"; g.lineWidth = 1.5; g.stroke(); g.fillStyle = "#f2a1b4"; g.beginPath(); g.moveTo(d * 6.5, -hr * .62); g.lineTo(d * 10.5, -hr - 1); g.lineTo(d * 11.3, -hr * .35); g.closePath(); g.fill(); };
+  ear(-1); ear(1); g.beginPath(); g.ellipse(0, 0, hr, hr * .92, 0, 0, Math.PI * 2); g.fillStyle = "#fbf6ec"; g.fill(); g.strokeStyle = "#2a221c"; g.lineWidth = 1.6; g.stroke();
+  g.fillStyle = "#2a221c"; [-5, 5].forEach(d => { g.beginPath(); g.arc(d, -1.5, 1.8, 0, Math.PI * 2); g.fill(); }); g.fillStyle = "#fff"; [-5, 5].forEach(d => { g.beginPath(); g.arc(d - .6, -2.2, .6, 0, Math.PI * 2); g.fill(); });
+  g.fillStyle = "rgba(242,161,180,.7)"; [-8, 8].forEach(d => { g.beginPath(); g.ellipse(d, 3, 2.6, 1.5, 0, 0, Math.PI * 2); g.fill(); });
+  g.fillStyle = "#f2a1b4"; g.beginPath(); g.ellipse(0, 1.4, 1.2, .9, 0, 0, Math.PI * 2); g.fill();
+  const my = 3.6, mw = 2.8, sq = .7 + chew * .5; g.strokeStyle = "#2a221c"; g.lineWidth = 1.2; g.lineCap = "round"; g.beginPath(); g.moveTo(-mw - 1.3, my - 1.2 * sq); g.quadraticCurveTo(-mw - .8, my + .6 * sq, -mw / 2, my + 1.6 * sq); g.quadraticCurveTo(-.3, my + 2.2 * sq, 0, my); g.quadraticCurveTo(.3, my + 2.2 * sq, mw / 2, my + 1.6 * sq); g.quadraticCurveTo(mw + .8, my + .6 * sq, mw + 1.3, my - 1.2 * sq); g.stroke();
+  g.strokeStyle = "rgba(90,80,70,.55)"; g.lineWidth = .7; [-1, 1].forEach(d => { g.beginPath(); g.moveTo(d * 9, 1); g.lineTo(d * 17, -.5); g.moveTo(d * 9, 3); g.lineTo(d * 16.5, 4); g.stroke(); });
+  g.restore(); }
 function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="row" style="flex-wrap:nowrap;gap:10px"><button class="btn sm ghost" type="button" id="homeBtn">‹ ${esc(t().home)}</button>${catBarHTML(pct)}<button class="btn sm ghost" type="button" id="gradBtn" title="${esc(t().gradTitle)}">🎓 ${esc(t().grad)}</button></div><div class="modehead"><span class="muted small">${t().modes[mode]} · ${t().left(SES.queue.length)}</span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}" title="${esc(t().hfHelp)}">${hf ? t().hfOn : t().hfOff}</button>${levelChip(c)}</span></div>${say(MODE_NM[mode] || "st_default", esc(t().nmAsk[mode](langName())))}`; }
 document.addEventListener("click", e => {
   if(!e.target.closest("#gradBtn") || !SES) return;
@@ -1624,7 +1653,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
     // 不正解：答えを見せて、書き写してから次へ（書かずに進むこともできる）
     phase = "copy";
     fillBlank(false);
-    $("#fb").innerHTML = `<div class="feedback ${isGuess ? "meh" : "no"}">${fbh(isGuess ? "st_default" : "st_surprised", isGuess ? x.guessWrong : x.wrong)}${answerBlock()}<span class="fb-note"><b>${x.copyPrompt}</b>${isGuess ? "" : " " + x.retryLater}</span></div>`; showFb();
+    const sl = !isGuess && Math.random() < .3 ? slangPick() : null; $("#fb").innerHTML = `<div class="feedback ${isGuess ? "meh" : "no"}">${fbh(isGuess ? "st_default" : "st_surprised", isGuess ? x.guessWrong : (sl ? `…${esc(sl)}. ` : "") + x.wrong)}${answerBlock()}<span class="fb-note"><b>${x.copyPrompt}</b>${isGuess ? "" : " " + x.retryLater}</span></div>`; showFb();
     input.value = ""; input.classList.add("miss"); input.placeholder = x.copyPh; input.focus({ preventScroll: true });
     $("#acts").innerHTML = `${listenBtn(target)}<span class="grow"></span><button class="btn ghost" type="button" id="skipCopy">${x.skipCopy}</button>`;
     bindSay(box);
@@ -1646,6 +1675,33 @@ function askTyped(c, mode, promptHTML, target, isGuess){
   $("#idk").onclick = () => { if(phase === "answer" && !SES.state.answered) reveal("no"); };
 }
 /* 入力なしモード（歩きながら・電車用）：考える → 答えを聞く → 自己採点 */
+/* 뜻 말하기(외국어 → 내 언어): 뜻은 표현이 여러 가지라, 비슷하면 자동 정답 / 아니면 정답을 보여주고 스스로 판정 */
+function meaningMatch(input, meaning){ const nn = v => norm(v).replace(/[~〜…]/g, "").replace(/\s+/g, ""); const a = nn(input); if(a.length < 1) return false;
+  const raw = String(meaning).replace(/[(（][^)）]*[)）]/g, ",").split(/[,，、;；\/・·]|\s또는\s/), alts = raw.map(nn).filter(Boolean).concat(raw.map(r => nn(String(r).trim().split(/\s+/).pop() || ""))).filter(Boolean); if(!alts.length) return false;
+  const stem = v => v.replace(/(하다|되다|하기|한|하는|이다|다|する|すること|な|の|い)$/, "");
+  return alts.some(m => m === a || stem(m) === stem(a) || (a.length >= 2 && (m.includes(a) && a.length >= m.length * .6 || a.includes(m) && m.length >= 2)) || (m.length >= 4 && lev(m, a) <= 1)); }
+function lev(a, b){ const d = Array.from({ length: a.length + 1 }, (_, i) => [i]); for(let j = 1; j <= b.length; j++) d[0][j] = j; for(let i = 1; i <= a.length; i++) for(let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return d[a.length][b.length]; }
+function askMeaning(c, promptHTML){
+  const box = $("#sessionBox"), x = t(), mode = "meaning";
+  box.innerHTML = head(c, mode) + `<div class="stage">${promptHTML}<div id="fb"></div></div><div class="dock">
+    <form id="ansForm" autocomplete="off" class="ansrow"><input type="text" id="ans" class="answer" spellcheck="false" placeholder="${esc(x.meanPh)}" aria-label="${x.answer}" enterkeyhint="go"><button class="btn primary" type="button" id="chk">${x.check}</button></form>
+    <div class="row" id="acts">${listenBtn(c.word)}<span class="grow"></span><button class="btn ghost" type="button" id="idk">${x.idk}</button></div></div>`;
+  const input = $("#ans"); input.focus({ preventScroll: true }); bindSay(box); speak(c.word);
+  const keep = b => b.addEventListener("pointerdown", e => { if(document.activeElement === input) e.preventDefault(); });
+  box.querySelectorAll(".dock button").forEach(keep);
+  const ansBlock = () => `<span class="fb-answer">${esc(c.meaning)}</span><span class="fb-mean">${esc(c.word)}</span>${c.example ? `<span class="fb-ex">${highlight(c)}</span>${c.exampleKo ? `<span class="fb-mean">${esc(c.exampleKo)}</span>` : ""}` : ""}`;
+  const show = () => { const fb = $("#fb"); if(fb) requestAnimationFrame(() => fb.scrollIntoView({ block: "nearest", behavior: "smooth" })); };
+  let done = false;
+  const reveal = res => { if(done) return; done = true; SES.state.answered = true;
+    if(res === "ok"){ input.classList.add("done"); $("#fb").innerHTML = `<div class="feedback ok">${fbh("st_happy", x.correct)}${ansBlock()}</div>`; show();
+      const nb = $("#chk"); nb.id = "nx"; nb.textContent = x.next; nb.onclick = () => settleItem(true); $("#ansForm").onsubmit = e => { e.preventDefault(); settleItem(true); }; speak(c.example || c.word); return; }
+    const typed = res === "check"; $("#fb").innerHTML = `<div class="feedback ${typed ? "meh" : "no"}">${fbh(typed ? "st_surprised" : "st_default", typed ? x.meanMeh : x.wrong)}${ansBlock()}</div>`; show();
+    $("#ansForm").style.display = "none";
+    $("#acts").innerHTML = `${listenBtn(c.example || c.word)}<span class="grow"></span>${typed ? `<button class="btn bad" type="button" id="mNo">${esc(x.meanDiff)}</button><button class="btn good" type="button" id="mOk">${esc(x.meanSame)}</button>` : `<button class="btn primary" type="button" id="mNo">${x.next}</button>`}`;
+    bindSay(box); $("#mNo").onclick = () => settleItem(false); const ok = $("#mOk"); if(ok) ok.onclick = () => settleItem(true); input.blur(); speak(c.example || c.word); };
+  const submit = () => { if(done) return; const v = input.value.trim(); if(!v){ input.focus({ preventScroll: true }); return; } reveal(meaningMatch(v, c.meaning) ? "ok" : "check"); };
+  $("#ansForm").onsubmit = e => { e.preventDefault(); submit(); }; $("#chk").onclick = submit; $("#idk").onclick = () => reveal("no");
+}
 function askHandsFree(c, mode, promptHTML, target, isGuess){
   const box = $("#sessionBox"), x = t();
   box.innerHTML = head(c, mode) + `<div class="stage">${promptHTML}<div id="fb"></div></div><div class="dock">
@@ -1678,6 +1734,12 @@ function renderItem(c, mode){
       ? `<p class="sentence">${tokHTML(p.before)}<span class="blank">____</span>${tokHTML(p.after)}</p><p class="q-sub">${esc(c.exampleKo)}</p><p class="q-hint">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p>`
       : `<div><div class="word" style="font-size:1.6rem">${esc(c.meaning || x.noMeaning)}</div><p class="q-hint">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p></div>`;
     return (hf ? askHandsFree : askTyped)(c, mode, promptHTML, target, isGuess);
+  }
+  if(mode === "meaning"){
+    if(!c.meaning) return renderItem(c, "recall");
+    const promptHTML = `<div><div class="word">${esc(c.word)}</div>${canSpeak() ? `<p class="q-hint">🔊</p>` : ""}</div>`;
+    if(hf) return askHandsFree(c, mode, promptHTML, c.meaning, false);
+    return askMeaning(c, promptHTML);
   }
   if(mode === "recall"){
     const leech = (c.lapses || 0) >= 3, ch = Array.from(c.word);
@@ -2803,6 +2865,13 @@ function catDash(r){ return new Promise(res => {
       setTimeout(res, 300); };
   };
 }); }
+/* 유행어: GitHub Actions 수집기(tools/slang_collect.py)가 매일 모은 slang/{ko,ja}.json 을 읽어서, 냥이가 근엄하게 내뱉는다 */
+const SLANG_BASE = "slang/"; let SLANG = null;
+function slangLang(){ return S.meta.settings.ui === "ko" ? "ko" : "ja"; }
+function loadSlang(){ const lang = slangLang(); try{ const c = JSON.parse(localStorage.getItem("slang-cache") || "null"); if(c && c.lang === lang){ SLANG = c; if(Date.now() - c.at < 12 * 3600e3) return; } }catch(_){}
+  fetch(SLANG_BASE + lang + ".json", { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(j => { if(!j || !j.terms) return; SLANG = { lang, at: Date.now(), terms: j.terms.slice(0, 30).map(x => ({ t: x.t, s: x.s || x.n || 1 })) }; try{ localStorage.setItem("slang-cache", JSON.stringify(SLANG)); }catch(_){} }).catch(() => {}); }
+function slangPick(){ if(!SLANG || SLANG.lang !== slangLang() || !SLANG.terms.length) return null; const ts = SLANG.terms.slice(0, 20), w = ts.map(x => x.s * x.s), tot = w.reduce((a, b) => a + b, 0); let r = Math.random() * tot; for(let i = 0; i < ts.length; i++){ r -= w[i]; if(r <= 0) return ts[i].t; } return ts[0].t; }
+function slangLine(){ const t = slangPick(); if(!t) return null; const ko = slangLang() === "ko", v = ko ? [`…${t}.`, `${t}… 라고 하던가.`, `요즘 인간들은 "${t}"라고 한다지.`, `…${t}. 기억해 둬라.`] : [`…${t}。`, `「${t}」…と言うらしいな。`, `最近の人間は「${t}」と言うそうだ。`, `…${t}。覚えておけ。`]; return v[Math.floor(Math.random() * v.length)]; }
 function petNudge(){ let b = $("#petNudge"); if(!b){ b = document.createElement("button"); b.id = "petNudge"; b.type = "button"; document.body.appendChild(b); }
   b.textContent = pt().nudge; b.classList.add("on"); b.onclick = () => { b.classList.remove("on"); openPet(true); }; clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove("on"), 12000); }
 function openPet(welcome){
@@ -2997,6 +3066,7 @@ function petLoop0(now){
   if((st.bliss || 0) > .8 && Math.random() < dt * 1.6){ const c = st.toScr(64 + (Math.random() - .5) * 50, 62); (st.hearts = st.hearts || []).push({ x: c.x, y: c.y, t: 0, s: .7 + Math.random() * .6, ph: Math.random() * 6 }); }
   if(st.hearts) st.hearts = st.hearts.filter(h => (h.t += dt * .45) < 1);
   st.bliss = Math.max(0, (st.bliss || 0) - dt * .012 + (st.holding && st.rubbed ? dt * .03 : 0)); fatStep(st, dt); signStep(st, dt);
+  if(st.nextSlang == null) st.nextSlang = now + 25000 + Math.random() * 20000; if(now > st.nextSlang){ st.nextSlang = now + 45000 + Math.random() * 45000; const m = $("#petMsg"); const l = slangLine(); if(l && m && !m.classList.contains("show") && !st.grab) petMsg(l, 3000); }
   if(st.whale) whaleStep(st, dt);
   st.hit = Math.max(0, st.hit - dt * 3.5); st.flap = Math.max(0, st.flap - dt * .9); st.shake = Math.max(0, st.shake - dt * 14);
   petDraw(); st.raf = requestAnimationFrame(petLoop);
@@ -3083,7 +3153,8 @@ function omegaMouth(g, my, w, sq, open, tongue, tongueOut){
     om.quadraticCurveTo(64 + w / 2, my + 4 + o * 2.4, 64, my + 4.6 + o * 2.4); om.quadraticCurveTo(64 - w / 2, my + 4 + o * 2.4, 64 - w / 2 - .6, my + 2.6 * sq); om.closePath();
     g.fillStyle = "#6b2c34"; g.fill(om); if(tongue && !tongueOut){ g.save(); g.clip(om); g.fillStyle = "#ef8aa0"; g.beginPath(); g.ellipse(64, my + 4.4 + o * 2, Math.min(3.2, w * .55), 1.6 + o * .6, 0, 0, Math.PI * 2); g.fill(); g.restore(); } }
   const pth = new Path2D(); P(pth); g.strokeStyle = INKC; g.lineWidth = 2; g.stroke(pth); }
-function drawCatFace(st, g){
+function drawCatFace(st, g){ const fk = st.faceK || S.meta.settings.faceK || 1; g.save(); g.translate(64, 86); g.scale(fk, fk); g.translate(-64, -86); drawCatFace0(st, g); g.restore(); }
+function drawCatFace0(st, g){
   // 顔
   const b = st.bliss || 0, y = 82, L = 52, R = 76, hit = st.hit > .15, happy = !hit && b > .45 && performance.now() - st.lastHit < 1400, dopey = !hit && b > .62;
   g.strokeStyle = INKC; g.fillStyle = INKC; g.lineWidth = 2.2;
@@ -3196,8 +3267,13 @@ function lickStep(st, dt){ const l = st.lick; if(!l) return; l.t += dt; if(l.t >
   if(l.t >= l.end){ st.stains = (st.stains || []).filter(x => x !== l.sn); st.lick = null; st.bliss = Math.min(1, (st.bliss || 0) + .06); } }
 function lickDraw(st, ctx){ const l = st.lick; if(!l) return; const m = meshPt(st, 64, 93), u = l.t / l.end, ext = Math.min(1, l.t / .25, (l.end - l.t) / .25), wig = Math.sin(l.t * 22) * 6;   // 혀를 쭉 내밀어 할짝할짝
   const p = meshPt(st, l.sn.ux + wig * .4, l.sn.uy + Math.cos(l.t * 22) * 2), tx = m.x + (p.x - m.x) * ext, ty = m.y + (p.y - m.y) * ext;
-  ctx.lineCap = "round"; ctx.strokeStyle = "#b8455b"; ctx.lineWidth = 15; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.quadraticCurveTo((m.x + tx) / 2 + wig, (m.y + ty) / 2 + 10, tx, ty); ctx.stroke(); ctx.strokeStyle = "#ef8aa0"; ctx.lineWidth = 12; ctx.stroke();
-  ctx.fillStyle = "#ef8aa0"; ctx.beginPath(); ctx.ellipse(tx, ty, 10, 8, Math.atan2(ty - m.y, tx - m.x), 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = "#b8455b"; ctx.lineWidth = 1.5; ctx.stroke(); }
+  drawTongue(ctx, m.x, m.y, tx, ty); }
+function drawTongue(ctx, x0, y0, x1, y1){   // 혀: 한 덩어리 젤리가 쭈욱 늘어남 (선·무늬 없이 한 색)
+  const dx = x1 - x0, dy = y1 - y0, L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L, nx = -uy, ny = ux, w0 = 6, w1 = 10 + Math.min(4, L / 30), wm = Math.max(4, 8 - L / 40);
+  const P = (a, b) => [x0 + ux * a + nx * b, y0 + uy * a + ny * b];
+  ctx.beginPath(); ctx.moveTo(...P(-2, -w0)); ctx.quadraticCurveTo(...P(L * .5, -wm), ...P(L - w1 * .6, -w1)); ctx.bezierCurveTo(...P(L + w1 * .9, -w1), ...P(L + w1 * .9, w1), ...P(L - w1 * .6, w1));
+  ctx.quadraticCurveTo(...P(L * .5, wm), ...P(-2, w0)); ctx.closePath(); ctx.fillStyle = "#ee8aa1"; ctx.fill(); ctx.strokeStyle = "rgba(160,60,85,.55)"; ctx.lineWidth = 1.2; ctx.stroke();
+  ctx.fillStyle = "rgba(255,255,255,.35)"; ctx.beginPath(); ctx.ellipse(...P(L - w1 * .4, -w1 * .35), w1 * .35, w1 * .2, Math.atan2(uy, ux), 0, Math.PI * 2); ctx.fill(); }
 function sfxLick(){ if(!pa()) return; const t0 = PA.currentTime; pNoise("bandpass", 2200, 1200, 3, t0, .08, .22); pOsc("sine", 700, 400, t0, .06, .08); }
 function eatStep(st, dt){ const e = st.eat; if(!e) return; e.t += dt; const ko = S.meta.settings.ui === "ko";
   if(e.mode === "tongue" && e.t > .22 && !e.got){ e.got = 1; sfxChomp(); buzz(25); const p = meshPt(st, e.k.ux, e.k.uy); st.texts.push({ x: p.x + 20, y: p.y - 24, t: 0, s: ko ? "찹!" : "パクッ!", big: 0, doodle: 1 }); }
@@ -3209,9 +3285,7 @@ function eatDraw(st, ctx){ const e = st.eat; if(!e) return; const m = meshPt(st,
   // 혀: 입에서 쭉 → 찹 → 쏙
   const ext = u < .36 ? u / .36 : 1 - (u - .36) / .64, tx = m.x + (p.x - m.x) * ext, ty = m.y + (p.y - m.y) * ext;
   if(u > .36) petDrawItem(ctx, e.k.it, tx, ty, 40 * (1 - (1 - ext) * .6), e.k.ang);
-  ctx.lineCap = "round"; ctx.strokeStyle = "#b8455b"; ctx.lineWidth = 15; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.quadraticCurveTo((m.x + tx) / 2 + Math.sin(u * 30) * 10, (m.y + ty) / 2 + 12, tx, ty); ctx.stroke();
-  ctx.strokeStyle = "#ef8aa0"; ctx.lineWidth = 12; ctx.stroke(); ctx.strokeStyle = "rgba(184,69,91,.5)"; ctx.lineWidth = 1.6; ctx.stroke();
-  ctx.fillStyle = "#ef8aa0"; ctx.beginPath(); ctx.ellipse(tx, ty, 9, 7.5, Math.atan2(ty - m.y, tx - m.x), 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = "#b8455b"; ctx.lineWidth = 1.5; ctx.stroke();
+  drawTongue(ctx, m.x, m.y, tx, ty);
   if(u <= .36) petDrawItem(ctx, e.k.it, p.x, p.y, 40, e.k.ang); }
 function sfxTongue(){ if(!pa()) return; const t0 = PA.currentTime; pOsc("sine", 300, 1200, t0, .16, .25); pNoise("bandpass", 1800, 900, 3, t0, .12, .2); }
 function sfxChomp(){ if(!pa()) return; const t0 = PA.currentTime; pOsc("square", 260, 120, t0, .06, .3); pNoise("lowpass", 1600, 400, .7, t0, .07, .4); }
@@ -3426,7 +3500,7 @@ function petProjStep(st, q, dt){
   // はずれ: 頭を越えて飛んでいく／手前に落ちる → おやつは戻ってくる
   if(!q.miss){ q.miss = 1; q.vx = (tg.x - mx) * 1.6; q.vy = q.over ? -500 : 120; }
   q.vy += 1400 * dt; q.x += q.vx * dt; q.y += q.vy * dt; q.sz = Math.max(14, q.sz - dt * (q.over ? 40 : 0));
-  if(q.y > st.H + 60 || q.y < -80 || q.x < -80 || q.x > st.W + 80 || q.t > 2.6){ const p = petState(); p.inv[q.id] = (p.inv[q.id] || 0) + 1; petMsg(pt().miss, 1400); petTray(); return false; }
+  if(q.y > st.H + 60 || q.y < -80 || q.x < -80 || q.x > st.W + 80 || q.t > 2.6){ const p = petState(); p.inv[q.id] = (p.inv[q.id] || 0) + 1; petMsg((Math.random() < .45 && slangPick()) ? `…${slangPick()}.` : pt().miss, 1600); petTray(); return false; }
   return true; }
 
 /* ════════ 1日の学習を終えたら: 巨大な냥발が画面を覆って、今日の日付に肉球スタンプ ════════ */
@@ -3726,8 +3800,8 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
-load(); slimPresets(); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
+if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+load(); slimPresets(); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
 if("serviceWorker" in navigator && location.protocol === "https:"){ navigator.serviceWorker.register("sw.js").catch(() => {}); }
