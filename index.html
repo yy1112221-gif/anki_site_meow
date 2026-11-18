@@ -3022,6 +3022,12 @@ function drawCatTex(st){
   drawCatFace(st, g);
   g0.setTransform(1, 0, 0, 1, 0, 0); g0.drawImage(st.tex2, 0, 0);
 }
+function omegaMouth(g, my, w, sq, open, tongue, tongueOut){
+  const P = (path) => { path.moveTo(64 - w - 2.5, my - 2.5 * sq); path.quadraticCurveTo(64 - w - 1.5, my + 1 * sq, 64 - w / 2, my + 3.2 * sq); path.quadraticCurveTo(63.4, my + 4.4 * sq, 64, my); path.quadraticCurveTo(64.6, my + 4.4 * sq, 64 + w / 2, my + 3.2 * sq); path.quadraticCurveTo(64 + w + 1.5, my + 1 * sq, 64 + w + 2.5, my - 2.5 * sq); };
+  if(open > 0){ const om = new Path2D(), o = open; om.moveTo(64 - w / 2 - .6, my + 2.6 * sq); om.quadraticCurveTo(63.4, my + 4.4 * sq, 64, my + .3); om.quadraticCurveTo(64.6, my + 4.4 * sq, 64 + w / 2 + .6, my + 2.6 * sq);
+    om.quadraticCurveTo(64 + w / 2, my + 4 + o * 2.4, 64, my + 4.6 + o * 2.4); om.quadraticCurveTo(64 - w / 2, my + 4 + o * 2.4, 64 - w / 2 - .6, my + 2.6 * sq); om.closePath();
+    g.fillStyle = "#6b2c34"; g.fill(om); if(tongue && !tongueOut){ g.save(); g.clip(om); g.fillStyle = "#ef8aa0"; g.beginPath(); g.ellipse(64, my + 4.4 + o * 2, Math.min(3.2, w * .55), 1.6 + o * .6, 0, 0, Math.PI * 2); g.fill(); g.restore(); } }
+  const pth = new Path2D(); P(pth); g.strokeStyle = INKC; g.lineWidth = 2; g.stroke(pth); }
 function drawCatFace(st, g){
   // 顔
   const b = st.bliss || 0, y = 82, L = 52, R = 76, hit = st.hit > .15, happy = !hit && b > .45 && performance.now() - st.lastHit < 1400, dopey = !hit && b > .62;
@@ -3038,19 +3044,19 @@ function drawCatFace(st, g){
     if(!bl){ g.fillStyle = "rgba(255,255,255,.9)"; g.beginPath(); g.arc(ex - 1, y - 1.2, .9, 0, Math.PI * 2); g.fill(); g.fillStyle = INKC; } }); }
   g.strokeStyle = "rgba(232,121,143,.85)"; g.lineWidth = 1.5; [44, 84].forEach(x => { for(const o of [-5, -1, 3]){ g.beginPath(); g.moveTo(x + o, 90.5); g.lineTo(x + o + 2.4, 85.8); g.stroke(); } });
   g.fillStyle = PINK; g.beginPath(); g.ellipse(64, y + 4.5, 1.9, 1.3, 0, 0, Math.PI * 2); g.fill();
-  const my = y + 8, w = 5.5; g.strokeStyle = INKC; g.lineWidth = 2;
-  if(hit && !cph){ g.fillStyle = "#5b2a2a"; g.beginPath(); g.ellipse(64, my + 3, 3, 3.6 + st.hit * 2, 0, 0, Math.PI * 2); g.fill(); }
-  else if(cph === 1){ const op = Math.abs(Math.sin(cw * 7 * Math.PI)); g.beginPath(); g.moveTo(59, my + 1); g.quadraticCurveTo(61.5, my + 1 - op * 2, 64, my + 1); g.quadraticCurveTo(66.5, my + 1 + op * 2, 69, my + 1); g.stroke(); }
-  else if(cph === 2){ g.beginPath(); g.ellipse(64, my + 2, 1.6, 2, 0, 0, Math.PI * 2); g.stroke(); }
-  else if(cph === 3){ g.fillStyle = "#6b2c34"; g.beginPath(); g.ellipse(64, my + 2.5, 2.4, 3.2, 0, 0, Math.PI * 2); g.fill(); }
-  else if(dopey){ const o = (b - .62) * 2.6, w2 = w;   // ω(3을 눕힌 입)는 그대로 두고, 그 아래로 헤— 벌어짐
-    const om = new Path2D(); om.moveTo(64 - w2 / 2 - .6, my + 2.6); om.quadraticCurveTo(63.4, my + 4.4, 64, my + .3); om.quadraticCurveTo(64.6, my + 4.4, 64 + w2 / 2 + .6, my + 2.6);
-    om.quadraticCurveTo(64 + w2 / 2, my + 5 + o * 5, 64, my + 5.6 + o * 5); om.quadraticCurveTo(64 - w2 / 2, my + 5 + o * 5, 64 - w2 / 2 - .6, my + 2.6); om.closePath();
-    g.fillStyle = "#6b2c34"; g.fill(om); g.save(); g.clip(om); g.fillStyle = "#ef8aa0"; g.beginPath(); g.ellipse(64, my + 5.2 + o * 4.4, 3.2, 2 + o * 1.2, 0, 0, Math.PI * 2); g.fill(); g.restore();
-    g.beginPath(); g.moveTo(64 - w - 2.5, my - 2.5); g.quadraticCurveTo(64 - w - 1.5, my + 1, 64 - w / 2, my + 3.2); g.quadraticCurveTo(63.4, my + 4.4, 64, my); g.quadraticCurveTo(64.6, my + 4.4, 64 + w / 2, my + 3.2); g.quadraticCurveTo(64 + w + 1.5, my + 1, 64 + w + 2.5, my - 2.5); g.stroke();
-    if(b > .7){ const dl = 2 + (b - .7) * 16 + Math.sin(st.t * 2.3) * 1.2; g.fillStyle = "rgba(200,232,255,.9)"; g.beginPath(); g.moveTo(68.4, my + 3.4); g.quadraticCurveTo(70.4, my + 3.4 + dl * .6, 69.6, my + 3.4 + dl); g.arc(68.8, my + 3.4 + dl, 1.3, 0, Math.PI); g.quadraticCurveTo(67.6, my + 3.4 + dl * .5, 68.4, my + 3.4); g.fill(); } }
-  else { g.beginPath(); g.moveTo(64 - w - 2.5, my - 2.5); g.quadraticCurveTo(64 - w - 1.5, my + 1, 64 - w / 2, my + 3.2); g.quadraticCurveTo(63.4, my + 4.4, 64, my); g.quadraticCurveTo(64.6, my + 4.4, 64 + w / 2, my + 3.2); g.quadraticCurveTo(64 + w + 1.5, my + 1, 64 + w + 2.5, my - 2.5); g.stroke();
-    if(happy){ g.fillStyle = "#d9465a"; g.beginPath(); g.moveTo(61.6, my + 3); g.quadraticCurveTo(64, my + 8, 66.4, my + 3); g.fill(); } }
+  const my = y + 8; g.strokeStyle = INKC; g.lineWidth = 2;
+  // 입은 어떤 동작이든 ω(3을 눕힌 모양)를 유지: 폭·높이만 바뀌고, 벌어짐·혀는 그 아래로
+  let mw = 5.5, sq = 1, open = 0, tongue = 0, tongueOut = 0;
+  if(cph === 1){ const op = Math.abs(Math.sin(cw * 7 * Math.PI)); sq = .55 + op * .6; mw = 5.5 + op * .6; }          // 우물우물: ω가 위아래로 오물
+  else if(cph === 2){ mw = 3; sq = 1.1; open = .5; }                                                                  // 쓰읍: ω를 오므리고 가운데로 빨아들임
+  else if(cph === 3){ mw = 4.2; open = 2.2; }                                                                         // 퉤: 오므린 ω 아래로 확
+  else if(st.lick || (st.eat && st.eat.mode === "tongue")){ open = 1.2; tongue = 1; tongueOut = 1; }   // 혀 내밀기
+  else if(st.eat && st.eat.mode === "suck"){ mw = 3; sq = 1.1; open = .5; }
+  else if(hit){ open = 1.4 + st.hit * 1.2; }
+  else if(dopey){ open = (b - .62) * 2.6 + .6; tongue = 1; }
+  else if(happy){ open = .7; tongue = 1; }
+  omegaMouth(g, my, mw, sq, open, tongue, tongueOut);
+  if(dopey && b > .7 && !cph){ const dl = 2 + (b - .7) * 16 + Math.sin(st.t * 2.3) * 1.2; g.fillStyle = "rgba(200,232,255,.9)"; g.beginPath(); g.moveTo(68.4, my + 3.4); g.quadraticCurveTo(70.4, my + 3.4 + dl * .6, 69.6, my + 3.4 + dl); g.arc(68.8, my + 3.4 + dl, 1.3, 0, Math.PI); g.quadraticCurveTo(67.6, my + 3.4 + dl * .5, 68.4, my + 3.4); g.fill(); }
   g.lineWidth = 1.1; g.strokeStyle = "rgba(60,48,38,.5)"; [[-1, 38], [1, 90]].forEach(([sx, x0]) => [[-3, -4], [1.5, 0], [6, 4]].forEach(([dy, an]) => { g.beginPath(); g.moveTo(x0, 84 + dy); const wd = (st.bliss || 0) * 5; g.quadraticCurveTo(x0 + sx * 9, 84 + dy + an * .4 + st.hit * 3 * an + wd * .4, x0 + sx * 16, 84 + dy + an + wd); g.stroke(); }));
 }
 function petDraw(){
@@ -3131,10 +3137,34 @@ function itemFX(st, it, hx, hy, F){ const c = st.toScr(hx, hy), id = it.id;
 function meshPt(st, ux, uy){ const fi = (ux - JX0) / (JX1 - JX0) * (JNX - 1), fj = (uy - JY0) / (JY1 - JY0) * (JNY - 1), i = Math.max(0, Math.min(JNX - 2, Math.floor(fi))), j = Math.max(0, Math.min(JNY - 2, Math.floor(fj))), a = fi - i, b = fj - j;
   const k = j * JNX + i, L = (arr) => (arr[k] * (1 - a) + arr[k + 1] * a) * (1 - b) + (arr[k + JNX] * (1 - a) + arr[k + JNX + 1] * a) * b; return st.toScr(ux + L(st.dx), uy + L(st.dy)); }
 const CH_IN = .28, CH_CHEW = 1.7, CH_SLURP = .55;
+function lickStep(st, dt){ const l = st.lick; if(!l) return; l.t += dt; if(l.t > .25 && l.t < l.end - .2){ l.sn.a = Math.max(0, l.sn.a - dt * .7); const k = Math.floor(l.t * 7); if(k !== l.n){ l.n = k; sfxLick(); } }
+  if(l.t >= l.end){ st.stains = (st.stains || []).filter(x => x !== l.sn); st.lick = null; st.bliss = Math.min(1, (st.bliss || 0) + .06); } }
+function lickDraw(st, ctx){ const l = st.lick; if(!l) return; const m = meshPt(st, 64, 93), u = l.t / l.end, ext = Math.min(1, l.t / .25, (l.end - l.t) / .25), wig = Math.sin(l.t * 22) * 6;   // 혀를 쭉 내밀어 할짝할짝
+  const p = meshPt(st, l.sn.ux + wig * .4, l.sn.uy + Math.cos(l.t * 22) * 2), tx = m.x + (p.x - m.x) * ext, ty = m.y + (p.y - m.y) * ext;
+  ctx.lineCap = "round"; ctx.strokeStyle = "#b8455b"; ctx.lineWidth = 15; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.quadraticCurveTo((m.x + tx) / 2 + wig, (m.y + ty) / 2 + 10, tx, ty); ctx.stroke(); ctx.strokeStyle = "#ef8aa0"; ctx.lineWidth = 12; ctx.stroke();
+  ctx.fillStyle = "#ef8aa0"; ctx.beginPath(); ctx.ellipse(tx, ty, 10, 8, Math.atan2(ty - m.y, tx - m.x), 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = "#b8455b"; ctx.lineWidth = 1.5; ctx.stroke(); }
+function sfxLick(){ if(!pa()) return; const t0 = PA.currentTime; pNoise("bandpass", 2200, 1200, 3, t0, .08, .22); pOsc("sine", 700, 400, t0, .06, .08); }
+function eatStep(st, dt){ const e = st.eat; if(!e) return; e.t += dt; const ko = S.meta.settings.ui === "ko";
+  if(e.mode === "tongue" && e.t > .22 && !e.got){ e.got = 1; sfxChomp(); buzz(25); const p = meshPt(st, e.k.ux, e.k.uy); st.texts.push({ x: p.x + 20, y: p.y - 24, t: 0, s: ko ? "찹!" : "パクッ!", big: 0, doodle: 1 }); }
+  if(e.t >= e.end){ st.eat = null; const m = st.toScr(64, 92); if(chewStart(st, e.k.it, m.x, m.y, e.k.res || "none")) st.chew.t = CH_IN; } }
+function eatDraw(st, ctx){ const e = st.eat; if(!e) return; const m = meshPt(st, 64, 93), p = meshPt(st, e.k.ux, e.k.uy), u = e.t / e.end;
+  if(e.mode === "suck"){ const k = u * u, sp = (1 - k) * 2.2, x = p.x + (m.x - p.x) * k + Math.cos(u * 14) * 14 * (1 - k), y = p.y + (m.y - p.y) * k + Math.sin(u * 14) * 8 * (1 - k);
+    ctx.strokeStyle = "rgba(255,255,255,.5)"; ctx.lineWidth = 1.5; for(let i = 0; i < 4; i++){ const a = u * 20 + i * 1.57; ctx.beginPath(); ctx.arc(m.x, m.y, 14 + 10 * (1 - u) + i * 4, a, a + 1); ctx.stroke(); }
+    petDrawItem(ctx, e.k.it, x, y, 40 * (1 - k * .8), u * 12 + sp); return; }
+  // 혀: 입에서 쭉 → 찹 → 쏙
+  const ext = u < .36 ? u / .36 : 1 - (u - .36) / .64, tx = m.x + (p.x - m.x) * ext, ty = m.y + (p.y - m.y) * ext;
+  if(u > .36) petDrawItem(ctx, e.k.it, tx, ty, 40 * (1 - (1 - ext) * .6), e.k.ang);
+  ctx.lineCap = "round"; ctx.strokeStyle = "#b8455b"; ctx.lineWidth = 15; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.quadraticCurveTo((m.x + tx) / 2 + Math.sin(u * 30) * 10, (m.y + ty) / 2 + 12, tx, ty); ctx.stroke();
+  ctx.strokeStyle = "#ef8aa0"; ctx.lineWidth = 12; ctx.stroke(); ctx.strokeStyle = "rgba(184,69,91,.5)"; ctx.lineWidth = 1.6; ctx.stroke();
+  ctx.fillStyle = "#ef8aa0"; ctx.beginPath(); ctx.ellipse(tx, ty, 9, 7.5, Math.atan2(ty - m.y, tx - m.x), 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = "#b8455b"; ctx.lineWidth = 1.5; ctx.stroke();
+  if(u <= .36) petDrawItem(ctx, e.k.it, p.x, p.y, 40, e.k.ang); }
+function sfxTongue(){ if(!pa()) return; const t0 = PA.currentTime; pOsc("sine", 300, 1200, t0, .16, .25); pNoise("bandpass", 1800, 900, 3, t0, .12, .2); }
+function sfxChomp(){ if(!pa()) return; const t0 = PA.currentTime; pOsc("square", 260, 120, t0, .06, .3); pNoise("lowpass", 1600, 400, .7, t0, .07, .4); }
 function chewStart(st, it, x, y, res){ if(st.chew) return false; st.chew = { t: 0, x0: x, y0: y, it, n: 0, said: {}, res, crunch: res === "shell" }; return true; }
 function chewStep(st, dt){ const c = st.chew; if(c){ c.t += dt; const t = c.t, ko = S.meta.settings.ui === "ko", say = (key, s, x, y, big) => { if(c.said[key]) return; c.said[key] = 1; st.texts.push({ x, y, t: 0, s, big: big ? 1 : 0, doodle: 1 }); };
     const m = st.toScr(64, 92);
     if(t > CH_IN && t < CH_IN + CH_CHEW){ const k = Math.floor((t - CH_IN) * 7); if(k !== c.n){ c.n = k; c.crunch ? sfxCrunch() : sfxChew(k); buzz(8); } say("m", c.crunch ? (ko ? "와그작와그작" : "バリボリ") : (ko ? "우물우물" : "もぐもぐ"), m.x + 70, m.y - 70); }
+    if(c.res === "none" && t > CH_IN + CH_CHEW){ say("g", ko ? "꿀꺽" : "ごっくん", m.x + 60, m.y - 60); st.chew = null; st.bliss = Math.min(1, (st.bliss || 0) + .05); return; }
     if(t > CH_IN + CH_CHEW && !c.slurp){ c.slurp = 1; sfxSlurp(); say("s", ko ? "쓰으읍…" : "ずぞぞぞ…", m.x - 60, m.y - 80); }
     if(t > CH_IN + CH_CHEW + CH_SLURP && !c.spat){ c.spat = 1; sfxSpit(); buzz([50, 20, 90]); say("p", ko ? "퉤에에에엣!!" : "ペッッッ!!", st.W / 2, st.H * .26, 1);
       jellyHit(st, .9, 64, 92); st.bone = { t: 0, x0: m.x, y0: m.y + 8, dx: (Math.random() - .5) * .6, res: c.res }; fxBurst(st, "drop", m.x, m.y + 6, 14, 380); }
@@ -3162,16 +3192,16 @@ function sfxChew(k){ if(!pa()) return; const t0 = PA.currentTime; pOsc("sine", k
 function sfxSlurp(){ if(!pa()) return; const t0 = PA.currentTime; pNoise("bandpass", 600, 3800, 4, t0, .5, .45); pOsc("sine", 300, 900, t0, .45, .12); }
 function sfxSpit(){ if(!pa()) return; const t0 = PA.currentTime; pNoise("highpass", 2600, 900, .7, t0, .38, .7); pOsc("square", 520, 160, t0, .16, .2); pOsc("sine", 900, 200, t0 + .02, .3, .25); }
 function sfxSmack(){ if(!pa()) return; const t0 = PA.currentTime; pNoise("lowpass", 4000, 400, .5, t0, .14, .8); pOsc("triangle", 1400, 300, t0, .1, .3); }
-function fxStep(st, dt){ chewStep(st, dt); if(st.glow) st.glow = Math.max(0, st.glow - dt * 1.2);
+function fxStep(st, dt){ chewStep(st, dt); eatStep(st, dt); lickStep(st, dt); if(st.glow) st.glow = Math.max(0, st.glow - dt * 1.2);
   (st.sticks || []).forEach(k => { k.t += dt; if(k.kind === "pinch"){ st.hit = Math.max(st.hit, .4); if(Math.random() < dt * 6) st.shake = Math.max(st.shake, 2); } if(k.kind === "slide") k.uy += dt * (k.t > .6 ? 9 : 0); });
-  st.sticks = (st.sticks || []).filter(k => { if(k.t < k.life) return true; const p = meshPt(st, k.ux, k.uy); if(k.res && chewStart(st, k.it, p.x, p.y, k.res)) return false; st.parts.push({ x: p.x, y: p.y, vx: (Math.random() - .5) * 120, vy: -120, life: 1.6, kind: "fall", it: k.it, sz: 38, rot: k.ang, rs: (Math.random() - .5) * 10, floor: 1, fo: 4 }); return false; });
+  st.sticks = (st.sticks || []).filter(k => { if(k.t < k.life) return true; const p = meshPt(st, k.ux, k.uy); if(!st.chew && !st.eat && (k.res || k.kind === "slide")){ const r = Math.random(), mode = r < .34 ? "fall" : r < .67 ? "suck" : "tongue"; if(mode === "fall"){ chewStart(st, k.it, p.x, p.y, k.res || "none"); return false; } st.eat = { k, mode, t: 0, end: mode === "suck" ? .7 : .6 }; if(mode === "suck") sfxSlurp(); else sfxTongue(); return false; } st.parts.push({ x: p.x, y: p.y, vx: (Math.random() - .5) * 120, vy: -120, life: 1.6, kind: "fall", it: k.it, sz: 38, rot: k.ang, rs: (Math.random() - .5) * 10, floor: 1, fo: 4 }); return false; });
   // 얼룩: 잠깐 뒤 냥이가 팔을 늘려서 슥슥 닦아 없앰
   (st.stains || []).forEach(sn => sn.age += dt);
-  if(!st.wipe && st.stains && st.stains.length){ const sn = st.stains[0]; if(sn.age > .9 && !st.grab){ st.wipe = { sn, ux: sn.ux, uy: sn.uy, dir: sn.ux < 64 ? -1 : 1, t: 0, end: 2.2, last: 0 }; } }
+  if(!st.wipe && st.stains && st.stains.length){ const sn = st.stains[0]; if(sn.age > .9 && !st.grab && !st.lick && !sn.lickTried){ sn.lickTried = 1; if(Math.random() < .5){ st.lick = { sn, t: 0, end: 2, n: 0 }; sfxTongue(); return; } } if(sn.age > .9 && !st.grab && !st.lick){ st.wipe = { sn, ux: sn.ux, uy: sn.uy, dir: sn.ux < 64 ? -1 : 1, t: 0, end: 2.2, last: 0 }; } }
   if(st.wipe){ const w = st.wipe; w.t += dt; if(w.t > .3 && w.t < w.end - .2){ w.sn.a = Math.max(0, w.sn.a - dt * .62); const sk = Math.floor(st.t * 24 / Math.PI); if(sk !== w.last){ w.last = sk; if(sk % 2) sfxRub(); } }
     if(w.t >= w.end){ st.stains = st.stains.filter(x => x !== w.sn); st.wipe = null; st.bliss = Math.min(1, (st.bliss || 0) + .05); } }
 }
-function fxDrawStick(st, ctx){ chewDraw(st, ctx); if(st.kiBoom){ const k = st.kiBoom; k.t += 1 / 60; const u = k.t / .7; if(u >= 1) st.kiBoom = null; else { ctx.save(); ctx.globalCompositeOperation = "lighter"; const R = (60 + u * st.W) * k.r * .6; ctx.strokeStyle = `rgba(150,230,255,${1 - u})`; ctx.lineWidth = 18 * (1 - u) + 2; ctx.beginPath(); ctx.ellipse(k.x, k.y, R, R * .55, 0, 0, Math.PI * 2); ctx.stroke(); if(u < .2){ ctx.fillStyle = `rgba(210,250,255,${.8 * (1 - u / .2)})`; ctx.fillRect(0, 0, st.W, st.H); } ctx.restore(); if(u < .5) mangaLines(ctx, st, k.x, k.y, 60, 1 - u * 2); } }
+function fxDrawStick(st, ctx){ chewDraw(st, ctx); eatDraw(st, ctx); lickDraw(st, ctx); if(st.kiBoom){ const k = st.kiBoom; k.t += 1 / 60; const u = k.t / .7; if(u >= 1) st.kiBoom = null; else { ctx.save(); ctx.globalCompositeOperation = "lighter"; const R = (60 + u * st.W) * k.r * .6; ctx.strokeStyle = `rgba(150,230,255,${1 - u})`; ctx.lineWidth = 18 * (1 - u) + 2; ctx.beginPath(); ctx.ellipse(k.x, k.y, R, R * .55, 0, 0, Math.PI * 2); ctx.stroke(); if(u < .2){ ctx.fillStyle = `rgba(210,250,255,${.8 * (1 - u / .2)})`; ctx.fillRect(0, 0, st.W, st.H); } ctx.restore(); if(u < .5) mangaLines(ctx, st, k.x, k.y, 60, 1 - u * 2); } }
   if(st.glow){ const c = st.toScr(64, 90); const rg = ctx.createRadialGradient(c.x, c.y, 10, c.x, c.y, st.W * .7); rg.addColorStop(0, `rgba(255,240,170,${.55 * st.glow})`); rg.addColorStop(1, "rgba(255,240,170,0)"); ctx.fillStyle = rg; ctx.fillRect(0, 0, st.W, st.H); }
   (st.sticks || []).forEach(k => { const p = meshPt(st, k.ux, k.uy); let rot = k.ang, x = p.x, y = p.y, sz = 40;
     if(k.kind === "dart"){ rot += Math.sin(k.t * 30) * .25 * Math.exp(-k.t * 2); }
