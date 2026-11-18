@@ -654,6 +654,13 @@ h1 .logo{display:flex;flex-direction:column;align-items:flex-start;gap:0;letter-
 .logo .logo-s{font-size:.72rem;font-weight:700;letter-spacing:.22em;color:var(--muted);text-transform:none;margin:0 0 2px 2px}
 .logo .logo-b{display:inline-flex;align-items:center;font-size:2.15rem;font-weight:900;letter-spacing:.01em;line-height:1;color:var(--ink);font-family:"Arial Rounded MT Bold","SF Pro Rounded",ui-rounded,var(--display)}
 .logo .lo2{width:.98em;height:.98em;margin:0 .02em;transform:translateY(-.07em);color:var(--ink)} .logo .lx{width:.5em;height:.92em;margin-left:-.02em;color:var(--ink);transform:translateY(-.02em)}
+.catbar{position:relative;height:26px;min-width:120px}
+.catbar .cb-tail{position:absolute;left:0;top:0;width:14px;height:26px}
+.catbar .cb-body{position:absolute;left:12px;top:5px;height:16px;width:calc((100% - 66px) * var(--p) / 100 + 4px);background:repeating-linear-gradient(90deg,#fbf6ec 0 12px,#f3ebdd 12px 14px);border:1.6px solid #2a221c;border-left:0;border-right:0;transition:width .6s cubic-bezier(.3,1.4,.5,1)}
+.catbar .cb-head{position:absolute;top:0;left:calc((100% - 66px) * var(--p) / 100 + 12px);width:32px;height:26px;transition:left .6s cubic-bezier(.3,1.4,.5,1);transform-origin:20% 50%;animation:cbChomp .5s ease-in-out infinite}
+@keyframes cbChomp{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.93)}}
+.catbar .cb-churu{position:absolute;top:8px;right:0;height:10px;left:calc((100% - 66px) * var(--p) / 100 + 40px);transition:left .6s cubic-bezier(.3,1.4,.5,1);background:linear-gradient(90deg,#f2b98f 0 5px,#fff 5px);border:1.4px solid #e46b8a;border-left:0;border-radius:0 6px 6px 0;overflow:hidden;min-width:0}
+.catbar .cb-churu b{position:absolute;left:8px;right:6px;top:2.5px;height:2px;background:repeating-linear-gradient(90deg,#f6b7c8 0 6px,transparent 6px 9px);opacity:.9}
 h1 .logo .testtag{font-size:.55rem;letter-spacing:.1em;background:var(--accent);color:#fff;border-radius:999px;padding:2px 7px;margin-left:6px}
 </style>
 </head>
@@ -1524,7 +1531,17 @@ function finishSession(){
 
 const kbdHTML = () => L().chars.length ? '<div class="kbd">' + L().chars.map(ch => `<button type="button" data-ch="${ch}">${ch}</button>`).join("") + "</div>" : "";
 function bindKbd(box, input){ box.querySelectorAll(".kbd button").forEach(b => b.onclick = () => { const s = input.selectionStart ?? input.value.length, e = input.selectionEnd ?? s; input.value = input.value.slice(0,s) + b.dataset.ch + input.value.slice(e); input.focus(); try{ input.setSelectionRange(s+1, s+1); }catch(_){} }); }
-function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="row" style="flex-wrap:nowrap;gap:10px"><button class="btn sm ghost" type="button" id="homeBtn">‹ ${esc(t().home)}</button><div class="progress grow" aria-hidden="true"><i style="width:${pct}%"></i></div><button class="btn sm ghost" type="button" id="gradBtn" title="${esc(t().gradTitle)}">🎓 ${esc(t().grad)}</button></div><div class="modehead"><span class="muted small">${t().modes[mode]} · ${t().left(SES.queue.length)}</span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}" title="${esc(t().hfHelp)}">${hf ? t().hfOn : t().hfOff}</button>${levelChip(c)}</span></div>${say(MODE_NM[mode] || "st_default", esc(t().nmAsk[mode](langName())))}`; }
+/* 오늘의 진척도: 위에서 본 냥이가 츄르를 먹어 나갈수록 몸통이 주욱 늘어남 */
+function catBarHTML(pct){ const P = Math.max(0, Math.min(100, pct));
+  return `<div class="catbar grow" role="progressbar" aria-valuenow="${P}" aria-valuemin="0" aria-valuemax="100" style="--p:${P}">
+  <svg class="cb-tail" viewBox="0 0 14 26" aria-hidden="true"><path d="M13 13 C6 13 3 11 3.5 7 C4 3.5 8 3.5 8.5 6" fill="none" stroke="#2a221c" stroke-width="5" stroke-linecap="round"/><path d="M13 13 C6 13 3 11 3.5 7 C4 3.5 8 3.5 8.5 6" fill="none" stroke="#fbf6ec" stroke-width="2.6" stroke-linecap="round"/><ellipse cx="11" cy="4.6" rx="2.6" ry="2" fill="#fbf6ec" stroke="#2a221c" stroke-width="1.2"/><ellipse cx="11" cy="21.4" rx="2.6" ry="2" fill="#fbf6ec" stroke="#2a221c" stroke-width="1.2"/></svg>
+  <i class="cb-body"></i>
+  <svg class="cb-head" viewBox="0 0 32 26" aria-hidden="true"><ellipse cx="3.5" cy="4.2" rx="2.8" ry="2" fill="#fbf6ec" stroke="#2a221c" stroke-width="1.2"/><ellipse cx="3.5" cy="21.8" rx="2.8" ry="2" fill="#fbf6ec" stroke="#2a221c" stroke-width="1.2"/>
+    <path d="M24 9 L30 4.5 M24.5 11 L31 9.5 M24 17 L30 21.5 M24.5 15 L31 16.5" stroke="#6b6158" stroke-width=".8" stroke-linecap="round"/>
+    <path d="M8.5 6.5 L7.5 .9 L13.5 3.8 Z M8.5 19.5 L7.5 25.1 L13.5 22.2 Z" fill="#fbf6ec" stroke="#2a221c" stroke-width="1.3" stroke-linejoin="round"/><path d="M9.2 5.2 L8.8 2.8 L11.4 4.1 Z M9.2 20.8 L8.8 23.2 L11.4 21.9 Z" fill="#f2a1b4"/>
+    <ellipse cx="15.5" cy="13" rx="10" ry="9" fill="#fbf6ec" stroke="#2a221c" stroke-width="1.6"/><path d="M9 13 L20 13" stroke="rgba(160,130,100,.25)" stroke-width="3" stroke-linecap="round"/><ellipse cx="24.6" cy="13" rx="1.4" ry="1.1" fill="#f2a1b4"/></svg>
+  ${P < 100 ? `<i class="cb-churu"><b></b></i>` : ""}</div>`; }
+function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="row" style="flex-wrap:nowrap;gap:10px"><button class="btn sm ghost" type="button" id="homeBtn">‹ ${esc(t().home)}</button>${catBarHTML(pct)}<button class="btn sm ghost" type="button" id="gradBtn" title="${esc(t().gradTitle)}">🎓 ${esc(t().grad)}</button></div><div class="modehead"><span class="muted small">${t().modes[mode]} · ${t().left(SES.queue.length)}</span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}" title="${esc(t().hfHelp)}">${hf ? t().hfOn : t().hfOff}</button>${levelChip(c)}</span></div>${say(MODE_NM[mode] || "st_default", esc(t().nmAsk[mode](langName())))}`; }
 document.addEventListener("click", e => {
   if(!e.target.closest("#gradBtn") || !SES) return;
   const it = SES.queue[0]; const c = it && S.cards[it.id]; if(!c) return;
@@ -2628,12 +2645,12 @@ const PT = {
   ja:{ title:"おやつタイム", give:"おやつをあげる", snacks:n=>`おやつ ${n}個`, streakN:n=>`連続 ${n}日`, next:(it,d)=>`あと${d}日で ${it} 解禁`, maxed:"おやつ全部解禁ずみ！",
        empty:"おやつがないよ。今日の学習を終えるともらえる！ おなかはいつでもつつけるよ", grant:n=>`ごほうび おやつ ×${n}`, grantWhy:(s,b)=>`連続${s}日ボーナス${b ? ` ＋正解ボーナス${b}` : ""}`,
        throwNow:"おなかに投げる", lv:n=>`ぷにLv.${n}`, fat:"プデプデ度", snd:"音", lvUp:c=>`ポンッ！ はじけてスッキリ… 🪙 +${c}`, unlock:"新しいおやつ解禁！", freezeGot:"7日達成！ひとやすみ券ゲット（1日休んでも連続が続く）",
-       freezeUsed:n=>`ひとやすみ券で ${n}日分の連続を守ったよ`, freezes:n=>`ひとやすみ券 ${n}`, main:"今日の目玉", combo:n=>`COMBO ×${n}`, shop:"おやつショップ", coins:"コイン", lack:"コインが足りないよ", bought:(it,n)=>`${it} ×${n} を買った！`, have:n=>`持ってる ${n}`, close:"閉じる", nudge:"🍖 ねこのおなかを叩きにいく", welcome:"今日もおつかれ！ 思いっきり投げていいよ 🍖", hint:"おやつは上にフリック · タップで自動 · おなかをなでる · 長押しでむぎゅっ · ほっぺはつまんで引っぱる", nice:"ナイス！", great:"グレート！", excellent:"エクセレント！", curve:"カーブ！", miss:"おしい！ もう一回",
+       freezeUsed:n=>`ひとやすみ券で ${n}日分の連続を守ったよ`, freezes:n=>`ひとやすみ券 ${n}`, main:"今日の目玉", combo:n=>`COMBO ×${n}`, shop:"おやつショップ", coins:"コイン", lack:"コインが足りないよ", bought:(it,n)=>`${it} ×${n} を買った！`, have:n=>`持ってる ${n}`, close:"閉じる", nudge:"🍖 ねこのおなかを叩きにいく", sndMode:{ mix:"🔉 音楽といっしょに（マナーモードでは鳴らない）", loud:"🔊 マナーモードでも鳴らす（音楽は止まる）", off:"🔇 音オフ" }, welcome:"今日もおつかれ！ 思いっきり投げていいよ 🍖", hint:"おやつは上にフリック · タップで自動 · おなかをなでる · 長押しでむぎゅっ · ほっぺはつまんで引っぱる", nice:"ナイス！", great:"グレート！", excellent:"エクセレント！", curve:"カーブ！", miss:"おしい！ もう一回",
        ranks:["見習い","ささみ級","ねこ缶級","おすし級","海の幸級","王様級","伝説級"], test:"テスト: おやつ+10", testStreak:"テスト: 連続日数" },
   ko:{ title:"간식 타임", give:"간식 주기", snacks:n=>`간식 ${n}개`, streakN:n=>`연속 ${n}일`, next:(it,d)=>`${d}일 더 하면 ${it} 해금`, maxed:"간식 전부 해금 완료!",
        empty:"간식이 없어. 오늘 학습을 끝내면 받을 수 있어! 배는 언제든 찔러도 돼", grant:n=>`보상 간식 ×${n}`, grantWhy:(s,b)=>`연속 ${s}일 보너스${b ? ` + 정답 보너스 ${b}` : ""}`,
        throwNow:"배에 던지기", lv:n=>`말랑 Lv.${n}`, fat:"푸데푸데", snd:"소리", lvUp:c=>`펑! 터지고 다시 홀쭉… 🪙 +${c}`, unlock:"새 간식 해금!", freezeGot:"7일 달성! 쉬는 날 쿠폰 획득 (하루 쉬어도 연속 유지)",
-       freezeUsed:n=>`쉬는 날 쿠폰으로 ${n}일치 연속을 지켰어`, freezes:n=>`쉬는 날 쿠폰 ${n}`, main:"오늘의 메인", combo:n=>`COMBO ×${n}`, shop:"간식 상점", coins:"코인", lack:"코인이 부족해", bought:(it,n)=>`${it} ×${n} 구매!`, have:n=>`보유 ${n}`, close:"닫기", nudge:"🍖 냥이 배 때리러 가기", welcome:"오늘도 수고했어! 마음껏 던져 🍖", hint:"간식은 위로 휙 · 톡 치면 자동 · 배 문지르기 · 꾹 누르면 쭈욱 · 볼은 잡아당기기", nice:"나이스!", great:"그레이트!", excellent:"엑설런트!", curve:"커브!", miss:"아깝다! 한 번 더",
+       freezeUsed:n=>`쉬는 날 쿠폰으로 ${n}일치 연속을 지켰어`, freezes:n=>`쉬는 날 쿠폰 ${n}`, main:"오늘의 메인", combo:n=>`COMBO ×${n}`, shop:"간식 상점", coins:"코인", lack:"코인이 부족해", bought:(it,n)=>`${it} ×${n} 구매!`, have:n=>`보유 ${n}`, close:"닫기", nudge:"🍖 냥이 배 때리러 가기", sndMode:{ mix:"🔉 음악이랑 같이 (무음 모드면 안 들림)", loud:"🔊 무음 모드여도 소리 냄 (음악은 멈춤)", off:"🔇 소리 끔" }, welcome:"오늘도 수고했어! 마음껏 던져 🍖", hint:"간식은 위로 휙 · 톡 치면 자동 · 배 문지르기 · 꾹 누르면 쭈욱 · 볼은 잡아당기기", nice:"나이스!", great:"그레이트!", excellent:"엑설런트!", curve:"커브!", miss:"아깝다! 한 번 더",
        ranks:["견습","닭가슴살급","캔급","초밥급","해산물급","왕급","전설급"], test:"테스트: 간식 +10", testStreak:"테스트: 연속 일수" },
 };
 const pt = () => PT[S.meta.settings.ui] || PT.ja;
@@ -2698,9 +2715,12 @@ function bindPetOpen(root){ (root || document).querySelectorAll("[data-petopen]"
 let PA = null, PNOISE = null;
 let PMASTER = null, PUNLOCK = false;
 function petSoundOn(){ return S.meta.settings.petSound !== false; }
-function pa(){ if(!PUNLOCK){ PUNLOCK = true;   // iPhone: 무음 스위치가 켜져 있어도 들리도록 '재생' 세션으로 전환
-    try{ if(navigator.audioSession) navigator.audioSession.type = "playback"; }catch(_){}
-    try{ const au = new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="); au.loop = true; au.volume = 0; au.setAttribute("playsinline", ""); au.play().catch(() => {}); PA_KEEP = au; }catch(_){} }
+function sndMode(){ const v = S.meta.settings.petSound; return v === false ? "off" : v === "loud" ? "loud" : "mix"; }   // mix: 음악 안 끊김 / loud: 무음 스위치 무시(음악은 멈춤)
+function applySndMode(){ const m = sndMode();
+  try{ if(navigator.audioSession) navigator.audioSession.type = m === "loud" ? "playback" : "ambient"; }catch(_){}
+  if(m === "loud"){ if(!PA_KEEP){ try{ const au = new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="); au.loop = true; au.volume = 0; au.setAttribute("playsinline", ""); au.play().catch(() => {}); PA_KEEP = au; }catch(_){} } }
+  else if(PA_KEEP){ try{ PA_KEEP.pause(); }catch(_){} PA_KEEP = null; } }
+function pa(){ if(!PUNLOCK){ PUNLOCK = true; applySndMode(); }
   if(!PA){ try{ PA = new (window.AudioContext || window.webkitAudioContext)(); PMASTER = PA.createGain(); PMASTER.gain.value = petSoundOn() ? 1 : 0; PMASTER.connect(PA.destination); const n = PA.sampleRate; PNOISE = PA.createBuffer(1, n, n); const d = PNOISE.getChannelData(0); for(let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1; }catch(e){ PA = null; } }
   if(PA && PA.state !== "running") PA.resume().catch(() => {}); if(PMASTER) PMASTER.gain.value = petSoundOn() ? 1 : 0; return petSoundOn() ? PA : null; }
 let PA_KEEP = null;
@@ -2740,7 +2760,7 @@ function openPet(welcome){
   if(!$("#pet")){ const el = document.createElement("div"); el.id = "pet"; el.setAttribute("role", "dialog"); document.body.appendChild(el); }
   const el = $("#pet"); el.classList.remove("hidden"); document.body.classList.add("petopen");
   const isTest = /\/test\//.test(location.pathname) || location.protocol === "file:";
-  el.innerHTML = `<canvas id="petBG"></canvas><canvas id="petGL"></canvas><canvas id="petCv"></canvas><button type="button" class="pet-snd" id="petSnd" aria-label="${esc(x.snd)}">${petSoundOn() ? "🔊" : "🔇"}</button>
+  el.innerHTML = `<canvas id="petBG"></canvas><canvas id="petGL"></canvas><canvas id="petCv"></canvas><button type="button" class="pet-snd" id="petSnd" aria-label="${esc(x.snd)}">${{ mix: "🔉", loud: "🔊", off: "🔇" }[sndMode()]}</button>
     <div class="pet-top"><button class="btn sm" type="button" id="petClose">‹ ${esc(x.close)}</button>
       <div class="pet-lv"><canvas id="petFat" width="0" height="0"></canvas><b id="petLv"></b></div>
       <div class="pet-st"><b>🔥 ${streak()}</b><small>${esc(x.ranks[petTier(streak())])}${p.freezes ? ` · 🧊${p.freezes}` : ""}</small></div></div>
@@ -2748,7 +2768,8 @@ function openPet(welcome){
     <div class="pet-bottom"><p class="pet-hint">${esc(x.hint)}</p>
       ${isTest ? `<div class="row" style="justify-content:center;gap:6px"><button class="btn sm" type="button" id="petTest">${esc(x.test)}</button><label class="small" style="display:flex;gap:6px;align-items:center">${esc(x.testStreak)}<input id="petTestS" type="number" min="0" max="200" value="${streak()}" style="width:70px"></label></div>` : ""}</div>`;
   $("#petClose").onclick = closePet;
-  $("#petSnd").onclick = () => { S.meta.settings.petSound = !petSoundOn(); save(); const b = $("#petSnd"); b.textContent = petSoundOn() ? "🔊" : "🔇"; if(PMASTER) PMASTER.gain.value = petSoundOn() ? 1 : 0; if(petSoundOn()){ pa(); sfxPoyon(.3); } };
+  $("#petSnd").onclick = () => { const nx = { mix: "loud", loud: false, off: true }[sndMode()]; S.meta.settings.petSound = nx; save(); const m = sndMode(); $("#petSnd").textContent = { mix: "🔉", loud: "🔊", off: "🔇" }[m];
+    applySndMode(); if(PMASTER) PMASTER.gain.value = petSoundOn() ? 1 : 0; petMsg(pt().sndMode[m], 2600); if(petSoundOn()){ pa(); sfxPoyon(.3); } };
   const tb = $("#petTest"); if(tb){ tb.onclick = () => { const s = streak(), top = petTier(s); for(let i = 0; i < 10; i++){ const c = PET_ITEMS.filter(it => it.t <= top); const it = c[Math.floor(Math.random() * c.length)]; p.inv[it.id] = (p.inv[it.id] || 0) + 1; } save(); petTray(); };
     $("#petTestS").onchange = e => { const n = Math.max(0, Math.min(200, parseInt(e.target.value, 10) || 0)); S.meta.days = {}; for(let i = 0; i < n; i++) S.meta.days[addDays(today(), -i)] = true; save(); openPet(); }; }
   petStart(); petTray(); el.classList.remove("enter"); void el.offsetWidth; el.classList.add("enter"); if(welcome === true) setTimeout(() => petMsg(pt().welcome, 3200), 450);
@@ -3615,7 +3636,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 load(); slimPresets(); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
