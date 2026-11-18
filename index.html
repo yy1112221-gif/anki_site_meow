@@ -504,6 +504,9 @@ body.petopen{overflow:hidden}
 #petCv,#petGL,#petBG{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none} #petBG{pointer-events:none} #petGL{pointer-events:none}
 .pet-top{position:absolute;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));display:flex;align-items:center;gap:10px}
 .pet-lv{flex:1;display:flex;flex-direction:column;gap:0;align-items:center} .pet-lv b{font-size:.72rem;letter-spacing:.06em;color:var(--muted);font-weight:800} #petFat{width:84px;height:52px;display:block}
+#pet.enter{animation:petIn .5s cubic-bezier(.2,1.1,.3,1)} @keyframes petIn{from{transform:translateY(40px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+#petNudge{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));z-index:55;transform:translate(-50%,30px);opacity:0;pointer-events:none;padding:12px 20px;border-radius:999px;border:0;background:#111413;color:#fff;font-weight:800;font-size:.95rem;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:.35s cubic-bezier(.2,1.3,.4,1)}
+#petNudge.on{transform:translate(-50%,0);opacity:1;pointer-events:auto;animation:nudgeWob 1.6s 1s infinite} @keyframes nudgeWob{0%,80%,100%{transform:translate(-50%,0)}86%{transform:translate(-50%,-6px) rotate(-3deg)}93%{transform:translate(-50%,0) rotate(2deg)}}
 .pet-snd{position:absolute;z-index:5;left:12px;top:calc(64px + env(safe-area-inset-top));width:38px;height:38px;border-radius:50%;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:1.05rem;display:grid;place-items:center;cursor:pointer}
 .pet-bar{width:min(220px,100%);height:9px;border-radius:999px;background:rgba(255,255,255,.5);overflow:hidden} .pet-bar i{display:block;height:100%;background:linear-gradient(90deg,#ffb84d,#f2708f);border-radius:999px;transition:width .3s}
 .pet-st{display:flex;flex-direction:column;align-items:flex-end} .pet-st b{font-size:1.05rem;color:var(--ink)} .pet-st small{font-size:.7rem;color:var(--muted)}
@@ -1495,7 +1498,7 @@ function secureDay(){   // 今日のノルマ達成: 連続日数・肉球スタ
   const first = !S.meta.days[today()] || S.meta.days[today()] === "freeze"; if(!first){ saveSession(); updateStats(); nextItem(); return; }
   S.meta.days[today()] = true; save(); saveSession(); updateStats();
   const ok = SES.finished.filter(f => f.ok).length, ng = SES.finished.length - ok, PG = petGrant(ok, ng);
-  const go = () => { toast(t().goalHit(streak(), PG ? PG.n : 0)); if(PG) sfxFanfare(); nextItem(); };
+  const go = () => { toast(t().goalHit(streak(), PG ? PG.n : 0)); if(PG) sfxFanfare(); nextItem(); if(petCount()) petNudge(); };
   pawStamp().then(go);
 }
 function finishSession(){
@@ -1509,7 +1512,7 @@ function finishSession(){
   document.body.classList.remove("focus");
   const box = $("#sessionBox");
   box.innerHTML = `${heroHTML(x.finishTitle, "", 100)}${say(ng ? "st_happy" : "st_love", esc(ng ? x.nmFinishSome : x.nmFinishAll))}${petGrantHTML(PG)}<p>${x.finishSum(ok, ng)}</p><div class="list">${rows}</div><div class="row">${petCount() ? `<button class="btn primary" type="button" data-petopen>🍖 ${esc(pt().throwNow)}</button>` : ""}<span class="grow"></span><button class="btn${petCount() ? "" : " primary"}" id="backHome" type="button">${x.ok}</button></div>`;
-  bindPetOpen(box); (firstToday ? pawStamp() : Promise.resolve()).then(() => { if(PG) sfxFanfare(); });
+  bindPetOpen(box); (firstToday ? pawStamp() : Promise.resolve()).then(() => { if(PG) sfxFanfare(); if(petCount()) setTimeout(() => { if(!$("#pet") || $("#pet").classList.contains("hidden")) openPet(true); }, 1100); });   // 학습 끝 → 자연스럽게 냥이한테
   paintHero(box);
   $("#backHome").onclick = () => { SES = null; document.body.classList.remove("focus"); box.classList.add("hidden"); $("#sessionStart").classList.remove("hidden"); renderAll(); setTimeout(maybeRiskPrompt, 600); };
 }
@@ -2620,12 +2623,12 @@ const PT = {
   ja:{ title:"おやつタイム", give:"おやつをあげる", snacks:n=>`おやつ ${n}個`, streakN:n=>`連続 ${n}日`, next:(it,d)=>`あと${d}日で ${it} 解禁`, maxed:"おやつ全部解禁ずみ！",
        empty:"おやつがないよ。今日の学習を終えるともらえる！ おなかはいつでもつつけるよ", grant:n=>`ごほうび おやつ ×${n}`, grantWhy:(s,b)=>`連続${s}日ボーナス${b ? ` ＋正解ボーナス${b}` : ""}`,
        throwNow:"おなかに投げる", lv:n=>`ぷにLv.${n}`, fat:"プデプデ度", snd:"音", lvUp:c=>`ポンッ！ はじけてスッキリ… 🪙 +${c}`, unlock:"新しいおやつ解禁！", freezeGot:"7日達成！ひとやすみ券ゲット（1日休んでも連続が続く）",
-       freezeUsed:n=>`ひとやすみ券で ${n}日分の連続を守ったよ`, freezes:n=>`ひとやすみ券 ${n}`, main:"今日の目玉", combo:n=>`COMBO ×${n}`, shop:"おやつショップ", coins:"コイン", lack:"コインが足りないよ", bought:(it,n)=>`${it} ×${n} を買った！`, have:n=>`持ってる ${n}`, close:"閉じる", hint:"おやつは上にフリック · タップで自動 · おなかをなでる · 長押しでむぎゅっ · ほっぺはつまんで引っぱる", nice:"ナイス！", great:"グレート！", excellent:"エクセレント！", curve:"カーブ！", miss:"おしい！ もう一回",
+       freezeUsed:n=>`ひとやすみ券で ${n}日分の連続を守ったよ`, freezes:n=>`ひとやすみ券 ${n}`, main:"今日の目玉", combo:n=>`COMBO ×${n}`, shop:"おやつショップ", coins:"コイン", lack:"コインが足りないよ", bought:(it,n)=>`${it} ×${n} を買った！`, have:n=>`持ってる ${n}`, close:"閉じる", nudge:"🍖 ねこのおなかを叩きにいく", welcome:"今日もおつかれ！ 思いっきり投げていいよ 🍖", hint:"おやつは上にフリック · タップで自動 · おなかをなでる · 長押しでむぎゅっ · ほっぺはつまんで引っぱる", nice:"ナイス！", great:"グレート！", excellent:"エクセレント！", curve:"カーブ！", miss:"おしい！ もう一回",
        ranks:["見習い","ささみ級","ねこ缶級","おすし級","海の幸級","王様級","伝説級"], test:"テスト: おやつ+10", testStreak:"テスト: 連続日数" },
   ko:{ title:"간식 타임", give:"간식 주기", snacks:n=>`간식 ${n}개`, streakN:n=>`연속 ${n}일`, next:(it,d)=>`${d}일 더 하면 ${it} 해금`, maxed:"간식 전부 해금 완료!",
        empty:"간식이 없어. 오늘 학습을 끝내면 받을 수 있어! 배는 언제든 찔러도 돼", grant:n=>`보상 간식 ×${n}`, grantWhy:(s,b)=>`연속 ${s}일 보너스${b ? ` + 정답 보너스 ${b}` : ""}`,
        throwNow:"배에 던지기", lv:n=>`말랑 Lv.${n}`, fat:"푸데푸데", snd:"소리", lvUp:c=>`펑! 터지고 다시 홀쭉… 🪙 +${c}`, unlock:"새 간식 해금!", freezeGot:"7일 달성! 쉬는 날 쿠폰 획득 (하루 쉬어도 연속 유지)",
-       freezeUsed:n=>`쉬는 날 쿠폰으로 ${n}일치 연속을 지켰어`, freezes:n=>`쉬는 날 쿠폰 ${n}`, main:"오늘의 메인", combo:n=>`COMBO ×${n}`, shop:"간식 상점", coins:"코인", lack:"코인이 부족해", bought:(it,n)=>`${it} ×${n} 구매!`, have:n=>`보유 ${n}`, close:"닫기", hint:"간식은 위로 휙 · 톡 치면 자동 · 배 문지르기 · 꾹 누르면 쭈욱 · 볼은 잡아당기기", nice:"나이스!", great:"그레이트!", excellent:"엑설런트!", curve:"커브!", miss:"아깝다! 한 번 더",
+       freezeUsed:n=>`쉬는 날 쿠폰으로 ${n}일치 연속을 지켰어`, freezes:n=>`쉬는 날 쿠폰 ${n}`, main:"오늘의 메인", combo:n=>`COMBO ×${n}`, shop:"간식 상점", coins:"코인", lack:"코인이 부족해", bought:(it,n)=>`${it} ×${n} 구매!`, have:n=>`보유 ${n}`, close:"닫기", nudge:"🍖 냥이 배 때리러 가기", welcome:"오늘도 수고했어! 마음껏 던져 🍖", hint:"간식은 위로 휙 · 톡 치면 자동 · 배 문지르기 · 꾹 누르면 쭈욱 · 볼은 잡아당기기", nice:"나이스!", great:"그레이트!", excellent:"엑설런트!", curve:"커브!", miss:"아깝다! 한 번 더",
        ranks:["견습","닭가슴살급","캔급","초밥급","해산물급","왕급","전설급"], test:"테스트: 간식 +10", testStreak:"테스트: 연속 일수" },
 };
 const pt = () => PT[S.meta.settings.ui] || PT.ja;
@@ -2725,7 +2728,9 @@ const buzz = p => { try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){}
 /* ───────── 画面とぷにぷに物理 ───────── */
 const PET_BASE = "M4 112 C4 100 14 96 22 96 C24 80 34 60 64 60 C94 60 104 80 106 96 C114 96 124 100 124 112 C124 118 116 120 64 120 C12 120 4 118 4 112 Z";
 let PET = null;
-function openPet(){
+function petNudge(){ let b = $("#petNudge"); if(!b){ b = document.createElement("button"); b.id = "petNudge"; b.type = "button"; document.body.appendChild(b); }
+  b.textContent = pt().nudge; b.classList.add("on"); b.onclick = () => { b.classList.remove("on"); openPet(true); }; clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove("on"), 12000); }
+function openPet(welcome){
   const x = pt(), p = petState();
   if(!$("#pet")){ const el = document.createElement("div"); el.id = "pet"; el.setAttribute("role", "dialog"); document.body.appendChild(el); }
   const el = $("#pet"); el.classList.remove("hidden"); document.body.classList.add("petopen");
@@ -2741,7 +2746,7 @@ function openPet(){
   $("#petSnd").onclick = () => { S.meta.settings.petSound = !petSoundOn(); save(); const b = $("#petSnd"); b.textContent = petSoundOn() ? "🔊" : "🔇"; if(PMASTER) PMASTER.gain.value = petSoundOn() ? 1 : 0; if(petSoundOn()){ pa(); sfxPoyon(.3); } };
   const tb = $("#petTest"); if(tb){ tb.onclick = () => { const s = streak(), top = petTier(s); for(let i = 0; i < 10; i++){ const c = PET_ITEMS.filter(it => it.t <= top); const it = c[Math.floor(Math.random() * c.length)]; p.inv[it.id] = (p.inv[it.id] || 0) + 1; } save(); petTray(); };
     $("#petTestS").onchange = e => { const n = Math.max(0, Math.min(200, parseInt(e.target.value, 10) || 0)); S.meta.days = {}; for(let i = 0; i < n; i++) S.meta.days[addDays(today(), -i)] = true; save(); openPet(); }; }
-  petStart(); petTray();
+  petStart(); petTray(); el.classList.remove("enter"); void el.offsetWidth; el.classList.add("enter"); if(welcome === true) setTimeout(() => petMsg(pt().welcome, 3200), 450);
   const top = petTier(streak()); if(top > p.seenTier){ const its = PET_ITEMS.filter(i => i.t === top); p.seenTier = top; save(); setTimeout(() => { petMsg(`${x.unlock} ${its.map(i => i.e || "").join("")} ${its.map(itName).join("・")}`, 3200); sfxFanfare(); }, 500); }
   else if(!petCount()) petMsg(x.empty, 4200);
 }
@@ -2871,6 +2876,7 @@ function jellyStep(st, h){
     if(j > 0){ lx += dx[k - JNX]; ly += dy[k - JNX]; n++; } if(j < JNY - 1){ lx += dx[k + JNX]; ly += dy[k + JNX]; n++; }
     const rx = st.rx[k], ry = st.ry[k], top = Math.max(0, (118 - ry) / 64);
     let tx = sw * top * top, ty = br * top, ka = KA;
+    if(st.chew){ const cb = chewBulge(st); if(cb){ [-1, 1].forEach(sd => { const f = Math.exp(-((rx - 64 - sd * 22) ** 2 + (ry - 92) ** 2) / (2 * 10 * 10)); tx += sd * cb * f; ty += cb * .35 * f; }); ka += 300 * Math.exp(-((ry - 92) ** 2) / 200); } }
     for(const pl of st.pulls){ if(!pl.on) continue; const ddx = rx - pl.x0, ddy = ry - pl.y0, d2 = ddx * ddx + ddy * ddy, L = Math.hypot(pl.ox, pl.oy) || 1, ux = pl.ox / L, uy = pl.oy / L, al = ddx * ux + ddy * uy, pe = ddx * uy - ddy * ux;
       // 外へ引っぱる: 向きの先は丸ごとついてくる（折れ返らない）/ 内へ寄せる: その場だけ寄って顔がむにゅっ
       const inward = pl.ox * pl.side < 0, f = Math.exp(-pe * pe / (2 * 13 * 13)) * (al > 0 ? (inward ? Math.exp(-al * al / (2 * 20 * 20)) : 1) : Math.exp(-al * al / (2 * 16 * 16)));
@@ -2897,7 +2903,11 @@ function petLoop(now){
   const steps = 6, h = dt / steps; for(let k = 0; k < steps; k++) jellyStep(st, h);
   st.flies = st.flies.filter(f => { f.t += dt / f.dur; if(f.t >= 1){ st.lastCh = 0; petImpact(f.it.F, f.hx, f.hy, f.it); return false; } return true; });
   const floorY = st.toScr(64, 121).y;
-  st.parts = st.parts.filter(q => { q.life -= dt * (q.floor ? .45 : 1.4); q.vy += (q.g || 700) * dt; q.x += q.vx * dt; q.y += q.vy * dt; if(q.rs) q.rot = (q.rot || 0) + q.rs * dt;
+  const vacOn = st.vacAt && performance.now() > st.vacAt; if(vacOn && !st.vacSnd){ st.vacSnd = 1; sfxSlurp(); st.vacFace = performance.now() + 900; } if(st.vacAt && performance.now() > st.vacAt + 1200){ st.vacAt = 0; st.vacSnd = 0; }
+  const mouth = st.toScr(64, 92);
+  st.parts.forEach(q => { q.age = (q.age || 0) + dt; if(q.vac && vacOn){ q.floor = 0; q.g = 1; q.life = Math.max(q.life, .5); const dx = mouth.x - q.x, dy = mouth.y - q.y, d = Math.hypot(dx, dy) || 1; q.vx = dx / d * Math.min(900, 200 + (q.age * 400)); q.vy = dy / d * Math.min(900, 200 + q.age * 400); if(d < 14) q.life = 0; }
+    if(q.flick && q.age > 1.2 && !q.flicked){ q.flicked = 1; q.floor = 0; q.vx = (q.x < st.W / 2 ? -1 : 1) * 1150; q.vy = -480; q.rs = 30; q.life = 1.5; sfxKick(); st.flap = 1; } });
+  st.parts = st.parts.filter(q => { q.life -= dt * (q.floor ? .45 : q.vac && vacOn ? 0 : 1.4); q.vy += (q.g || 700) * dt; q.x += q.vx * dt; q.y += q.vy * dt; if(q.rs) q.rot = (q.rot || 0) + q.rs * dt;
     if(q.floor && q.y > floorY + (q.fo || 0)){ q.y = floorY + (q.fo || 0); if(q.vy > 60 && q.tick && Math.random() < .5) sfxTick(); q.vy *= -.38; q.vx *= .72; q.rs = (q.rs || 0) * .6; }
     return q.life > 0 && q.y < st.H + 20; });
   fxStep(st, dt);
@@ -2964,7 +2974,7 @@ function drawCatTex(st){
   const fur = g.createRadialGradient(50, 74, 4, 64, 98, 74); fur.addColorStop(0, "#fffdf8"); fur.addColorStop(.55, "#f8f0e3"); fur.addColorStop(1, "#ecdfcb");
   g.fillStyle = fur; g.fill(body); ears.forEach(e => g.fill(e.P));
   g.globalCompositeOperation = "source-atop";
-  g.globalCompositeOperation = "source-atop"; (st.stains || []).forEach(sn => { g.globalAlpha = Math.max(0, sn.a); sn.blobs.forEach(b => { g.fillStyle = b.c || sn.col; g.beginPath(); g.ellipse(sn.ux + b.x, sn.uy + b.y, b.r, b.r * b.e, b.t, 0, Math.PI * 2); g.fill(); }); g.globalAlpha = 1; });
+  g.globalCompositeOperation = "source-atop"; (st.stains || []).forEach(sn => { g.globalAlpha = Math.max(0, sn.a); sn.blobs.forEach(b => { g.fillStyle = b.c || sn.col; g.beginPath(); g.ellipse(sn.ux + b.x, sn.uy + b.y, b.r, b.r * b.e, b.t, 0, Math.PI * 2); g.fill(); if(sn.grain){ g.strokeStyle = "rgba(120,100,80,.55)"; g.lineWidth = .35; g.stroke(); } }); g.globalAlpha = 1; });
   const BW = 44, BH = 40; if(!st.tex3 || st.tex3.width !== Math.round(BW * TS)){ st.tex3 = document.createElement("canvas"); st.tex3.width = Math.round(BW * TS); st.tex3.height = Math.round(BH * TS); st.t3 = st.tex3.getContext("2d"); }
   arms.forEach(a => { const g3 = st.t3, ox = a.bx - BW / 2, oy = a.by - 28; g3.setTransform(1, 0, 0, 1, 0, 0); g3.clearRect(0, 0, st.tex3.width, st.tex3.height); g3.setTransform(TS, 0, 0, TS, -ox * TS, -oy * TS);   // 落ち影（小さい下書きで作る）: 根元に向かってすっと消える
     g3.shadowColor = "rgba(105,75,45,.42)"; g3.shadowBlur = 3.2 * TS; g3.shadowOffsetY = 1.8 * TS; g3.shadowOffsetX = -a.dir * .4 * TS; g3.fillStyle = "#000"; g3.fill(a.P); g3.shadowColor = "transparent";
@@ -2991,7 +3001,10 @@ function drawCatFace(st, g){
   const y = 82, L = 52, R = 76, hit = st.hit > .15, happy = !hit && performance.now() - st.lastHit < 1400, b = st.bliss || 0, dopey = !hit && b > .55;
   g.strokeStyle = INKC; g.fillStyle = INKC; g.lineWidth = 2.2;
   if(b > .15){ g.fillStyle = `rgba(244,130,155,${Math.min(.45, b * .5)})`; [44, 84].forEach(x => { g.beginPath(); g.ellipse(x, 88.5, 6 + b * 3, 3.4 + b * 1.6, 0, 0, Math.PI * 2); g.fill(); }); g.fillStyle = INKC; }   // 볼이 점점 발그레
-  if(st.wipe && !hit){ [L, R].forEach(ex => { g.beginPath(); g.moveTo(ex - 3.5, y + .5); g.lineTo(ex + 3.5, y + .5); g.stroke(); }); }   // 슥슥 닦는 중: 진지
+  const cw = st.chew && st.chew.t > CH_IN ? st.chew.t - CH_IN : -1, cph = cw < 0 ? (st.vacFace && performance.now() < st.vacFace ? 2 : 0) : cw < CH_CHEW ? 1 : cw < CH_CHEW + CH_SLURP ? 2 : 3;
+  if(cph === 1 || cph === 2){ [L, R].forEach(ex => { g.beginPath(); if(cph === 1){ g.moveTo(ex - 4, y + 1.5); g.quadraticCurveTo(ex, y - 3.5, ex + 4, y + 1.5); } else { g.moveTo(ex - 3.6, y); g.lineTo(ex + 3.6, y); } g.stroke(); }); }
+  else if(cph === 3){ [[L, 1], [R, -1]].forEach(([ex, dir]) => { g.beginPath(); g.moveTo(ex - 4 * dir, y - 3.5); g.lineTo(ex + 3 * dir, y); g.lineTo(ex - 4 * dir, y + 3.5); g.stroke(); }); }
+  else if(st.wipe && !hit){ [L, R].forEach(ex => { g.beginPath(); g.moveTo(ex - 3.5, y + .5); g.lineTo(ex + 3.5, y + .5); g.stroke(); }); }   // 슥슥 닦는 중: 진지
   else if(dopey){ const dr = 1.2 + (b - .55) * 5; [[L, -1], [R, 1]].forEach(([ex, dir]) => { g.beginPath(); g.moveTo(ex - 4.5, y - .5 + (dir < 0 ? dr : 0)); g.quadraticCurveTo(ex, y + 3.2, ex + 4.5, y - .5 + (dir > 0 ? dr : 0)); g.stroke(); }); }   // 헤벌레: 처진 눈
   else if(hit){ [[L, 1], [R, -1]].forEach(([ex, dir]) => { g.beginPath(); g.moveTo(ex - 4 * dir, y - 3.5); g.lineTo(ex + 3 * dir, y); g.lineTo(ex - 4 * dir, y + 3.5); g.stroke(); }); }
   else if(happy || st.holding){ [L, R].forEach(ex => { g.beginPath(); g.moveTo(ex - 4, y + 1.5); g.quadraticCurveTo(ex, y - 3.5, ex + 4, y + 1.5); g.stroke(); }); }
@@ -3000,10 +3013,16 @@ function drawCatFace(st, g){
   g.strokeStyle = "rgba(232,121,143,.85)"; g.lineWidth = 1.5; [44, 84].forEach(x => { for(const o of [-5, -1, 3]){ g.beginPath(); g.moveTo(x + o, 90.5); g.lineTo(x + o + 2.4, 85.8); g.stroke(); } });
   g.fillStyle = PINK; g.beginPath(); g.ellipse(64, y + 4.5, 1.9, 1.3, 0, 0, Math.PI * 2); g.fill();
   const my = y + 8, w = 5.5; g.strokeStyle = INKC; g.lineWidth = 2;
-  if(hit){ g.fillStyle = "#5b2a2a"; g.beginPath(); g.ellipse(64, my + 3, 3, 3.6 + st.hit * 2, 0, 0, Math.PI * 2); g.fill(); }
-  else if(dopey){ const o = (b - .55) * 2.2; g.fillStyle = "#6b2c34"; g.beginPath(); g.moveTo(58.5, my); g.quadraticCurveTo(64, my - 1, 69.5, my); g.quadraticCurveTo(68, my + 5 + o * 4, 64, my + 5.5 + o * 4); g.quadraticCurveTo(60, my + 5 + o * 4, 58.5, my); g.fill();
-    g.fillStyle = "#ef8aa0"; g.beginPath(); g.ellipse(64.5, my + 3.8 + o * 3, 3.2, 1.8 + o, 0, 0, Math.PI * 2); g.fill();
-    if(b > .7){ const dl = 2 + (b - .7) * 16 + Math.sin(st.t * 2.3) * 1.2; g.fillStyle = "rgba(200,232,255,.9)"; g.beginPath(); g.moveTo(68, my + 2); g.quadraticCurveTo(70.2, my + 2 + dl * .6, 69.4, my + 2 + dl); g.arc(68.6, my + 2 + dl, 1.3, 0, Math.PI); g.quadraticCurveTo(67.4, my + 2 + dl * .5, 68, my + 2); g.fill(); } }   // 입이 헤 벌어지고 침 주르륵
+  if(hit && !cph){ g.fillStyle = "#5b2a2a"; g.beginPath(); g.ellipse(64, my + 3, 3, 3.6 + st.hit * 2, 0, 0, Math.PI * 2); g.fill(); }
+  else if(cph === 1){ const op = Math.abs(Math.sin(cw * 7 * Math.PI)); g.beginPath(); g.moveTo(59, my + 1); g.quadraticCurveTo(61.5, my + 1 - op * 2, 64, my + 1); g.quadraticCurveTo(66.5, my + 1 + op * 2, 69, my + 1); g.stroke(); }
+  else if(cph === 2){ g.beginPath(); g.ellipse(64, my + 2, 1.6, 2, 0, 0, Math.PI * 2); g.stroke(); }
+  else if(cph === 3){ g.fillStyle = "#6b2c34"; g.beginPath(); g.ellipse(64, my + 2.5, 2.4, 3.2, 0, 0, Math.PI * 2); g.fill(); }
+  else if(dopey){ const o = (b - .55) * 2.2, w2 = w;   // ω(3을 눕힌 입)는 그대로 두고, 그 아래로 헤— 벌어짐
+    const om = new Path2D(); om.moveTo(64 - w2 / 2 - .6, my + 2.6); om.quadraticCurveTo(63.4, my + 4.4, 64, my + .3); om.quadraticCurveTo(64.6, my + 4.4, 64 + w2 / 2 + .6, my + 2.6);
+    om.quadraticCurveTo(64 + w2 / 2, my + 5 + o * 5, 64, my + 5.6 + o * 5); om.quadraticCurveTo(64 - w2 / 2, my + 5 + o * 5, 64 - w2 / 2 - .6, my + 2.6); om.closePath();
+    g.fillStyle = "#6b2c34"; g.fill(om); g.save(); g.clip(om); g.fillStyle = "#ef8aa0"; g.beginPath(); g.ellipse(64, my + 5.2 + o * 4.4, 3.2, 2 + o * 1.2, 0, 0, Math.PI * 2); g.fill(); g.restore();
+    g.beginPath(); g.moveTo(64 - w - 2.5, my - 2.5); g.quadraticCurveTo(64 - w - 1.5, my + 1, 64 - w / 2, my + 3.2); g.quadraticCurveTo(63.4, my + 4.4, 64, my); g.quadraticCurveTo(64.6, my + 4.4, 64 + w / 2, my + 3.2); g.quadraticCurveTo(64 + w + 1.5, my + 1, 64 + w + 2.5, my - 2.5); g.stroke();
+    if(b > .7){ const dl = 2 + (b - .7) * 16 + Math.sin(st.t * 2.3) * 1.2; g.fillStyle = "rgba(200,232,255,.9)"; g.beginPath(); g.moveTo(68.4, my + 3.4); g.quadraticCurveTo(70.4, my + 3.4 + dl * .6, 69.6, my + 3.4 + dl); g.arc(68.8, my + 3.4 + dl, 1.3, 0, Math.PI); g.quadraticCurveTo(67.6, my + 3.4 + dl * .5, 68.4, my + 3.4); g.fill(); } }
   else { g.beginPath(); g.moveTo(64 - w - 2.5, my - 2.5); g.quadraticCurveTo(64 - w - 1.5, my + 1, 64 - w / 2, my + 3.2); g.quadraticCurveTo(63.4, my + 4.4, 64, my); g.quadraticCurveTo(64.6, my + 4.4, 64 + w / 2, my + 3.2); g.quadraticCurveTo(64 + w + 1.5, my + 1, 64 + w + 2.5, my - 2.5); g.stroke();
     if(happy){ g.fillStyle = "#d9465a"; g.beginPath(); g.moveTo(61.6, my + 3); g.quadraticCurveTo(64, my + 8, 66.4, my + 3); g.fill(); } }
   g.lineWidth = 1.1; g.strokeStyle = "rgba(60,48,38,.5)"; [[-1, 38], [1, 90]].forEach(([sx, x0]) => [[-3, -4], [1.5, 0], [6, 4]].forEach(([dy, an]) => { g.beginPath(); g.moveTo(x0, 84 + dy); const wd = (st.bliss || 0) * 5; g.quadraticCurveTo(x0 + sx * 9, 84 + dy + an * .4 + st.hit * 3 * an + wd * .4, x0 + sx * 16, 84 + dy + an + wd); g.stroke(); }));
@@ -3048,7 +3067,7 @@ function petDraw(){
     else { ctx.fillStyle = { drop: "#ffffff", sauce: "#d8262c", cream: "#fffaf0", paste: "#f2b98f", water: "#bfeaff", crumb2: "#e0a43a" }[k] || "#d39a5f"; ctx.beginPath(); ctx.arc(q.x, q.y, q.sz * .7, 0, Math.PI * 2); ctx.fill(); } }); ctx.globalAlpha = 1;
   // 文字
   st.texts.forEach(x => { const a = 1 - x.t; ctx.globalAlpha = a; ctx.textAlign = "center"; ctx.lineJoin = "round";
-    const sz = x.big ? 34 + Math.sin(Math.min(1, x.t * 4) * Math.PI) * 12 : 22; ctx.font = `900 ${sz}px system-ui, sans-serif`;
+    const sz = x.big ? 34 + Math.sin(Math.min(1, x.t * 4) * Math.PI) * 12 : 22; ctx.font = `900 ${sz}px ${x.doodle ? "'Chalkboard SE','Comic Sans MS'," : ""}system-ui, sans-serif`;
     const yy = x.big ? x.y : x.y - x.t * 50; ctx.lineWidth = 6; ctx.strokeStyle = "#fff"; ctx.strokeText(x.s, x.x, yy); ctx.fillStyle = x.big ? "#e8486a" : "#c8860a"; ctx.fillText(x.s, x.x, yy); }); ctx.globalAlpha = 1;
 }
 
@@ -3064,20 +3083,20 @@ function petThrow(id, fromEl){
 }
 /* 간식마다 특징이 사는 연출: 튀는 것·묻는 것(냥이가 팔 늘려 닦음)·달라붙는 것 */
 function fxBurst(st, kind, x, y, n, sp, o){ for(let i = 0; i < n; i++){ const a = -Math.PI * (.08 + Math.random() * .84), v = sp * (.4 + Math.random() * .8); st.parts.push(Object.assign({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, kind, sz: 2 + Math.random() * 3, rot: Math.random() * 6, rs: (Math.random() - .5) * 20 }, o || {})); } }
-function fxStain(st, ux, uy, col, size, cols){ const blobs = []; const n = 7 + Math.round(size * 3);
+function fxStain(st, ux, uy, col, size, cols, style){ const blobs = []; const n = 7 + Math.round(size * 3);
   for(let i = 0; i < n; i++){ const a = Math.random() * Math.PI * 2, r = Math.random() * size * 7; blobs.push({ x: Math.cos(a) * r, y: Math.sin(a) * r * .8 + (i > n - 3 ? 4 + Math.random() * 6 : 0), r: 1.2 + Math.random() * size * 3.2, e: .6 + Math.random() * .6, t: Math.random() * 3, c: cols ? cols[i % cols.length] : null }); }
-  (st.stains = st.stains || []).push({ ux, uy, col, blobs, a: 1, age: 0 }); if(st.stains.length > 4) st.stains.shift(); }
+  if(style === "grain") blobs.forEach(b => { b.r = 1.5 + Math.random() * .6; b.e = .55; }); (st.stains = st.stains || []).push({ ux, uy, col, blobs, a: 1, age: 0, grain: style === "grain" }); if(st.stains.length > 4) st.stains.shift(); }
 function fxStick(st, it, ux, uy, kind, life, o){ (st.sticks = st.sticks || []).push(Object.assign({ it, ux, uy, kind, life, t: 0, ang: (Math.random() - .5) * .8 }, o || {})); }
 function itemFX(st, it, hx, hy, F){ const c = st.toScr(hx, hy), id = it.id;
-  if(id === "kari"){ fxBurst(st, "kibble", c.x, c.y, 16, 420, { floor: 1, tick: 1, sz: 4 }); }
-  else if(id === "nibo"){ fxStick(st, it, hx, hy, "dart", 1.6, { ang: (Math.random() < .5 ? -1 : 1) * (.5 + Math.random() * .4) }); }
-  else if(id === "sasa"){ fxBurst(st, "shred", c.x, c.y, 12, 260, { sz: 4 }); }
+  if(id === "kari"){ fxBurst(st, "kibble", c.x, c.y, 16, 420, { floor: 1, tick: 1, sz: 4, vac: 1 }); st.vacAt = performance.now() + 1400; }
+  else if(id === "nibo"){ fxStick(st, it, hx, hy, "dart", 1.1, { res: "fishbone", ang: (Math.random() < .5 ? -1 : 1) * (.5 + Math.random() * .4) }); }
+  else if(id === "sasa"){ if(!chewStart(st, it, c.x, c.y, "bone")) fxBurst(st, "shred", c.x, c.y, 12, 260, { sz: 4 }); }
   else if(id === "stick"){ fxBurst(st, "paste", c.x, c.y, 12, 300); fxStain(st, hx, hy, "rgba(240,180,140,.9)", .9); }
-  else if(id === "can"){ fxBurst(st, "sauce", c.x, c.y, 34, 520, { sz: 3 + Math.random() * 3 }); fxStain(st, hx, hy, "#c81e24", 1.3, ["#c81e24", "#e0352f", "#a8141a"]); st.parts.push({ x: c.x, y: c.y, vx: (Math.random() - .5) * 200, vy: -380, life: 1.6, kind: "fall", it, sz: 30, rot: 0, rs: 9, floor: 1, fo: 4 }); sfxSplat(); }
-  else if(id === "ebi"){ fxBurst(st, "crumb2", c.x, c.y, 22, 320); sfxCrunch(); }
-  else if(id === "sushi"){ fxBurst(st, "rice", c.x, c.y, 18, 330, { floor: 1, sz: 2.4 }); fxStick(st, it, hx, hy, "slide", 2.2); }
-  else if(id === "tai"){ fxStick(st, it, hx, hy, "flop", 1.3); fxBurst(st, "water", c.x, c.y, 14, 300); }
-  else if(id === "kani" || id === "lob"){ const side = hx < 64 ? -1 : 1; fxStick(st, it, 64 + side * 22, 84, "pinch", 2.2, { side }); sfxPinch(); }
+  else if(id === "can"){ fxBurst(st, "sauce", c.x, c.y, 34, 520, { sz: 3 + Math.random() * 3 }); fxStain(st, hx, hy, "#c81e24", 1.3, ["#c81e24", "#e0352f", "#a8141a"]); st.parts.push({ x: c.x, y: c.y, vx: (Math.random() - .5) * 200, vy: -380, life: 3, kind: "fall", it, sz: 30, rot: 0, rs: 9, floor: 1, fo: 4, flick: 1 }); sfxSplat(); }
+  else if(id === "ebi"){ fxBurst(st, "crumb2", c.x, c.y, 22, 320); sfxCrunch(); chewStart(st, it, c.x, c.y, "tail"); }
+  else if(id === "sushi"){ fxBurst(st, "rice", c.x, c.y, 18, 330, { floor: 1, sz: 2.4, vac: 1 }); fxStick(st, it, hx, hy, "slide", 2.2); fxStain(st, hx, hy - 4, "#fffdf5", .9, null, "grain"); st.vacAt = performance.now() + 1500; }
+  else if(id === "tai"){ fxStick(st, it, hx, hy, "flop", 1.3, { res: "fishbone" }); fxBurst(st, "water", c.x, c.y, 14, 300); }
+  else if(id === "kani" || id === "lob"){ const side = hx < 64 ? -1 : 1; fxStick(st, it, 64 + side * 22, 84, "pinch", 1.7, { side, res: "shell" }); sfxPinch(); }
   else if(id === "cake"){ fxBurst(st, "cream", c.x, c.y, 26, 420, { sz: 3 + Math.random() * 3 }); fxStain(st, hx, hy, "#fffaf0", 1.5, ["#fffaf0", "#fff4dc", "#f6a6b8"]); sfxSplat(); }
   else if(id === "gold"){ fxBurst(st, "coin", c.x, c.y, 18, 480, { floor: 1, tick: 1, sz: 5, rs: 14 }); }
   else if(id === "ki"){ const ch = st.lastCh || 0; st.kiBoom = { t: 0, x: c.x, y: c.y, r: 1 + ch * 2 }; st.shake = Math.max(st.shake, 10 + ch * 18); fxBurst(st, "water", c.x, c.y, 20 + ch * 30, 500 + ch * 400); st.texts.push({ x: st.W / 2, y: st.H * .24, t: 0, s: ch > .6 ? "ドォォン!!" : "ドン!", big: 1 }); sfxKi(ch); }
@@ -3085,16 +3104,48 @@ function itemFX(st, it, hx, hy, F){ const c = st.toScr(hx, hy), id = it.id;
 }
 function meshPt(st, ux, uy){ const fi = (ux - JX0) / (JX1 - JX0) * (JNX - 1), fj = (uy - JY0) / (JY1 - JY0) * (JNY - 1), i = Math.max(0, Math.min(JNX - 2, Math.floor(fi))), j = Math.max(0, Math.min(JNY - 2, Math.floor(fj))), a = fi - i, b = fj - j;
   const k = j * JNX + i, L = (arr) => (arr[k] * (1 - a) + arr[k + 1] * a) * (1 - b) + (arr[k + JNX] * (1 - a) + arr[k + JNX + 1] * a) * b; return st.toScr(ux + L(st.dx), uy + L(st.dy)); }
-function fxStep(st, dt){ if(st.glow) st.glow = Math.max(0, st.glow - dt * 1.2);
+const CH_IN = .28, CH_CHEW = 1.7, CH_SLURP = .55;
+function chewStart(st, it, x, y, res){ if(st.chew) return false; st.chew = { t: 0, x0: x, y0: y, it, n: 0, said: {}, res, crunch: res === "shell" }; return true; }
+function chewStep(st, dt){ const c = st.chew; if(c){ c.t += dt; const t = c.t, ko = S.meta.settings.ui === "ko", say = (key, s, x, y, big) => { if(c.said[key]) return; c.said[key] = 1; st.texts.push({ x, y, t: 0, s, big: big ? 1 : 0, doodle: 1 }); };
+    const m = st.toScr(64, 92);
+    if(t > CH_IN && t < CH_IN + CH_CHEW){ const k = Math.floor((t - CH_IN) * 7); if(k !== c.n){ c.n = k; c.crunch ? sfxCrunch() : sfxChew(k); buzz(8); } say("m", c.crunch ? (ko ? "와그작와그작" : "バリボリ") : (ko ? "우물우물" : "もぐもぐ"), m.x + 70, m.y - 70); }
+    if(t > CH_IN + CH_CHEW && !c.slurp){ c.slurp = 1; sfxSlurp(); say("s", ko ? "쓰으읍…" : "ずぞぞぞ…", m.x - 60, m.y - 80); }
+    if(t > CH_IN + CH_CHEW + CH_SLURP && !c.spat){ c.spat = 1; sfxSpit(); buzz([50, 20, 90]); say("p", ko ? "퉤에에에엣!!" : "ペッッッ!!", st.W / 2, st.H * .26, 1);
+      jellyHit(st, .9, 64, 92); st.bone = { t: 0, x0: m.x, y0: m.y + 8, dx: (Math.random() - .5) * .6, res: c.res }; fxBurst(st, "drop", m.x, m.y + 6, 14, 380); }
+    if(t > CH_IN + CH_CHEW + CH_SLURP + .5) st.chew = null; }
+  const b = st.bone; if(b){ b.t += dt; if(b.t > .32 && !b.hit){ b.hit = 1; sfxSmack(); st.shake = Math.max(st.shake, 14); buzz(60); } if(b.t > 2.2) st.bone = null; } }
+function chewBulge(st){ const c = st.chew; if(!c) return 0; const t = c.t - CH_IN; if(t < 0) return 0; if(t < CH_CHEW) return 3.6 * (.55 + .45 * Math.abs(Math.sin(t * 7 * Math.PI))); if(t < CH_CHEW + CH_SLURP) return -3; return 0; }
+function drawResidue(ctx, sz, rot, res){ if(!res || res === "bone") return drawBone(ctx, sz, rot); ctx.save(); ctx.rotate(rot); const s = sz / 60; ctx.scale(s, s); ctx.lineJoin = "round"; ctx.lineCap = "round";
+  if(res === "fishbone"){ ctx.strokeStyle = "#f4efe6"; ctx.lineWidth = 7; const draw = () => { ctx.beginPath(); ctx.moveTo(-22, 0); ctx.lineTo(22, 0); for(let i = -16; i <= 14; i += 6){ ctx.moveTo(i, 0); ctx.lineTo(i - 4, -11); ctx.moveTo(i, 0); ctx.lineTo(i - 4, 11); } ctx.moveTo(22, 0); ctx.lineTo(32, -10); ctx.lineTo(32, 10); ctx.closePath(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-22, -10); ctx.quadraticCurveTo(-38, 0, -22, 10); ctx.stroke(); };
+    ctx.strokeStyle = "#5b4a3a"; ctx.lineWidth = 6.5; draw(); ctx.strokeStyle = "#fbf7ef"; ctx.lineWidth = 3; draw(); ctx.fillStyle = "#2a221c"; ctx.beginPath(); ctx.arc(-27, -2, 2.4, 0, Math.PI * 2); ctx.fill(); }
+  else if(res === "tail"){ const P = new Path2D("M-6 -4 L6 -4 L20 -18 C26 -10 26 10 20 18 L6 4 L-6 4 Z"); const g = ctx.createLinearGradient(-6, 0, 24, 0); g.addColorStop(0, "#f7b25a"); g.addColorStop(1, "#e2552d"); ctx.fillStyle = g; ctx.fill(P); ctx.strokeStyle = "#7a2d12"; ctx.lineWidth = 2.4; ctx.stroke(P); ctx.beginPath(); ctx.moveTo(8, -2); ctx.lineTo(20, -10); ctx.moveTo(8, 2); ctx.lineTo(20, 10); ctx.stroke(); }
+  else if(res === "shell"){ const P = new Path2D("M-26 6 C-26 -16 26 -16 26 6 L20 4 L16 9 L10 4 L5 9 L0 4 L-5 9 L-10 4 L-16 9 L-20 4 Z"); const g = ctx.createLinearGradient(0, -16, 0, 8); g.addColorStop(0, "#f2563c"); g.addColorStop(1, "#b52a1a"); ctx.fillStyle = g; ctx.fill(P); ctx.strokeStyle = "#5e150b"; ctx.lineWidth = 2.4; ctx.stroke(P); ctx.fillStyle = "rgba(255,255,255,.5)"; [[-10, -6], [4, -9], [14, -3]].forEach(([x, y]) => { ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI * 2); ctx.fill(); }); }
+  ctx.restore(); }
+function drawBone(ctx, sz, rot){ ctx.save(); ctx.rotate(rot); const s = sz / 60; ctx.scale(s, s); ctx.fillStyle = "#fffaf0"; ctx.strokeStyle = "#5b4a3a"; ctx.lineWidth = 2.6; ctx.lineJoin = "round";
+  const P = new Path2D("M-20 -5 L20 -5 C22 -14 34 -14 34 -6 C40 -6 40 6 34 6 C34 14 22 14 20 5 L-20 5 C-22 14 -34 14 -34 6 C-40 6 -40 -6 -34 -6 C-34 -14 -22 -14 -20 -5 Z"); ctx.fill(P); ctx.stroke(P);
+  ctx.strokeStyle = "rgba(160,120,90,.45)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-16, 1); ctx.lineTo(14, 1); ctx.stroke(); ctx.restore(); }
+function chewDraw(st, ctx){ const c = st.chew; if(c && c.t < CH_IN){ const e = c.t / CH_IN, m = st.toScr(64, 92); petDrawItem(ctx, c.it, c.x0 + (m.x - c.x0) * e, c.y0 + (m.y - c.y0) * e, 46 * (1 - e * .7), e * 3); }
+  if(c && c.t > CH_IN && c.t < CH_IN + .55){ const m = st.toScr(64, 92), e = (c.t - CH_IN) / .55; ctx.save(); ctx.beginPath(); ctx.rect(0, m.y + 2, st.W, st.H); ctx.clip(); drawResidue(ctx, 30 * (1 - e), .3, c.res); ctx.restore(); }
+  const b = st.bone; if(!b) return; const W = st.W, H = st.H;
+  if(b.t < .32){ const e = b.t / .32, ee = e * e, x = b.x0 + (W / 2 + b.dx * W - b.x0) * ee, y = b.y0 - Math.sin(e * Math.PI) * 60 + (H * .42 - b.y0) * ee; ctx.save(); ctx.translate(x, y); drawResidue(ctx, 26 + ee * W * .9, b.t * 30, b.res); ctx.restore(); }   // 화면 쪽으로 날아옴
+  else { const u = b.t - .32, cx = W / 2 + b.dx * W, cy = H * .42 + Math.max(0, u - .35) ** 2 * 260; ctx.save(); ctx.globalAlpha = Math.min(1, (2.2 - b.t) * 2);
+    ctx.strokeStyle = "rgba(255,255,255,.9)"; ctx.lineWidth = 2.4; for(let i = 0; i < 9; i++){ const a = i / 9 * Math.PI * 2 + .3; let x = cx, y = cy; ctx.beginPath(); ctx.moveTo(x, y); for(let k = 0; k < 4; k++){ x += Math.cos(a + (k % 2 ? .3 : -.3)) * 26; y += Math.sin(a + (k % 2 ? .3 : -.3)) * 26; ctx.lineTo(x, y); } ctx.stroke(); }   // 화면 금
+    ctx.translate(cx, cy); drawResidue(ctx, W * .92, .3 + Math.sin(u * 30) * .06 * Math.exp(-u * 5), b.res); ctx.restore(); } }
+function sfxKick(){ if(!pa()) return; const t0 = PA.currentTime; pOsc("triangle", 1900, 1800, t0, .35, .22); pOsc("sine", 2850, 2800, t0, .3, .12); pNoise("highpass", 3000, 2000, .5, t0, .05, .3); }
+function sfxChew(k){ if(!pa()) return; const t0 = PA.currentTime; pOsc("sine", k % 2 ? 210 : 170, 120, t0, .12, .3); pNoise("lowpass", 700, 300, .6, t0, .09, .18); }
+function sfxSlurp(){ if(!pa()) return; const t0 = PA.currentTime; pNoise("bandpass", 600, 3800, 4, t0, .5, .45); pOsc("sine", 300, 900, t0, .45, .12); }
+function sfxSpit(){ if(!pa()) return; const t0 = PA.currentTime; pNoise("highpass", 2600, 900, .7, t0, .38, .7); pOsc("square", 520, 160, t0, .16, .2); pOsc("sine", 900, 200, t0 + .02, .3, .25); }
+function sfxSmack(){ if(!pa()) return; const t0 = PA.currentTime; pNoise("lowpass", 4000, 400, .5, t0, .14, .8); pOsc("triangle", 1400, 300, t0, .1, .3); }
+function fxStep(st, dt){ chewStep(st, dt); if(st.glow) st.glow = Math.max(0, st.glow - dt * 1.2);
   (st.sticks || []).forEach(k => { k.t += dt; if(k.kind === "pinch"){ st.hit = Math.max(st.hit, .4); if(Math.random() < dt * 6) st.shake = Math.max(st.shake, 2); } if(k.kind === "slide") k.uy += dt * (k.t > .6 ? 9 : 0); });
-  st.sticks = (st.sticks || []).filter(k => { if(k.t < k.life) return true; const p = meshPt(st, k.ux, k.uy); st.parts.push({ x: p.x, y: p.y, vx: (Math.random() - .5) * 120, vy: -120, life: 1.6, kind: "fall", it: k.it, sz: 38, rot: k.ang, rs: (Math.random() - .5) * 10, floor: 1, fo: 4 }); return false; });
+  st.sticks = (st.sticks || []).filter(k => { if(k.t < k.life) return true; const p = meshPt(st, k.ux, k.uy); if(k.res && chewStart(st, k.it, p.x, p.y, k.res)) return false; st.parts.push({ x: p.x, y: p.y, vx: (Math.random() - .5) * 120, vy: -120, life: 1.6, kind: "fall", it: k.it, sz: 38, rot: k.ang, rs: (Math.random() - .5) * 10, floor: 1, fo: 4 }); return false; });
   // 얼룩: 잠깐 뒤 냥이가 팔을 늘려서 슥슥 닦아 없앰
   (st.stains || []).forEach(sn => sn.age += dt);
   if(!st.wipe && st.stains && st.stains.length){ const sn = st.stains[0]; if(sn.age > .9 && !st.grab){ st.wipe = { sn, ux: sn.ux, uy: sn.uy, dir: sn.ux < 64 ? -1 : 1, t: 0, end: 2.2, last: 0 }; } }
   if(st.wipe){ const w = st.wipe; w.t += dt; if(w.t > .3 && w.t < w.end - .2){ w.sn.a = Math.max(0, w.sn.a - dt * .62); const sk = Math.floor(st.t * 24 / Math.PI); if(sk !== w.last){ w.last = sk; if(sk % 2) sfxRub(); } }
     if(w.t >= w.end){ st.stains = st.stains.filter(x => x !== w.sn); st.wipe = null; st.bliss = Math.min(1, (st.bliss || 0) + .05); } }
 }
-function fxDrawStick(st, ctx){ if(st.kiBoom){ const k = st.kiBoom; k.t += 1 / 60; const u = k.t / .7; if(u >= 1) st.kiBoom = null; else { ctx.save(); ctx.globalCompositeOperation = "lighter"; const R = (60 + u * st.W) * k.r * .6; ctx.strokeStyle = `rgba(150,230,255,${1 - u})`; ctx.lineWidth = 18 * (1 - u) + 2; ctx.beginPath(); ctx.ellipse(k.x, k.y, R, R * .55, 0, 0, Math.PI * 2); ctx.stroke(); if(u < .2){ ctx.fillStyle = `rgba(210,250,255,${.8 * (1 - u / .2)})`; ctx.fillRect(0, 0, st.W, st.H); } ctx.restore(); if(u < .5) mangaLines(ctx, st, k.x, k.y, 60, 1 - u * 2); } }
+function fxDrawStick(st, ctx){ chewDraw(st, ctx); if(st.kiBoom){ const k = st.kiBoom; k.t += 1 / 60; const u = k.t / .7; if(u >= 1) st.kiBoom = null; else { ctx.save(); ctx.globalCompositeOperation = "lighter"; const R = (60 + u * st.W) * k.r * .6; ctx.strokeStyle = `rgba(150,230,255,${1 - u})`; ctx.lineWidth = 18 * (1 - u) + 2; ctx.beginPath(); ctx.ellipse(k.x, k.y, R, R * .55, 0, 0, Math.PI * 2); ctx.stroke(); if(u < .2){ ctx.fillStyle = `rgba(210,250,255,${.8 * (1 - u / .2)})`; ctx.fillRect(0, 0, st.W, st.H); } ctx.restore(); if(u < .5) mangaLines(ctx, st, k.x, k.y, 60, 1 - u * 2); } }
   if(st.glow){ const c = st.toScr(64, 90); const rg = ctx.createRadialGradient(c.x, c.y, 10, c.x, c.y, st.W * .7); rg.addColorStop(0, `rgba(255,240,170,${.55 * st.glow})`); rg.addColorStop(1, "rgba(255,240,170,0)"); ctx.fillStyle = rg; ctx.fillRect(0, 0, st.W, st.H); }
   (st.sticks || []).forEach(k => { const p = meshPt(st, k.ux, k.uy); let rot = k.ang, x = p.x, y = p.y, sz = 40;
     if(k.kind === "dart"){ rot += Math.sin(k.t * 30) * .25 * Math.exp(-k.t * 2); }
