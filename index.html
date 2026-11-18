@@ -2862,7 +2862,7 @@ function drawCatTex(st){
   // 形（体・耳・腕）を1つのシルエットとして扱う → 重なった所に線が出ない
   const body = st.upath, fr = 9 + st.flap * 28, amp = .3 + st.flap * .6, arms = [], ears = [];
   // 前足: おなかの前に下りてくる短い腕。根元は体に溶けこみ、境目は線ではなく影で見せる
-  [[33, 107, -1, 0], [95, 107, 1, 1.3]].forEach(([bx, by, dir, ph]) => { const an = Math.PI + dir * (.14 + Math.sin(st.t * fr + ph) * amp * .45), c = Math.cos(an), sn = Math.sin(an);
+  [[33, 107, -1, 0], [95, 107, 1, 1.3]].forEach(([bx, by, dir, ph]) => { const ready = st.grab || (st.proj && st.proj.length); const an = ready ? Math.PI + dir * (.14 + st.t * 13 + ph) : Math.PI + dir * (.14 + Math.sin(st.t * fr + ph) * amp * .45), c = Math.cos(an), sn = Math.sin(an);
     const T = (x, y) => [bx + c * x - sn * y, by + sn * x + c * y];   // y: 下向き（腕の向き）
     const tcy = 10.5, tr = 5.6, P = new Path2D(), side = new Path2D(); let q = T(-8.6, -7); P.moveTo(q[0], q[1]);
     let k1 = T(-8.2, 3.5), k2 = T(-tr, tcy); P.quadraticCurveTo(k1[0], k1[1], k2[0], k2[1]); q = T(-8.3, 0); side.moveTo(q[0], q[1]); side.quadraticCurveTo(k1[0], k1[1], k2[0], k2[1]);
@@ -2928,10 +2928,6 @@ function petDraw(){
     const sq = Math.max(-.4, Math.min(.4, my / 50)); ctx.save(); ctx.translate(st.cx + shx, st.by + shy); ctx.scale(st.bw * (1 + sq * .6), st.bh * (1 - sq)); ctx.translate(-st.cx, -st.by);
     ctx.drawImage(st.tex, st.cx + (JX0 - 64) * s, st.by + (JY0 - 120) * s, (JX1 - JX0) * s, (JY1 - JY0) * s); ctx.restore(); }
   if(st.whale) whaleDraw(st, ctx);
-  // 狙いの輪（つかんでいる間・飛んでいる間）
-  if(st.grab || st.proj.length){ const c = st.toScr(64, 98), R = petRingR(st) * st.s * st.bw, R0 = 30 * st.s * st.bw;
-    ctx.lineWidth = 3; ctx.strokeStyle = "rgba(255,255,255,.8)"; ctx.beginPath(); ctx.ellipse(c.x, c.y, R0, R0 * .62, 0, 0, Math.PI * 2); ctx.stroke();
-    const col = R / (st.s * st.bw) < 14 ? "#ff8a3d" : R / (st.s * st.bw) < 21 ? "#ffd23d" : "#7bdc6b"; ctx.lineWidth = 4; ctx.strokeStyle = col; ctx.beginPath(); ctx.ellipse(c.x, c.y, R, R * .62, 0, 0, Math.PI * 2); ctx.stroke(); }
   // 投げたおやつ・つかんでいるおやつ
   st.proj.forEach(q => { if(q.spin){ ctx.strokeStyle = "rgba(255,230,120,.7)"; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(q.x, q.y, q.sz * .7, q.rot, q.rot + 4); ctx.stroke(); } petDrawItem(ctx, q.it, q.x, q.y, q.sz, q.rot); });
   if(st.grab && st.grab.x){ const g = st.grab; if(g.spin){ ctx.strokeStyle = "rgba(255,230,120,.85)"; ctx.lineWidth = 4; for(let k = 0; k < 2; k++){ ctx.beginPath(); ctx.arc(g.x, g.y, 34 + k * 8, g.rot + k * 2, g.rot + k * 2 + 2.4); ctx.stroke(); } }
