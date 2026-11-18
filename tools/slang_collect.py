@@ -167,7 +167,7 @@ def main():
         try: old = {x["t"]: x for x in json.load(open(os.path.join(OUT, f"{lang}.json"), encoding="utf-8")).get("terms", [])}
         except Exception: pass
         def work(x):   # 상위 단어만 뜻·예문 수집 (예전에 모은 건 유지·보강, 이미 넉넉하면 3일에 한 번만)
-            o = old.get(x["t"], {}); x["first"] = o.get("first", report["time"][:10]); x["def"] = [d for d in o.get("def", []) if "<" not in d]; x["ex"] = [e for e in o.get("ex", []) if good_sentence(e, lang) and x["t"] in (e.lower() if lang in ("en", "es") else e)]; x["at"] = o.get("at", "")
+            o = old.get(x["t"], {}); x["first"] = o.get("first", report["time"][:10]); x["def"] = [d for d in o.get("def", []) if "<" not in d and not re.match(r"(present participle|plural of|past tense|inflection of|alternative)", d, re.I) and not (lang in LANGCHK and len(LANGCHK[lang][1].findall(d)) >= 1)]; x["ex"] = [e for e in o.get("ex", []) if good_sentence(e, lang) and x["t"] in (e.lower() if lang in ("en", "es") else e)]; x["at"] = o.get("at", "")
             if False and len(x["ex"]) >= 2 and x["def"] and x["at"] and x["at"] > (datetime.datetime.utcnow() - datetime.timedelta(days=3)).isoformat(): return
             links = [u for d, u in alldocs if u and x["t"] in (d.lower() if lang in ("en", "es") else d)]
             try:
