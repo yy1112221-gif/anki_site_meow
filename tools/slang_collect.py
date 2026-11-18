@@ -16,6 +16,7 @@ def strip(s): return html.unescape(re.sub(r"<[^>]+>", " ", s))
 QUOTE = re.compile(r"[‘'\"“「『]([^‘’'\"“”「」『』]{2,14})[’'\"”」』]")
 KO = re.compile(r"^[가-힣ㄱ-ㅎㅏ-ㅣ0-9A-Za-z ~!?.…]{2,14}$"); JA = re.compile(r"^[぀-ヿ一-鿿ー0-9A-Za-z〜！？…]{2,14}$")
 CUE = {"ko": re.compile(r"유행어|신조어|밈|뜻|유래|챌린지|MZ"), "ja": re.compile(r"流行語|ネットスラング|若者言葉|ミーム|意味|バズ")}
+BAD = re.compile(r"유행어|신조어|流行語|新語|뜻|意味|^[0-9 .]+$|^(code|query|relkey|setlog)$|기자|대통령|지원금|\d{4}")
 STOP = set("유행어 신조어 밈 뜻 MZ 챌린지 단독 속보 종합 영상 포토 인터뷰 공식 사진 流行語 若者言葉 意味 速報 動画".split())
 
 def rss_items(xml):
@@ -56,14 +57,17 @@ def m_namu(lang):
     h = get("https://namu.wiki/w/%EC%9C%A0%ED%96%89%EC%96%B4"); return [strip(h)[:200000]]
 
 METHODS = {"google_news": m_google_news, "bing_news": m_bing_news, "google_trends": m_google_trends, "naver_news": m_naver_news, "daum_news": m_daum_news, "namu": m_namu}
+# 2026-11-18 시험 결과: 줴줴이야를 잡아낸 방법 = google_news · bing_news · naver_news → 이 셋만 실제 사전에 반영 (나머지는 보고서용으로만 계속 시험)
+USE = {"google_news", "bing_news", "naver_news"}
 
 def extract(docs, lang):
     c = collections.Counter(); where = collections.defaultdict(set); ok = KO if lang == "ko" else JA
     for i, d in enumerate(docs):
         if not CUE[lang].search(d): continue
         for m in QUOTE.finditer(d):
-            t = m.group(1).strip()
-            if t in STOP or not ok.match(t) or len(t.split()) > 2: continue
+            t = re.sub(r"^[.…~!?\s]+|[.…~!?\s]+$", "", m.group(1).strip())
+            if "…" in t or ".." in t: t = re.split(r"\.\.+|…", t)[-1].strip(" ~!?")
+            if t in STOP or BAD.search(t) or not ok.match(t) or len(t.split()) > 2: continue
             c[t] += 1; where[t].add(i)
     return [(t, len(where[t])) for t, _ in c.most_common(80)]
 
@@ -76,10 +80,11 @@ def main():
             try:
                 docs = fn(lang); terms = extract(docs, lang)
                 r = {"ok": True, "docs": len(docs), "terms": [t for t, _ in terms[:40]], "probe_in_raw": any(TARGET in d for d in docs), "probe_in_terms": any(TARGET in t for t, _ in terms)}
-                for t, n in terms: pool[t] += n; srcs[t].add(name)
+                if name in USE:
+                    for t, n in terms: pool[t] += n; srcs[t].add(name)
             except Exception as e: r = {"ok": False, "err": str(e)[:200]}
             report["methods"][f"{lang}:{name}"] = r; print(lang, name, json.dumps(r, ensure_ascii=False)[:400], flush=True)
-        ranked = [{"t": t, "n": n, "src": sorted(srcs[t])} for t, n in pool.most_common(60) if n >= 1]
+        ranked = sorted([{"t": t, "n": n, "src": sorted(srcs[t]), "s": n + 2 * len(srcs[t])} for t, n in pool.items()], key=lambda x: -x["s"])[:60]
         os.makedirs(OUT, exist_ok=True)
         old = []
         try: old = json.load(open(os.path.join(OUT, f"{lang}.json"), encoding="utf-8")).get("terms", [])
