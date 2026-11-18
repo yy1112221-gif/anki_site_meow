@@ -2864,26 +2864,27 @@ function wheelDown(e){ const w = WHEEL; if(!w || !w.list || !w.list.length) retu
   w.x0 = e.clientX; w.y0 = e.clientY; w.t0 = performance.now(); w.vel = 0;
   let hi = -1, hd = 30; w.els.forEach((el, i) => { const a = wheelA(i); if(Math.abs(a) > .75) return; const [ex, ey] = wheelPos(a), q = Math.hypot(x - ex, y - ey); if(q < hd || (i === w.best && q < 46 && q < hd + 16)){ hd = q; hi = i; } });
   w.lastA = Math.atan2(x - w.cx, w.cy - y); w.lastT = w.t0;
-  if(hi >= 0){ w.mode = "pend"; w.hi = hi; return; }   // 간식 위: 위로 끌면 잡기 / 옆으로 밀면 회전 / 톡 치면 던지기
+  if(hi >= 0){ w.mode = "pend"; w.hi = hi; clearTimeout(w.holdT);   // 간식 위: 위로 끌면 잡기 / 옆으로 밀면 회전 / 톡 치면 던지기 / 잠깐 누르고 있으면 잡기(기합구슬·별은 그대로 차징)
+    const cx0 = e.clientX, cy0 = e.clientY; w.holdT = setTimeout(() => { if(w.mode !== "pend") return; w.mode = "grab"; w.gid = w.list[w.hi].id; w.gel = w.els[w.hi]; PET_SEL = w.gid; petGrab(w.gid, w.gel); petDragMove(cx0, cy0); petGrabUI(true); buzz(12); }, 230); return; }
   w.mode = "spin"; w.drag = true; w.lastA = Math.atan2(x - w.cx, w.cy - y); w.lastT = w.t0; }
 function wheelMove(e){ const w = WHEEL; if(!w || !w.mode) return;
   if(w.mode === "grab"){ petDragMove(e.clientX, e.clientY); return; }
   if(w.mode === "pend"){ const dx = e.clientX - w.x0, dy = e.clientY - w.y0;
-    if(dy < -12 && -dy > Math.abs(dx) * .8){ w.mode = "grab"; w.gid = w.list[w.hi].id; w.gel = w.els[w.hi]; PET_SEL = w.gid; petGrab(w.gid, w.gel); petDragMove(w.x0, w.y0); petDragMove(e.clientX, e.clientY); petGrabUI(true); buzz(10); return; }   // 잡는 동안 다른 간식은 숨김
-    if(Math.hypot(dx, dy) > 10){ w.mode = "spin"; w.drag = true; } else return; }
+    if(dy < -12 && -dy > Math.abs(dx) * .8){ clearTimeout(w.holdT); w.mode = "grab"; w.gid = w.list[w.hi].id; w.gel = w.els[w.hi]; PET_SEL = w.gid; petGrab(w.gid, w.gel); petDragMove(w.x0, w.y0); petDragMove(e.clientX, e.clientY); petGrabUI(true); buzz(10); return; }   // 잡는 동안 다른 간식은 숨김
+    if(Math.hypot(dx, dy) > 10){ clearTimeout(w.holdT); w.mode = "spin"; w.drag = true; } else return; }
   const pr = $("#pet").getBoundingClientRect(), x = e.clientX - pr.left, y = e.clientY - pr.top, a = Math.atan2(x - w.cx, w.cy - y), now = performance.now();
   let da = a - w.lastA; while(da > Math.PI) da -= 2 * Math.PI; while(da < -Math.PI) da += 2 * Math.PI;
   w.rot += da; w.vel = w.vel * .4 + .6 * da / Math.max(.008, (now - w.lastT) / 1000); w.lastA = a; w.lastT = now; }
 function wheelUp(e){ const w = WHEEL; if(!w || !w.mode) return; const m = w.mode; w.mode = null;
   const tap = Math.hypot(e.clientX - w.x0, e.clientY - w.y0) < 10 && performance.now() - w.t0 < 300;
   if(m === "grab"){ petRelease(); petGrabUI(false); return; }
-  if(m === "pend"){ if(tap) petThrow(w.list[w.hi].id, w.els[w.hi]); return; }
+  if(m === "pend"){ clearTimeout(w.holdT); if(tap) petThrow(w.list[w.hi].id, w.els[w.hi]); return; }
   w.drag = false; w.vel = Math.max(-12, Math.min(12, w.vel));
   if(tap){ const pr = $("#pet").getBoundingClientRect(), x = e.clientX - pr.left, y = e.clientY - pr.top; let bi = -1, bd = 44;   // 다른 간식을 톡 → 그 간식이 가운데로
     w.els.forEach((el, i) => { const [ex, ey] = wheelPos(wheelA(i)), q = Math.hypot(x - ex, y - ey); if(q < bd){ bd = q; bi = i; } }); if(bi >= 0){ w.rot -= wheelA(bi); w.vel = 0; } } }
 window.addEventListener("pointerup", e => { if(WHEEL && WHEEL.mode) wheelUp(e); }); window.addEventListener("pointercancel", () => { if(WHEEL && WHEEL.mode) wheelCancel(); });
 document.addEventListener("visibilitychange", () => { if(document.hidden){ if(WHEEL && WHEEL.mode) wheelCancel(); if(PET){ PET.grab = null; PET.holding = false; PET.pulls = []; } try{ sfxChargeEnd(); sfxSqueezeEnd(); }catch(_){} petGrabUI(false); } });
-function wheelCancel(){ const w = WHEEL; if(!w) return; if(w.mode === "grab"){ if(PET) PET.grab = null; petGrabUI(false); try{ sfxChargeEnd(); }catch(_){} } w.mode = null; w.drag = false; }
+function wheelCancel(){ const w = WHEEL; if(!w) return; clearTimeout(w.holdT); if(w.mode === "grab"){ if(PET) PET.grab = null; petGrabUI(false); try{ sfxChargeEnd(); }catch(_){} } w.mode = null; w.drag = false; }
 function petGrabUI(on){ const el = $("#pet"); if(el) el.classList.toggle("grabbing", on); }
 
 /* ════════ 암기냥이の体: ばね格子（ゼリー）に絵を貼って、体そのものが揺れる ════════
@@ -3415,7 +3416,8 @@ function petProjStep(st, q, dt){
   const tg = st.toScr(q.lx, q.ly), e = Math.min(1, q.t);
   // 放物線（奥へ飛ぶので上にふくらむ）＋回転していれば横にカーブ
   const mx = (q.x0 + tg.x) / 2 - q.spin * st.W * .32, my = Math.min(q.y0, tg.y) - st.H * .22;
-  if(q.t <= 1){ q.x = (1 - e) ** 2 * q.x0 + 2 * (1 - e) * e * mx + e * e * tg.x; q.y = (1 - e) ** 2 * q.y0 + 2 * (1 - e) * e * my + e * e * tg.y; q.sz = (50 - 20 * e) * (1 + 2.2 * (q.ch || 0)); }
+  if(q.t <= 1 && q.it.id === "ki"){ q.x = q.x0 + (tg.x - q.x0) * e; q.y = q.y0 + (tg.y - q.y0) * e; q.sz = (50 - 22 * e) * (1 + 2.2 * (q.ch || 0)); if(Math.random() < .6) st.parts.push({ x: q.x, y: q.y, vx: (Math.random() - .5) * 60, vy: (Math.random() - .5) * 60, life: .5, kind: "water", sz: 2 + Math.random() * 3 * (1 + (q.ch || 0)), g: 1 }); }   // 기합구슬은 일직선
+  else if(q.t <= 1){ q.x = (1 - e) ** 2 * q.x0 + 2 * (1 - e) * e * mx + e * e * tg.x; q.y = (1 - e) ** 2 * q.y0 + 2 * (1 - e) * e * my + e * e * tg.y; q.sz = (50 - 20 * e) * (1 + 2.2 * (q.ch || 0)); }
   if(q.t < 1) return true;
   if(q.hit){ const mul = 1, labels = [];
     const F = q.it.F * Math.max(.75, Math.min(1.5, q.sp / 1700)) * (1 + 1.6 * (q.ch || 0)); st.lastCh = q.ch || 0; petImpact(F, q.lx, q.ly, q.it, mul * (1 + (q.ch || 0)), labels);
