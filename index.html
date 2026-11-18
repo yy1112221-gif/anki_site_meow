@@ -509,6 +509,7 @@ body.petopen{overflow:hidden}
 #petNudge.on{transform:translate(-50%,0);opacity:1;pointer-events:auto;animation:nudgeWob 1.6s 1s infinite} @keyframes nudgeWob{0%,80%,100%{transform:translate(-50%,0)}86%{transform:translate(-50%,-6px) rotate(-3deg)}93%{transform:translate(-50%,0) rotate(2deg)}}
 .dash-ov{position:fixed;inset:0;z-index:70;pointer-events:none} .dash-ov img{position:fixed;width:64px;height:auto;transform:translate(-50%,-50%);will-change:transform}
 .dash-flash{position:fixed;inset:0;background:#fff;opacity:0} .dash-crack{position:fixed;width:260px;height:260px;margin:-130px 0 0 -130px;opacity:0;transition:opacity .2s} .dash-crack.on{opacity:1}
+.slang-sec{margin-top:16px;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:var(--glass)} .slang-ask{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--glass-strong)} .sl-tag{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;background:#ff6b3d;color:#fff;font-size:.7rem;font-weight:800;vertical-align:middle}
 .pet-snd{position:absolute;z-index:5;left:12px;top:calc(64px + env(safe-area-inset-top));width:38px;height:38px;border-radius:50%;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:1.05rem;display:grid;place-items:center;cursor:pointer}
 .pet-bar{width:min(220px,100%);height:9px;border-radius:999px;background:rgba(255,255,255,.5);overflow:hidden} .pet-bar i{display:block;height:100%;background:linear-gradient(90deg,#ffb84d,#f2708f);border-radius:999px;transition:width .3s}
 .pet-st{display:flex;flex-direction:column;align-items:flex-end} .pet-st b{font-size:1.05rem;color:var(--ink)} .pet-st small{font-size:.7rem;color:var(--muted)}
@@ -890,6 +891,7 @@ ja: {
   nextReview:(d,n)=>`次の復習：${d}（${n}日後）`, nextNone:"新しい単語を追加するとすぐ学習に入ります。",
   streak:n=>`連続学習 ${n}日`, todayTitle:"今日の学習", todayCounts:(a,b)=>`復習 <b>${a}</b>枚 · 新しい単語 <b>${b}</b>語`,
   todayHint:n=>`最初に間違えたカードは正解するまで繰り返し出ます。連続学習 ${n}日。`, start:"はじめる",
+  slTitle:"🔥 いまどきスラング", slDesc:"毎日ニュースから自動で集めた流行語を、実際に使われた文で覚えます。スラングばかりでは使えないので、ふだんの単語に少しだけ混ぜるのがおすすめ。", slAsk:"スラングはどれくらい混ぜますか？", slRec:"おすすめ", slMixN:n=>`1日${n}語だけ混ぜる`, slMixAll:"スラング中心", slChange:"変更", slWhy:"普段の単語と一緒に少しずつ覚えると、実際の会話で自然に使えます。", slDone:(n,m)=>`スラング${n}語を準備しました（${m ? `1日${m}語` : "中心"}）`, slTag:"スラング",
   meanPh:"意味を日本語で", meanSame:"合ってた（意味は同じ）", meanDiff:"違った", meanMeh:"答えはこれだ。…貴様の答え、意味は同じか？",
   modes:{ meaning:"意味を答える", scriptNew:"文字を覚える", script:"文字を読む", study:"まず当ててみる", cloze:"穴埋め", recall:"意味から書く", write:"作文", speak:"スピーキング" },
   left:n=>`残り${n}枚`, listen:"発音を聞く", listenEx:"例文を聞く", listenAgain:"もう一度聞く", listenMine:"自分の文を聞く",
@@ -974,6 +976,7 @@ ko: {
   nextReview:(d,n)=>`다음 복습: ${d} (${n}일 뒤)`, nextNone:"새 단어를 추가하면 바로 학습에 들어갑니다.",
   streak:n=>`연속 학습 ${n}일`, todayTitle:"오늘의 학습", todayCounts:(a,b)=>`복습 <b>${a}</b>장 · 새 단어 <b>${b}</b>개`,
   todayHint:n=>`처음 틀린 카드는 맞힐 때까지 다시 나옵니다. 연속 학습 ${n}일.`, start:"시작하기",
+  slTitle:"🔥 요즘 슬랭", slDesc:"뉴스에서 매일 자동으로 모은 유행어를, 실제로 쓰인 문장으로 배워요. 슬랭만 배우면 쓸 데가 없으니, 평소 단어에 조금씩 섞는 걸 추천해요.", slAsk:"슬랭은 얼마나 섞을까요?", slRec:"추천", slMixN:n=>`하루 ${n}개만 섞기`, slMixAll:"슬랭 위주", slChange:"바꾸기", slWhy:"평소 단어랑 같이 한두 개씩 배워야 실제 대화에서 자연스럽게 써먹어요.", slDone:(n,m)=>`슬랭 ${n}개 준비 완료 (${m ? `하루 ${m}개씩` : "슬랭 위주"})`, slTag:"슬랭",
   meanPh:"뜻을 한국어로", meanSame:"맞았어 (뜻이 같아)", meanDiff:"틀렸어", meanMeh:"정답은 이것. …네 답, 뜻이 같나?",
   modes:{ meaning:"뜻 말하기", scriptNew:"글자 외우기", script:"글자 읽기", study:"먼저 맞혀보기", cloze:"빈칸 채우기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
   left:n=>`남은 ${n}장`, listen:"발음 듣기", listenEx:"예문 듣기", listenAgain:"다시 듣기", listenMine:"내 문장 듣기",
@@ -1382,12 +1385,19 @@ function reviewModes(c){
   if(st.speaking && c.example && c.exampleKo) pool.push("speak");
   return [pool[r % pool.length]];
 }
+function slangDeck(){ return decks().find(d => d.preset === S.meta.settings.lang + "-slang" && deckOn(d)); }
+function pickNewWithSlang(q){   // 슬랭은 하루 1~2개만 '촉촉하게' 섞기 (설정에 따라)
+  const all = newCandidates(), sd = slangDeck(); if(!sd) return all.filter(c => !c.slang).slice(0, q);
+  const mix = sd.slangMix == null ? 1 : sd.slangMix, sl = all.filter(c => c.slang), rest = all.filter(c => !c.slang);
+  if(!mix) return sl.concat(rest).slice(0, q);   // 슬랭 위주
+  const doneToday = cardsHere().filter(c => c.slang && c.introduced === today()).length, k = Math.max(0, Math.min(mix - doneToday, sl.length, q));
+  const out = rest.slice(0, q - k), pos = Math.min(out.length, 2); out.splice(pos, 0, ...sl.slice(0, k)); return out; }
 let SES = null;
 function buildSession(){
   const items = [];
   dueCards().forEach(c => reviewModes(c).forEach(m => items.push({ id: c.id, mode: m })));
   // 새 단어는 3개씩 묶어 단계를 번갈아(같은 단어를 연달아 묻지 않고 짧게 간격을 둠): 맞혀보기 → 뜻 말하기 → 빈칸 → 뜻 보고 쓰기
-  const nw = newCandidates().slice(0, newQuota());
+  const nw = pickNewWithSlang(newQuota());
   for(let i = 0; i < nw.length; i += 3){ const g = nw.slice(i, i + 3);
     g.forEach(c => items.push({ id: c.id, mode: "study" })); g.forEach(c => items.push({ id: c.id, mode: "meaning" }));
     g.forEach(c => { if(clozeParts(c)) items.push({ id: c.id, mode: "cloze" }); }); g.slice().reverse().forEach(c => items.push({ id: c.id, mode: "recall" })); }
@@ -1584,7 +1594,7 @@ function catBarDraw(el, t){ const cv = el.firstElementChild; if(!cv || !el.offse
   const my = 3.6, mw = 2.8, sq = .7 + chew * .5; g.strokeStyle = "#2a221c"; g.lineWidth = 1.2; g.lineCap = "round"; g.beginPath(); g.moveTo(-mw - 1.3, my - 1.2 * sq); g.quadraticCurveTo(-mw - .8, my + .6 * sq, -mw / 2, my + 1.6 * sq); g.quadraticCurveTo(-.3, my + 2.2 * sq, 0, my); g.quadraticCurveTo(.3, my + 2.2 * sq, mw / 2, my + 1.6 * sq); g.quadraticCurveTo(mw + .8, my + .6 * sq, mw + 1.3, my - 1.2 * sq); g.stroke();
   g.strokeStyle = "rgba(90,80,70,.55)"; g.lineWidth = .7; [-1, 1].forEach(d => { g.beginPath(); g.moveTo(d * 9, 1); g.lineTo(d * 17, -.5); g.moveTo(d * 9, 3); g.lineTo(d * 16.5, 4); g.stroke(); });
   g.restore(); }
-function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="row" style="flex-wrap:nowrap;gap:10px"><button class="btn sm ghost" type="button" id="homeBtn">‹ ${esc(t().home)}</button>${catBarHTML(pct)}<button class="btn sm ghost" type="button" id="gradBtn" title="${esc(t().gradTitle)}">🎓 ${esc(t().grad)}</button></div><div class="modehead"><span class="muted small">${t().modes[mode]} · ${t().left(SES.queue.length)}</span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}" title="${esc(t().hfHelp)}">${hf ? t().hfOn : t().hfOff}</button>${levelChip(c)}</span></div>${say(MODE_NM[mode] || "st_default", esc(t().nmAsk[mode](langName())))}`; }
+function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="row" style="flex-wrap:nowrap;gap:10px"><button class="btn sm ghost" type="button" id="homeBtn">‹ ${esc(t().home)}</button>${catBarHTML(pct)}<button class="btn sm ghost" type="button" id="gradBtn" title="${esc(t().gradTitle)}">🎓 ${esc(t().grad)}</button></div><div class="modehead"><span class="muted small">${t().modes[mode]}${c.slang ? `<span class="sl-tag">${esc(t().slTag)}</span>` : ""} · ${t().left(SES.queue.length)}</span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}" title="${esc(t().hfHelp)}">${hf ? t().hfOn : t().hfOff}</button>${levelChip(c)}</span></div>${say(MODE_NM[mode] || "st_default", esc(t().nmAsk[mode](langName())))}`; }
 document.addEventListener("click", e => {
   if(!e.target.closest("#gradBtn") || !SES) return;
   const it = SES.queue[0]; const c = it && S.cards[it.id]; if(!c) return;
@@ -3552,6 +3562,24 @@ function pawStamp0(){
 }
 
 /* ════════ レベル別セット（公開リスト）とレベル診断 ════════ */
+const SLANG_LANGS = ["ko", "ja", "en", "es"];
+function slangSectionHTML(lang){ if(!SLANG_LANGS.includes(lang)) return ""; const x = t(), d = decks().find(dd => dd.preset === lang + "-slang");
+  const mixTxt = d ? (d.slangMix ? x.slMixN(d.slangMix) : x.slMixAll) : "";
+  return `<div class="slang-sec"><div class="row" style="align-items:center;gap:8px"><b>${esc(x.slTitle)}</b><span class="grow"></span>${d ? `<span class="small muted">${esc(mixTxt)}</span><button class="btn sm" type="button" id="slMix">${esc(x.slChange)}</button>` : `<button class="btn sm primary" type="button" id="slAdd">${esc(x.presetAdd)}</button>`}</div>
+    <p class="small muted" style="margin:.3em 0 0">${esc(x.slDesc)}</p><div id="slAsk"></div></div>`; }
+function bindSlangSection(lang){ const a = $("#slAdd"), m = $("#slMix"); if(a) a.onclick = () => askSlangMix(lang, null); if(m) m.onclick = () => askSlangMix(lang, decks().find(d => d.preset === lang + "-slang")); }
+function askSlangMix(lang, d){   // 얼마나 섞을지 무조건 물어봄 (추천: 하루 1~2개)
+  const x = t(), box = $("#slAsk"); if(!box) return;
+  box.innerHTML = `<div class="slang-ask"><p><b>${esc(x.slAsk)}</b></p><div class="row" style="flex-wrap:wrap;gap:8px"><button class="btn primary" type="button" data-mix="1">${esc(x.slMixN(1))} · ${esc(x.slRec)}</button><button class="btn" type="button" data-mix="2">${esc(x.slMixN(2))}</button><button class="btn ghost" type="button" data-mix="0">${esc(x.slMixAll)}</button></div><p class="tiny muted">${esc(x.slWhy)}</p></div>`;
+  box.querySelectorAll("[data-mix]").forEach(b => b.onclick = async () => { const mix = +b.dataset.mix; b.disabled = true;
+    if(!d){ d = addDeck(x.slTitle); d.preset = lang + "-slang"; }
+    d.slangMix = mix; d.on = true; const n = await topUpSlang(d); save(); renderAll(); toast(x.slDone(n, mix)); renderPresets(); }); }
+async function topUpSlang(d){ const lang = d.preset.split("-")[0]; let j; try{ const r = await fetch(SLANG_BASE + lang + ".json", { cache: "no-cache" }); if(!r.ok) return 0; j = await r.json(); }catch(e){ return 0; }
+  const have = new Set(Object.values(S.cards).filter(c => (c.lang || "es") === lang).map(c => norm(c.word))); let n = 0; const now = Date.now();
+  (j.terms || []).filter(x => x.ex && x.ex.length && x.def && x.def.length && (x.cue == null || x.cue >= 1)).slice(0, 40).forEach((x, i) => { if(have.has(norm(x.t))) return;
+    const c = newCard({ word: x.t, deck: d.id, lang }); c.slang = 1; c.lazy = 1; c.meaning = ""; c.gloss = (x.def || []).find(d => !/[?？]\s*$|^¿/.test(d)) || ""; const exs = x.ex.filter(e => e.toLowerCase().includes(x.t.toLowerCase())); if(!exs.length) return; c.example = exs[0]; x.ex = exs; c.exAlt = x.ex.slice(1, 3); c.form = findForm(c.example, c.word) || x.t; c.created = now + i;
+    S.cards[c.id] = c; have.add(norm(x.t)); n++; });
+  d.slangAt = Date.now(); return n; }
 let PRESET_IDX = null; const PRESET_LANGS = ["es", "ja", "ko"];
 async function presetIndex(){ if(PRESET_IDX) return PRESET_IDX; const r = await fetch("presets/index.json"); if(!r.ok) throw new Error("preset"); PRESET_IDX = await r.json(); return PRESET_IDX; }
 const lvLabel = (lv) => S.meta.settings.ui === "ko" && lv.labelKo ? lv.labelKo : lv.label;
@@ -3560,12 +3588,12 @@ async function renderPresets(){
   const box = $("#presetBox"); if(!box) return; const x = t(), lang = S.meta.settings.lang;
   box.innerHTML = `<p class="muted small">${esc(x.presetLoading)}</p>`;
   let idx; try{ idx = await presetIndex(); }catch(e){ box.innerHTML = ""; $("#presetCard").classList.add("hidden"); return; }
-  const set = idx.sets[lang]; $("#presetCard").classList.toggle("hidden", !set && !SCRIPT_SETS[lang]); if(!set){ box.innerHTML = scriptSectionHTML(lang); box.querySelectorAll("[data-scr]").forEach(b => b.onclick = () => addScriptSet(lang, b.dataset.scr)); return; }
+  const set = idx.sets[lang]; $("#presetCard").classList.toggle("hidden", !set && !SCRIPT_SETS[lang] && !SLANG_LANGS.includes(lang)); if(!set){ box.innerHTML = slangSectionHTML(lang) + scriptSectionHTML(lang); bindSlangSection(lang); box.querySelectorAll("[data-scr]").forEach(b => b.onclick = () => addScriptSet(lang, b.dataset.scr)); return; }
   const dg = (S.meta.diag || {})[lang];
   box.innerHTML = `<div class="row" style="gap:8px;flex-wrap:wrap;align-items:center"><button class="btn primary" type="button" id="diagBtn">${esc(x.diagBtn)}</button>${dg ? `<span class="small muted">${esc(x.lastDiag(dg.est, dg.date.slice(5).replace("-", "/")))}</span>` : ""}</div>
     <div id="diagBox"></div>
     <div class="plist">${set.levels.map(lv => { const done = decks().some(d => d.preset === lang + "-" + lv.id); return `<div class="pitem${dg && dg.rec === lv.id ? " rec" : ""}"><b>${esc(lvLabel(lv))}</b><span>${lv.n.toLocaleString()}</span><button class="btn sm${done ? "" : " primary"}" type="button" data-pre="${lv.id}" ${done ? "disabled" : ""}>${done ? "✓" : esc(x.presetAdd)}</button></div>`; }).join("")}</div>
-    <p class="tiny muted">${esc(x.presetSrc)}: <a href="${set.url}" target="_blank" rel="noopener">${esc(set.src)}</a></p><p class="small" id="presetNote" aria-live="polite"></p>${scriptSectionHTML(lang)}`;
+    <p class="tiny muted">${esc(x.presetSrc)}: <a href="${set.url}" target="_blank" rel="noopener">${esc(set.src)}</a></p><p class="small" id="presetNote" aria-live="polite"></p>${slangSectionHTML(lang)}${scriptSectionHTML(lang)}`; bindSlangSection(lang);
   box.querySelectorAll("[data-scr]").forEach(b => b.onclick = () => addScriptSet(lang, b.dataset.scr));
   box.querySelectorAll("[data-pre]").forEach(b => b.onclick = () => addPreset(lang, b.dataset.pre, b));
   $("#diagBtn").onclick = () => startDiag(lang);
@@ -3590,7 +3618,8 @@ function materialize(d, data, want){
 let TOPUP_BUSY = false;
 async function topUpPresets(){
   if(TOPUP_BUSY) return; TOPUP_BUSY = true; let added = 0;
-  try{ for(const d of decks()){ if(!d.preset || d.preset.startsWith("script-") || (d.cursor || 0) >= (d.total || Infinity)) continue;
+  for(const d of decks()) if(d.preset && d.preset.endsWith("-slang") && Date.now() - (d.slangAt || 0) > 20 * 3600e3){ try{ added += await topUpSlang(d); }catch(e){} }
+  try{ for(const d of decks()){ if(!d.preset || d.preset.startsWith("script-") || d.preset.endsWith("-slang") || (d.cursor || 0) >= (d.total || Infinity)) continue;
       const left = Object.values(S.cards).filter(c => c.deck === d.id && c.isNew).length; if(left >= PRESET_LOW) continue;
       try{ added += materialize(d, await presetData(d.preset), PRESET_CHUNK); }catch(e){} }
   } finally { TOPUP_BUSY = false; }
@@ -3599,7 +3628,7 @@ async function topUpPresets(){
 /* 以前の版で全部カードにしてしまったセットを軽くする（まだ一度も出ていない語だけ） */
 function slimPresets(){
   let changed = false;
-  decks().forEach(d => { if(!d.preset || d.preset.startsWith("script-") || d.cursor !== undefined) return;
+  decks().forEach(d => { if(!d.preset || d.preset.startsWith("script-") || d.preset.endsWith("-slang") || d.cursor !== undefined) return;
     const fresh = Object.values(S.cards).filter(c => c.deck === d.id && c.isNew).sort((a, b) => (a.created || 0) - (b.created || 0));
     const keep = fresh.slice(0, PRESET_CHUNK), drop = fresh.slice(PRESET_CHUNK);
     drop.forEach(c => delete S.cards[c.id]); d.cursor = 0; d.skip = []; changed = changed || drop.length > 0; });
@@ -3621,6 +3650,10 @@ const LAZY = new Map();
 function fillLazy(c){
   if(!c || !c.lazy) return Promise.resolve(); if(LAZY.has(c.id)) return LAZY.get(c.id);
   const p = (async () => { try{
+    if(c.slang){ const cur = S.cards[c.id]; if(!cur) return; const L = cur.lang;
+      if(!cur.meaning){ const g = cur.gloss ? await translate(cur.gloss, L) : await translate(cur.word, L); if(g) cur.meaning = g; }
+      if(cur.example && !cur.exampleKo){ try{ cur.exampleKo = await translate(cur.example, L); }catch(e){} }
+      if(cur.meaning) delete cur.lazy; saveCard(cur); return; }
     const r = await lookup(c.word); const cur = S.cards[c.id]; if(!cur) return;
     if(r.meaning) cur.meaning = (cur.reading ? cur.reading + " · " : "") + r.meaning;
     if(!cur.example && r.cands && r.cands.length){ const cd = r.cands[0]; cur.example = cd.text; cur.form = cd.form; cur.src = cd.id; cur.audio = cd.audio || null; try{ cur.exampleKo = await trOf(cd); }catch(e){} }
@@ -3800,7 +3833,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 load(); slimPresets(); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
