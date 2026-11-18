@@ -3,7 +3,7 @@
 1) 여러 방법을 시험(보고서 report.json). 2026-11-18 시험에서 '줴줴이야'를 잡아낸 방법(google/bing/naver 뉴스)만 사전에 반영.
 2) 뜻: 기사 속 설명 문장(뜻·의미·means·significa·とは…)을 그대로 수집.
 3) 예문: 기사 속 실제 문장 중, 슬랭 말고는 쉬운 일반 어휘·문법으로 된 문장을 골라 수집. 문장을 지어내지 않는다."""
-import json, re, time, urllib.request, urllib.parse, html, datetime, collections, os
+import json, re, time, concurrent.futures as cf, urllib.request, urllib.parse, html, datetime, collections, os
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15"
 OUT = os.path.join(os.path.dirname(__file__), "..", "slang"); TARGET = os.environ.get("SLANG_PROBE", "줴줴이야")
 LANGS = ["ko", "ja", "en", "es"]
@@ -70,7 +70,7 @@ def extract(docs, lang):
 
 SENT = {"ko": re.compile(r"(?<=[.!?。])\s+|(?<=다\.)\s*|(?<=요\.)\s*"), "ja": re.compile(r"(?<=[。！？])"), "en": re.compile(r"(?<=[.!?])\s+(?=[A-Z\"“])"), "es": re.compile(r"(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚ¿¡\"“])")}
 def article_sentences(url, lang):
-    try: h = get(url, 15)
+    try: h = get(url, 8)
     except Exception: return []
     ps = [strip(p) for p in re.findall(r"<p[^>]*>(.*?)</p>", h, re.S)]
     if len(" ".join(ps)) < 200: ps = [strip(x) for x in re.findall(r">([^<>]{40,600})<", h)]
@@ -130,7 +130,7 @@ def gather(term, lang, links, docs):
     key = (lambda s: term in s.lower()) if lang in ("en", "es") else (lambda s: term in s)
     heads = {d for d, _ in docs}   # 뉴스 제목은 예문으로 안 씀
     body = []
-    for u in list(dict.fromkeys(links + term_links(term, lang)))[:8]: body += article_sentences(u, lang); time.sleep(.4)
+    with cf.ThreadPoolExecutor(6) as ex: body = [x for r in ex.map(lambda u: article_sentences(u, lang), list(dict.fromkeys(links + term_links(term, lang)))[:5]) for x in r]
     hit = [x for x in dict.fromkeys(body) if key(x) and not any(x in h for h in heads)]
     wk = wiktionary_defs(term, lang); tt = [x for x in tatoeba(term, lang) if good_sentence(x, lang)]
     defs = [d for d, _ in wk][:2] + sorted([x for x in hit if DEF[lang].search(x) and good_sentence(x, lang) and len(x) < 200], key=len)[:2]
@@ -157,13 +157,15 @@ def main():
         old = {}
         try: old = {x["t"]: x for x in json.load(open(os.path.join(OUT, f"{lang}.json"), encoding="utf-8")).get("terms", [])}
         except Exception: pass
-        for x in ranked[:25]:   # 상위 단어만 뜻·예문 수집 (예전에 모은 건 유지·보강)
-            o = old.get(x["t"], {}); x["first"] = o.get("first", report["time"][:10]); x["def"] = o.get("def", []); x["ex"] = o.get("ex", [])
+        def work(x):   # 상위 단어만 뜻·예문 수집 (예전에 모은 건 유지·보강, 이미 넉넉하면 3일에 한 번만)
+            o = old.get(x["t"], {}); x["first"] = o.get("first", report["time"][:10]); x["def"] = [d for d in o.get("def", []) if "<" not in d]; x["ex"] = [e for e in o.get("ex", []) if good_sentence(e, lang)]; x["at"] = o.get("at", "")
+            if len(x["ex"]) >= 2 and x["def"] and x["at"] and x["at"] > (datetime.datetime.utcnow() - datetime.timedelta(days=3)).isoformat(): return
             links = [u for d, u in alldocs if u and x["t"] in (d.lower() if lang in ("en", "es") else d)]
             try:
                 defs, exs = gather(x["t"], lang, links, alldocs)
-                x["def"] = list(dict.fromkeys(defs + [d for d in x["def"] if '<' not in d]))[:3]; x["ex"] = list(dict.fromkeys(exs + [e for e in x["ex"] if good_sentence(e, lang)]))[:4]
+                x["def"] = list(dict.fromkeys(defs + x["def"]))[:3]; x["ex"] = list(dict.fromkeys(exs + x["ex"]))[:4]; x["at"] = report["time"]
             except Exception as e: print("gather", x["t"], e)
+        with cf.ThreadPoolExecutor(4) as ex: list(ex.map(work, ranked[:18]))
         seen = {x["t"] for x in ranked}; keep = [v for k, v in old.items() if k not in seen and (v.get("ex") or v.get("def"))][:60]
         json.dump({"updated": report["time"], "lang": lang, "terms": ranked + keep}, open(os.path.join(OUT, f"{lang}.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     json.dump(report, open(os.path.join(OUT, "report.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
