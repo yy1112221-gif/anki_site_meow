@@ -17,7 +17,7 @@ QUOTE = re.compile(r"[‘'\"“「『]([^‘’'\"“”「」『』]{2,14})[’
 KO = re.compile(r"^[가-힣ㄱ-ㅎㅏ-ㅣ0-9A-Za-z ~!?.…]{2,14}$"); JA = re.compile(r"^[぀-ヿ一-鿿ー0-9A-Za-z〜！？…]{2,14}$")
 CUE = {"ko": re.compile(r"유행어|신조어|밈|뜻|유래|챌린지|MZ"), "ja": re.compile(r"流行語|ネットスラング|若者言葉|ミーム|意味|バズ")}
 BAD = re.compile(r"유행어|신조어|流行語|新語|뜻|意味|^[0-9 .]+$|^(code|query|relkey|setlog)$|기자|대통령|지원금|\d{4}")
-STOP = set("유행어 신조어 밈 뜻 MZ 챌린지 단독 속보 종합 영상 포토 인터뷰 공식 사진 流行語 若者言葉 意味 速報 動画".split())
+STOP = set("오늘의 진짜 괜찮아 개콘 개그콘서트 진짜? 네 아니 그냥 정말 유행어 신조어 밈 뜻 MZ 챌린지 단독 속보 종합 영상 포토 인터뷰 공식 사진 流行語 若者言葉 意味 速報 動画".split())
 
 def rss_items(xml):
     for it in re.findall(r"<item>(.*?)</item>", xml, re.S):
