@@ -122,8 +122,15 @@ def tatoeba(term, lang):
         return [r["text"] for r in j.get("results", [])][:5]
     except Exception: return []
 END = {"ko": re.compile(r"(다|요|죠|까|네|어|아|지)[.!?…]?\s*$|[.!?]\s*$"), "ja": re.compile(r"[。！？]\s*$"), "en": re.compile(r"[.!?]\"?\s*$"), "es": re.compile(r"[.!?]\"?\s*$")}
+LANGCHK = {"es": (re.compile(r"\b(el|la|los|las|que|de|es|una?|por|para|con|se)\b", re.I), re.compile(r"\b(il|della|delle|anche|invece|sono|questo|ovvero|perché|è)\b", re.I)),
+           "en": (re.compile(r"\b(the|a|is|to|of|and|you|it|in)\b", re.I), re.compile(r"\b(el|la|que|il|della|der|die|und)\b", re.I))}
 def good_sentence(x, lang):
     if re.search(r"https?:|\||&nbsp;|</?[a-z]", x): return False
+    if x.count('"') % 2 or x.count("“") != x.count("”") or x.count("‘") != x.count("’") or x.count("「") != x.count("」"): return False   # 잘린 인용문 제외
+    if lang in LANGCHK:
+        yes, no = LANGCHK[lang]
+        if not yes.search(x) or len(no.findall(x)) >= 2: return False   # 다른 언어 기사 섞임 방지 (예: 스페인어 칸에 이탈리아어)
+    if lang in ("ko", "ja") and len(x) < 15: return False
     if lang in ("en", "es"): w = len(x.split()); return 5 <= w <= 28 and bool(END[lang].search(x))
     return 10 <= len(x) <= 80 and bool(END[lang].search(x))
 def gather(term, lang, links, docs):
@@ -132,8 +139,8 @@ def gather(term, lang, links, docs):
     body = []
     with cf.ThreadPoolExecutor(6) as ex: body = [x for r in ex.map(lambda u: article_sentences(u, lang), list(dict.fromkeys(links + term_links(term, lang)))[:5]) for x in r]
     hit = [x for x in dict.fromkeys(body) if key(x) and not any(x in h for h in heads)]
-    wk = wiktionary_defs(term, lang); tt = [x for x in tatoeba(term, lang) if good_sentence(x, lang)]
-    defs = [d for d, _ in wk][:2] + sorted([x for x in hit if DEF[lang].search(x) and good_sentence(x, lang) and len(x) < 200], key=len)[:2]
+    wk = wiktionary_defs(term, lang); tt = [x for x in tatoeba(term, lang) if key(x) and good_sentence(x, lang)]
+    defs = sorted([x for x in hit if DEF[lang].search(x) and good_sentence(x, lang) and len(x) < 200], key=len)[:2] + [d for d, _ in wk][:2]   # 기사 속 설명(요즘 뜻) 먼저, 사전 뜻은 보조
     wex = [x for _, exs in wk for x in exs if key(x) and good_sentence(x, lang)]
     news = sorted([x for x in hit if good_sentence(x, lang) and x not in defs], key=lambda x: -ex_score(x, term, lang))
     exs = tt[:2] + wex[:2] + [x for x in news if ex_score(x, term, lang) > -6][:3]   # 우선순위: Tatoeba(일반 문장) > 위키낱말사전 용례 > 뉴스 본문
@@ -159,7 +166,7 @@ def main():
         except Exception: pass
         def work(x):   # 상위 단어만 뜻·예문 수집 (예전에 모은 건 유지·보강, 이미 넉넉하면 3일에 한 번만)
             o = old.get(x["t"], {}); x["first"] = o.get("first", report["time"][:10]); x["def"] = [d for d in o.get("def", []) if "<" not in d]; x["ex"] = [e for e in o.get("ex", []) if good_sentence(e, lang)]; x["at"] = o.get("at", "")
-            if len(x["ex"]) >= 2 and x["def"] and x["at"] and x["at"] > (datetime.datetime.utcnow() - datetime.timedelta(days=3)).isoformat(): return
+            if False and len(x["ex"]) >= 2 and x["def"] and x["at"] and x["at"] > (datetime.datetime.utcnow() - datetime.timedelta(days=3)).isoformat(): return
             links = [u for d, u in alldocs if u and x["t"] in (d.lower() if lang in ("en", "es") else d)]
             try:
                 defs, exs = gather(x["t"], lang, links, alldocs)
