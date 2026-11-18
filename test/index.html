@@ -3143,37 +3143,39 @@ function signStep(st, dt){ const c = $("#petBG"); if(!c) return; if(c.width !== 
     st.sign = { dir, k, x: dir > 0 ? -30 : st.W + 30, y: y0, vy: (y1 - y0) / (st.W + 60) * 32, sp: 26 + Math.random() * 10, t: 0, ph: 0, stop: Math.random() < .7 ? st.W * (.25 + Math.random() * .5) : null, stopT: 0, prints: [], lastStep: 0, lv: petState().lv }; }
   if(!st.sign && ev <= 0) st.nextSign = now + 5000;
   const w = st.sign; (st.prints = st.prints || []).forEach(q => q.a -= dt / 6); st.prints = st.prints.filter(q => q.a > 0);
-  st.prints.forEach(q => { g.fillStyle = `rgba(40,30,20,${.22 * q.a})`; g.beginPath(); g.ellipse(q.x, q.y, 1.5 * q.k, .8 * q.k, 0, 0, Math.PI * 2); g.fill(); g.beginPath(); g.arc(q.x + q.d * 1.6 * q.k, q.y - 1 * q.k, .55 * q.k, 0, Math.PI * 2); g.fill(); });
+  st.prints.forEach(q => { g.fillStyle = `rgba(43,47,58,${.3 * q.a})`; g.beginPath(); g.ellipse(q.x, q.y, 1.5 * q.k, .8 * q.k, 0, 0, Math.PI * 2); g.fill(); g.beginPath(); g.arc(q.x + q.d * 1.6 * q.k, q.y - 1 * q.k, .55 * q.k, 0, Math.PI * 2); g.fill(); });
   if(!w) return; w.t += dt;
   let walking = true; if(w.stop != null && Math.abs(w.x - w.stop) < 2 && w.stopT < 2.2){ w.stopT += dt; walking = false; } else if(w.stopT >= 2.2) w.stop = null;
   if(walking){ w.x += w.dir * w.sp * dt; w.y += w.vy * dt; w.ph += dt * 9; const sn = Math.floor(w.ph / Math.PI); if(sn !== w.lastStep){ w.lastStep = sn; st.prints.push({ x: w.x - w.dir * 3 * w.k, y: w.y + (sn % 2 ? 1.6 : -.4) * w.k, a: 1, k: w.k, d: w.dir }); } }
   if(w.x < -50 || w.x > st.W + 50){ st.sign = null; st.nextSign = now + Math.max(5, ev) * 1000 * (.8 + Math.random() * .4); return; }
   signDraw(g, w, st, walking);
 }
-function signDraw(g, w, st, walking){ const k = w.k, f = w.dir, hop = walking ? Math.abs(Math.sin(w.ph)) * 1.8 : (w.stopT < .3 ? Math.sin(w.stopT / .3 * Math.PI) * 3 : 0), look = !walking && w.stopT > .3;
-  const P = (pts, fill, line) => { g.beginPath(); pts.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.closePath(); g.fillStyle = fill; g.fill(); if(line){ g.strokeStyle = line; g.lineWidth = .5; g.stroke(); } };
-  g.save(); g.translate(w.x, w.y - hop * k); g.scale(k, k);
-  g.fillStyle = "rgba(0,0,0,.14)"; g.beginPath(); g.ellipse(0, hop + .5, 10, 1.8, 0, 0, Math.PI * 2); g.fill();
-  g.save(); g.scale(f, 1);
-  const sw = walking ? Math.sin(w.ph) * 2.2 : 0, LG = "#d9cdb6", PA1 = "#f7f1e4", PA2 = "#e6dbc5", FOLD = "#c9bb9f";
-  g.strokeStyle = "#8e7f66"; g.lineWidth = 1.1; g.lineCap = "round"; [[-6, sw], [-2.5, -sw], [3, -sw], [6.5, sw]].forEach(([x, s2]) => { g.beginPath(); g.moveTo(x, -3); g.lineTo(x + s2 * .5, 0); g.stroke(); });   // 하찮은 다리
-  const tw = Math.sin(st.t * 6) * 2; P([[-8, -7], [-14 + tw * .3, -16 - tw * .2], [-10.5, -6]], PA2, FOLD);   // 꼬리(종이 한 장)
-  P([[-9.5, -3], [-7.5, -11], [6.5, -11], [8.5, -3]], PA1, FOLD); P([[-9.5, -3], [-1, -7.5], [8.5, -3]], PA2); g.strokeStyle = FOLD; g.lineWidth = .5; g.beginPath(); g.moveTo(-7.5, -11); g.lineTo(-1, -7.5); g.lineTo(6.5, -11); g.stroke();   // 몸통(접힌 자국)
-  g.restore();
-  // 머리는 늘 정면(종이접기 얼굴) — 표정이 생명
-  const hx = f * 8, hy = -15;
-  P([[hx - 6, hy - 4.5], [hx - 5, hy - 10.5], [hx - 2, hy - 4.8]], PA2, FOLD); P([[hx + 6, hy - 4.5], [hx + 5, hy - 10.5], [hx + 2, hy - 4.8]], PA2, FOLD);
-  P([[hx - 6.5, hy - 4.5], [hx + 6.5, hy - 4.5], [hx + 5, hy + 3], [hx, hy + 5.5], [hx - 5, hy + 3]], PA1, FOLD); P([[hx, hy - 4.5], [hx + 6.5, hy - 4.5], [hx + 5, hy + 3], [hx, hy + 5.5]], "rgba(0,0,0,.05)");
-  const bl = (w.t % 2.7) < .12; g.strokeStyle = "#2a221c"; g.lineWidth = .9; g.lineCap = "round"; g.lineJoin = "round";
-  [-2.4, 2.4].forEach(ox => { g.beginPath(); if(bl){ g.moveTo(hx + ox - 1.2, hy); g.lineTo(hx + ox + 1.2, hy); } else { g.moveTo(hx + ox - 1.3, hy + .6); g.lineTo(hx + ox, hy - .8); g.lineTo(hx + ox + 1.3, hy + .6); } g.stroke(); });   // ^ ^
-  g.beginPath(); g.moveTo(hx - 1, hy + 1.9); g.lineTo(hx, hy + 3); g.lineTo(hx + 1, hy + 1.9); g.stroke();   // v
-  g.fillStyle = "rgba(240,128,150,.6)"; [-4, 4].forEach(ox => { g.beginPath(); g.arc(hx + ox, hy + 2, .9, 0, Math.PI * 2); g.fill(); });
-  if(look){ g.fillStyle = "#2a221c"; g.font = "700 5px system-ui"; g.textAlign = "center"; g.fillText("…!", hx + f * 9, hy - 9); }
-  // 입에 문 팻말
-  const sx = hx + f * 6, tilt = Math.sin(w.ph * .5) * .12; g.save(); g.translate(sx, hy + 3.5); g.rotate(tilt * f);
-  g.strokeStyle = "#a0855e"; g.lineWidth = 1; g.beginPath(); g.moveTo(0, 0); g.lineTo(f * 3, -9); g.stroke();
-  g.translate(f * 3, -13); g.fillStyle = "#fffdf6"; g.strokeStyle = "#6b5b45"; g.lineWidth = .6; g.beginPath(); g.rect(-9, -4.5, 18, 9); g.fill(); g.stroke();
-  g.fillStyle = "#2a221c"; g.font = "800 6px system-ui, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("Lv." + w.lv, 0, .4); g.restore();
+function signDraw(g, w, st, walking){   // 볼펜으로 끄적인 낙서 냥이 (선이 살짝 꿈틀거림)
+  const k = w.k * 1.15, f = w.dir, hop = walking ? Math.abs(Math.sin(w.ph)) * 1.8 : (w.stopT < .3 ? Math.sin(w.stopT / .3 * Math.PI) * 3 : 0), look = !walking && w.stopT > .3;
+  let seed = Math.floor(performance.now() / 120) * 97 + 13; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647 - .5; };
+  const J = .55, line = pts => { g.beginPath(); pts.forEach(([x, y], i) => { const X = x + rnd() * J, Y = y + rnd() * J; i ? g.lineTo(X, Y) : g.moveTo(X, Y); }); g.stroke(); };
+  const loop = (cx, cy, rx, ry, n, closeGap) => { const pts = []; const a0 = rnd() * 2; for(let i = 0; i <= n; i++){ const a = a0 + i / n * Math.PI * 2 * (1 + (closeGap || .06)); pts.push([cx + Math.cos(a) * rx * (1 + rnd() * .08), cy + Math.sin(a) * ry * (1 + rnd() * .08)]); } line(pts); };
+  g.save(); g.translate(w.x, w.y - hop * k); g.scale(k, k); g.lineCap = "round"; g.lineJoin = "round";
+  g.fillStyle = "rgba(0,0,0,.1)"; g.beginPath(); g.ellipse(0, hop + .5, 9, 1.5, 0, 0, Math.PI * 2); g.fill();
+  const INK = "#2b2f3a"; g.strokeStyle = INK; g.lineWidth = .9;
+  const sw = walking ? Math.sin(w.ph) * 2.4 : 0;
+  // 몸통(대충 그린 감자) + 다리 막대기 + 꼬불 꼬리
+  g.fillStyle = "#fff"; g.beginPath(); g.ellipse(-1 * f, -7, 8.5, 4.8, 0, 0, Math.PI * 2); g.fill(); loop(-1 * f, -7, 8.5, 4.8, 14, .1);
+  [[-6, sw], [-3, -sw], [3, -sw], [6, sw]].forEach(([x, s2]) => line([[x * f, -3], [x * f + s2 * .5 * f, 0], [x * f + s2 * .5 * f + 1.2 * f, 0]]));
+  const tw = Math.sin(st.t * 5) * 1.5; line([[-9 * f, -8], [-12 * f, -11 + tw * .3], [-11 * f, -14], [-13.5 * f, -15.5 + tw], [-12.5 * f, -17.5]]);
+  // 머리(동글) — 늘 정면, 표정이 생명
+  const hx = f * 7, hy = -14; g.fillStyle = "#fff"; g.beginPath(); g.arc(hx, hy, 5.6, 0, Math.PI * 2); g.fill();
+  line([[hx - 4.6, hy - 2.6], [hx - 4.2, hy - 8.2], [hx - 1.4, hy - 5.1]]); line([[hx + 4.6, hy - 2.6], [hx + 4.2, hy - 8.2], [hx + 1.4, hy - 5.1]]); loop(hx, hy, 5.6, 5.2, 16, .08);
+  const bl = (w.t % 2.7) < .12; g.lineWidth = .8;
+  [-2.2, 2.2].forEach(ox => bl ? line([[hx + ox - 1.1, hy], [hx + ox + 1.1, hy]]) : line([[hx + ox - 1.2, hy + .5], [hx + ox, hy - .8], [hx + ox + 1.2, hy + .5]]));   // ^ ^
+  line([[hx - .9, hy + 1.8], [hx, hy + 2.8], [hx + .9, hy + 1.8]]);   // v
+  g.strokeStyle = "rgba(240,110,130,.7)"; g.lineWidth = .6; [-3.6, 3.6].forEach(ox => line([[hx + ox - .8, hy + 2.3], [hx + ox - .2, hy + 1.3]])); g.strokeStyle = INK;
+  g.lineWidth = .5; [-1, 1].forEach(d => { line([[hx + d * 3.5, hy + 1], [hx + d * 7.5, hy + .4]]); line([[hx + d * 3.5, hy + 1.9], [hx + d * 7.2, hy + 2.6]]); });   // 수염 두 가닥
+  if(look){ g.lineWidth = .8; line([[hx + f * 8, hy - 11], [hx + f * 8, hy - 7.5]]); g.beginPath(); g.arc(hx + f * 8, hy - 5.8, .45, 0, Math.PI * 2); g.fillStyle = INK; g.fill(); }
+  // 입에 문 팻말 (삐뚤빼뚤)
+  const tilt = Math.sin(w.ph * .5) * .12; g.save(); g.translate(hx + f * 4, hy + 2.5); g.rotate(tilt * f); g.lineWidth = .8;
+  line([[0, 0], [f * 2.5, -8]]); g.translate(f * 2.5, -12.5); g.fillStyle = "#fff"; g.fillRect(-9, -4.5, 18, 9); line([[-9, -4.5], [9, -4.8], [9.2, 4.5], [-9, 4.6], [-9.1, -4.2]]);
+  g.fillStyle = INK; g.font = "700 6.4px 'Chalkboard SE','Comic Sans MS','Marker Felt',system-ui,sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("Lv." + w.lv, rnd() * .3, .5 + rnd() * .3); g.restore();
   g.restore(); }
 /* 🐋 이스터에그: 하늘에서 거대한 그림자 → 초거대 고래가 덮침 → 첨벙 */
 const WH_SH = 1.05, WH_FALL = .42;
