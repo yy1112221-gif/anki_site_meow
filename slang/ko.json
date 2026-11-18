@@ -1,6 +1,499 @@
 {
- "updated": "2026-11-18T09:52:01.543280Z",
+ "updated": "2026-11-18T09:53:23.519161Z",
  "terms": [
+  {
+   "t": "개콘",
+   "n": 10,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 14
+  },
+  {
+   "t": "줴줴이야",
+   "n": 8,
+   "src": [
+    "bing_news",
+    "google_news",
+    "naver_news"
+   ],
+   "s": 14
+  },
+  {
+   "t": "한본어",
+   "n": 3,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 7
+  },
+  {
+   "t": "맥싱",
+   "n": 3,
+   "src": [
+    "google_news",
+    "naver_news"
+   ],
+   "s": 7
+  },
+  {
+   "t": "장원영이다",
+   "n": 3,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 7
+  },
+  {
+   "t": "개그콘서트",
+   "n": 3,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 7
+  },
+  {
+   "t": "영크크",
+   "n": 4,
+   "src": [
+    "google_news"
+   ],
+   "s": 6
+  },
+  {
+   "t": "진짜? 괜찮아",
+   "n": 2,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 6
+  },
+  {
+   "t": "모깅",
+   "n": 2,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 6
+  },
+  {
+   "t": "자리 빼야지",
+   "n": 2,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 6
+  },
+  {
+   "t": "조회련",
+   "n": 2,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 6
+  },
+  {
+   "t": "지인이 말해줘",
+   "n": 2,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 6
+  },
+  {
+   "t": "오늘의",
+   "n": 2,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 6
+  },
+  {
+   "t": "유행쇼",
+   "n": 3,
+   "src": [
+    "google_news"
+   ],
+   "s": 5
+  },
+  {
+   "t": "라우럴",
+   "n": 3,
+   "src": [
+    "google_news"
+   ],
+   "s": 5
+  },
+  {
+   "t": "애를 가져가",
+   "n": 3,
+   "src": [
+    "google_news"
+   ],
+   "s": 5
+  },
+  {
+   "t": "최현우",
+   "n": 2,
+   "src": [
+    "google_news"
+   ],
+   "s": 4
+  },
+  {
+   "t": "야르",
+   "n": 2,
+   "src": [
+    "google_news"
+   ],
+   "s": 4
+  },
+  {
+   "t": "진짜",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "괜찮아",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "가테",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "아느냐",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "김도영",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "킹받쥬",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "진짜 소레나",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "마지 고마워",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "프로 불참러",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "재혼황후",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "덕연이 딸",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "컴백",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "공개재판",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "힌지니어",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "작전",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "돤쥐",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "NISA 빈곤",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "야호",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "월간다음",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "피의 결혼식",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "파란 쓰나미",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "그게 뭐예요",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "현백코어",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "밤티",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "장원영",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "암호",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "시간 효율",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "심리 효율",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "리센느노믹스",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "엑소엘이요",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "무의미 밈",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "조롱 밈",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "김밥천국",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "진정성",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "초지역적",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "블루 쓰나미",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "네온 챌린지",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "딸깍",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "L 챌린지",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "알고 있어",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "중국 국부",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "스튜핏",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
   {
    "t": "빼난지원금",
    "n": 10,
@@ -10,78 +503,9 @@
    ]
   },
   {
-   "t": "개콘",
-   "n": 9,
-   "src": [
-    "bing_news",
-    "google_news"
-   ]
-  },
-  {
-   "t": "영크크",
-   "n": 4,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "줴줴이야",
-   "n": 4,
-   "src": [
-    "bing_news",
-    "google_news"
-   ]
-  },
-  {
-   "t": "유행쇼",
-   "n": 3,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "라우럴",
-   "n": 3,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "한본어",
-   "n": 3,
-   "src": [
-    "bing_news",
-    "google_news"
-   ]
-  },
-  {
-   "t": "맥싱",
-   "n": 3,
-   "src": [
-    "google_news",
-    "naver_news"
-   ]
-  },
-  {
    "t": "애를 가져가?",
    "n": 3,
    "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "장원영이다",
-   "n": 3,
-   "src": [
-    "bing_news",
-    "google_news"
-   ]
-  },
-  {
-   "t": "개그콘서트",
-   "n": 3,
-   "src": [
-    "bing_news",
     "google_news"
    ]
   },
@@ -128,69 +552,7 @@
    ]
   },
   {
-   "t": "최현우",
-   "n": 2,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "야르",
-   "n": 2,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
    "t": "진짜? 괜찮아!",
-   "n": 2,
-   "src": [
-    "bing_news",
-    "google_news"
-   ]
-  },
-  {
-   "t": "NISA 빈곤",
-   "n": 2,
-   "src": [
-    "bing_news",
-    "google_news"
-   ]
-  },
-  {
-   "t": "모깅",
-   "n": 2,
-   "src": [
-    "bing_news",
-    "google_news"
-   ]
-  },
-  {
-   "t": "자리 빼야지",
-   "n": 2,
-   "src": [
-    "bing_news",
-    "google_news"
-   ]
-  },
-  {
-   "t": "조회련",
-   "n": 2,
-   "src": [
-    "bing_news",
-    "google_news"
-   ]
-  },
-  {
-   "t": "지인이 말해줘",
-   "n": 2,
-   "src": [
-    "bing_news",
-    "google_news"
-   ]
-  },
-  {
-   "t": "오늘의",
    "n": 2,
    "src": [
     "bing_news",
@@ -205,42 +567,7 @@
    ]
   },
   {
-   "t": "진짜",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "괜찮아",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "가테",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
    "t": "광주 유행어",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "아느냐",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "김도영",
    "n": 1,
    "src": [
     "google_news"
@@ -254,112 +581,7 @@
    ]
   },
   {
-   "t": "진짜 소레나",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "마지 고마워",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "프로 불참러",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "재혼황후",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "덕연이 딸",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "컴백",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "공개재판",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "힌지니어",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "돤쥐",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
    "t": "유행어 양도해라",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "야호",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "월간다음",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "작전",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "피의 결혼식",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "파란 쓰나미",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "현백코어",
    "n": 1,
    "src": [
     "google_news"
@@ -373,41 +595,6 @@
    ]
   },
   {
-   "t": "밤티",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "장원영",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "암호",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "시간 효율",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "심리 효율",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
    "t": "올해의 신조어",
    "n": 1,
    "src": [
@@ -415,21 +602,7 @@
    ]
   },
   {
-   "t": "리센느노믹스",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
    "t": "엑소엘이요?",
-   "n": 1,
-   "src": [
-    "google_news"
-   ]
-  },
-  {
-   "t": "무의미 밈",
    "n": 1,
    "src": [
     "google_news"
