@@ -1,17 +1,17 @@
 {
- "time": "2026-11-18T12:56:47.068409Z",
+ "time": "2026-11-18T22:08:31.592052Z",
  "probe": "줴줴이야",
  "methods": {
   "ko:google_news": {
    "ok": true,
-   "docs": 92,
+   "docs": 95,
    "terms": [
     "유행쇼",
     "줴줴이야",
+    "영크크",
     "한본어",
     "맥싱",
     "야르",
-    "영크크",
     "애를 가져가",
     "장원영이다",
     "진짜? 괜찮아",
@@ -33,7 +33,7 @@
     "NISA 빈곤",
     "월간다음",
     "작전",
-    "그게 뭐예요",
+    "힐링 줴줴이야",
     "피의 결혼식",
     "파란 쓰나미"
    ],
@@ -42,30 +42,30 @@
   },
   "ko:bing_news": {
    "ok": true,
-   "docs": 38,
+   "docs": 35,
    "terms": [
     "ggzz",
     "허경환의 유행쇼",
-    "줴줴이야",
     "스튜핏",
+    "거제 야호",
     "콘텐츠",
+    "NISA 빈곤",
+    "줴줴이야",
     "올해의 단어",
     "마리텔",
+    "독박즈",
+    "목소리의 권리",
+    "AI 폭주",
+    "1광일",
+    "절반도 모르겠다",
+    "또 야구인가",
     "작업",
     "작업 들어간다",
     "세 친구",
     "고 설명했다.그는",
-    "1광일",
-    "절반도 모르겠다",
-    "또 야구인가",
     "진짜? 괜찮아",
     "한본어",
-    "자리 빼야지",
-    "조회련",
     "모깅",
-    "효연의 레벨업",
-    "가짜 김효연",
-    "난리자베스",
     "장원영이다",
     "지인이 말해줘",
     "오늘의 주우재",
@@ -80,7 +80,7 @@
   },
   "ko:naver_news": {
    "ok": true,
-   "docs": 2,
+   "docs": 3,
    "terms": [
     "맥싱",
     "47세",
@@ -102,7 +102,7 @@
   },
   "ja:google_news": {
    "ok": true,
-   "docs": 97,
+   "docs": 99,
    "terms": [
     "りくりゅう",
     "好きすぎて滅！",
@@ -113,11 +113,16 @@
     "5つのネットスラング",
     "本音",
     "AI暴走",
+    "フレネミー",
     "ギルティ",
     "NISA貧乏",
+    "夜の踊り子",
     "ドーパミン中毒のガキ",
-    "フレネミー",
     "もちろんお笑いも推しました",
+    "土下座してほしい",
+    "デマ",
+    "常識",
+    "なんとかなれーッ",
     "メンタルどっかいってまいそう",
     "メンパ",
     "自分で決めろや！",
@@ -128,32 +133,26 @@
     "別班",
     "パンチくん",
     "ボンドロ",
-    "お笑い流行ってない",
-    "ドラマ関連",
-    "VIVANT",
-    "ちいかわ関連",
-    "辟易する",
-    "古参勢"
+    "お笑い流行ってない"
    ],
    "probe_in_raw": false,
    "probe_in_terms": false
   },
   "ja:bing_news": {
    "ok": true,
-   "docs": 24,
+   "docs": 22,
    "terms": [
     "マジ卍",
     "M3",
     "チー牛",
-    "WLBジャーナリスト賞",
     "マジ",
     "加倍奉還",
-    "duck不必",
-    "DDDD",
-    "yyds",
     "呀咧呀咧",
     "很解",
     "很躁",
+    "duck不必",
+    "DDDD",
+    "yyds",
     "沒有沾醬",
     "Lemon",
     "排骨",
@@ -163,15 +162,16 @@
     "画一性",
     "均一性",
     "一様性",
-    "コレすげー思ってた",
-    "言ってくれた",
     "5つのネットスラング",
     "本音",
-    "ネットスラング",
     "共感・受容系",
     "ほのぼの系",
     "驚嘆・感嘆系",
-    "ぐぐる"
+    "コレすげー思ってた",
+    "言ってくれた",
+    "ネットスラング",
+    "ぐぐる",
+    "DQN"
    ],
    "probe_in_raw": false,
    "probe_in_terms": false
@@ -199,15 +199,17 @@
   },
   "en:google_news": {
    "ok": true,
-   "docs": 88,
+   "docs": 89,
    "terms": [
     "mogging",
     "maxxing",
+    "clock it",
     "menty b",
     "the rona",
     "cozzie livs",
     "ratioed",
     "calling me unc",
+    "human",
     "tante-tante code",
     "delulu",
     "code rot"
@@ -220,6 +222,7 @@
    "docs": 26,
    "terms": [
     "clock it",
+    "mogging",
     "crashing out",
     "oten",
     "sus",
@@ -232,15 +235,12 @@
     "skibidi",
     "or",
     "mad rizz",
-    "mogging",
     "delulu",
     "fomo",
-    "six-seven",
     "brainrot",
     "waste-guna-huiya",
     "new",
-    "i really like",
-    "the city"
+    "i really like"
    ],
    "probe_in_raw": false,
    "probe_in_terms": false
@@ -267,12 +267,21 @@
    "probe_in_terms": false
   },
   "es:google_news": {
-   "ok": false,
-   "err": "HTTP Error 429: Too Many Requests"
+   "ok": true,
+   "docs": 42,
+   "terms": [
+    "mogging",
+    "maxxing",
+    "golf",
+    "bad gyal",
+    "blocus"
+   ],
+   "probe_in_raw": false,
+   "probe_in_terms": false
   },
   "es:bing_news": {
    "ok": true,
-   "docs": 21,
+   "docs": 20,
    "terms": [
     "farmear aura",
     "demure",
@@ -284,7 +293,6 @@
     "delulu",
     "prime",
     "ghostear",
-    "chats",
     "padrear",
     "padre",
     "no puedo más",
@@ -292,7 +300,8 @@
     "fomo",
     "side quest",
     "generación lamine yamal",
-    "farmeando aura"
+    "farmeando aura",
+    "al"
    ],
    "probe_in_raw": false,
    "probe_in_terms": false
