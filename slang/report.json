@@ -1,10 +1,10 @@
 {
- "time": "2026-11-18T12:48:08.586396Z",
+ "time": "2026-11-18T12:56:47.068409Z",
  "probe": "줴줴이야",
  "methods": {
   "ko:google_news": {
    "ok": true,
-   "docs": 93,
+   "docs": 92,
    "terms": [
     "유행쇼",
     "줴줴이야",
@@ -33,30 +33,31 @@
     "NISA 빈곤",
     "월간다음",
     "작전",
+    "그게 뭐예요",
     "피의 결혼식",
-    "파란 쓰나미",
-    "현백코어"
+    "파란 쓰나미"
    ],
    "probe_in_raw": true,
    "probe_in_terms": true
   },
   "ko:bing_news": {
    "ok": true,
-   "docs": 27,
+   "docs": 38,
    "terms": [
+    "ggzz",
+    "허경환의 유행쇼",
     "줴줴이야",
     "스튜핏",
-    "NISA 빈곤",
+    "콘텐츠",
     "올해의 단어",
+    "마리텔",
     "작업",
     "작업 들어간다",
     "세 친구",
     "고 설명했다.그는",
+    "1광일",
     "절반도 모르겠다",
     "또 야구인가",
-    "1광일",
-    "ggzz",
-    "허경환의 유행쇼",
     "진짜? 괜찮아",
     "한본어",
     "자리 빼야지",
@@ -65,15 +66,14 @@
     "효연의 레벨업",
     "가짜 김효연",
     "난리자베스",
-    "라스",
-    "라디오스타",
-    "열정 페이",
     "장원영이다",
     "지인이 말해줘",
     "오늘의 주우재",
     "장원영",
     "냉부",
-    "민망"
+    "민망",
+    "크렁크",
+    "Business"
    ],
    "probe_in_raw": true,
    "probe_in_terms": true
@@ -140,24 +140,29 @@
   },
   "ja:bing_news": {
    "ok": true,
-   "docs": 20,
+   "docs": 24,
    "terms": [
+    "マジ卍",
     "M3",
     "チー牛",
     "WLBジャーナリスト賞",
-    "マジ卍",
+    "マジ",
     "加倍奉還",
-    "呀咧呀咧",
-    "很解",
-    "很躁",
     "duck不必",
     "DDDD",
     "yyds",
+    "呀咧呀咧",
+    "很解",
+    "很躁",
     "沒有沾醬",
     "Lemon",
     "排骨",
     "現象學",
     "學到好多新造詞",
+    "Gemini",
+    "画一性",
+    "均一性",
+    "一様性",
     "コレすげー思ってた",
     "言ってくれた",
     "5つのネットスラング",
@@ -166,12 +171,7 @@
     "共感・受容系",
     "ほのぼの系",
     "驚嘆・感嘆系",
-    "ぐぐる",
-    "DQN",
-    "ワーク・ライフバランス",
-    "子持ち様",
-    "wwwww",
-    "チーズ牛丼食ってそう"
+    "ぐぐる"
    ],
    "probe_in_raw": false,
    "probe_in_terms": false
@@ -217,17 +217,27 @@
   },
   "en:bing_news": {
    "ok": true,
-   "docs": 16,
+   "docs": 26,
    "terms": [
+    "clock it",
+    "crashing out",
+    "oten",
     "sus",
     "mid",
     "rizz",
     "ijbol",
     "gts",
     "demure",
-    "crashing out",
     "bruh",
     "skibidi",
+    "or",
+    "mad rizz",
+    "mogging",
+    "delulu",
+    "fomo",
+    "six-seven",
+    "brainrot",
+    "waste-guna-huiya",
     "new",
     "i really like",
     "the city"
@@ -257,23 +267,15 @@
    "probe_in_terms": false
   },
   "es:google_news": {
-   "ok": true,
-   "docs": 39,
-   "terms": [
-    "mogging",
-    "maxxing",
-    "golf",
-    "bad gyal",
-    "blocus"
-   ],
-   "probe_in_raw": false,
-   "probe_in_terms": false
+   "ok": false,
+   "err": "HTTP Error 429: Too Many Requests"
   },
   "es:bing_news": {
    "ok": true,
-   "docs": 16,
+   "docs": 21,
    "terms": [
     "farmear aura",
+    "demure",
     "polyester",
     "alv",
     "cringe",
@@ -283,12 +285,14 @@
     "prime",
     "ghostear",
     "chats",
+    "padrear",
+    "padre",
     "no puedo más",
+    "boomers",
     "fomo",
     "side quest",
-    "boomers",
-    "farmeando aura",
-    "generación lamine yamal"
+    "generación lamine yamal",
+    "farmeando aura"
    ],
    "probe_in_raw": false,
    "probe_in_terms": false

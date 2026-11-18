@@ -1,25 +1,25 @@
 {
- "updated": "2026-11-18T12:48:08.586396Z",
+ "updated": "2026-11-18T12:56:47.068409Z",
  "lang": "en",
  "terms": [
   {
    "t": "mogging",
    "n": 24,
    "src": [
+    "bing_news",
     "google_news"
    ],
-   "s": 26,
+   "s": 28,
    "first": "2026-11-18",
    "def": [
     "The act or habit of being significantly more attractive than someone or something; a domination in appearance",
-    "The act or habit of being superior to someone or something",
-    "present participle and gerund of mog"
+    "The act or habit of being superior to someone or something"
    ],
    "ex": [
     "Are you mogging or maxxing?",
     "#WordOfTheDay: \"mogging\" Curious about the definition and etymology of our WOTD?"
    ],
-   "at": "2026-11-18T12:48:08.586396Z",
+   "at": "2026-11-18T12:56:47.068409Z",
    "cue": 30
   },
   {
@@ -30,14 +30,68 @@
    ],
    "s": 6,
    "first": "2026-11-18",
-   "def": [
-    "present participle and gerund of maxx"
-   ],
+   "def": [],
    "ex": [
     "Are you mogging or maxxing?"
    ],
-   "at": "2026-11-18T12:48:08.586396Z",
+   "at": "2026-11-18T12:56:47.068409Z",
    "cue": 5
+  },
+  {
+   "t": "delulu",
+   "n": 2,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 6,
+   "first": "2026-11-18",
+   "def": [
+    "Delusional",
+    "Delusion ; delusional attitudes or thoughts",
+    "Another term that the government now recognises as an acronym for delusions is \"Delulu.\" It refers to someone believing things that are unrealistic, often out of choice."
+   ],
+   "ex": [],
+   "at": "2026-11-18T12:56:47.068409Z",
+   "cue": 3
+  },
+  {
+   "t": "clock it",
+   "n": 3,
+   "src": [
+    "bing_news"
+   ],
+   "s": 5,
+   "first": "2026-11-18",
+   "def": [
+    "A congratulation of success",
+    "A congratulation of success .",
+    "Leading the trend was BJP MP Bansuri Swaraj, who used the phrase \"clock it\", a Gen Z expression meaning to notice or correctly identify something, to praise the Narendra Modi government."
+   ],
+   "ex": [
+    "BJP MP Bansuri Swaraj used the phrase \"clock it\" while supporting the Bill and praising the government's approach to tackling examination-related irregularities."
+   ],
+   "at": "2026-11-18T12:56:47.068409Z",
+   "cue": 5
+  },
+  {
+   "t": "crashing out",
+   "n": 2,
+   "src": [
+    "bing_news"
+   ],
+   "s": 4,
+   "first": "2026-11-18",
+   "def": [
+    "15 slang words Gen Zers are using in 2025 — and what they mean From the popular \"6-7\" to \"crashing out\" and looking \"chopped,\" these are 15 slang terms you might've heard your Gen Z coworkers using in 2025."
+   ],
+   "ex": [
+    "If you've been online lately, you've likely seen people talking about crashing out.",
+    "Well, not literally — though, plenty of people actually are crashing out.",
+    "For some, “crashing out” can be a liberating release of pent-up emotions."
+   ],
+   "at": "2026-11-18T12:56:47.068409Z",
+   "cue": 2
   },
   {
    "t": "menty b",
@@ -58,7 +112,7 @@
     "According to Zeltser, there is a possibility that \"Menty B\" sounds inconsiderate to some people who meet criteria for a mental health disorder.",
     "And terms like “Menty B” can make sharing heavy news easier."
    ],
-   "at": "2026-11-18T12:48:08.586396Z",
+   "at": "2026-11-18T12:56:47.068409Z",
    "cue": 7
   },
   {
@@ -76,7 +130,7 @@
    "ex": [
     "If I caught the rona , I'd make sure I self-isolate for two weeks minimum !"
    ],
-   "at": "2026-11-18T12:48:08.586396Z",
+   "at": "2026-11-18T12:56:47.068409Z",
    "cue": 1
   },
   {
@@ -96,7 +150,7 @@
     "Youngsters in the country are affectionately referring to the current economic backdrop as the \"cozzie livs.\"",
     "But as conversations move from online to in-person, it's going to be impossible to subtly search the definition of cozzie Livs when talking to younger staff members."
    ],
-   "at": "2026-11-18T12:48:08.586396Z",
+   "at": "2026-11-18T12:56:47.068409Z",
    "cue": 1
   },
   {
@@ -113,7 +167,7 @@
     "Modified or multiplied by a ratio ."
    ],
    "ex": [],
-   "at": "2026-11-18T12:48:08.586396Z",
+   "at": "2026-11-18T12:56:47.068409Z",
    "cue": 1
   },
   {
@@ -126,8 +180,8 @@
    "first": "2026-11-18",
    "def": [],
    "ex": [],
-   "at": "2026-11-18T12:48:08.586396Z",
-   "cue": 1
+   "at": "2026-11-18T12:56:47.068409Z",
+   "cue": 2
   },
   {
    "t": "tante-tante code",
@@ -141,25 +195,8 @@
     "What Does the 'Tante-Tante Code' Mean?"
    ],
    "ex": [],
-   "at": "2026-11-18T12:48:08.586396Z",
+   "at": "2026-11-18T12:56:47.068409Z",
    "cue": 1
-  },
-  {
-   "t": "delulu",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Another term that the government now recognises as an acronym for delusions is \"Delulu.\" It refers to someone believing things that are unrealistic, often out of choice.",
-    "Delusional",
-    "Delusion ; delusional attitudes or thoughts"
-   ],
-   "ex": [],
-   "at": "2026-11-18T12:48:08.586396Z",
-   "cue": 2
   },
   {
    "t": "code rot",
@@ -174,8 +211,25 @@
     "Synonym of bit rot : the development of bugs and incompatibilities of software due to changes in its environment , etc."
    ],
    "ex": [],
-   "at": "2026-11-18T12:48:08.586396Z",
+   "at": "2026-11-18T12:56:47.068409Z",
    "cue": 1
+  },
+  {
+   "t": "oten",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [],
+   "ex": [
+    "Survey Method When did \"oten\" start to become popular?",
+    "In this way, \"oten\" is a word that allows you to casually express surprise.",
+    "First, let's look at the cumulative number of posts containing \"oten\" (Figure 1)."
+   ],
+   "at": "2026-11-18T12:56:47.068409Z",
+   "cue": 9
   },
   {
    "t": "sus",
@@ -193,10 +247,10 @@
    "ex": [
     "yeah, the account posting offensive stuff got sussed .",
     "Here is what \"sus\" stands for and how to use it in conversation.",
-    "Used in texting and everyday speech, sus can be either a noun or an adjective.",
-    "But \"sus\" as we know it wasn't imported by English tourists."
+    "Although Cooper wasn't aware of \"sus\" at the time, he was struck by its familiarity to students.",
+    "Players often use \"sus\" to describe others who are acting strange and could potentially be the imposter."
    ],
-   "at": "2026-11-18T12:48:08.586396Z",
+   "at": "2026-11-18T12:56:47.068409Z",
    "cue": 13
   },
   {
@@ -218,8 +272,8 @@
     "According to Wright, \"mid\" is older than modern English.",
     "See more \"Mid\" is a slang word for anything that's ... blah."
    ],
-   "at": "2026-11-18T12:48:08.586396Z",
-   "cue": 10
+   "at": "2026-11-18T12:56:47.068409Z",
+   "cue": 12
   },
   {
    "t": "rizz",
@@ -230,9 +284,9 @@
    "s": 3,
    "first": "2026-11-18",
    "def": [
-    "A person 's ability to attract a love interest , usually female ; attractiveness , charm",
-    "Often followed by up : to attract or seduce (a love interest )",
-    "To “rizz” someone means to charm or seduce them."
+    "To “rizz” someone means to charm or seduce them.",
+    "In contrast, unspoken rizz refers to the ability to exude charm without saying a word.",
+    "A person 's ability to attract a love interest , usually female ; attractiveness , charm"
    ],
    "ex": [
     "My rizz is silent but deadly.",
@@ -240,8 +294,8 @@
     "You got her number ? W rizz !",
     "Merriam-Webster defines rizz as “romantic appeal or charm” when used as a noun."
    ],
-   "at": "2026-11-18T12:48:08.586396Z",
-   "cue": 1
+   "at": "2026-11-18T12:56:47.068409Z",
+   "cue": 22
   },
   {
    "t": "ijbol",
@@ -252,17 +306,17 @@
    "s": 3,
    "first": "2026-11-18",
    "def": [
+    "Find out IJBOL's meaning—and how to use the term like you know what you're doing.",
     "Alternative letter-case form of IJBOL",
-    "To burst out laughing",
-    "Find out IJBOL's meaning—and how to use the term like you know what you're doing."
+    "To burst out laughing"
    ],
    "ex": [
     "Dictionary.com IJBOL is just another acronym to express humor or laughter online.",
     "Instead, the slang-savvy generation has coined a more complicated term in lieu of laugh out loud: IJBOL.",
     "Another reason IJBOL is often misidentified as a Korean word has to do with how it was popularized."
    ],
-   "at": "2026-11-18T12:48:08.586396Z",
-   "cue": 1
+   "at": "2026-11-18T12:56:47.068409Z",
+   "cue": 12
   },
   {
    "t": "gts",
@@ -282,8 +336,8 @@
     "We've been compiling explainers on all the terminology floating around the digital world.\",\"headline\":\"What does 'gts' mean?",
     "If someone sends you \"GTS\" in a text message, they are most likely telling you that they are going to sleep or recommending that you go to sleep."
    ],
-   "at": "2026-11-18T12:48:08.586396Z",
-   "cue": 9
+   "at": "2026-11-18T12:56:47.068409Z",
+   "cue": 10
   },
   {
    "t": "demure",
@@ -291,41 +345,7 @@
    "src": [
     "bing_news"
    ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Modest , quiet , reserved , or serious",
-    "Affectedly modest, decorous , or serious; making a show of gravity",
-    "The dictionary defines \"demure\" as reserved, modest, serious, and shy, while \"mindful\" means to be conscious or aware of something."
-   ],
-   "ex": [
-    "Mary is wearing demure clothes.",
-    "Skura's style of dress was described as demure.",
-    "She is a demure young lady.",
-    "Wright, what is occurring with \"demure\" and her cousins is not particularly special."
-   ],
-   "at": "2026-11-18T12:48:08.586396Z",
-   "cue": 3
-  },
-  {
-   "t": "crashing out",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "present participle and gerund of crash out",
-    "15 slang words Gen Zers are using in 2025 — and what they mean From the popular \"6-7\" to \"crashing out\" and looking \"chopped,\" these are 15 slang terms you might've heard your Gen Z coworkers using in 2025."
-   ],
-   "ex": [
-    "If you've been online lately, you've likely seen people talking about crashing out.",
-    "Well, not literally — though, plenty of people actually are crashing out.",
-    "For some, “crashing out” can be a liberating release of pent-up emotions."
-   ],
-   "at": "2026-11-18T12:48:08.586396Z",
-   "cue": 1
+   "s": 3
   },
   {
    "t": "bruh",
@@ -333,24 +353,58 @@
    "src": [
     "bing_news"
    ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "The Meaning of 'Bruh': How Gen Z Uses This Popular Slang Term Key takeaways Powered by Yahoo Scout.",
-    "If you've ever heard your child use it and thought to yourself, \"What does 'bruh' mean?\" you're not alone.",
-    "Expressing amazement or shock"
-   ],
-   "ex": [
-    "It was such a bruh moment.",
-    "You're moving to Greenland ? Bruh !",
-    "Person 1 : I think the word partisan derives from how they parted their hair. Person 2 : Bruh .",
-    "Cohen says young watchers of TikTok are taking \"bruh\" and running with it."
-   ],
-   "at": "2026-11-18T12:48:08.586396Z",
-   "cue": 10
+   "s": 3
   },
   {
    "t": "skibidi",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "or",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "mad rizz",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "fomo",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "six-seven",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "brainrot",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "waste-guna-huiya",
    "n": 1,
    "src": [
     "bing_news"
@@ -380,38 +434,6 @@
     "bing_news"
    ],
    "s": 3
-  },
-  {
-   "t": "clock it",
-   "n": 3,
-   "src": [
-    "bing_news"
-   ],
-   "s": 5,
-   "first": "2026-11-18",
-   "def": [
-    "A congratulation of success .",
-    "Leading the trend was BJP MP Bansuri Swaraj, who used the phrase \"clock it\", a Gen Z expression meaning to notice or correctly identify something, to praise the Narendra Modi government."
-   ],
-   "ex": [
-    "BJP MP Bansuri Swaraj used the phrase \"clock it\" while supporting the Bill and praising the government's approach to tackling examination-related irregularities."
-   ],
-   "at": "2026-11-18T12:40:59.225497Z"
-  },
-  {
-   "t": "oten",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [],
-   "ex": [
-    "Survey Method When did \"oten\" start to become popular?",
-    "In this way, \"oten\" is a word that allows you to casually express surprise.",
-    "First, let's look at the cumulative number of posts containing \"oten\" (Figure 1)."
-   ]
   }
  ]
 }
