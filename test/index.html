@@ -535,6 +535,7 @@ nav.subnav{position:fixed;z-index:30;left:12px;right:12px;bottom:calc(10px + env
 nav.subnav button{pointer-events:auto;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:52px;padding:7px 8px 6px;border-radius:16px;border:1px solid var(--glass-edge);background:var(--glass-strong);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--muted);box-shadow:var(--glass-shadow);cursor:pointer}
 nav.subnav button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round} nav.subnav button small{font-size:.62rem;font-weight:700;letter-spacing:.02em}
 nav.subnav button[aria-selected="true"]{color:var(--ink);border-color:var(--accent)} nav.subnav .sn-home{flex-direction:row;gap:6px;font-weight:800;font-size:.85rem;color:var(--ink);padding:10px 14px}
+body.focus .tutask{display:none!important}
 body[data-view="today"] nav.subnav .sn-home, body:not([data-view]) nav.subnav .sn-home{display:none} body.focus nav.subnav{display:none}
 main, .wrap{padding-bottom:84px}
 .actrow{display:flex;gap:10px;margin:14px 0 4px} .actrow .btn{flex:1 1 0;min-height:56px;font-size:1.02rem;font-weight:800;border-radius:18px;justify-content:center}
@@ -1135,7 +1136,8 @@ function save(){ S.meta.mu = Date.now(); try{ localStorage.setItem(LS_KEY, JSON.
 function firstVisitDefaults(){   // 처음 온 사람: 브라우저 언어로 화면 언어·학습 언어를 정함 (한국어 → 일본어 JLPT). ?ui=ko&lang=ja 로도 지정 가능
   const q = new URLSearchParams(location.search), nl = (navigator.language || "").toLowerCase(), st = S.meta.settings;
   if(nl.startsWith("ja")){ st.ui = "ja"; st.lang = "ko"; } else { st.ui = "ko"; st.lang = "ja"; }
-  if(["ko", "ja"].includes(q.get("ui"))) st.ui = q.get("ui"); if(q.get("lang") && LANGS[q.get("lang")] && q.get("lang") !== st.ui) st.lang = q.get("lang"); }
+  if(["ko", "ja"].includes(q.get("ui"))) st.ui = q.get("ui"); if(q.get("lang") && LANGS[q.get("lang")] && q.get("lang") !== st.ui) st.lang = q.get("lang");
+  if(st.lang === "ja" || st.lang === "ko"){ st.handsFree = true; S.meta.hfTip = 1; } }   // 일본어 키보드 없는 사람이 막히지 않게: 처음엔 '입력 없이'(정답 보고 직접 채점)
 function load(){ try{ const raw = localStorage.getItem(LS_KEY); if(!raw){ firstVisitDefaults(); return; } const d = JSON.parse(raw); S.cards = d.cards || {}; S.meta = Object.assign(S.meta, d.meta||{}); S.meta.settings = Object.assign({}, DEFAULT_SETTINGS, (d.meta||{}).settings||{}); }catch(e){} }
 try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){}
 const cardsHere = () => Object.values(S.cards).filter(c => (c.lang||"es") === S.meta.settings.lang);
@@ -1153,7 +1155,7 @@ function todayNewPreview(){
   return `<div class="chips"><span class="tiny muted" style="align-self:center">${esc(x.todayNewList)}</span>${list.map(c => `<span class="chip" style="background:var(--accent-soft)">${c._linked ? "🔗 " : ""}${esc(c.word)}</span>`).join("")}</div>${list.some(c => c._linked) ? `<p class="tiny muted">${esc(x.linkedHint)}</p>` : ""}`;
 }
 function deckChips(){
-  const ds = decks(); if(ds.length < 2) return "";
+  const ds = decks().filter(d => d.total || cardsHere().some(c => deckOf(c) === d.id)); if(ds.length < 2) return "";
   return `<div class="chips" aria-label="${esc(t().studyDecks)}"><span class="tiny muted" style="align-self:center">${esc(t().studyDecks)}</span>` + ds.map(d => `<button type="button" class="chiptog" data-deck="${d.id}" aria-pressed="${d.on !== false}">${esc(deckName(d))} <span class="tiny">${d.total ? d.total.toLocaleString() : cardsHere().filter(c => deckOf(c) === d.id).length}</span></button>`).join("") + `</div>`;
 }
 document.addEventListener("click", e => {
@@ -1544,7 +1546,7 @@ async function renderOnboard(box){   // 첫 시작: ① 배울 언어 ② 지금
 }
 function syncOn(){ return !!(S.meta.sync && S.meta.sync.code); }
 function maybeTutAsk(){   // 첫 입장에만: 작지만 눈에 띄는 O/X. 동기화 코드가 있는 사람에겐 절대 안 띄움
-  const old = $("#tutAsk"); if(syncOn() || S.meta.tutAsked || Object.keys(S.meta.days || {}).length || document.body.dataset.view && document.body.dataset.view !== "today" || SES){ if(old) old.remove(); return; }
+  const old = $("#tutAsk"); if(syncOn() || S.meta.tutAsked || !cardsHere().length || Object.keys(S.meta.days || {}).length || document.body.dataset.view && document.body.dataset.view !== "today" || SES){ if(old) old.remove(); return; }
   if(old) return; const x = t(), el = document.createElement("div"); el.id = "tutAsk"; el.className = "tutask"; el.setAttribute("role", "dialog");
   el.innerHTML = `${nm("st_default", 30)}<span>${esc(x.tutAsk)}</span><button type="button" class="ox o" aria-label="O">⭕</button><button type="button" class="ox x" aria-label="X">❌</button>`;
   document.body.appendChild(el);
@@ -1592,6 +1594,8 @@ function renderStartInner(){
   $("#startBtn").onclick = startSession;
 }
 function startSession(){
+  { const ta = $("#tutAsk"); if(ta) ta.remove(); }
+  if(S.meta.hfTip === 1 && S.meta.settings.handsFree){ S.meta.hfTip = 2; save(); setTimeout(() => toast(S.meta.settings.ui === "ko" ? "지금은 '입력 없이' 모드예요. 일본어 키보드가 있으면 위 버튼을 눌러 직접 써 보세요" : "いまは「入力なし」モード。キーボードがあれば上のボタンで書く練習もできます"), 900); }
   SES = buildSession(); if(!SES.queue.length){ SES = null; renderStart(); return; }
   prefetchLazy([...new Set(SES.queue.map(it => it.id))]);
   saveSession();
@@ -3754,6 +3758,7 @@ const PRESET_CHUNK = 60, PRESET_LOW = 25, PRESET_DATA = {};
 async function presetData(id){ if(PRESET_DATA[id]) return PRESET_DATA[id]; const r = await fetch(`../presets/${id}.json`); if(!r.ok) throw new Error("preset"); return (PRESET_DATA[id] = await r.json()); }
 function materialize(d, data, want){
   const lang = d.preset.split("-")[0], ui = S.meta.settings.ui, have = new Set(Object.values(S.cards).filter(c => (c.lang || "es") === lang).map(c => norm(c.word)));
+  if(data.ord && d.ord !== data.ord){ d.cursor = 0; d.ord = data.ord; }   // 단어장 순서가 바뀌면 처음부터 (이미 있는 단어는 건너뜀)
   const skip = new Set((d.skip || []).map(w => w.toLowerCase())); const now = Date.now(); let n = 0, i = d.cursor || 0;
   for(; i < data.items.length && n < want; i++){
     const it = data.items[i], w = it[0]; if(!w || have.has(norm(w)) || skip.has(w.toLowerCase())) continue;
@@ -3815,7 +3820,7 @@ function fillLazy(c){
       if(!cur.meaning){ const g = cur.gloss ? await translate(cur.gloss, L) : await translate(cur.word, L); if(g) cur.meaning = g; }
       if(cur.example && !cur.exampleKo){ try{ cur.exampleKo = await translate(cur.example, L); }catch(e){} }
       if(cur.meaning) delete cur.lazy; saveCard(cur); return; }
-    const r = await lookup(c.word); const cur = S.cards[c.id]; if(!cur) return;
+    const cur0 = S.cards[c.id]; const r = cur0 && cur0.mOk ? { meaning: "", cands: await tatoeba(c.word).catch(() => []) } : await lookup(c.word); const cur = S.cards[c.id]; if(!cur) return;
     if(r.meaning && !cur.mOk) cur.meaning = (cur.reading ? cur.reading + " · " : "") + r.meaning;
     if(!cur.example && r.cands && r.cands.length){ const cd = r.cands[0]; cur.example = cd.text; cur.form = cd.form; cur.src = cd.id; cur.audio = cd.audio || null; try{ cur.exampleKo = await trOf(cd); }catch(e){} }
     if(r.meaning || cur.meaning) delete cur.lazy; saveCard(cur);
@@ -3911,7 +3916,7 @@ function askScript(c, mode){
 /* ════════ データを守る: 識別コードのすすめ・消えそうなときの警告 ════════ */
 const isIOS = () => /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 const isStandalone = () => !!(navigator.standalone || (window.matchMedia && matchMedia("(display-mode: standalone)").matches));
-function usedEnough(){ return Object.keys(S.cards).length >= 15 || Object.keys(S.meta.days || {}).length >= 2 || (S.meta.ans && Object.values(S.meta.ans).some(n => n >= 10)); }
+function usedEnough(){ return Object.keys(S.meta.days || {}).length >= 2 || (S.meta.ans && Object.values(S.meta.ans).some(n => n >= 10)); }
 function dataRisk(){
   const x = t(), sy = S.meta.sync || {}, r = [];
   if(SAVE_FAIL) r.push({ lv: 2, msg: x.riskSave });
