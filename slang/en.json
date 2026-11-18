@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-18T12:02:51.922686Z",
+ "updated": "2026-11-18T12:33:41.375851Z",
  "lang": "en",
  "terms": [
   {
@@ -16,9 +16,23 @@
    ],
    "ex": [
     "Are you mogging or maxxing?",
-    "#WordOfTheDay: \"mogging\" Curious about the definition and etymology of our WOTD?",
-    "What Is 'Mogging'?"
-   ]
+    "#WordOfTheDay: \"mogging\" Curious about the definition and etymology of our WOTD?"
+   ],
+   "at": "2026-11-18T12:33:41.375851Z"
+  },
+  {
+   "t": "maxxing",
+   "n": 4,
+   "src": [
+    "google_news"
+   ],
+   "s": 6,
+   "first": "2026-11-18",
+   "def": [],
+   "ex": [
+    "Are you mogging or maxxing?"
+   ],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "delulu",
@@ -32,21 +46,8 @@
    "def": [],
    "ex": [
     "Finally, they became 'delulu' (delusional), believing the protesting students would join them—but no one did,\" Shinde said."
-   ]
-  },
-  {
-   "t": "maxxing",
-   "n": 3,
-   "src": [
-    "google_news"
    ],
-   "s": 5,
-   "first": "2026-11-18",
-   "def": [],
-   "ex": [
-    "Are you mogging or maxxing?",
-    "What Is ‘Maxxing’?"
-   ]
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "clock it",
@@ -60,8 +61,11 @@
     "Leading the trend was BJP MP Bansuri Swaraj, who used the phrase \"clock it\", a Gen Z expression meaning to notice or correctly identify something, to praise the Narendra Modi government."
    ],
    "ex": [
+    "After six o'clock, it gradually became light.",
+    "You ought to adjust the clock. It's slow.",
     "BJP MP Bansuri Swaraj used the phrase \"clock it\" while supporting the Bill and praising the government's approach to tackling examination-related irregularities."
-   ]
+   ],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "crashing out",
@@ -72,12 +76,16 @@
    "s": 4,
    "first": "2026-11-18",
    "def": [
+    "present participle and gerund of crash out",
     "15 slang words Gen Zers are using in 2025 — and what they mean From the popular \"6-7\" to \"crashing out\" and looking \"chopped,\" these are 15 slang terms you might've heard your Gen Z coworkers using in 2025."
    ],
    "ex": [
-    "We know \"demure\" and \"crashing out\" hate to see us coming.",
-    "In 2025, if you're not locking in, you might be crashing out."
-   ]
+    "I found out why my computer keeps crashing.",
+    "We better get out of here before it all comes crashing down on us.",
+    "If you've been online lately, you've likely seen people talking about crashing out.",
+    "So right now we're all crashing out — but that likely won't last."
+   ],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "menty b",
@@ -87,8 +95,15 @@
    ],
    "s": 3,
    "first": "2026-11-18",
-   "def": [],
-   "ex": []
+   "def": [
+    "A mental breakdown ."
+   ],
+   "ex": [
+    "And terms like \"Menty B\" can make sharing heavy news easier.",
+    "It's not just \"Menty B\" — young people are including other mental-health-adjacent terms in their slang lexicon.",
+    "According to Zeltser, there is a possibility that \"Menty B\" sounds inconsiderate to some people who meet criteria for a mental health disorder."
+   ],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "the rona",
@@ -98,8 +113,13 @@
    ],
    "s": 3,
    "first": "2026-11-18",
-   "def": [],
-   "ex": []
+   "def": [
+    "COVID-19 ."
+   ],
+   "ex": [
+    "If I caught the rona , I'd make sure I self-isolate for two weeks minimum !"
+   ],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "cozzie livs",
@@ -109,8 +129,15 @@
    ],
    "s": 3,
    "first": "2026-11-18",
-   "def": [],
-   "ex": []
+   "def": [
+    "Cost of living crisis ."
+   ],
+   "ex": [
+    "Youngsters in the country are currently affectionately referring to the current economic backdrop as the \"cozzie livs\".",
+    "Youngsters in the country are affectionately referring to the current economic backdrop as the \"cozzie livs.\"",
+    "But as conversations move from online to in-person, it's going to be impossible to subtly search the definition of cozzie Livs when talking to younger staff members."
+   ],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "ratioed",
@@ -120,8 +147,12 @@
    ],
    "s": 3,
    "first": "2026-11-18",
-   "def": [],
-   "ex": []
+   "def": [
+    "Modified or multiplied by a ratio .",
+    "Having significantly more replies than retweets or likes , indicating a general dislike by the public ."
+   ],
+   "ex": [],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "calling me unc",
@@ -132,7 +163,8 @@
    "s": 3,
    "first": "2026-11-18",
    "def": [],
-   "ex": []
+   "ex": [],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "tante-tante code",
@@ -145,7 +177,8 @@
    "def": [
     "What Does the 'Tante-Tante Code' Mean?"
    ],
-   "ex": []
+   "ex": [],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "code rot",
@@ -155,25 +188,11 @@
    ],
    "s": 3,
    "first": "2026-11-18",
-   "def": [],
-   "ex": [
-    "What is 'code rot'?"
-   ]
-  },
-  {
-   "t": "oten",
-   "n": 1,
-   "src": [
-    "bing_news"
+   "def": [
+    "Synonym of bit rot : the development of bugs and incompatibilities of software due to changes in its environment , etc."
    ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [],
-   "ex": [
-    "Survey Method When did \"oten\" start to become popular?",
-    "In this way, \"oten\" is a word that allows you to casually express surprise.",
-    "First, let's look at the cumulative number of posts containing \"oten\" (Figure 1)."
-   ]
+   "ex": [],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "sus",
@@ -184,12 +203,17 @@
    "s": 3,
    "first": "2026-11-18",
    "def": [
-    "What does 'sus' mean?"
+    "ISO 639-2 & ISO 639-3 language code for Susu .",
+    "Suspicion (in terms of a sus law ).",
+    "Here's what \\\"sus\\\" means.\",\"headline\":\"What does 'sus' mean?"
    ],
    "ex": [
-    "Phrases like \"that's mid\" or \"no cap, sus\" are common forms of slang used by Gen Z.",
-    "See more Phrases like \"that's mid\" or \"no cap, sus\" are common forms of slang used by Gen Z."
-   ]
+    "yeah, the account posting offensive stuff got sussed .",
+    "Here is what \"sus\" stands for and how to use it in conversation.",
+    "Although Cooper wasn't aware of \"sus\" at the time, he was struck by its familiarity to students.",
+    "Players often use \"sus\" to describe others who are acting strange and could potentially be the imposter."
+   ],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "mid",
@@ -199,12 +223,18 @@
    ],
    "s": 3,
    "first": "2026-11-18",
-   "def": [],
+   "def": [
+    "ISO 639-3 language code for Mandaic .",
+    "Occupying a middle position; middle .",
+    "This article originally appeared on USA TODAY: What does 'mid' mean?"
+   ],
    "ex": [
-    "Was your lunch \"mid?\" Did someone try to \"rizz\" you up?",
-    "Phrases like \"that's mid\" or \"no cap, sus\" are common forms of slang used by Gen Z.",
-    "See more Phrases like \"that's mid\" or \"no cap, sus\" are common forms of slang used by Gen Z."
-   ]
+    "We need to retake mid .",
+    "According to Malik, \"mid\" was used by people in cannabis culture.",
+    "According to Wright, \"mid\" is older than modern English.",
+    "\"That band's latest release was mid."
+   ],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "rizz",
@@ -214,11 +244,17 @@
    ],
    "s": 3,
    "first": "2026-11-18",
-   "def": [],
+   "def": [
+    "To “rizz” someone means to charm or seduce them.",
+    "“Mad rizz” means having strong or exceptional rizz."
+   ],
    "ex": [
-    "Was your lunch \"mid?\" Did someone try to \"rizz\" you up?",
-    "Terms like “rizz,” short for charisma; “cap,” ..."
-   ]
+    "My rizz is silent but deadly.",
+    "There is more than a fine line between unspoken rizz and surreptitious sexual harassment.",
+    "Merriam-Webster defines rizz as “romantic appeal or charm” when used as a noun.",
+    "Another example might be, “You’ve got mad rizz, you always make people laugh!”."
+   ],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "ijbol",
@@ -229,9 +265,16 @@
    "s": 3,
    "first": "2026-11-18",
    "def": [
+    "Find out IJBOL's meaning—and how to use the term like you know what you're doing.",
+    "Beyond IJBOL’s meaning, there are a few other things you need to know about this on-the-rise term.",
     "Did see that meme because \"ijbol.\" What do these phrases even mean, if anything?"
    ],
-   "ex": []
+   "ex": [
+    "Dictionary.com IJBOL is just another acronym to express humor or laughter online.",
+    "But it isn’t exactly the coolest thing to write out IJBOL in all uppercase letters.",
+    "Instead, if you’re really looking to fit in with the Gen-Z crowd, writing “ijbol” in lowercase letters is the way to go."
+   ],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "gts",
@@ -242,9 +285,16 @@
    "s": 3,
    "first": "2026-11-18",
    "def": [
+    "Here is the meaning and how to use the slang \"gts\".",
+    "Don't worry we're here to help share more about GTS' meaning !",
     "What does 'gts' mean?"
    ],
-   "ex": []
+   "ex": [
+    "\"GTS\" is also commonly used on social media to indicate that good times were had.",
+    "GTS.\" This is a way of expressing that it is late and that you should be preparing to get some shut-eye.",
+    "We've been compiling explainers on all the terminology floating around the digital world.\",\"headline\":\"What does 'gts' mean?"
+   ],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "demure",
@@ -254,12 +304,16 @@
    ],
    "s": 3,
    "first": "2026-11-18",
-   "def": [],
+   "def": [
+    "The dictionary defines \"demure\" as reserved, modest, serious, and shy, while \"mindful\" means to be conscious or aware of something."
+   ],
    "ex": [
+    "I love your demure smile.",
+    "Mary is wearing demure clothes.",
     "Wright, what is occurring with \"demure\" and her cousins is not particularly special.",
-    "We know \"demure\" and \"crashing out\" hate to see us coming.",
-    "Take \"demure,\" a formal word found in the dictionary unlike other \"slang.\" Apparently, the word's meteoric rise isn't all that surprising."
-   ]
+    "We know \"demure\" and \"crashing out\" hate to see us coming."
+   ],
+   "at": "2026-11-18T12:33:41.375851Z"
   },
   {
    "t": "bruh",
@@ -267,10 +321,7 @@
    "src": [
     "bing_news"
    ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [],
-   "ex": []
+   "s": 3
   },
   {
    "t": "skibidi",
@@ -278,14 +329,7 @@
    "src": [
     "bing_news"
    ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Or have you ever scratched your head trying to figure out what “skibidi” means?"
-   ],
-   "ex": [
-    "It originated from a YouTube videos series called ‘Skibidi Toilet’ that featured animated talking heads."
-   ]
+   "s": 3
   },
   {
    "t": "or",
@@ -293,17 +337,7 @@
    "src": [
     "bing_news"
    ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Or have you ever scratched your head trying to figure out what “skibidi” means?",
-    "67 Meme Meaning: Does Viral Slang Have Spiritual Definition - Blessing Or Curse?"
-   ],
-   "ex": [
-    "Or maybe a meme made you more confused than amused.",
-    "To see which new words and ...",
-    "Are you mogging or maxxing?"
-   ]
+   "s": 3
   },
   {
    "t": "mad rizz",
@@ -311,24 +345,7 @@
    "src": [
     "bing_news"
    ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [],
-   "ex": []
-  },
-  {
-   "t": "six-seven",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [],
-   "ex": [
-    "Why are they constantly saying “six-seven”?",
-    "Before the video ends, they spend a lot of time repeating “six-seven” and “forty-one,” which is so accurate it hurts."
-   ]
+   "s": 3
   },
   {
    "t": "fomo",
@@ -336,12 +353,15 @@
    "src": [
     "bing_news"
    ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [],
-   "ex": [
-    "Then came FOMO (fear of missing out), so they held a protest outside the Prime Minister's residence."
-   ]
+   "s": 3
+  },
+  {
+   "t": "six-seven",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
   },
   {
    "t": "brainrot",
@@ -382,6 +402,21 @@
     "bing_news"
    ],
    "s": 3
+  },
+  {
+   "t": "oten",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [],
+   "ex": [
+    "Survey Method When did \"oten\" start to become popular?",
+    "In this way, \"oten\" is a word that allows you to casually express surprise.",
+    "First, let's look at the cumulative number of posts containing \"oten\" (Figure 1)."
+   ]
   }
  ]
 }
