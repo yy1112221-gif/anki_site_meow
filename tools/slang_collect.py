@@ -113,7 +113,8 @@ def wiktionary_defs(term, lang):
         for e in j.get(lang, []):
             for d in e.get("definitions", [])[:3]:
                 t = strip(d.get("definition", "")); ex = [strip(x) for x in d.get("examples", []) if x]
-                if t: out.append((t, ex))
+                t = re.sub(r"\.mw-parser-output.*$", "", t).strip(" .")
+                if t and not re.match(r"(present participle|plural of|past tense|simple past|inflection of|alternative (form|spelling)|third-person|misspelling)", t, re.I): out.append((t, ex))
         return out
     except Exception: return []
 def tatoeba(term, lang):
@@ -122,14 +123,14 @@ def tatoeba(term, lang):
         return [r["text"] for r in j.get("results", [])][:5]
     except Exception: return []
 END = {"ko": re.compile(r"(다|요|죠|까|네|어|아|지)[.!?…]?\s*$|[.!?]\s*$"), "ja": re.compile(r"[。！？]\s*$"), "en": re.compile(r"[.!?]\"?\s*$"), "es": re.compile(r"[.!?]\"?\s*$")}
-LANGCHK = {"es": (re.compile(r"\b(el|la|los|las|que|de|es|una?|por|para|con|se)\b", re.I), re.compile(r"\b(il|della|delle|anche|invece|sono|questo|ovvero|perché|è)\b", re.I)),
+LANGCHK = {"es": (re.compile(r"\b(el|la|los|las|que|de|es|una?|por|para|con|se)\b", re.I), re.compile(r"\b(il|di|della|delle|alla|nel|gli|anche|invece|sono|questo|ovvero|perché|è|insomma)\b", re.I)),
            "en": (re.compile(r"\b(the|a|is|to|of|and|you|it|in)\b", re.I), re.compile(r"\b(el|la|que|il|della|der|die|und)\b", re.I))}
 def good_sentence(x, lang):
     if re.search(r"https?:|\||&nbsp;|</?[a-z]", x): return False
     if x.count('"') % 2 or x.count("“") != x.count("”") or x.count("‘") != x.count("’") or x.count("「") != x.count("」"): return False   # 잘린 인용문 제외
     if lang in LANGCHK:
         yes, no = LANGCHK[lang]
-        if not yes.search(x) or len(no.findall(x)) >= 2: return False   # 다른 언어 기사 섞임 방지 (예: 스페인어 칸에 이탈리아어)
+        if not yes.search(x) or len(no.findall(x)) >= (1 if lang == "es" else 2): return False   # 다른 언어 기사 섞임 방지 (예: 스페인어 칸에 이탈리아어)
     if lang in ("ko", "ja") and len(x) < 15: return False
     if lang in ("en", "es"): w = len(x.split()); return 5 <= w <= 28 and bool(END[lang].search(x))
     return 10 <= len(x) <= 80 and bool(END[lang].search(x))
@@ -144,7 +145,8 @@ def gather(term, lang, links, docs):
     wex = [x for _, exs in wk for x in exs if key(x) and good_sentence(x, lang)]
     news = sorted([x for x in hit if good_sentence(x, lang) and x not in defs], key=lambda x: -ex_score(x, term, lang))
     exs = tt[:2] + wex[:2] + [x for x in news if ex_score(x, term, lang) > -6][:3]   # 우선순위: Tatoeba(일반 문장) > 위키낱말사전 용례 > 뉴스 본문
-    return list(dict.fromkeys(defs))[:3], list(dict.fromkeys(exs))[:4]
+    cue = sum(1 for x in hit + [d for d, _ in docs if key(d)] if CUE[lang].search(x))   # 슬랭으로 소개된 횟수(유행어·뜻·slang… 과 같은 문장)
+    return list(dict.fromkeys(defs))[:3], list(dict.fromkeys(exs))[:4], cue
 
 def main():
     report = {"time": datetime.datetime.utcnow().isoformat() + "Z", "probe": TARGET, "methods": {}}
@@ -169,7 +171,7 @@ def main():
             if False and len(x["ex"]) >= 2 and x["def"] and x["at"] and x["at"] > (datetime.datetime.utcnow() - datetime.timedelta(days=3)).isoformat(): return
             links = [u for d, u in alldocs if u and x["t"] in (d.lower() if lang in ("en", "es") else d)]
             try:
-                defs, exs = gather(x["t"], lang, links, alldocs)
+                defs, exs, cue = gather(x["t"], lang, links, alldocs); x["cue"] = cue
                 x["def"] = list(dict.fromkeys(defs + x["def"]))[:3]; x["ex"] = list(dict.fromkeys(exs + x["ex"]))[:4]; x["at"] = report["time"]
             except Exception as e: print("gather", x["t"], e)
         with cf.ThreadPoolExecutor(4) as ex: list(ex.map(work, ranked[:18]))
