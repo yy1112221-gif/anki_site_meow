@@ -506,18 +506,21 @@ body.petopen{overflow:hidden}
 .pet-lv{flex:1;display:flex;flex-direction:column;gap:4px;align-items:center} .pet-lv b{font-size:.95rem;color:var(--ink)}
 .pet-bar{width:min(220px,100%);height:9px;border-radius:999px;background:rgba(255,255,255,.5);overflow:hidden} .pet-bar i{display:block;height:100%;background:linear-gradient(90deg,#ffb84d,#f2708f);border-radius:999px;transition:width .3s}
 .pet-st{display:flex;flex-direction:column;align-items:flex-end} .pet-st b{font-size:1.05rem;color:var(--ink)} .pet-st small{font-size:.7rem;color:var(--muted)}
-.pet-msg{position:absolute;left:50%;top:calc(76px + env(safe-area-inset-top));transform:translate(-50%,-10px);max-width:88vw;padding:10px 16px;border-radius:18px;background:rgba(255,255,255,.92);color:#1d2b27;font-weight:700;font-size:.9rem;text-align:center;opacity:0;transition:.25s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.pet-msg{position:absolute;z-index:5;left:50%;top:calc(76px + env(safe-area-inset-top));transform:translate(-50%,-10px);max-width:88vw;padding:10px 16px;border-radius:18px;background:rgba(255,255,255,.92);color:#1d2b27;font-weight:700;font-size:.9rem;text-align:center;opacity:0;transition:.25s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.15)}
 .pet-msg.show{opacity:1;transform:translate(-50%,0)}
-.pet-bottom{position:absolute;left:0;right:0;bottom:0;padding:10px 12px calc(12px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px}
+.pet-bottom{position:absolute;left:0;right:0;top:calc(76px + env(safe-area-inset-top));bottom:auto;pointer-events:none;padding:0 12px;z-index:3} .pet-bottom .row,.pet-bottom button,.pet-bottom input{pointer-events:auto} .pet-bottom-old{padding:10px 12px calc(12px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px}
 .pet-tray{display:flex;gap:10px;overflow-x:auto;padding:6px 4px;scrollbar-width:none;justify-content:safe center}
 .pet-hub{position:relative;width:70px;height:70px;margin:0 auto;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.16);backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 6px 20px rgba(0,0,0,.18);display:grid;place-items:center;cursor:pointer;touch-action:none;transition:transform .1s}
 .pet-hub:active{transform:scale(.9)} .pet-hub.gold{border-color:#ffcc33;box-shadow:0 0 16px rgba(255,204,51,.6)}
 .pet-hub i,.pw-it i{position:absolute;right:-4px;top:-4px;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#e8486a;color:#fff;font:700 .75rem/22px system-ui;font-style:normal;text-align:center}
-.pw-layer{position:absolute;inset:0;z-index:6;touch-action:none}
-.pw-disc{position:absolute;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.06) 0 38%,rgba(255,255,255,.2) 39% 100%);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);border:1px solid rgba(255,255,255,.45);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 0 40px rgba(255,255,255,.12),0 -6px 40px rgba(0,0,0,.18);transform:scale(.55);opacity:0;transition:transform .26s cubic-bezier(.2,1.5,.4,1),opacity .18s}
-.pw-it{position:absolute;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);transform:scale(.4);transition:transform .2s,background .15s;pointer-events:none}
-.pw-it.gold{border-color:#ffcc33} .pw-layer.on .pw-disc{transform:scale(1.06);opacity:1} .pw-layer.on .pw-it{transform:scale(1)} .pw-layer.on .pw-it.sel{transform:scale(1.25);background:rgba(255,255,255,.38);box-shadow:0 0 18px rgba(255,255,255,.5)}
-.pw-layer.off .pw-disc,.pw-layer.off .pw-it{opacity:0!important;transform:scale(.7)}
+.pw-layer{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.pw-disc{position:absolute;border-radius:50%;pointer-events:auto;touch-action:none;background:rgba(255,255,255,.07);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+  -webkit-mask:radial-gradient(closest-side,transparent 72%,#000 80%,#000 93%,transparent 100%);mask:radial-gradient(closest-side,transparent 72%,#000 80%,#000 93%,transparent 100%);transition:opacity .2s}
+.pw-items{position:absolute;inset:0;pointer-events:none} .pw-it{position:absolute;left:0;top:0;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;transition:opacity .2s}
+.pw-ring{position:absolute;width:72px;height:72px;border-radius:50%;border:1.5px solid rgba(255,255,255,.32);box-shadow:0 0 12px rgba(255,255,255,.12);pointer-events:none;transition:opacity .2s} #pet.grabbing .pw-ring{opacity:0}
+.pw-it i{opacity:.85} .pw-it:not(.sel) i{transform:scale(.8);opacity:.6}
+.pw-empty{display:none;position:absolute;left:0;right:0;bottom:calc(30px + env(safe-area-inset-bottom));text-align:center} .pw-layer.empty .pw-empty{display:block} .pw-layer.empty .pw-disc{opacity:.4}
+#pet.grabbing .pw-disc,#pet.grabbing .pw-it{opacity:0!important;pointer-events:none} #pet.grabbing .pw-disc{pointer-events:auto}
 #pet .pet-top,#pet .pet-bottom,#pet .pet-msg{transition:opacity .2s} #pet.grabbing .pet-top,#pet.grabbing .pet-bottom,#pet.grabbing .pet-msg{opacity:0;pointer-events:none} #pet.wheeling .pet-hint{opacity:0}
 .pet-it{position:relative;flex-shrink:0;width:64px;height:64px;border-radius:22px;border:1px solid var(--glass-edge);background:var(--glass-strong);display:grid;place-items:center;cursor:pointer;touch-action:none;transition:transform .08s}
 .pet-it:active{transform:scale(.88)} .pet-it.gold{border-color:#ffcc33;box-shadow:0 0 14px rgba(255,204,51,.6)}
@@ -2718,12 +2721,12 @@ function openPet(){
       <div class="pet-lv"><b id="petLv"></b><div class="pet-bar"><i id="petBar"></i></div></div>
       <div class="pet-st"><b>🔥 ${streak()}</b><small>${esc(x.ranks[petTier(streak())])}${p.freezes ? ` · 🧊${p.freezes}` : ""}</small></div></div>
     <div class="pet-msg" id="petMsg" aria-live="polite"></div>
-    <div class="pet-bottom"><div class="pet-tray" id="petTray"></div><p class="pet-hint">${esc(x.hint)}</p>
+    <div class="pet-bottom"><p class="pet-hint">${esc(x.hint)}</p>
       ${isTest ? `<div class="row" style="justify-content:center;gap:6px"><button class="btn sm" type="button" id="petTest">${esc(x.test)}</button><label class="small" style="display:flex;gap:6px;align-items:center">${esc(x.testStreak)}<input id="petTestS" type="number" min="0" max="200" value="${streak()}" style="width:70px"></label></div>` : ""}</div>`;
   $("#petClose").onclick = closePet;
   const tb = $("#petTest"); if(tb){ tb.onclick = () => { const s = streak(), top = petTier(s); for(let i = 0; i < 10; i++){ const c = PET_ITEMS.filter(it => it.t <= top); const it = c[Math.floor(Math.random() * c.length)]; p.inv[it.id] = (p.inv[it.id] || 0) + 1; } save(); petTray(); };
     $("#petTestS").onchange = e => { const n = Math.max(0, Math.min(200, parseInt(e.target.value, 10) || 0)); S.meta.days = {}; for(let i = 0; i < n; i++) S.meta.days[addDays(today(), -i)] = true; save(); openPet(); }; }
-  petTray(); petStart();
+  petStart(); petTray();
   const top = petTier(streak()); if(top > p.seenTier){ const its = PET_ITEMS.filter(i => i.t === top); p.seenTier = top; save(); setTimeout(() => { petMsg(`${x.unlock} ${its.map(i => i.e || "").join("")} ${its.map(itName).join("・")}`, 3200); sfxFanfare(); }, 500); }
   else if(!petCount()) petMsg(x.empty, 4200);
 }
@@ -2732,69 +2735,54 @@ let PMSG_T = null;
 function petMsg(txt, ms){ const m = $("#petMsg"); if(!m) return; m.textContent = txt; m.classList.add("show"); clearTimeout(PMSG_T); PMSG_T = setTimeout(() => m.classList.remove("show"), ms || 2200); }
 function petLvUI(){ const p = petState(); const a = petNeed(p.lv - 1 < 1 ? 0 : p.lv - 1) * (p.lv > 1 ? 1 : 0), b = petNeed(p.lv); const lv = $("#petLv"), bar = $("#petBar"); if(!lv) return;
   lv.textContent = pt().lv(p.lv); bar.style.width = Math.max(2, Math.min(100, (p.kcal - a) / Math.max(1, b - a) * 100)) + "%"; }
-/* 간식 고르기: 가운데 버튼 하나 → 꾹 누르면 반투명 유리 회전판이 펼쳐짐 → 돌려서 고르고, 위로 끌어 꺼내면 판은 사라지고 간식과 냥이만 남는다 */
+/* 간식 회전판: 화면 아래에 늘 떠 있는 은은한 블러 원판. 좌우로 돌리고, 가운데 간식을 누르면 그 간식을 잡는다(다른 간식은 잡는 동안 숨김) */
 let PET_SEL = null, WHEEL = null;
 function petInvList(){ const p = petState(); return PET_ITEMS.filter(i => p.inv[i.id] > 0).sort((a, b) => b.t - a.t || b.kcal - a.kcal); }
-function petTray(){ const tr = $("#petTray"); if(!tr) return; const p = petState(), ids = petInvList();
-  if(!ids.find(i => i.id === PET_SEL)) PET_SEL = ids[0] ? ids[0].id : null;
-  const it = PET_SEL && PET_IT[PET_SEL];
-  tr.innerHTML = it ? `<button class="pet-hub${it.gold ? " gold" : ""}" type="button" id="petHub" aria-label="${esc(itName(it))}">${petIconHTML(it, 40)}<i>${p.inv[it.id]}</i></button>` : `<span class="pet-none">🍽️ 0</span>`;
-  const hub = $("#petHub"); if(!hub) return;
-  let hold = null, mode = null, sx = 0, sy = 0, t0 = 0;
-  hub.onpointerdown = e => { e.preventDefault(); pa(); mode = "press"; sx = e.clientX; sy = e.clientY; t0 = performance.now(); try{ hub.setPointerCapture(e.pointerId); }catch(_){}
-    hold = setTimeout(() => { if(mode !== "press") return; mode = "wheel"; wheelOpen(hub); wheelDown(e.clientX, e.clientY, true); buzz(12); }, 330); };
-  hub.onpointermove = e => { if(mode === "wheel"){ wheelMove(e.clientX, e.clientY); return; }
-    if(mode === "press" && Math.hypot(e.clientX - sx, e.clientY - sy) > 12){ clearTimeout(hold); mode = "drag"; petGrab(PET_SEL, hub); petDragMove(e.clientX, e.clientY); petGrabUI(true); } else if(mode === "drag") petDragMove(e.clientX, e.clientY); };
-  hub.onpointerup = e => { clearTimeout(hold); if(mode === "press") petThrow(PET_SEL, hub); else if(mode === "drag"){ petRelease(); petGrabUI(false); } else if(mode === "wheel") wheelUp(e.clientX, e.clientY); mode = null; };
-  hub.onpointercancel = () => { clearTimeout(hold); if(mode === "drag" && PET){ PET.grab = null; petGrabUI(false); } if(mode === "wheel") wheelClose(); mode = null; };
-  petLvUI(); }
-function petGrabUI(on){ const el = $("#pet"); if(el) el.classList.toggle("grabbing", on); if(!on) setTimeout(petTray, 40); }
-function wheelOpen(hub){
-  const host = $("#pet"); if(!host || WHEEL) return; const list = petInvList(); if(!list.length) return;
-  const hr = hub.getBoundingClientRect(), pr = host.getBoundingClientRect(), cx = hr.left + hr.width / 2 - pr.left, cy = hr.top + hr.height / 2 - pr.top;
-  const R = Math.min(pr.width * .47, 200), RI = R * .72, step = Math.min(.7, Math.max(.42, 2.2 / Math.max(1, list.length - 1)));
-  const lay = document.createElement("div"); lay.className = "pw-layer";
-  lay.innerHTML = `<div class="pw-disc" style="left:${cx - R}px;top:${cy - R}px;width:${2 * R}px;height:${2 * R}px"></div>` + list.map(i => `<div class="pw-it${i.gold ? " gold" : ""}" data-id="${i.id}">${petIconHTML(i, 34)}<i>${petState().inv[i.id]}</i></div>`).join("");
-  host.appendChild(lay); host.classList.add("wheeling");
-  const idx = Math.max(0, list.findIndex(i => i.id === PET_SEL));
-  WHEEL = { lay, hub, list, cx, cy, R, RI, step, rot: -idx * step, vel: 0, drag: false, cand: null, raf: 0, els: [...lay.querySelectorAll(".pw-it")] };
-  requestAnimationFrame(() => lay.classList.add("on")); sfxSpin();
-  lay.onpointerdown = e => { e.preventDefault(); try{ lay.setPointerCapture(e.pointerId); }catch(_){} wheelDown(e.clientX, e.clientY, false); };
-  lay.onpointermove = e => wheelMove(e.clientX, e.clientY);
-  lay.onpointerup = e => wheelUp(e.clientX, e.clientY);
-  lay.onpointercancel = () => wheelClose();
-  wheelPlace(); wheelAnim();
-}
-function wheelXY(cx, cy){ const w = WHEEL, pr = $("#pet").getBoundingClientRect(); return [cx - pr.left - w.cx, cy - pr.top - w.cy]; }
-function wheelPlace(){ const w = WHEEL; if(!w) return; let best = 0, bd = 9;
-  w.els.forEach((el, i) => { const a = w.rot + i * w.step, vis = Math.abs(a) < 1.75; el.style.left = (w.cx + Math.sin(a) * w.RI) + "px"; el.style.top = (w.cy - Math.cos(a) * w.RI) + "px";
-    el.style.opacity = vis ? Math.max(0, 1 - Math.max(0, Math.abs(a) - 1.1) / .65) : 0; if(Math.abs(a) < bd){ bd = Math.abs(a); best = i; } });
-  w.els.forEach((el, i) => el.classList.toggle("sel", i === best));
-  const id = w.list[best].id; if(id !== w.sel){ if(w.sel){ buzz(4); sfxTick(); } w.sel = id; } }
-function wheelAnim(){ const w = WHEEL; if(!w) return;
-  if(!w.drag){ const max = 0, min = -(w.list.length - 1) * w.step; w.rot += w.vel / 60; w.vel *= .9;
-    if(w.rot > max){ w.rot += (max - w.rot) * .25; w.vel *= .5; } else if(w.rot < min){ w.rot += (min - w.rot) * .25; w.vel *= .5; }
-    else if(Math.abs(w.vel) < .6){ const tgt = Math.round(w.rot / w.step) * w.step; w.rot += (tgt - w.rot) * .2; } }
-  wheelPlace(); w.raf = requestAnimationFrame(wheelAnim); }
-function wheelDown(x, y, fromHub){ const w = WHEEL; if(!w) return; const [dx, dy] = wheelXY(x, y), d = Math.hypot(dx, dy);
-  if(!fromHub && (d > w.R * 1.12 || dy > 10)){ wheelClose(); return; }
-  w.drag = true; w.vel = 0; w.lastA = Math.atan2(dx, -dy); w.lastT = performance.now(); w.d0 = d; w.x0 = x; w.y0 = y; w.t0 = w.lastT; w.cand = null;
-  if(!fromHub){ let bi = -1, bd = 40; w.els.forEach((el, i) => { const a = w.rot + i * w.step, ex = Math.sin(a) * w.RI, ey = -Math.cos(a) * w.RI, q = Math.hypot(dx - ex, dy - ey); if(q < bd && Math.abs(a) < 1.6){ bd = q; bi = i; } }); if(bi >= 0) w.cand = bi; } }
-function wheelMove(x, y){ const w = WHEEL; if(w && w.drag){ const [dx, dy] = wheelXY(x, y), d = Math.hypot(dx, dy), a = Math.atan2(dx, -dy), now = performance.now();
-    // 간식을 위(바깥)로 끌어내면 꺼내기
-    if(w.cand != null && d - w.d0 > 34 && y < w.y0 - 24){ const id = w.list[w.cand].id, hub = w.hub; PET_SEL = id; wheelClose(true); petGrab(id, hub); petDragMove(x, y); petGrabUI(true); WHEEL_TAKE = true; return; }
-    let da = a - w.lastA; while(da > Math.PI) da -= 2 * Math.PI; while(da < -Math.PI) da += 2 * Math.PI;
-    if(Math.abs(da) > .002 && (w.cand == null || Math.hypot(x - w.x0, y - w.y0) > 8)){ w.cand = Math.hypot(x - w.x0, y - w.y0) > 18 ? null : w.cand; w.rot += da; w.vel = w.vel * .4 + .6 * da / Math.max(.008, (now - w.lastT) / 1000); }
-    w.lastA = a; w.lastT = now; return; }
-  if(WHEEL_TAKE) petDragMove(x, y); }
-let WHEEL_TAKE = false;
-function wheelUp(x, y){ if(WHEEL_TAKE){ WHEEL_TAKE = false; petRelease(); petGrabUI(false); const l = document.querySelector(".pw-layer"); if(l) l.remove(); return; }
-  const w = WHEEL; if(!w) return; w.drag = false; w.vel = Math.max(-14, Math.min(14, w.vel));
-  if(w.cand != null && Math.hypot(x - w.x0, y - w.y0) < 10 && performance.now() - w.t0 < 300){ w.rot = -w.cand * w.step; w.vel = 0; PET_SEL = w.list[w.cand].id; } w.cand = null; }
-function wheelClose(keepLayer){ const w = WHEEL; if(!w) return; cancelAnimationFrame(w.raf); PET_SEL = w.sel || PET_SEL; WHEEL = null; const host = $("#pet"); if(host) host.classList.remove("wheeling");
-  w.lay.classList.remove("on"); w.lay.classList.add("off");
-  if(keepLayer){ w.lay.onpointermove = e => wheelMove(e.clientX, e.clientY); w.lay.onpointerup = e => wheelUp(e.clientX, e.clientY); w.lay.onpointercancel = () => { WHEEL_TAKE = false; if(PET) PET.grab = null; petGrabUI(false); w.lay.remove(); }; w.lay.onpointerdown = null; }
-  else { setTimeout(() => w.lay.remove(), 220); setTimeout(petTray, 30); } }
+function petTray(){ const host = $("#pet"); if(!host || !PET) return; const list = petInvList();
+  if(!list.find(i => i.id === PET_SEL)) PET_SEL = list[0] ? list[0].id : null;
+  let w = WHEEL; if(!w || !host.contains(w.lay)){ if(w) cancelAnimationFrame(w.raf);
+    const lay = document.createElement("div"); lay.className = "pw-layer"; lay.innerHTML = `<div class="pw-disc"></div><div class="pw-ring"></div><div class="pw-items"></div><span class="pet-none pw-empty">🍽️ 0</span>`; host.appendChild(lay);
+    w = WHEEL = { lay, disc: lay.querySelector(".pw-disc"), box: lay.querySelector(".pw-items"), rot: 0, vel: 0, drag: false, raf: 0, sig: "" };
+    wheelGeo(); w.disc.onpointerdown = wheelDown; w.disc.onpointermove = wheelMove; w.disc.onpointerup = wheelUp; w.disc.onpointercancel = wheelCancel; wheelAnim(); }
+  const sig = list.map(i => i.id).join(","); if(sig !== w.sig){ w.sig = sig; w.list = list;
+    w.box.innerHTML = list.map(i => `<div class="pw-it${i.gold ? " gold" : ""}" data-id="${i.id}">${petIconHTML(i, 36)}<i></i></div>`).join(""); w.els = [...w.box.children];
+    const idx = Math.max(0, list.findIndex(i => i.id === PET_SEL)); w.rot = -idx * w.step; }
+  w.lay.classList.toggle("empty", !list.length); petLvUI(); }
+function wheelGeo(){ const w = WHEEL, pr = $("#pet").getBoundingClientRect(), W = pr.width, H = pr.height;
+  w.RI = Math.max(230, W * .66); w.cx = W / 2; w.top = H * .835; w.cy = w.top + w.RI; w.step = 76 / w.RI; const Rd = w.RI + 50;
+  const [rx, ry] = [w.cx, w.top]; Object.assign(w.lay.querySelector(".pw-ring").style, { left: (rx - 36) + "px", top: (ry - 36) + "px" }); Object.assign(w.disc.style, { left: (w.cx - Rd) + "px", top: (w.cy - Rd) + "px", width: 2 * Rd + "px", height: 2 * Rd + "px" }); }
+function wheelPos(a){ const w = WHEEL; return [w.cx + Math.sin(a) * w.RI, w.cy - Math.cos(a) * w.RI]; }
+function wheelAnim(){ const w = WHEEL; if(!w) return; if(!document.contains(w.lay)){ WHEEL = null; return; }
+  const n = (w.list || []).length;
+  if(!w.drag && n){ const min = -(n - 1) * w.step; w.rot += w.vel / 60; w.vel *= .92;
+    if(w.rot > 0){ w.rot += -w.rot * .25; w.vel *= .5; } else if(w.rot < min){ w.rot += (min - w.rot) * .25; w.vel *= .5; }
+    else if(Math.abs(w.vel) < .5){ w.rot += (Math.round(w.rot / w.step) * w.step - w.rot) * .2; } }
+  let best = 0, bd = 9; const inv = petState().inv;
+  (w.els || []).forEach((el, i) => { const a = w.rot + i * w.step, [x, y] = wheelPos(a), fa = Math.abs(a);
+    el.style.transform = `translate(${x - 30}px,${y - 30}px) scale(${fa < w.step / 2 ? 1.22 : 1 - Math.min(.3, fa * .25)})`; el.style.opacity = Math.max(0, 1 - Math.max(0, fa - .62) / .35);
+    const b = el.lastChild, c = String(inv[w.list[i].id] || 0); if(b.textContent !== c) b.textContent = c; if(fa < bd){ bd = fa; best = i; } });
+  (w.els || []).forEach((el, i) => el.classList.toggle("sel", i === best));
+  if(n){ const id = w.list[best].id; if(id !== PET_SEL){ if(w.drag || Math.abs(w.vel) > .5){ buzz(4); sfxTick(); } PET_SEL = id; } w.best = best; }
+  w.raf = requestAnimationFrame(wheelAnim); }
+function wheelDown(e){ const w = WHEEL; if(!w || !w.list || !w.list.length) return; e.preventDefault(); pa(); try{ w.disc.setPointerCapture(e.pointerId); }catch(_){}
+  const pr = $("#pet").getBoundingClientRect(), x = e.clientX - pr.left, y = e.clientY - pr.top, [sx, sy] = wheelPos(w.rot + w.best * w.step);
+  w.x0 = e.clientX; w.y0 = e.clientY; w.t0 = performance.now(); w.vel = 0;
+  if(Math.hypot(x - sx, y - sy) < 46){   // 가운데 간식을 잡음 → 다른 간식은 숨김
+    w.mode = "grab"; w.gid = w.list[w.best].id; w.gel = w.els[w.best]; petGrab(w.gid, w.gel); petDragMove(e.clientX, e.clientY); petGrabUI(true); buzz(10); return; }
+  w.mode = "spin"; w.drag = true; w.lastA = Math.atan2(x - w.cx, w.cy - y); w.lastT = w.t0; }
+function wheelMove(e){ const w = WHEEL; if(!w || !w.mode) return;
+  if(w.mode === "grab"){ petDragMove(e.clientX, e.clientY); return; }
+  const pr = $("#pet").getBoundingClientRect(), x = e.clientX - pr.left, y = e.clientY - pr.top, a = Math.atan2(x - w.cx, w.cy - y), now = performance.now();
+  let da = a - w.lastA; while(da > Math.PI) da -= 2 * Math.PI; while(da < -Math.PI) da += 2 * Math.PI;
+  w.rot += da; w.vel = w.vel * .4 + .6 * da / Math.max(.008, (now - w.lastT) / 1000); w.lastA = a; w.lastT = now; }
+function wheelUp(e){ const w = WHEEL; if(!w || !w.mode) return; const m = w.mode; w.mode = null;
+  const tap = Math.hypot(e.clientX - w.x0, e.clientY - w.y0) < 10 && performance.now() - w.t0 < 300;
+  if(m === "grab"){ if(tap){ if(PET) PET.grab = null; petThrow(w.gid, w.gel); } else petRelease(); petGrabUI(false); return; }
+  w.drag = false; w.vel = Math.max(-12, Math.min(12, w.vel));
+  if(tap){ const pr = $("#pet").getBoundingClientRect(), x = e.clientX - pr.left, y = e.clientY - pr.top; let bi = -1, bd = 44;   // 다른 간식을 톡 → 그 간식이 가운데로
+    w.els.forEach((el, i) => { const [ex, ey] = wheelPos(w.rot + i * w.step), q = Math.hypot(x - ex, y - ey); if(q < bd){ bd = q; bi = i; } }); if(bi >= 0){ w.rot = -bi * w.step; w.vel = 0; } } }
+function wheelCancel(){ const w = WHEEL; if(!w) return; if(w.mode === "grab"){ if(PET) PET.grab = null; petGrabUI(false); } w.mode = null; w.drag = false; }
+function petGrabUI(on){ const el = $("#pet"); if(el) el.classList.toggle("grabbing", on); }
 
 /* ════════ 암기냥이の体: ばね格子（ゼリー）に絵を貼って、体そのものが揺れる ════════
    絵（輪郭線なし・やわらかい陰影）を毎フレーム下絵キャンバスに描き、WebGL で格子の形にゆがめて表示する。
