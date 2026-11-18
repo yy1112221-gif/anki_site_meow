@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-18T12:40:59.225497Z",
+ "updated": "2026-11-18T12:48:08.586396Z",
  "lang": "es",
  "terms": [
   {
@@ -12,7 +12,8 @@
    "first": "2026-11-18",
    "def": [],
    "ex": [],
-   "at": "2026-11-18T12:40:59.225497Z"
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 9
   },
   {
    "t": "maxxing",
@@ -23,11 +24,9 @@
    "s": 6,
    "first": "2026-11-18",
    "def": [],
-   "ex": [
-    "Con proteinmaxxing , invece, si fa riferimento alla ricerca di un maggiore apporto proteico.",
-    "Insomma, maxxing si usa ogni volta che si vuole descrivere la tendenza a portare qualcosa al massimo livello ."
-   ],
-   "at": "2026-11-18T12:40:59.225497Z"
+   "ex": [],
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 5
   },
   {
    "t": "golf",
@@ -46,7 +45,8 @@
     "P: ¿El golf puede sobrevivir cada uno por su lado?",
     "P: Ahora está en el LIV Golf, un campeonato que tiene menos días de competición."
    ],
-   "at": "2026-11-18T12:40:59.225497Z"
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 4
   },
   {
    "t": "farmear aura",
@@ -66,28 +66,8 @@
     "Al unir ambos conceptos aparece “farmear aura”, es decir, hacer algo que aumenta la percepción de carisma o actitud de una persona .",
     "\"Farmear aura\": la nueva tendencia de redes transforma las situaciones cotidianas en un juego imaginario donde cada gesto puede sumar o restar puntos de popularidad."
    ],
-   "at": "2026-11-18T12:40:59.225497Z"
-  },
-  {
-   "t": "demure",
-   "n": 2,
-   "src": [
-    "bing_news"
-   ],
-   "s": 4,
-   "first": "2026-11-18",
-   "def": [
-    "Non credo. È una questione di tempistiche e algoritmi che ha caricato l'essere demure di un significato aspirazionale.",
-    "Su uso se ha popularizo en redes sociales y su significado parece que ha adquirido nuevas acepciones Demure, la palabra de moda...",
-    "Pero, ¿qué significa 'demure' exactamente?"
-   ],
-   "ex": [
-    "Fino a quel momento, la parola demure era sconosciuta anche a molti anglofoni.",
-    "La creatrice inconsapevole del trend usa demure anche in modo ironico e flessibile.",
-    "“Very demure, very mindful”, dice, con tono sottomesso e molto calmo.",
-    "En la cultura pop, \"demure\" ha adquirido un nuevo sentido tras volverse un meme este año."
-   ],
-   "at": "2026-11-18T12:40:59.225497Z"
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 3
   },
   {
    "t": "bad gyal",
@@ -99,7 +79,8 @@
    "first": "2026-11-18",
    "def": [],
    "ex": [],
-   "at": "2026-11-18T12:40:59.225497Z"
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 2
   },
   {
    "t": "blocus",
@@ -114,7 +95,8 @@
     "La etiqueta #BlocusBCN identificaba mensajes que anunciaban la concentración en la capital catalana.",
     "El caso de Blocus muestra cómo las convocatorias juveniles pueden difundirse mediante diferentes plataformas digitales, desde perfiles públicos hasta grupos privados de mensajería."
    ],
-   "at": "2026-11-18T12:40:59.225497Z"
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 2
   },
   {
    "t": "polyester",
@@ -133,7 +115,8 @@
     "No tanto, porque 'polyester' no apareció de la nada.",
     "La red no tardó en etiquetar este vídeo diseñado por y para el algoritmo, que aspira a ser modelo de vida, como 'polyester' o 'Polyester lifestyle'."
    ],
-   "at": "2026-11-18T12:40:59.225497Z"
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 1
   },
   {
    "t": "alv",
@@ -153,7 +136,8 @@
     "Alguna cosa similar ha ocurrido con ‘ALV’ .",
     "Las siglas 'ALV' son un ejemplo."
    ],
-   "at": "2026-11-18T12:40:59.225497Z"
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 6
   },
   {
    "t": "cringe",
@@ -174,7 +158,8 @@
     "En resumen, evita cualquier acción que podría generarles cringe o vergüenza ajena a otros.",
     "- Cringe (algo que da vergüenza ajena)."
    ],
-   "at": "2026-11-18T12:40:59.225497Z"
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 6
   },
   {
    "t": "npc",
@@ -189,10 +174,10 @@
     "NPC è l'acronimo di “Non-Player Character” in lingua inglese, che tradotto in italiano significa “personaggio non giocabile”."
    ],
    "ex": [
-    "Scoperto cosa siano gli NPC, c'è da segnalare un altro fenomeno.",
     "- NPC (persona que actúa sin personalidad o de modo automático)."
    ],
-   "at": "2026-11-18T12:40:59.225497Z"
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 4
   },
   {
    "t": "shippear",
@@ -213,7 +198,8 @@
     "Es parte del ritual de shippear.",
     "- Shippear (querer que dos personas sean pareja)."
    ],
-   "at": "2026-11-18T12:40:59.225497Z"
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 3
   },
   {
    "t": "delulu",
@@ -233,7 +219,8 @@
     "Segundo os relatos nas redes sociais, a mentalidade \"delulu\" envolve o uso de afirmações, otimismo e pensamento positivo 👍 .",
     "- Delulu (persona que vive demasiado en su propia fantasía)."
    ],
-   "at": "2026-11-18T12:40:59.225497Z"
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 5
   },
   {
    "t": "prime",
@@ -245,16 +232,17 @@
    "first": "2026-11-18",
    "def": [
     "prime ( the most active, thriving, or successful stage or period )",
-    "inflection of premir : third-person singular present indicative second-person singular imperative",
-    "Las primeras en usarla fueron influencers estadounidenses y en apenas unas semanas, el término 'demure' se ha extendido como una enorme mancha de aceite prácticamente por cualquier video de aspirante a influencer."
+    "second-person singular imperative",
+    "inflection of premir : third-person singular present indicative second-person singular imperative"
    ],
    "ex": [
     "\"Metroid Prime 3 : Corruption\" es un videojuego de Nintendo vendido exclusivamente para Wii.",
     "De esta manera, el peak puede coincidir durante el prime , aunque no necesariamente.",
     "“Llevo todo el curso sacando sobresalientes, estoy en mi prime”.",
-    "No es la primera vez que sucede algo así."
+    "Para ver los comentarios de nuestros socias y socios, primero tienes que iniciar sesión o registrarte ."
    ],
-   "at": "2026-11-18T12:40:59.225497Z"
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 3
   },
   {
    "t": "ghostear",
@@ -275,7 +263,8 @@
     "Ghostear a una persona origina un dolor emocional y a veces es peor que una simple ruptura.",
     "- Ghostear (dejar de responder a alguien de repente)."
    ],
-   "at": "2026-11-18T12:40:59.225497Z"
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 5
   },
   {
    "t": "chats",
@@ -294,6 +283,100 @@
     "Los trolls se dedican a sembrar cizaña en chats, foros, blogs y páginas web colaborativas.",
     "El punto verde ayuda a localizar los mensajes o chats pendientes por leer.",
     "En los chats de WhatsApp hay varios códigos secretos para comunicar ideas o emociones."
+   ],
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 6
+  },
+  {
+   "t": "no puedo más",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [],
+   "ex": [
+    "No puedo más con ello."
+   ],
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 1
+  },
+  {
+   "t": "fomo",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "¿Qué significa FOMO y cómo usar la palabra?",
+    "FOMO"
+   ],
+   "ex": [
+    "La forma corta —FOMO— fue McGinnis quien la consolidó y puso en circulación.",
+    "Si el FOMO es la ansiedad, el JOMO es la cura voluntaria.",
+    "El uso constante del móvil es un síntoma de tener FOMO."
+   ],
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 5
+  },
+  {
+   "t": "side quest",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [],
+   "ex": [],
+   "at": "2026-11-18T12:48:08.586396Z",
+   "cue": 1
+  },
+  {
+   "t": "boomers",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "farmeando aura",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "generación lamine yamal",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "demure",
+   "n": 2,
+   "src": [
+    "bing_news"
+   ],
+   "s": 4,
+   "first": "2026-11-18",
+   "def": [
+    "Non credo. È una questione di tempistiche e algoritmi che ha caricato l'essere demure di un significato aspirazionale.",
+    "Su uso se ha popularizo en redes sociales y su significado parece que ha adquirido nuevas acepciones Demure, la palabra de moda...",
+    "Pero, ¿qué significa 'demure' exactamente?"
+   ],
+   "ex": [
+    "Fino a quel momento, la parola demure era sconosciuta anche a molti anglofoni.",
+    "La creatrice inconsapevole del trend usa demure anche in modo ironico e flessibile.",
+    "“Very demure, very mindful”, dice, con tono sottomesso e molto calmo.",
+    "En la cultura pop, \"demure\" ha adquirido un nuevo sentido tras volverse un meme este año."
    ],
    "at": "2026-11-18T12:40:59.225497Z"
   },
@@ -335,54 +418,6 @@
     "Cuando los padres entienden el lenguaje que utilizan sus hijos en el ámbito digital desaparecen los malentendidos, resulta mucho más fácil mantener conversaciones de calidad."
    ],
    "at": "2026-11-18T12:40:59.225497Z"
-  },
-  {
-   "t": "no puedo más",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "fomo",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "side quest",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "boomers",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "generación lamine yamal",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "farmeando aura",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
   }
  ]
 }
