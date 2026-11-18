@@ -2883,6 +2883,11 @@ function sfxFanfare(){ if(!pa()) return; const t0 = PA.currentTime; [523, 659, 7
 const buzz = p => { try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} };
 
 /* ───────── 画面とぷにぷに物理 ───────── */
+function petBodyY(x){   // PET_BASE 윗선(좌우 대칭 베지어)의 높이
+  if(!petBodyY.T){ const T = []; const B = (a, b, c, d, t) => { const u = 1 - t; return u*u*u*a + 3*u*u*t*b + 3*u*t*t*c + t*t*t*d; };
+    for(let i = 0; i <= 200; i++){ const t = i / 200; T.push([B(22, 24, 34, 64, t), B(96, 80, 60, 60, t)]); } petBodyY.T = T; }
+  if(x > 64) x = 128 - x; const T = petBodyY.T; if(x <= T[0][0]) return T[0][1];
+  for(let i = 1; i < T.length; i++) if(T[i][0] >= x){ const a = T[i - 1], b = T[i], k = (x - a[0]) / Math.max(1e-6, b[0] - a[0]); return a[1] + (b[1] - a[1]) * k; } return 60; }
 const PET_BASE = "M4 112 C4 100 14 96 22 96 C24 80 34 60 64 60 C94 60 104 80 106 96 C114 96 124 100 124 112 C124 118 116 120 64 120 C12 120 4 118 4 112 Z";
 let PET = null;
 /* 학습 끝: 문제 내던 냥이가 화면(나) 쪽으로 달려와 쾅! 박고, 뒤로 폴짝 → 냥이 만지기로 */
@@ -3161,7 +3166,14 @@ function drawCatTex(st){
   const eb = Math.max(0, (st.bliss || 0) - .2) / .8;
   [[1, 44], [-1, 84]].forEach(([dir, ex]) => { const an = -dir * eb * .95, ca = Math.cos(an), sa = Math.sin(an), ox = ex + dir * 5, oy = 70, R = (x, y) => [ox + (x - ox) * ca - (y - oy) * sa, oy + (x - ox) * sa + (y - oy) * ca];
     const P = new Path2D(), m = (f, ...q) => { const r = []; for(let i = 0; i < q.length; i += 2) r.push(...R(q[i], q[i + 1])); P[f](...r); };
-    m("moveTo", ex - dir * 3, 72); m("quadraticCurveTo", ex - dir * 4.5, 56, ex - dir * 2.2, 52.5); m("quadraticCurveTo", ex + dir * 1, 53, ex + dir * 14, 64); P.closePath(); ears.push({ P, dir, ex, R }); });
+    // 귀 뿌리는 몸 표면에 고정(회전 안 함), 윗부분만 회전 → 뿌리가 튀어나오지 않고 오목한 곡선으로 몸에 이어짐
+    const by = x => petBodyY(x), ox0 = ex - dir * 8.5, ix0 = ex + dir * 18, oF = [ox0, by(ox0) + .6], iF = [ix0, by(ix0) + .6];
+    const tg = (x, s) => { const d = by(x + s) - by(x), l = Math.hypot(1, d); return [s / l, d / l]; }, to = tg(ox0, dir), ti = tg(ix0, -dir);
+    const oM = R(ex - dir * 3.4, 61.5), tip = R(ex - dir * 2.2, 52.5), iM = R(ex + dir * 6.5, 57.6), oC = R(ex - dir * 3.9, 66.5), iC = R(ex + dir * 11, 61);
+    P.moveTo(...oF); P.bezierCurveTo(oF[0] + to[0] * 3.2, oF[1] + to[1] * 3.2, oC[0], oC[1], oM[0], oM[1]);
+    P.quadraticCurveTo(...R(ex - dir * 4.3, 55.5), ...tip); P.quadraticCurveTo(...R(ex + dir * 1, 53), ...iM);
+    P.bezierCurveTo(iC[0], iC[1], iF[0] + ti[0] * 3.2, iF[1] + ti[1] * 3.2, iF[0], iF[1]);
+    P.lineTo(ex + dir * 12, 80); P.lineTo(ex - dir * 6, 82); P.closePath(); ears.push({ P, dir, ex, R }); });
   const shapes = [body, ...ears.map(e => e.P)];
   // 床の影
   const sg = g0.createRadialGradient(64, 121, 4, 64, 121, 70); sg.addColorStop(0, "rgba(0,0,0,.30)"); sg.addColorStop(.6, "rgba(0,0,0,.12)"); sg.addColorStop(1, "rgba(0,0,0,0)");
