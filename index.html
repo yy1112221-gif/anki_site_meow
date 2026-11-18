@@ -510,6 +510,15 @@ body.petopen{overflow:hidden}
 .pet-msg.show{opacity:1;transform:translate(-50%,0)}
 .pet-bottom{position:absolute;left:0;right:0;bottom:0;padding:10px 12px calc(12px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px}
 .pet-tray{display:flex;gap:10px;overflow-x:auto;padding:6px 4px;scrollbar-width:none;justify-content:safe center}
+.pet-hub{position:relative;width:70px;height:70px;margin:0 auto;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.16);backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 6px 20px rgba(0,0,0,.18);display:grid;place-items:center;cursor:pointer;touch-action:none;transition:transform .1s}
+.pet-hub:active{transform:scale(.9)} .pet-hub.gold{border-color:#ffcc33;box-shadow:0 0 16px rgba(255,204,51,.6)}
+.pet-hub i,.pw-it i{position:absolute;right:-4px;top:-4px;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#e8486a;color:#fff;font:700 .75rem/22px system-ui;font-style:normal;text-align:center}
+.pw-layer{position:absolute;inset:0;z-index:6;touch-action:none}
+.pw-disc{position:absolute;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.06) 0 38%,rgba(255,255,255,.2) 39% 100%);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);border:1px solid rgba(255,255,255,.45);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 0 40px rgba(255,255,255,.12),0 -6px 40px rgba(0,0,0,.18);transform:scale(.55);opacity:0;transition:transform .26s cubic-bezier(.2,1.5,.4,1),opacity .18s}
+.pw-it{position:absolute;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);transform:scale(.4);transition:transform .2s,background .15s;pointer-events:none}
+.pw-it.gold{border-color:#ffcc33} .pw-layer.on .pw-disc{transform:scale(1.06);opacity:1} .pw-layer.on .pw-it{transform:scale(1)} .pw-layer.on .pw-it.sel{transform:scale(1.25);background:rgba(255,255,255,.38);box-shadow:0 0 18px rgba(255,255,255,.5)}
+.pw-layer.off .pw-disc,.pw-layer.off .pw-it{opacity:0!important;transform:scale(.7)}
+#pet .pet-top,#pet .pet-bottom,#pet .pet-msg{transition:opacity .2s} #pet.grabbing .pet-top,#pet.grabbing .pet-bottom,#pet.grabbing .pet-msg{opacity:0;pointer-events:none} #pet.wheeling .pet-hint{opacity:0}
 .pet-it{position:relative;flex-shrink:0;width:64px;height:64px;border-radius:22px;border:1px solid var(--glass-edge);background:var(--glass-strong);display:grid;place-items:center;cursor:pointer;touch-action:none;transition:transform .08s}
 .pet-it:active{transform:scale(.88)} .pet-it.gold{border-color:#ffcc33;box-shadow:0 0 14px rgba(255,204,51,.6)}
 .pet-it i{position:absolute;right:-4px;top:-4px;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#e8486a;color:#fff;font:700 .75rem/22px system-ui;font-style:normal}
@@ -2723,18 +2732,69 @@ let PMSG_T = null;
 function petMsg(txt, ms){ const m = $("#petMsg"); if(!m) return; m.textContent = txt; m.classList.add("show"); clearTimeout(PMSG_T); PMSG_T = setTimeout(() => m.classList.remove("show"), ms || 2200); }
 function petLvUI(){ const p = petState(); const a = petNeed(p.lv - 1 < 1 ? 0 : p.lv - 1) * (p.lv > 1 ? 1 : 0), b = petNeed(p.lv); const lv = $("#petLv"), bar = $("#petBar"); if(!lv) return;
   lv.textContent = pt().lv(p.lv); bar.style.width = Math.max(2, Math.min(100, (p.kcal - a) / Math.max(1, b - a) * 100)) + "%"; }
-function petTray(){ const tr = $("#petTray"); if(!tr) return; const p = petState();
-  const ids = PET_ITEMS.filter(i => p.inv[i.id] > 0).sort((a, b) => b.t - a.t);
-  tr.innerHTML = ids.length ? ids.map(i => `<button class="pet-it${i.gold ? " gold" : ""}" type="button" data-it="${i.id}" title="${esc(itName(i))}">${petIconHTML(i, 34)}<i>${p.inv[i.id]}</i></button>`).join("") : `<span class="pet-none">🍽️ 0</span>`;
-  tr.querySelectorAll("[data-it]").forEach(b => {
-    let hold = null, rep = null, mode = null, sx = 0, sy = 0; const stop = () => { clearTimeout(hold); clearInterval(rep); hold = rep = null; };
-    b.onpointerdown = e => { e.preventDefault(); pa(); mode = "press"; sx = e.clientX; sy = e.clientY; try{ b.setPointerCapture(e.pointerId); }catch(_){}
-      hold = setTimeout(() => { if(mode !== "press") return; mode = "rapid"; petThrow(b.dataset.it, b); rep = setInterval(() => { if(!petThrow(b.dataset.it, b)) stop(); }, 130); }, 380); };
-    b.onpointermove = e => { if(mode === "press" && Math.hypot(e.clientX - sx, e.clientY - sy) > 12){ stop(); mode = "drag"; petGrab(b.dataset.it, b); } if(mode === "drag") petDragMove(e.clientX, e.clientY); };
-    b.onpointerup = () => { stop(); if(mode === "press") petThrow(b.dataset.it, b); else if(mode === "drag") petRelease(); mode = null; };
-    b.onpointercancel = () => { stop(); if(mode === "drag" && PET) PET.grab = null; mode = null; };
-  });
+/* 간식 고르기: 가운데 버튼 하나 → 꾹 누르면 반투명 유리 회전판이 펼쳐짐 → 돌려서 고르고, 위로 끌어 꺼내면 판은 사라지고 간식과 냥이만 남는다 */
+let PET_SEL = null, WHEEL = null;
+function petInvList(){ const p = petState(); return PET_ITEMS.filter(i => p.inv[i.id] > 0).sort((a, b) => b.t - a.t || b.kcal - a.kcal); }
+function petTray(){ const tr = $("#petTray"); if(!tr) return; const p = petState(), ids = petInvList();
+  if(!ids.find(i => i.id === PET_SEL)) PET_SEL = ids[0] ? ids[0].id : null;
+  const it = PET_SEL && PET_IT[PET_SEL];
+  tr.innerHTML = it ? `<button class="pet-hub${it.gold ? " gold" : ""}" type="button" id="petHub" aria-label="${esc(itName(it))}">${petIconHTML(it, 40)}<i>${p.inv[it.id]}</i></button>` : `<span class="pet-none">🍽️ 0</span>`;
+  const hub = $("#petHub"); if(!hub) return;
+  let hold = null, mode = null, sx = 0, sy = 0, t0 = 0;
+  hub.onpointerdown = e => { e.preventDefault(); pa(); mode = "press"; sx = e.clientX; sy = e.clientY; t0 = performance.now(); try{ hub.setPointerCapture(e.pointerId); }catch(_){}
+    hold = setTimeout(() => { if(mode !== "press") return; mode = "wheel"; wheelOpen(hub); wheelDown(e.clientX, e.clientY, true); buzz(12); }, 330); };
+  hub.onpointermove = e => { if(mode === "wheel"){ wheelMove(e.clientX, e.clientY); return; }
+    if(mode === "press" && Math.hypot(e.clientX - sx, e.clientY - sy) > 12){ clearTimeout(hold); mode = "drag"; petGrab(PET_SEL, hub); petDragMove(e.clientX, e.clientY); petGrabUI(true); } else if(mode === "drag") petDragMove(e.clientX, e.clientY); };
+  hub.onpointerup = e => { clearTimeout(hold); if(mode === "press") petThrow(PET_SEL, hub); else if(mode === "drag"){ petRelease(); petGrabUI(false); } else if(mode === "wheel") wheelUp(e.clientX, e.clientY); mode = null; };
+  hub.onpointercancel = () => { clearTimeout(hold); if(mode === "drag" && PET){ PET.grab = null; petGrabUI(false); } if(mode === "wheel") wheelClose(); mode = null; };
   petLvUI(); }
+function petGrabUI(on){ const el = $("#pet"); if(el) el.classList.toggle("grabbing", on); if(!on) setTimeout(petTray, 40); }
+function wheelOpen(hub){
+  const host = $("#pet"); if(!host || WHEEL) return; const list = petInvList(); if(!list.length) return;
+  const hr = hub.getBoundingClientRect(), pr = host.getBoundingClientRect(), cx = hr.left + hr.width / 2 - pr.left, cy = hr.top + hr.height / 2 - pr.top;
+  const R = Math.min(pr.width * .47, 200), RI = R * .72, step = Math.min(.7, Math.max(.42, 2.2 / Math.max(1, list.length - 1)));
+  const lay = document.createElement("div"); lay.className = "pw-layer";
+  lay.innerHTML = `<div class="pw-disc" style="left:${cx - R}px;top:${cy - R}px;width:${2 * R}px;height:${2 * R}px"></div>` + list.map(i => `<div class="pw-it${i.gold ? " gold" : ""}" data-id="${i.id}">${petIconHTML(i, 34)}<i>${petState().inv[i.id]}</i></div>`).join("");
+  host.appendChild(lay); host.classList.add("wheeling");
+  const idx = Math.max(0, list.findIndex(i => i.id === PET_SEL));
+  WHEEL = { lay, hub, list, cx, cy, R, RI, step, rot: -idx * step, vel: 0, drag: false, cand: null, raf: 0, els: [...lay.querySelectorAll(".pw-it")] };
+  requestAnimationFrame(() => lay.classList.add("on")); sfxSpin();
+  lay.onpointerdown = e => { e.preventDefault(); try{ lay.setPointerCapture(e.pointerId); }catch(_){} wheelDown(e.clientX, e.clientY, false); };
+  lay.onpointermove = e => wheelMove(e.clientX, e.clientY);
+  lay.onpointerup = e => wheelUp(e.clientX, e.clientY);
+  lay.onpointercancel = () => wheelClose();
+  wheelPlace(); wheelAnim();
+}
+function wheelXY(cx, cy){ const w = WHEEL, pr = $("#pet").getBoundingClientRect(); return [cx - pr.left - w.cx, cy - pr.top - w.cy]; }
+function wheelPlace(){ const w = WHEEL; if(!w) return; let best = 0, bd = 9;
+  w.els.forEach((el, i) => { const a = w.rot + i * w.step, vis = Math.abs(a) < 1.75; el.style.left = (w.cx + Math.sin(a) * w.RI) + "px"; el.style.top = (w.cy - Math.cos(a) * w.RI) + "px";
+    el.style.opacity = vis ? Math.max(0, 1 - Math.max(0, Math.abs(a) - 1.1) / .65) : 0; if(Math.abs(a) < bd){ bd = Math.abs(a); best = i; } });
+  w.els.forEach((el, i) => el.classList.toggle("sel", i === best));
+  const id = w.list[best].id; if(id !== w.sel){ if(w.sel){ buzz(4); sfxTick(); } w.sel = id; } }
+function wheelAnim(){ const w = WHEEL; if(!w) return;
+  if(!w.drag){ const max = 0, min = -(w.list.length - 1) * w.step; w.rot += w.vel / 60; w.vel *= .9;
+    if(w.rot > max){ w.rot += (max - w.rot) * .25; w.vel *= .5; } else if(w.rot < min){ w.rot += (min - w.rot) * .25; w.vel *= .5; }
+    else if(Math.abs(w.vel) < .6){ const tgt = Math.round(w.rot / w.step) * w.step; w.rot += (tgt - w.rot) * .2; } }
+  wheelPlace(); w.raf = requestAnimationFrame(wheelAnim); }
+function wheelDown(x, y, fromHub){ const w = WHEEL; if(!w) return; const [dx, dy] = wheelXY(x, y), d = Math.hypot(dx, dy);
+  if(!fromHub && (d > w.R * 1.12 || dy > 10)){ wheelClose(); return; }
+  w.drag = true; w.vel = 0; w.lastA = Math.atan2(dx, -dy); w.lastT = performance.now(); w.d0 = d; w.x0 = x; w.y0 = y; w.t0 = w.lastT; w.cand = null;
+  if(!fromHub){ let bi = -1, bd = 40; w.els.forEach((el, i) => { const a = w.rot + i * w.step, ex = Math.sin(a) * w.RI, ey = -Math.cos(a) * w.RI, q = Math.hypot(dx - ex, dy - ey); if(q < bd && Math.abs(a) < 1.6){ bd = q; bi = i; } }); if(bi >= 0) w.cand = bi; } }
+function wheelMove(x, y){ const w = WHEEL; if(w && w.drag){ const [dx, dy] = wheelXY(x, y), d = Math.hypot(dx, dy), a = Math.atan2(dx, -dy), now = performance.now();
+    // 간식을 위(바깥)로 끌어내면 꺼내기
+    if(w.cand != null && d - w.d0 > 34 && y < w.y0 - 24){ const id = w.list[w.cand].id, hub = w.hub; PET_SEL = id; wheelClose(true); petGrab(id, hub); petDragMove(x, y); petGrabUI(true); WHEEL_TAKE = true; return; }
+    let da = a - w.lastA; while(da > Math.PI) da -= 2 * Math.PI; while(da < -Math.PI) da += 2 * Math.PI;
+    if(Math.abs(da) > .002 && (w.cand == null || Math.hypot(x - w.x0, y - w.y0) > 8)){ w.cand = Math.hypot(x - w.x0, y - w.y0) > 18 ? null : w.cand; w.rot += da; w.vel = w.vel * .4 + .6 * da / Math.max(.008, (now - w.lastT) / 1000); }
+    w.lastA = a; w.lastT = now; return; }
+  if(WHEEL_TAKE) petDragMove(x, y); }
+let WHEEL_TAKE = false;
+function wheelUp(x, y){ if(WHEEL_TAKE){ WHEEL_TAKE = false; petRelease(); petGrabUI(false); const l = document.querySelector(".pw-layer"); if(l) l.remove(); return; }
+  const w = WHEEL; if(!w) return; w.drag = false; w.vel = Math.max(-14, Math.min(14, w.vel));
+  if(w.cand != null && Math.hypot(x - w.x0, y - w.y0) < 10 && performance.now() - w.t0 < 300){ w.rot = -w.cand * w.step; w.vel = 0; PET_SEL = w.list[w.cand].id; } w.cand = null; }
+function wheelClose(keepLayer){ const w = WHEEL; if(!w) return; cancelAnimationFrame(w.raf); PET_SEL = w.sel || PET_SEL; WHEEL = null; const host = $("#pet"); if(host) host.classList.remove("wheeling");
+  w.lay.classList.remove("on"); w.lay.classList.add("off");
+  if(keepLayer){ w.lay.onpointermove = e => wheelMove(e.clientX, e.clientY); w.lay.onpointerup = e => wheelUp(e.clientX, e.clientY); w.lay.onpointercancel = () => { WHEEL_TAKE = false; if(PET) PET.grab = null; petGrabUI(false); w.lay.remove(); }; w.lay.onpointerdown = null; }
+  else { setTimeout(() => w.lay.remove(), 220); setTimeout(petTray, 30); } }
 
 /* ════════ 암기냥이の体: ばね格子（ゼリー）に絵を貼って、体そのものが揺れる ════════
    絵（輪郭線なし・やわらかい陰影）を毎フレーム下絵キャンバスに描き、WebGL で格子の形にゆがめて表示する。
@@ -2766,7 +2826,7 @@ function petStart(){
     const pl = st.pulls.find(q => q.pid === e.pointerId);
     if(pl){ let ox = ux - pl.x0, oy = uyr - pl.y0; const L = Math.hypot(ox, oy);
       if(!pl.on && L > 3){ pl.on = true; buzz(10); }
-      if(pl.on){ const inward = ox * pl.side < 0, cap = inward ? 20 : 50, k = L > 0 ? cap * Math.tanh(L * 1.04 / cap) / L : 0; pl.ox = ox * k; pl.oy = Math.max(-40, Math.min(oy * k, 112 - pl.y0, 10)); st.flap = Math.max(st.flap, .4); if(Math.random() < .15) buzz(5); }
+      if(pl.on){ const inward = ox * pl.side < 0, cap = inward ? 26 : 78, k = L > 0 ? cap * Math.tanh(L * 1.25 / cap) / L : 0; pl.ox = ox * k; pl.oy = Math.max(-55, Math.min(oy * k, 118 - pl.y0)); st.flap = Math.max(st.flap, .4); if(Math.random() < .15) buzz(5); }
       return; }
     if(!st.holding || e.pointerId !== st.hpid) return;
     const uy = Math.max(58, Math.min(118, uyr));
@@ -2786,7 +2846,7 @@ function petStart(){
   PET = st; petLvUI(); st.raf = requestAnimationFrame(petLoop);
 }
 function jellyHit(st, F, hx, hy){   // 叩かれた: その場がへこみ、上がつぶれ、横がふくらむ → ほっぺを離した時と同じ速いぷるぷる
-  st.snap = Math.max(st.snap || 0, .42);
+  st.snap = Math.max(st.snap || 0, .42); (st.rips = st.rips || []).push({ x: hx, y: hy, t: 0, A: Math.min(8, 3 + F * 2.4) }); if(st.rips.length > 4) st.rips.shift();
   for(let k = 0; k < st.N; k++){ if(st.pin[k]) continue; const rx = st.rx[k], ry = st.ry[k], ddx = rx - hx, ddy = ry - hy, f = Math.exp(-(ddx * ddx + ddy * ddy) / (2 * 15 * 15));
     const top = Math.max(0, (118 - ry) / 64), side = Math.exp(-((ry - 106) ** 2) / (2 * 11 * 11));
     st.vy[k] += F * (330 * f + 170 * top); st.vx[k] += F * (10 * f * ddx + 95 * side * Math.sign(rx - 64) * Math.min(1, Math.abs(rx - 64) / 40)); }
@@ -2830,6 +2890,7 @@ function petLoop(now){
   st.flies = st.flies.filter(f => { f.t += dt / f.dur; if(f.t >= 1){ petImpact(f.it.F, f.hx, f.hy, f.it); return false; } return true; });
   st.parts = st.parts.filter(q => { q.life -= dt * 1.4; q.vy += 700 * dt; q.x += q.vx * dt; q.y += q.vy * dt; return q.life > 0 && q.y < st.H + 20; });
   st.texts = st.texts.filter(x => (x.t += dt * (x.big ? .9 : 1.2)) < 1);
+  if(st.rips) st.rips = st.rips.filter(r => (r.t += dt) < 1.5);
   if(st.whale) whaleStep(st, dt);
   st.hit = Math.max(0, st.hit - dt * 3.5); st.flap = Math.max(0, st.flap - dt * .9); st.shake = Math.max(0, st.shake - dt * 14);
   petDraw(); st.raf = requestAnimationFrame(petLoop);
@@ -2862,13 +2923,14 @@ function drawCatTex(st){
   // 形（体・耳・腕）を1つのシルエットとして扱う → 重なった所に線が出ない
   const body = st.upath, fr = 9 + st.flap * 28, amp = .3 + st.flap * .6, arms = [], ears = [];
   // 前足: おなかの前に下りてくる短い腕。根元は体に溶けこみ、境目は線ではなく影で見せる
-  [[33, 107, -1, 0], [95, 107, 1, 1.3]].forEach(([bx, by, dir, ph]) => { const ready = st.grab || (st.proj && st.proj.length); const an = ready ? Math.PI + dir * (.14 + st.t * 13 + ph) : Math.PI + dir * (.14 + Math.sin(st.t * fr + ph) * amp * .45), c = Math.cos(an), sn = Math.sin(an);
-    const T = (x, y) => [bx + c * x - sn * y, by + sn * x + c * y];   // y: 下向き（腕の向き）
+  [[33, 107, -1, 0], [95, 107, 1, 1.3]].forEach(([bx, by, dir, ph]) => { const ready = st.grab || (st.proj && st.proj.length), fi = st.t * 9 + ph * 2;   // 構え: 腕を空へ向け、根元の縦軸まわりにレーダーのように回す
+    const an = ready ? Math.PI + dir * .05 + .55 * Math.cos(fi) : Math.PI + dir * (.14 + Math.sin(st.t * fr + ph) * amp * .45), c = Math.cos(an), sn = Math.sin(an), Lf = ready ? 1.12 - .16 * Math.sin(fi) : 1, back = ready && Math.sin(fi) > .2;
+    const T = (x, y) => [bx + c * x - sn * y * Lf, by + sn * x + c * y * Lf];   // y: 下向き（腕の向き）
     const tcy = 10.5, tr = 5.6, P = new Path2D(), side = new Path2D(); let q = T(-8.6, -7); P.moveTo(q[0], q[1]);
     let k1 = T(-8.2, 3.5), k2 = T(-tr, tcy); P.quadraticCurveTo(k1[0], k1[1], k2[0], k2[1]); q = T(-8.3, 0); side.moveTo(q[0], q[1]); side.quadraticCurveTo(k1[0], k1[1], k2[0], k2[1]);
     for(let i = 1; i <= 14; i++){ const a = Math.PI - Math.PI * i / 14, r = T(Math.cos(a) * tr, tcy + Math.sin(a) * tr * 1.05); P.lineTo(r[0], r[1]); side.lineTo(r[0], r[1]); }
     k1 = T(8.2, 3.5); k2 = T(8.6, -7); P.quadraticCurveTo(k1[0], k1[1], k2[0], k2[1]); P.closePath(); q = T(8.3, 0); side.quadraticCurveTo(k1[0], k1[1], q[0], q[1]);
-    const tip = T(0, tcy + 1.5), t0 = T(0, -2), t1 = T(0, tcy + 5); arms.push({ P, side, an, dir, bx, by, tip, t0, t1 }); });
+    const tip = T(0, tcy + 1.5), t0 = T(0, -2), t1 = T(0, tcy + 5); arms.push({ P, side, an, dir, bx, by, tip, t0, t1, back }); });
   [[1, 44], [-1, 84]].forEach(([dir, ex]) => { const P = new Path2D(); P.moveTo(ex - dir * 3, 72); P.quadraticCurveTo(ex - dir * 4.5, 56, ex - dir * 2.2, 52.5); P.quadraticCurveTo(ex + dir * 1, 53, ex + dir * 14, 64); P.closePath(); ears.push({ P, dir, ex }); });
   const shapes = [body, ...ears.map(e => e.P)];
   // 床の影
@@ -2889,11 +2951,15 @@ function drawCatTex(st){
     g.strokeStyle = rg; g.lineWidth = 4; g.stroke(a.side); g.restore(); });
   const bt = g.createLinearGradient(0, 98, 0, 121); bt.addColorStop(0, "rgba(150,118,84,0)"); bt.addColorStop(1, "rgba(150,118,84,.26)"); g.fillStyle = bt; g.fillRect(-20, 90, 170, 40);
   const hl = g.createRadialGradient(46, 72, 1, 46, 72, 24); hl.addColorStop(0, "rgba(255,255,255,.85)"); hl.addColorStop(1, "rgba(255,255,255,0)"); g.fillStyle = hl; g.fillRect(18, 46, 64, 54);
+  (st.rips || []).forEach(r => { const rr = 48 * r.t, a = Math.min(1, r.A / 6) * Math.exp(-1.7 * r.t) * .1; if(a < .01) return; const r0 = Math.max(0, rr - 26), r1 = rr + 26;
+    const rg = g.createRadialGradient(r.x, r.y, r0, r.x, r.y, r1), st2 = (o, c) => rg.addColorStop(Math.max(0, Math.min(1, (rr + o - r0) / (r1 - r0))), c);
+    st2(-26, "rgba(255,255,255,0)"); st2(-9, `rgba(255,255,255,${a * 1.4})`); st2(0, "rgba(255,255,255,0)"); st2(9, `rgba(130,95,65,${a})`); st2(26, "rgba(130,95,65,0)");
+    g.fillStyle = rg; g.fillRect(r.x - r1, r.y - r1, r1 * 2, r1 * 2); });
   if(st.dent > .02 && st.hx != null){ const dg = g.createRadialGradient(st.hx, st.hy + 1.5, 1, st.hx, st.hy, 13); dg.addColorStop(0, `rgba(150,110,80,${.22 * st.dent})`); dg.addColorStop(.7, `rgba(150,110,80,${.07 * st.dent})`); dg.addColorStop(1, "rgba(150,110,80,0)"); g.fillStyle = dg; g.fillRect(st.hx - 14, st.hy - 14, 28, 28); }
   g.globalCompositeOperation = "source-over";
   // 耳の中・肉球
   ears.forEach(({ dir, ex }) => { g.fillStyle = "rgba(242,161,180,.75)"; g.beginPath(); g.moveTo(ex - dir * .5, 66); g.quadraticCurveTo(ex - dir * 1.6, 59, ex - dir * .6, 57.5); g.quadraticCurveTo(ex + dir * 3, 59, ex + dir * 7.5, 64); g.closePath(); g.fill(); });
-  arms.forEach(a => { g.strokeStyle = "rgba(120,90,65,.45)"; g.lineWidth = .9; [-1.7, 1.7].forEach(o => { const c = Math.cos(a.an), sn = Math.sin(a.an), x = a.tip[0] + c * o, y = a.tip[1] + sn * o; g.beginPath(); g.moveTo(x + sn * 1.6, y - c * 1.6); g.lineTo(x - sn * 1.2, y + c * 1.2); g.stroke(); }); });
+  arms.forEach(a => { if(a.back) return; g.strokeStyle = "rgba(120,90,65,.45)"; g.lineWidth = .9; [-1.7, 1.7].forEach(o => { const c = Math.cos(a.an), sn = Math.sin(a.an), x = a.tip[0] + c * o, y = a.tip[1] + sn * o; g.beginPath(); g.moveTo(x + sn * 1.6, y - c * 1.6); g.lineTo(x - sn * 1.2, y + c * 1.2); g.stroke(); }); });
   drawCatFace(st, g);
   g0.setTransform(1, 0, 0, 1, 0, 0); g0.drawImage(st.tex2, 0, 0);
 }
@@ -2918,7 +2984,11 @@ function petDraw(){
   drawCatTex(st);
   const shx = st.shake ? (Math.random() - .5) * st.shake * 2 : 0, shy = st.shake ? (Math.random() - .5) * st.shake * 2 : 0;
   if(st.gl){ const { gl, bP, pos, n } = st.gl, W = st.W, H = st.H;
-    for(let k = 0; k < st.N; k++){ const X = st.cx + shx + (st.rx[k] + st.dx[k] - 64) * s * st.bw, Y = st.by + shy + (st.ry[k] + st.dy[k] - 120) * s * st.bh; pos[k * 2] = X / W * 2 - 1; pos[k * 2 + 1] = 1 - Y / H * 2; }
+    const rips = st.rips || [];
+    for(let k = 0; k < st.N; k++){ let ox = 0, oy = 0; const rx = st.rx[k], ry = st.ry[k];
+      for(const r of rips){ const ddx = rx - r.x, ddy = ry - r.y, d = Math.hypot(ddx, ddy) || 1, ph = d - 48 * r.t, env = Math.exp(-ph * ph / (2 * 16 * 16)) * Math.exp(-1.7 * r.t) * Math.min(1, d / 6), w = r.A * env * Math.sin(ph / 18 * Math.PI * 2);
+        ox += ddx / d * w; oy += ry < 119.5 ? ddy / d * w * .8 : 0; }
+      const X = st.cx + shx + (rx + st.dx[k] + ox - 64) * s * st.bw, Y = st.by + shy + (Math.min(120, ry + st.dy[k] + oy) - 120 + (ry > 120 ? ry - 120 : 0)) * s * st.bh; pos[k * 2] = X / W * 2 - 1; pos[k * 2 + 1] = 1 - Y / H * 2; }
     gl.viewport(0, 0, st.gcv.width, st.gcv.height); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, st.tex);
     gl.bindBuffer(gl.ARRAY_BUFFER, bP); gl.bufferData(gl.ARRAY_BUFFER, pos, gl.DYNAMIC_DRAW); gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_SHORT, 0); }
@@ -2970,7 +3040,10 @@ function whaleDraw(st, ctx){ const w = st.whale, W = st.W, H = st.H, t = w.t, c 
   const sil = whaleSil(st, 512);
   if(t < WH_SH + WH_FALL){   // 1) 하늘에서 다가오는 그림자: 화면이 어두워지고 그림자가 점점 커짐
     const k = Math.min(1, t / WH_SH); ctx.fillStyle = `rgba(5,15,25,${.38 * k})`; ctx.fillRect(0, 0, W, H);
-    const sz = big * (.25 + .55 * k * k); ctx.globalAlpha = .2 + .45 * k; ctx.save(); ctx.translate(c.x + Math.sin(t * 3) * 8, c.y - 20); ctx.rotate(-.12); ctx.drawImage(sil, -sz / 2, -sz / 2, sz, sz); ctx.restore(); ctx.globalAlpha = 1;
+    // 床に落ちる影: 床の傾き（上から見下ろす角度）に合わせて縦につぶす。近づくほど濃く・くっきり・少し小さく
+    const fy = st.toScr(64, 120).y, sz = big * (1.25 - .45 * k), ky = .2 + .06 * k;
+    for(let j = 0; j < 3; j++){ const blur = (1 - k) * (j - 1) * .12; ctx.globalAlpha = (.12 + .38 * k) / (j === 1 ? 1 : 2.2); ctx.save(); ctx.translate(c.x + Math.sin(t * 2.4) * 10 * (1 - k), fy + 4); ctx.scale(1 + blur, ky * (1 + blur)); ctx.drawImage(sil, -sz / 2, -sz / 2, sz, sz); ctx.restore(); }
+    ctx.globalAlpha = 1;
     if(t > WH_SH){ const f = (t - WH_SH) / WH_FALL, e = f * f, sz2 = big * 1.15, y = -sz2 * .6 + (c.y + sz2 * .05 + sz2 * .6) * e;   // 2) 초거대 고래 낙하
       petDrawItem(ctx, PET_IT.whale, c.x, y, sz2, -.35 + .25 * e); } }
   else { const u = t - WH_SH - WH_FALL;   // 3) 첨벙: 번쩍 + 물기둥 + 고래가 가라앉으며 사라짐
@@ -2996,6 +3069,7 @@ function petImpact(F, hx, hy, it, mul, labels){
     clearTimeout(st.saveT); st.saveT = setTimeout(save, 600); petLvUI(); }
 }
 const petRingR = st => 8 + 20 * (.5 + .5 * Math.sin(st.ring * 2.4));
+function sfxTick(){ if(!pa()) return; const t0 = PA.currentTime; pOsc("square", 1800, 1500, t0, .03, .04); }
 function sfxSpin(){ if(!pa()) return; const t0 = PA.currentTime; pOsc("triangle", 420, 1500, t0, .22, .16); pOsc("sine", 900, 2200, t0 + .05, .2, .08); }
 function petGrab(id, el){ const st = PET; if(!st || !(petState().inv[id] > 0)) return; st.grab = { id, it: PET_IT[id], el, pts: [], acc: 0, lastA: null, x: 0, y: 0, spin: 0, rot: 0 }; }
 function petDragMove(cx, cy){ const st = PET, g = st && st.grab; if(!g) return; const r = st.cv.getBoundingClientRect(), x = cx - r.left, y = cy - r.top, now = performance.now();
