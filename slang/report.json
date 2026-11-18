@@ -1,54 +1,21 @@
 {
- "time": "2026-11-18T12:33:41.375851Z",
+ "time": "2026-11-18T12:40:59.225497Z",
  "probe": "줴줴이야",
  "methods": {
   "ko:google_news": {
-   "ok": true,
-   "docs": 93,
-   "terms": [
-    "유행쇼",
-    "줴줴이야",
-    "한본어",
-    "맥싱",
-    "야르",
-    "영크크",
-    "애를 가져가",
-    "장원영이다",
-    "진짜? 괜찮아",
-    "가테",
-    "돤쥐",
-    "아느냐",
-    "김도영",
-    "킹받쥬",
-    "진짜 소레나",
-    "마지 고마워",
-    "자리 빼야지",
-    "조회련",
-    "프로 불참러",
-    "재혼황후",
-    "덕연이 딸",
-    "컴백",
-    "공개재판",
-    "힌지니어",
-    "작전",
-    "NISA 빈곤",
-    "월간다음",
-    "피의 결혼식",
-    "파란 쓰나미",
-    "현백코어"
-   ],
-   "probe_in_raw": true,
-   "probe_in_terms": true
+   "ok": false,
+   "err": "HTTP Error 429: Too Many Requests"
   },
   "ko:bing_news": {
    "ok": true,
    "docs": 38,
    "terms": [
+    "줴줴이야",
     "스튜핏",
     "콘텐츠",
     "NISA 빈곤",
-    "줴줴이야",
     "올해의 단어",
+    "마리텔",
     "ggzz",
     "허경환의 유행쇼",
     "작업",
@@ -66,14 +33,13 @@
     "효연의 레벨업",
     "가짜 김효연",
     "난리자베스",
-    "라스",
-    "라디오스타",
-    "열정 페이",
     "장원영이다",
     "지인이 말해줘",
     "오늘의 주우재",
     "장원영",
-    "냉부"
+    "냉부",
+    "민망",
+    "크렁크"
    ],
    "probe_in_raw": true,
    "probe_in_terms": true
@@ -102,7 +68,7 @@
   },
   "ja:google_news": {
    "ok": true,
-   "docs": 97,
+   "docs": 98,
    "terms": [
     "りくりゅう",
     "好きすぎて滅！",
@@ -140,7 +106,7 @@
   },
   "ja:bing_news": {
    "ok": true,
-   "docs": 23,
+   "docs": 21,
    "terms": [
     "マジ卍",
     "M3",
@@ -169,9 +135,9 @@
     "驚嘆・感嘆系",
     "ぐぐる",
     "DQN",
-    "wwwww",
     "チーズ牛丼食ってそう",
-    "ぬこ"
+    "ぬこ",
+    "unc"
    ],
    "probe_in_raw": false,
    "probe_in_terms": false
@@ -199,7 +165,7 @@
   },
   "en:google_news": {
    "ok": true,
-   "docs": 89,
+   "docs": 88,
    "terms": [
     "mogging",
     "maxxing",
@@ -232,9 +198,9 @@
     "or",
     "mad rizz",
     "mogging",
+    "six-seven",
     "delulu",
     "fomo",
-    "six-seven",
     "brainrot",
     "waste-guna-huiya",
     "new",
@@ -267,7 +233,7 @@
   },
   "es:google_news": {
    "ok": true,
-   "docs": 38,
+   "docs": 39,
    "terms": [
     "mogging",
     "maxxing",
