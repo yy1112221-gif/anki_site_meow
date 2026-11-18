@@ -3202,11 +3202,11 @@ function fatStep(st, dt){ const c = $("#petFat"); if(!c) return; const dpr = st.
     const shapes = [];
     const head = new Path2D(); const ht = base - ph * .6 - rh * 1.7; head.moveTo(cx - rh * .95, base - ph * .4); head.lineTo(cx - rh * .9, ht + rh * .4); head.lineTo(cx - rh * .75, ht - 5.5); head.lineTo(cx - rh * .3, ht + rh * .05);
     head.quadraticCurveTo(cx, ht - rh * .08, cx + rh * .3, ht + rh * .05); head.lineTo(cx + rh * .75, ht - 5.5); head.lineTo(cx + rh * .9, ht + rh * .4); head.lineTo(cx + rh * .95, base - ph * .4); head.closePath(); shapes.push(head);
-    const pud = new Path2D(); pud.moveTo(cx - pw, base); pud.bezierCurveTo(cx - pw - ph * .7, base, cx - pw - ph * .5, base - ph * 1.2, cx - pw * .55, base - ph * 1.05); pud.quadraticCurveTo(cx, base - ph * 1.6, cx + pw * .55, base - ph * 1.05);
-    pud.bezierCurveTo(cx + pw + ph * .5, base - ph * 1.2, cx + pw + ph * .7, base, cx + pw, base); pud.closePath(); shapes.push(pud);
-    if(f > .62){ const k = Math.min(1.2, (f - .62) / .38); [[-.9, 1], [-.5, .7], [-.12, .45], [.38, .8], [.82, 1.1]].forEach(([xi, lf], i) => {   // 흘러넘치는 살
-      const x = cx + pw * xi, wd = 5 + lf * 4 + f * 2, L = k * (14 + lf * 46) + Math.sin(t * 2.6 + i * 1.7) * 3 * k, P = new Path2D();
-      P.moveTo(x - wd, base - 4); P.bezierCurveTo(x - wd * .9, base + L * .5, x - wd * .55, base + L * .7, x - wd * .7, base + L); P.arc(x, base + L, wd * .72, Math.PI, 0, true); P.bezierCurveTo(x + wd * .55, base + L * .7, x + wd * .9, base + L * .5, x + wd, base - 4); P.closePath(); shapes.push(P); }); }
+    const pud = new Path2D(), top = base - ph * 1.25, r = Math.min(ph * .62, pw * .5);   // 일자로 부푸는 몸통(윗면 꺾임 없음, 아주 살짝만 볼록)
+    pud.moveTo(cx - pw + r, base); pud.lineTo(cx + pw - r, base); pud.quadraticCurveTo(cx + pw + r * .2, base, cx + pw + r * .2, base - r); pud.quadraticCurveTo(cx + pw + r * .1, top, cx + pw - r * .6, top);
+    pud.quadraticCurveTo(cx, top - ph * .12, cx - pw + r * .6, top); pud.quadraticCurveTo(cx - pw - r * .1, top, cx - pw - r * .2, base - r); pud.quadraticCurveTo(cx - pw - r * .2, base, cx - pw + r, base); pud.closePath(); shapes.push(pud);
+    if(f > .5){ const k = Math.min(1, (f - .5) / .5); [[-.45, 0], [.45, 1.4]].forEach(([xi, ph2]) => {   // 뱃살이 아래로 살짝 삐져나옴
+      const x = cx + pw * xi, w = pw * .34, d = k * 6.5 + Math.sin(t * 2.4 + ph2) * .8 * k, P = new Path2D(); P.moveTo(x - w, base - 1.5); P.bezierCurveTo(x - w * .6, base + d * 1.1, x + w * .6, base + d * 1.1, x + w, base - 1.5); P.closePath(); shapes.push(P); }); }
     g.fillStyle = "rgba(0,0,0,.16)"; g.beginPath(); g.ellipse(cx, base + 2, pw + 4, 2.6, 0, 0, Math.PI * 2); g.fill();
     g.lineJoin = "round"; g.strokeStyle = "#2a221c"; g.lineWidth = 2.6; shapes.forEach(P => g.stroke(P));
     const fur = g.createLinearGradient(0, base - ph * 2 - rh * 2, 0, base + 60); fur.addColorStop(0, "#fffdf8"); fur.addColorStop(.45, "#f6eee0"); fur.addColorStop(1, "#e8d9c2"); g.fillStyle = fur; shapes.forEach(P => g.fill(P));
