@@ -509,6 +509,23 @@ body.petopen{overflow:hidden}
 .dash-ov{position:fixed;inset:0;z-index:70;pointer-events:none} .dash-ov img{position:fixed;width:64px;height:auto;transform:translate(-50%,-50%);will-change:transform}
 .dash-flash{position:fixed;inset:0;background:#fff;opacity:0} .dash-crack{position:fixed;width:260px;height:260px;margin:-130px 0 0 -130px;opacity:0;transition:opacity .2s} .dash-crack.on{opacity:1}
 .slang-sec{margin-top:16px;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:var(--glass)} .slang-ask{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--glass-strong)} .sl-tag{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;background:#ff6b3d;color:#fff;font-size:.7rem;font-weight:800;vertical-align:middle}
+nav.tabs{display:none!important} #forecast,#view-how .ladder,#view-how [data-i18n="forecastTitle"],#view-how [data-i18n="ladderTitle"],#view-how [data-i18n="ladderHelp"]{display:none!important}
+nav.subnav{position:fixed;z-index:30;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:6px;pointer-events:none}
+nav.subnav button{pointer-events:auto;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:52px;padding:7px 8px 6px;border-radius:16px;border:1px solid var(--glass-edge);background:var(--glass-strong);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--muted);box-shadow:var(--glass-shadow);cursor:pointer}
+nav.subnav button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round} nav.subnav button small{font-size:.62rem;font-weight:700;letter-spacing:.02em}
+nav.subnav button[aria-selected="true"]{color:var(--ink);border-color:var(--accent)} nav.subnav .sn-home{flex-direction:row;gap:6px;font-weight:800;font-size:.85rem;color:var(--ink);padding:10px 14px}
+body[data-view="today"] nav.subnav .sn-home, body:not([data-view]) nav.subnav .sn-home{display:none} body.focus nav.subnav{display:none}
+main, .wrap{padding-bottom:84px}
+.actrow{display:flex;gap:10px;margin:14px 0 4px} .actrow .btn{flex:1 1 0;min-height:56px;font-size:1.02rem;font-weight:800;border-radius:18px;justify-content:center}
+.actrow .btn.big:first-child{flex:1.35 1 0} .actrow .petbtn b{margin-left:6px;padding:1px 8px;border-radius:999px;background:rgba(0,0,0,.12);font-size:.8rem}
+.petline{margin:2px 2px 8px;font-size:.78rem;color:var(--muted)} .petline span{color:var(--accent);font-weight:600}
+.btn.pulse{animation:btnPulse 1.4s ease-in-out 4} @keyframes btnPulse{0%,100%{box-shadow:0 0 0 0 rgba(61,195,143,.6)}50%{box-shadow:0 0 0 10px rgba(61,195,143,0)}}
+.onb .onb-step{display:flex;align-items:center;gap:10px;margin:18px 0 8px;font-size:1.02rem} .onb-n{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-weight:900;font-size:.85rem;flex-shrink:0}
+.onb-langs,.onb-pills{display:flex;flex-wrap:wrap;gap:8px} .onb-diag{width:100%;min-height:52px;font-size:1rem;margin-bottom:10px} .linkbtn{border:0;background:none;color:var(--accent);font-weight:700;padding:0;cursor:pointer;text-decoration:underline}
+/* 공간 다이어트 */
+header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:none} .logo .logo-b{font-size:1.75rem} .logo .logo-s{font-size:.62rem;margin-bottom:0}
+.poster{padding-bottom:4px!important;margin-bottom:0!important} .poster .ptitle{margin:2px 0!important} .poster .catbar{margin-top:8px!important}
+#todaySide .streak{gap:5px} #todaySide .streak span{width:14px;height:14px} .sidebig{margin-bottom:6px}
 .pet-snd{position:absolute;z-index:5;left:12px;top:calc(64px + env(safe-area-inset-top));width:38px;height:38px;border-radius:50%;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:1.05rem;display:grid;place-items:center;cursor:pointer}
 .pet-bar{width:min(220px,100%);height:9px;border-radius:999px;background:rgba(255,255,255,.5);overflow:hidden} .pet-bar i{display:block;height:100%;background:linear-gradient(90deg,#ffb84d,#f2708f);border-radius:999px;transition:width .3s}
 .pet-st{display:flex;flex-direction:column;align-items:flex-end} .pet-st b{font-size:1.05rem;color:var(--ink)} .pet-st small{font-size:.7rem;color:var(--muted)}
@@ -696,6 +713,13 @@ h1 .logo .testtag{font-size:.55rem;letter-spacing:.1em;background:var(--accent);
     <button role="tab" aria-selected="false" data-view="add" data-i18n="tabAdd"></button>
     <button role="tab" aria-selected="false" data-view="list" data-i18n="tabList"></button>
     <button role="tab" aria-selected="false" data-view="how" data-i18n="tabHow"></button>
+  </nav>
+
+  <nav class="subnav" aria-label="menu">
+    <button type="button" class="sn-home" data-view="today"><span aria-hidden="true">←</span> <span data-i18n="tabToday"></span></button><span class="grow"></span>
+    <button type="button" data-view="add"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><small data-i18n="tabAdd"></small></button>
+    <button type="button" data-view="list"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg><small data-i18n="tabList"></small></button>
+    <button type="button" data-view="how"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><small data-i18n="tabHow"></small></button>
   </nav>
 
   <section id="view-today" class="view">
@@ -892,6 +916,7 @@ ja: {
   streak:n=>`連続学習 ${n}日`, todayTitle:"今日の学習", todayCounts:(a,b)=>`復習 <b>${a}</b>枚 · 新しい単語 <b>${b}</b>語`,
   todayHint:n=>`最初に間違えたカードは正解するまで繰り返し出ます。連続学習 ${n}日。`, start:"はじめる",
   slTitle:"🔥 いまどきスラング", slDesc:"毎日ニュースから自動で集めた流行語を、実際に使われた文で覚えます。スラングばかりでは使えないので、ふだんの単語に少しだけ混ぜるのがおすすめ。", slAsk:"スラングはどれくらい混ぜますか？", slRec:"おすすめ", slMixN:n=>`1日${n}語だけ混ぜる`, slMixAll:"スラング中心", slChange:"変更", slWhy:"普段の単語と一緒に少しずつ覚えると、実際の会話で自然に使えます。", slDone:(n,m)=>`スラング${n}語を準備しました（${m ? `1日${m}語` : "中心"}）`, slTag:"スラング",
+  obHi:"…来たか。まず三つだけ決めろ", obLang:"何語を覚える？", obLevel:"今の実力は？（わからなければテスト）", obDiag:"1分でレベル診断", obGo:"準備ができたら「学習を始める」を押せ", obOwn:"自分の単語を入れたいなら", srsOne:"忘れそうになる直前に、もう一度出します（間隔反復）。",
   meanPh:"意味を日本語で", meanSame:"合ってた（意味は同じ）", meanDiff:"違った", meanMeh:"答えはこれだ。…貴様の答え、意味は同じか？",
   modes:{ meaning:"意味を答える", scriptNew:"文字を覚える", script:"文字を読む", study:"まず当ててみる", cloze:"穴埋め", recall:"意味から書く", write:"作文", speak:"スピーキング" },
   left:n=>`残り${n}枚`, listen:"発音を聞く", listenEx:"例文を聞く", listenAgain:"もう一度聞く", listenMine:"自分の文を聞く",
@@ -977,6 +1002,7 @@ ko: {
   streak:n=>`연속 학습 ${n}일`, todayTitle:"오늘의 학습", todayCounts:(a,b)=>`복습 <b>${a}</b>장 · 새 단어 <b>${b}</b>개`,
   todayHint:n=>`처음 틀린 카드는 맞힐 때까지 다시 나옵니다. 연속 학습 ${n}일.`, start:"시작하기",
   slTitle:"🔥 요즘 슬랭", slDesc:"뉴스에서 매일 자동으로 모은 유행어를, 실제로 쓰인 문장으로 배워요. 슬랭만 배우면 쓸 데가 없으니, 평소 단어에 조금씩 섞는 걸 추천해요.", slAsk:"슬랭은 얼마나 섞을까요?", slRec:"추천", slMixN:n=>`하루 ${n}개만 섞기`, slMixAll:"슬랭 위주", slChange:"바꾸기", slWhy:"평소 단어랑 같이 한두 개씩 배워야 실제 대화에서 자연스럽게 써먹어요.", slDone:(n,m)=>`슬랭 ${n}개 준비 완료 (${m ? `하루 ${m}개씩` : "슬랭 위주"})`, slTag:"슬랭",
+  obHi:"…왔군. 딱 세 가지만 정해라", obLang:"무슨 언어를 외울 건가?", obLevel:"지금 실력은? (모르겠으면 테스트)", obDiag:"1분 레벨 테스트", obGo:"준비되면 ‘학습 시작’을 눌러라", obOwn:"내 단어를 직접 넣고 싶으면", srsOne:"잊어버리기 직전에 다시 물어보는 방식(간격 반복)으로 복습해요.",
   meanPh:"뜻을 한국어로", meanSame:"맞았어 (뜻이 같아)", meanDiff:"틀렸어", meanMeh:"정답은 이것. …네 답, 뜻이 같나?",
   modes:{ meaning:"뜻 말하기", scriptNew:"글자 외우기", script:"글자 읽기", study:"먼저 맞혀보기", cloze:"빈칸 채우기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
   left:n=>`남은 ${n}장`, listen:"발음 듣기", listenEx:"예문 듣기", listenAgain:"다시 듣기", listenMine:"내 문장 듣기",
@@ -1411,13 +1437,13 @@ function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1
 function renderStart(){
   renderStartInner(); renderSide();
   const box = $("#sessionStart"), pos = box.querySelector(".poster");
-  if(cardsHere().length){ const pc = document.createElement("div"); pc.innerHTML = petCardHTML(); const el = pc.firstElementChild; if(pos) pos.after(el); else box.prepend(el); bindPetOpen(box);
+  if(cardsHere().length){ bindPetOpen(box);
     const x = t(), notes = [], over = dueAll().length - dueCards().length, lang = S.meta.settings.lang;
     if(over > 0) notes.push(`<p class="hnote">📦 ${esc(x.capNote(over))}</p>`);
     if(struggling()) notes.push(`<p class="hnote">🐢 ${esc(x.slowNote)}</p>`);
     if(PRESET_LANGS.includes(lang) && !decks().some(d => d.preset && !d.preset.startsWith("script-")) && cardsHere().filter(c => !c.script).length < 30)
       notes.push(`<p class="hnote">💡 ${esc(x.smallHint)} <button type="button" class="linkbtn" id="hintPreset">📚 ${esc(x.presetTitle)}</button></p>`);
-    if(notes.length){ const nd = document.createElement("div"); nd.className = "hnotes"; nd.innerHTML = notes.join(""); el.after(nd);
+    if(notes.length){ const nd = document.createElement("div"); nd.className = "hnotes"; nd.innerHTML = notes.join(""); const anchor = box.querySelector(".petline") || pos; if(anchor) anchor.after(nd); else box.prepend(nd);
       const hp = nd.querySelector("#hintPreset"); if(hp) hp.onclick = async () => { showView("add"); await renderPresets(); $("#presetCard").scrollIntoView({ behavior: "smooth", block: "start" }); }; } }
   if(pos){ const rest = [...box.children].filter(el => el !== pos); if(rest.length){ const w = document.createElement("div"); w.className = "after-poster"; rest.forEach(el => w.appendChild(el)); box.appendChild(w); } }
   else box.style.background = "";
@@ -1439,41 +1465,52 @@ function renderSide(){
   const lad = x.levels.map((n,i) => `<div><b>${counts[i]}</b><span>${esc(n)}</span></div>`).join("") + `<div><b>${mastered}</b><span>${esc(x.chipDone)}</span></div>`;
   box.innerHTML = `<div class="sidebig"><b>${streak()}</b><span class="eyebrow">${esc(x.sideStreak)}</span></div>
     <div class="streak">${cells.join("")}</div>
-    <span class="eyebrow">${esc(x.sideWeek)}</span><div class="forecast">${fc}</div>
-    <span class="eyebrow">${esc(x.sideLadder)}</span><div class="mini-ladder">${lad}</div>`;
+    <p class="tiny muted" style="margin:.4em 0 0">${esc(x.srsOne)}</p>`; void fc; void lad;
+}
+function actRow(mainBtn, petFirst){   // 학습하기와 간식 주기를 같은 층위로 나란히
+  const n = petCount(), x = pt(), p = petState(), sk = streak();
+  const pet = `<button class="btn big petbtn${petFirst && n ? " primary" : ""}" type="button" data-petopen>🍖 ${esc(x.give)}${n ? `<b>${n}</b>` : ""}</button>`;
+  return `<div class="actrow">${mainBtn}${pet}</div><p class="petline">🔥 ${esc(x.streakN(sk))} · ${esc(x.ranks[petTier(sk)])} · <span>${esc(petNextInfo())}</span></p>`; }
+async function renderOnboard(box){   // 첫 시작: ① 배울 언어 ② 지금 실력 ③ 시작 — 한 화면에서 순서대로
+  const x = t(), lang = S.meta.settings.lang;
+  box.innerHTML = `<div class="onb">${say("st_default", esc(x.obHi))}
+    <div class="onb-step"><span class="onb-n">1</span><b>${esc(x.obLang)}</b></div><div class="onb-langs">${["en", "es", "ja", "ko"].filter(k => k !== S.meta.settings.ui || k === lang).map(k => `<button class="btn${k === lang ? " primary" : ""}" type="button" data-oblang="${k}">${FLAGS[k] || ""} ${esc(x.langNames[k])}</button>`).join("")}<button class="btn ghost" type="button" id="obMore">…</button></div>
+    <div class="onb-step"><span class="onb-n">2</span><b>${esc(x.obLevel)}</b></div><div id="onbLv" class="onb-lv"><p class="muted small">${esc(x.presetLoading)}</p></div><div id="diagBox"></div>
+    <div class="onb-step"><span class="onb-n">3</span><b>${esc(x.obGo)}</b></div>
+    <p class="small muted">${esc(x.obOwn)} <button class="linkbtn" type="button" id="goAdd">${esc(x.goAdd.replace(/<[^>]+>/g, ""))}</button>${lang === "es" ? ` · <button class="linkbtn" id="seed" type="button">${esc(x.seed)}</button>` : ""}</p></div>`;
+  box.querySelectorAll("[data-oblang]").forEach(b => b.onclick = () => { S.meta.settings.lang = b.dataset.oblang; save(); fillLangs(); fillVoices(); renderAll(); drawRain(); });
+  $("#obMore").onclick = () => $("#langBtn").click();
+  $("#goAdd").onclick = () => showView("add"); const sd = $("#seed"); if(sd) sd.onclick = seedExamples;
+  const lv = $("#onbLv"); let idx = null; try{ idx = await presetIndex(); }catch(e){}
+  const set = idx && idx.sets[lang];
+  if(!set){ lv.innerHTML = SCRIPT_SETS[lang] ? `<button class="btn primary" id="goScript" type="button">🔤 ${esc(x.scriptTitle)}</button>` : `<button class="btn primary" type="button" id="goAddB">${esc(x.goAdd.replace(/<[^>]+>/g, ""))}</button>`;
+    const gs = $("#goScript"); if(gs) gs.onclick = async () => { showView("add"); await renderPresets(); const sc = document.querySelector(".script-sec"); if(sc) sc.scrollIntoView({ behavior: "smooth", block: "start" }); };
+    const gb = $("#goAddB"); if(gb) gb.onclick = () => showView("add"); return; }
+  lv.innerHTML = `<button class="btn primary onb-diag" type="button" id="obDiag">🧪 ${esc(x.obDiag)}</button><div class="onb-pills">${set.levels.map(l => `<button class="btn" type="button" data-oblv="${l.id}">${esc(lvLabel(l))}</button>`).join("")}</div>
+    ${SCRIPT_SETS[lang] ? `<button class="btn ghost sm" type="button" id="goScript">🔤 ${esc(x.scriptTitle)}</button>` : ""}`;
+  $("#obDiag").onclick = () => { $("#obDiag").classList.add("hidden"); startDiag(lang); setTimeout(() => { const d = $("#diagBox"); if(d) d.scrollIntoView({ behavior: "smooth", block: "center" }); }, 60); };
+  lv.querySelectorAll("[data-oblv]").forEach(b => b.onclick = () => addPreset(lang, b.dataset.oblv, b));
+  const gs = $("#goScript"); if(gs) gs.onclick = async () => { showView("add"); await renderPresets(); const sc = document.querySelector(".script-sec"); if(sc) sc.scrollIntoView({ behavior: "smooth", block: "start" }); };
 }
 function renderStartInner(){
   const box = $("#sessionStart"), x = t();
   const due = dueCards().length, nq = Math.min(newQuota(), newCandidates().length) + scriptNewToday();
-  if(cardsHere().length === 0){
-    box.innerHTML = `${say("st_sleepy", esc(x.nmEmpty), true)}<h2>${x.emptyTitle}</h2><p class="muted">${esc(x.emptyBody(langName()))}</p>
-      <div class="startopts">${PRESET_LANGS.includes(S.meta.settings.lang) ? `<button class="btn primary" id="goDiag" type="button">${esc(x.diagBtn)}</button>` : ""}${SCRIPT_SETS[S.meta.settings.lang] ? `<button class="btn${PRESET_LANGS.includes(S.meta.settings.lang) ? "" : " primary"}" id="goScript" type="button">🔤 ${esc(x.scriptTitle)}</button>` : ""}
-      <button class="btn${PRESET_LANGS.includes(S.meta.settings.lang) || SCRIPT_SETS[S.meta.settings.lang] ? "" : " primary"}" id="goAdd" type="button">${x.goAdd}</button>${S.meta.settings.lang === "es" ? `<button class="btn ghost" id="seed" type="button">${x.seed}</button>` : ""}</div>`;
-    $("#goAdd").onclick = () => showView("add");
-    const gd = $("#goDiag"); if(gd) gd.onclick = async () => { showView("add"); await renderPresets(); $("#presetCard").scrollIntoView({ behavior: "smooth", block: "start" }); startDiag(S.meta.settings.lang); };
-    const gs = $("#goScript"); if(gs) gs.onclick = async () => { showView("add"); await renderPresets(); const sc = document.querySelector(".script-sec"); if(sc) sc.scrollIntoView({ behavior: "smooth", block: "start" }); };
-    const sd = $("#seed"); if(sd) sd.onclick = seedExamples;
-    return;
+  if(cardsHere().length === 0){ renderOnboard(box);     return;
   }
   if(due + nq === 0){
     const next = cardsHere().filter(c => !c.mastered && c.due).map(c => c.due).sort()[0];
-    box.innerHTML = `${heroHTML(S.meta.days[today()] ? x.doneTitle : x.noneTitle, "", S.meta.days[today()] ? 100 : 0)}${bigNums()}${say(S.meta.days[today()] ? "st_love" : "st_sleepy", esc(S.meta.days[today()] ? x.nmDone : x.nmNone))}
-      <p class="muted">${next ? esc(x.nextReview(next, diffDays(today(), next))) : x.nextNone}</p>
-      <p class="muted small">${x.streak(streak())}</p>${deckChips()}
-      <div class="row"><button class="btn${PRESET_LANGS.includes(S.meta.settings.lang) && !decks().some(d => d.preset && !d.preset.startsWith("script-")) ? " primary" : ""}" id="goAdd2" type="button">${PRESET_LANGS.includes(S.meta.settings.lang) && !decks().some(d => d.preset && !d.preset.startsWith("script-")) ? "📚 " + esc(x.presetTitle) : x.addMore}</button></div>`;
+    box.innerHTML = `${heroHTML(S.meta.days[today()] ? x.doneTitle : x.noneTitle, next ? x.nextReview(next, diffDays(today(), next)).replace(/<[^>]+>/g, "") : "", S.meta.days[today()] ? 100 : 0)}${actRow(`<button class="btn big" id="goAdd2" type="button">＋ ${PRESET_LANGS.includes(S.meta.settings.lang) && !decks().some(d => d.preset && !d.preset.startsWith("script-")) ? esc(x.presetTitle) : x.addMore}</button>`, true)}${say(S.meta.days[today()] ? "st_love" : "st_sleepy", esc(S.meta.days[today()] ? x.nmDone : x.nmNone))}${deckChips()}`;
     $("#goAdd2").onclick = async () => { showView("add"); if(PRESET_LANGS.includes(S.meta.settings.lang)){ await renderPresets(); $("#presetCard").scrollIntoView({ behavior: "smooth", block: "start" }); } };
     return;
   }
   const z = savedSession();
   if(z){
-    box.innerHTML = `${heroHTML(x.resumeTitle, "", Math.round((z.done || 0) / Math.max(1, (z.done || 0) + z.queue.length) * 100))}${say("st_default", esc(x.nmResume))}<p>${x.resumeBody(z.queue.length, z.done || 0)}</p>
-      <div class="row"><button class="btn primary" id="resumeBtn" type="button">${x.resume}</button><button class="btn ghost" id="restartBtn" type="button">${x.restart}</button></div>`;
+    box.innerHTML = `${heroHTML(x.resumeTitle, x.resumeBody(z.queue.length, z.done || 0).replace(/<[^>]+>/g, ""), Math.round((z.done || 0) / Math.max(1, (z.done || 0) + z.queue.length) * 100))}${actRow(`<button class="btn primary big" id="resumeBtn" type="button">▶ ${x.resume}</button>`)}<div class="row"><button class="btn ghost sm" id="restartBtn" type="button">${x.restart}</button></div>${say("st_default", esc(x.nmResume))}`;
     $("#resumeBtn").onclick = resumeSession;
     $("#restartBtn").onclick = () => { delete S.meta.session; save(); startSession(); };
     return;
   }
-  box.innerHTML = `${heroHTML(x.todayTitle, x.todayCounts(due, nq).replace(/<\/?b>/g, ""), 0)}${bigNums()}${say("cat_jpop", esc(x.nmToday(due, nq)))}<p class="muted small">${x.todayHint(streak())}</p>${todayNewPreview()}${deckChips()}
-    <div class="row"><button class="btn primary" id="startBtn" type="button">${x.start}</button></div>`;
+  box.innerHTML = `${heroHTML(x.todayTitle, x.todayCounts(due, nq).replace(/<\/?b>/g, ""), 0)}${actRow(`<button class="btn primary big" id="startBtn" type="button">▶ ${x.start}</button>`)}${say("cat_jpop", esc(x.nmToday(due, nq)))}${todayNewPreview()}${deckChips()}`;
   $("#startBtn").onclick = startSession;
 }
 function startSession(){
@@ -2573,12 +2610,12 @@ function fillLangsOld(){
 function showView(v){
   document.querySelectorAll(".view").forEach(s => s.classList.add("hidden"));
   $("#view-" + v).classList.remove("hidden");
-  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v ? "true" : "false"));
+  document.querySelectorAll("nav.tabs button, nav.subnav button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v ? "true" : "false")); document.body.dataset.view = v;
   if(v === "list"){ renderDecks(); renderDeckFilter(); renderList(); } if(v === "how"){ renderHow(); renderSync(); const hs = $("#hshop"); if(hs){ hs.ontoggle = () => { if(hs.open) renderShop(); }; if(hs.open) renderShop(); } } if(v === "add"){ fillDeckSelects(); fillImport(); renderPresets(); }
   if(v === "today" && SES){ document.body.classList.add("focus"); centerBox($("#sessionBox")); }
   else { document.body.classList.remove("focus"); const first = $("#view-" + v + " .card"); if(first && first.getBoundingClientRect().top < 0 || v !== "today") window.scrollTo({ top: 0 }); }
 }
-document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => showView(b.dataset.view));
+document.querySelectorAll("nav.tabs button, nav.subnav button").forEach(b => b.onclick = () => showView(b.dataset.view));
 function updateStats(){
   const all = cardsHere();
   $("#sDue").textContent = dueCards().length;
@@ -3641,7 +3678,7 @@ async function addPreset(lang, lvId, btn, skip){
     const data = await presetData(lang + "-" + lvId);
     const name = presetDeckName(lang, lv); const d = addDeck(name); d.preset = lang + "-" + lvId; d.skip = (skip || []).slice(0, 200); d.cursor = 0;
     const n = materialize(d, data, PRESET_CHUNK), k = (skip || []).length;
-    save(); renderAll(); const msg = x.presetDone(lv.n, name, k); const nt = $("#presetNote"); if(nt) nt.textContent = msg; toast(msg);
+    save(); renderAll(); const msg = x.presetDone(lv.n, name, k); const nt = $("#presetNote"); if(nt) nt.textContent = msg; toast(msg); showView("today"); window.scrollTo({ top: 0, behavior: "smooth" }); const sb = $("#startBtn"); if(sb) sb.classList.add("pulse");
   }catch(e){ if(btn){ btn.disabled = false; btn.textContent = x.presetAdd; } toast(x.ocrFail); }
   renderPresets();
 }
