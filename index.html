@@ -503,7 +503,7 @@ body.petopen{overflow:hidden}
 #pet.hidden{display:none}
 #petCv,#petGL,#petBG{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none} #petBG{pointer-events:none} #petGL{pointer-events:none}
 .pet-top{position:absolute;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));display:flex;align-items:center;gap:10px}
-.pet-lv{flex:1;display:flex;flex-direction:column;gap:0;align-items:center} .pet-lv b{font-size:.72rem;letter-spacing:.06em;color:var(--muted);font-weight:800} #petFat{width:84px;height:52px;display:block}
+.pet-lv{flex:1;display:flex;flex-direction:column;gap:0;align-items:center} .pet-lv b{font-size:.72rem;letter-spacing:.06em;color:var(--muted);font-weight:800} #petFat{position:absolute;left:-12px;right:-12px;top:-6px;width:calc(100% + 24px);height:130px;display:block;pointer-events:none;z-index:4} .pet-lv b{margin-top:50px}
 #pet.enter{animation:petIn .5s cubic-bezier(.2,1.1,.3,1)} @keyframes petIn{from{transform:translateY(40px) scale(.96);opacity:0}to{transform:none;opacity:1}}
 #petNudge{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));z-index:55;transform:translate(-50%,30px);opacity:0;pointer-events:none;padding:12px 20px;border-radius:999px;border:0;background:#111413;color:#fff;font-weight:800;font-size:.95rem;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:.35s cubic-bezier(.2,1.3,.4,1)}
 #petNudge.on{transform:translate(-50%,0);opacity:1;pointer-events:auto;animation:nudgeWob 1.6s 1s infinite} @keyframes nudgeWob{0%,80%,100%{transform:translate(-50%,0)}86%{transform:translate(-50%,-6px) rotate(-3deg)}93%{transform:translate(-50%,0) rotate(2deg)}}
@@ -2998,16 +2998,16 @@ function drawCatTex(st){
 }
 function drawCatFace(st, g){
   // 顔
-  const y = 82, L = 52, R = 76, hit = st.hit > .15, happy = !hit && performance.now() - st.lastHit < 1400, b = st.bliss || 0, dopey = !hit && b > .55;
+  const b = st.bliss || 0, y = 82, L = 52, R = 76, hit = st.hit > .15, happy = !hit && b > .45 && performance.now() - st.lastHit < 1400, dopey = !hit && b > .62;
   g.strokeStyle = INKC; g.fillStyle = INKC; g.lineWidth = 2.2;
   if(b > .15){ g.fillStyle = `rgba(244,130,155,${Math.min(.45, b * .5)})`; [44, 84].forEach(x => { g.beginPath(); g.ellipse(x, 88.5, 6 + b * 3, 3.4 + b * 1.6, 0, 0, Math.PI * 2); g.fill(); }); g.fillStyle = INKC; }   // 볼이 점점 발그레
   const cw = st.chew && st.chew.t > CH_IN ? st.chew.t - CH_IN : -1, cph = cw < 0 ? (st.vacFace && performance.now() < st.vacFace ? 2 : 0) : cw < CH_CHEW ? 1 : cw < CH_CHEW + CH_SLURP ? 2 : 3;
   if(cph === 1 || cph === 2){ [L, R].forEach(ex => { g.beginPath(); if(cph === 1){ g.moveTo(ex - 4, y + 1.5); g.quadraticCurveTo(ex, y - 3.5, ex + 4, y + 1.5); } else { g.moveTo(ex - 3.6, y); g.lineTo(ex + 3.6, y); } g.stroke(); }); }
   else if(cph === 3){ [[L, 1], [R, -1]].forEach(([ex, dir]) => { g.beginPath(); g.moveTo(ex - 4 * dir, y - 3.5); g.lineTo(ex + 3 * dir, y); g.lineTo(ex - 4 * dir, y + 3.5); g.stroke(); }); }
   else if(st.wipe && !hit){ [L, R].forEach(ex => { g.beginPath(); g.moveTo(ex - 3.5, y + .5); g.lineTo(ex + 3.5, y + .5); g.stroke(); }); }   // 슥슥 닦는 중: 진지
-  else if(dopey){ const dr = 1.2 + (b - .55) * 5; [[L, -1], [R, 1]].forEach(([ex, dir]) => { g.beginPath(); g.moveTo(ex - 4.5, y - .5 + (dir < 0 ? dr : 0)); g.quadraticCurveTo(ex, y + 3.2, ex + 4.5, y - .5 + (dir > 0 ? dr : 0)); g.stroke(); }); }   // 헤벌레: 처진 눈
+  else if(dopey){ const dr = (b - .62) * 4; [[L, -1], [R, 1]].forEach(([ex, dir]) => { g.beginPath(); g.moveTo(ex - 4.5, y + 1.5 + (dir < 0 ? dr : 0)); g.quadraticCurveTo(ex, y - 3.6, ex + 4.5, y + 1.5 + (dir > 0 ? dr : 0)); g.stroke(); }); }   // 헤벌레: 위로 굽은 눈(∩), 바깥쪽이 살짝 처짐   // 헤벌레: 처진 눈
   else if(hit){ [[L, 1], [R, -1]].forEach(([ex, dir]) => { g.beginPath(); g.moveTo(ex - 4 * dir, y - 3.5); g.lineTo(ex + 3 * dir, y); g.lineTo(ex - 4 * dir, y + 3.5); g.stroke(); }); }
-  else if(happy || st.holding){ [L, R].forEach(ex => { g.beginPath(); g.moveTo(ex - 4, y + 1.5); g.quadraticCurveTo(ex, y - 3.5, ex + 4, y + 1.5); g.stroke(); }); }
+  else if(happy || (st.holding && b > .45)){ [L, R].forEach(ex => { g.beginPath(); g.moveTo(ex - 4, y + 1.5); g.quadraticCurveTo(ex, y - 3.5, ex + 4, y + 1.5); g.stroke(); }); }
   else { const bl = (st.t % 3.4) < .12; [L, R].forEach(ex => { g.beginPath(); if(bl) g.ellipse(ex, y, 3, .8, 0, 0, Math.PI * 2); else g.arc(ex, y, 3.1, 0, Math.PI * 2); g.fill();
     if(!bl){ g.fillStyle = "rgba(255,255,255,.9)"; g.beginPath(); g.arc(ex - 1, y - 1.2, .9, 0, Math.PI * 2); g.fill(); g.fillStyle = INKC; } }); }
   g.strokeStyle = "rgba(232,121,143,.85)"; g.lineWidth = 1.5; [44, 84].forEach(x => { for(const o of [-5, -1, 3]){ g.beginPath(); g.moveTo(x + o, 90.5); g.lineTo(x + o + 2.4, 85.8); g.stroke(); } });
@@ -3017,7 +3017,7 @@ function drawCatFace(st, g){
   else if(cph === 1){ const op = Math.abs(Math.sin(cw * 7 * Math.PI)); g.beginPath(); g.moveTo(59, my + 1); g.quadraticCurveTo(61.5, my + 1 - op * 2, 64, my + 1); g.quadraticCurveTo(66.5, my + 1 + op * 2, 69, my + 1); g.stroke(); }
   else if(cph === 2){ g.beginPath(); g.ellipse(64, my + 2, 1.6, 2, 0, 0, Math.PI * 2); g.stroke(); }
   else if(cph === 3){ g.fillStyle = "#6b2c34"; g.beginPath(); g.ellipse(64, my + 2.5, 2.4, 3.2, 0, 0, Math.PI * 2); g.fill(); }
-  else if(dopey){ const o = (b - .55) * 2.2, w2 = w;   // ω(3을 눕힌 입)는 그대로 두고, 그 아래로 헤— 벌어짐
+  else if(dopey){ const o = (b - .62) * 2.6, w2 = w;   // ω(3을 눕힌 입)는 그대로 두고, 그 아래로 헤— 벌어짐
     const om = new Path2D(); om.moveTo(64 - w2 / 2 - .6, my + 2.6); om.quadraticCurveTo(63.4, my + 4.4, 64, my + .3); om.quadraticCurveTo(64.6, my + 4.4, 64 + w2 / 2 + .6, my + 2.6);
     om.quadraticCurveTo(64 + w2 / 2, my + 5 + o * 5, 64, my + 5.6 + o * 5); om.quadraticCurveTo(64 - w2 / 2, my + 5 + o * 5, 64 - w2 / 2 - .6, my + 2.6); om.closePath();
     g.fillStyle = "#6b2c34"; g.fill(om); g.save(); g.clip(om); g.fillStyle = "#ef8aa0"; g.beginPath(); g.ellipse(64, my + 5.2 + o * 4.4, 3.2, 2 + o * 1.2, 0, 0, Math.PI * 2); g.fill(); g.restore();
@@ -3165,25 +3165,33 @@ function sfxCrunch(){ if(!pa()) return; const t0 = PA.currentTime; for(let i = 0
 function sfxPinch(){ if(!pa()) return; const t0 = PA.currentTime; pOsc("square", 1300, 1700, t0, .07, .12); pOsc("square", 1300, 1700, t0 + .1, .07, .12); }
 function sfxRub(){ if(!pa()) return; const t0 = PA.currentTime; pNoise("bandpass", 1800 + Math.random() * 600, 900, 2, t0, .09, .22); }
 /* 푸데푸데: 1등신 미니냥의 뱃살이 점점 불어나다 한계에서 펑! 하고 원래대로 */
-function fatStep(st, dt){ const c = $("#petFat"); if(!c) return; const dpr = st.dpr || 2, W = 84, H = 52; if(c.width !== W * dpr){ c.width = W * dpr; c.height = H * dpr; }
+function fatStep(st, dt){ const c = $("#petFat"); if(!c) return; const dpr = st.dpr || 2, W = st.W, H = 130; if(c.width !== Math.round(W * dpr)){ c.width = Math.round(W * dpr); c.height = H * dpr; }
   const g = c.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
   st.fatV = st.fatV == null ? (st.fatT || 0) : st.fatV + ((st.fatT || 0) - st.fatV) * Math.min(1, dt * 3); st.fatKick = Math.max(0, (st.fatKick || 0) - dt * 2.2);
-  let f = st.fatV; if(st.fatPop > 0){ st.fatPop = Math.max(0, st.fatPop - dt * 1.4); }
-  const pop = st.fatPop || 0, pre = pop > .75 ? (1 - pop) / .25 : 0;   // 펑 직전엔 잔뜩 부풀었다가
-  const shown = pop > 0 ? (pop > .75 ? 1 + pre * .25 : 0) : f, wob = Math.sin(st.t * (7 + shown * 9)) * (.03 + shown * .05 + st.fatKick * .1) + (shown > .85 ? Math.sin(st.t * 40) * .02 : 0);
-  const cx = W / 2, base = H - 6, bw = 13 * (1 + shown * .95) * (1 + wob), bh = 13 * (1 + shown * .28) * (1 - wob * .6);
-  if(!(pop > 0 && pop <= .75)){
-    g.fillStyle = "rgba(0,0,0,.18)"; g.beginPath(); g.ellipse(cx, base + 1.5, bw * .95, 2.4, 0, 0, Math.PI * 2); g.fill();
-    g.fillStyle = "#fbf6ec"; g.strokeStyle = "#2a221c"; g.lineWidth = 1.4;
-    const top = base - bh * 2; g.beginPath(); g.moveTo(cx - bw * .55, top + bh * .55); g.lineTo(cx - bw * .5, top - 3.5); g.lineTo(cx - bw * .2, top + bh * .2);   // 귀
-    g.quadraticCurveTo(cx, top + bh * .05, cx + bw * .2, top + bh * .2); g.lineTo(cx + bw * .5, top - 3.5); g.lineTo(cx + bw * .55, top + bh * .55);
-    g.bezierCurveTo(cx + bw * 1.05, top + bh * 1.2, cx + bw * 1.15, base, cx + bw * .7, base); g.lineTo(cx - bw * .7, base); g.bezierCurveTo(cx - bw * 1.15, base, cx - bw * 1.05, top + bh * 1.2, cx - bw * .55, top + bh * .55); g.closePath(); g.fill(); g.stroke();
-    g.fillStyle = "rgba(160,125,90,.18)"; g.beginPath(); g.ellipse(cx, base - bh * .35, bw * .75, bh * .45 * (.6 + shown), 0, 0, Math.PI * 2); g.fill();   // 뱃살
-    const fy = top + bh * .78; g.strokeStyle = "#2a221c"; g.lineWidth = 1.1; [-1, 1].forEach(d => { g.beginPath(); g.moveTo(cx + d * 4.6 - 1.6, fy + .8); g.lineTo(cx + d * 4.6, fy - .9); g.lineTo(cx + d * 4.6 + 1.6, fy + .8); g.stroke(); });
-    g.beginPath(); g.moveTo(cx - 2, fy + 2.2); g.quadraticCurveTo(cx - 1, fy + 3.6, cx, fy + 2.4); g.quadraticCurveTo(cx + 1, fy + 3.6, cx + 2, fy + 2.2); g.stroke();
-    g.fillStyle = "rgba(242,130,155,.55)"; [-1, 1].forEach(d => { g.beginPath(); g.ellipse(cx + d * 7.5, fy + 2, 1.9, 1.1, 0, 0, Math.PI * 2); g.fill(); }); }
-  if(pop > 0 && pop <= .75){ const k = 1 - pop / .75; g.strokeStyle = `rgba(255,255,255,${1 - k})`; g.lineWidth = 2; for(let i = 0; i < 8; i++){ const a = i / 8 * Math.PI * 2, r0 = 6 + k * 18, r1 = r0 + 6; g.beginPath(); g.moveTo(cx + Math.cos(a) * r0, base - 14 + Math.sin(a) * r0); g.lineTo(cx + Math.cos(a) * r1, base - 14 + Math.sin(a) * r1); g.stroke(); }
-    g.fillStyle = `rgba(255,255,255,${.8 * (1 - k)})`; g.beginPath(); g.arc(cx, base - 14, 4 + k * 14, 0, Math.PI * 2); g.fill(); }
+  if(st.fatPop > 0) st.fatPop = Math.max(0, st.fatPop - dt * 1.2);
+  const pop = st.fatPop || 0, burst = pop > 0 && pop <= .7, f = pop > .7 ? 1 + (1 - pop) / .3 * .12 : pop > 0 ? 0 : st.fatV, t = st.t;
+  const wob = Math.sin(t * (6 + f * 8)) * (.02 + f * .04 + st.fatKick * .08) + (f > .85 ? Math.sin(t * 38) * .015 : 0);
+  const cx = W / 2, base = 46, rh = 12 + f * 3, pw = (15 + (W * .45 - 15) * Math.pow(f, 2.3)) * (1 + wob), ph = 8 + f * 9 * (1 - wob * .5);
+  if(!burst){
+    const shapes = [];
+    const head = new Path2D(); const ht = base - ph * .6 - rh * 1.7; head.moveTo(cx - rh * .95, base - ph * .4); head.lineTo(cx - rh * .9, ht + rh * .4); head.lineTo(cx - rh * .75, ht - 5.5); head.lineTo(cx - rh * .3, ht + rh * .05);
+    head.quadraticCurveTo(cx, ht - rh * .08, cx + rh * .3, ht + rh * .05); head.lineTo(cx + rh * .75, ht - 5.5); head.lineTo(cx + rh * .9, ht + rh * .4); head.lineTo(cx + rh * .95, base - ph * .4); head.closePath(); shapes.push(head);
+    const pud = new Path2D(); pud.moveTo(cx - pw, base); pud.bezierCurveTo(cx - pw - ph * .7, base, cx - pw - ph * .5, base - ph * 1.2, cx - pw * .55, base - ph * 1.05); pud.quadraticCurveTo(cx, base - ph * 1.6, cx + pw * .55, base - ph * 1.05);
+    pud.bezierCurveTo(cx + pw + ph * .5, base - ph * 1.2, cx + pw + ph * .7, base, cx + pw, base); pud.closePath(); shapes.push(pud);
+    if(f > .62){ const k = Math.min(1.2, (f - .62) / .38); [[-.9, 1], [-.5, .7], [-.12, .45], [.38, .8], [.82, 1.1]].forEach(([xi, lf], i) => {   // 흘러넘치는 살
+      const x = cx + pw * xi, wd = 5 + lf * 4 + f * 2, L = k * (14 + lf * 46) + Math.sin(t * 2.6 + i * 1.7) * 3 * k, P = new Path2D();
+      P.moveTo(x - wd, base - 4); P.bezierCurveTo(x - wd * .9, base + L * .5, x - wd * .55, base + L * .7, x - wd * .7, base + L); P.arc(x, base + L, wd * .72, Math.PI, 0, true); P.bezierCurveTo(x + wd * .55, base + L * .7, x + wd * .9, base + L * .5, x + wd, base - 4); P.closePath(); shapes.push(P); }); }
+    g.fillStyle = "rgba(0,0,0,.16)"; g.beginPath(); g.ellipse(cx, base + 2, pw + 4, 2.6, 0, 0, Math.PI * 2); g.fill();
+    g.lineJoin = "round"; g.strokeStyle = "#2a221c"; g.lineWidth = 2.6; shapes.forEach(P => g.stroke(P));
+    const fur = g.createLinearGradient(0, base - ph * 2 - rh * 2, 0, base + 60); fur.addColorStop(0, "#fffdf8"); fur.addColorStop(.45, "#f6eee0"); fur.addColorStop(1, "#e8d9c2"); g.fillStyle = fur; shapes.forEach(P => g.fill(P));
+    g.fillStyle = "rgba(242,161,180,.7)"; [-1, 1].forEach(d => { g.beginPath(); g.moveTo(cx + d * rh * .72, ht - 2.5); g.lineTo(cx + d * rh * .82, ht + rh * .35); g.lineTo(cx + d * rh * .45, ht + rh * .12); g.closePath(); g.fill(); });
+    const fy = ht + rh * .95, strain = f > .85; g.strokeStyle = "#2a221c"; g.lineWidth = 1.2; g.lineCap = "round";
+    [-1, 1].forEach(d => { g.beginPath(); if(strain){ g.moveTo(cx + d * 5 - d * 1.8, fy - 1.6); g.lineTo(cx + d * 5 + d * 1.2, fy); g.lineTo(cx + d * 5 - d * 1.8, fy + 1.6); } else { g.arc(cx + d * 5, fy, 1.5, 0, Math.PI * 2); g.fillStyle = "#2a221c"; g.fill(); } g.stroke(); });
+    g.beginPath(); g.moveTo(cx - 2.4, fy + 2.8); g.quadraticCurveTo(cx - 1.2, fy + 4.4, cx, fy + 3); g.quadraticCurveTo(cx + 1.2, fy + 4.4, cx + 2.4, fy + 2.8); g.stroke();
+    g.fillStyle = "rgba(242,130,155,.55)"; [-1, 1].forEach(d => { g.beginPath(); g.ellipse(cx + d * 8.5, fy + 2.4, 2.2, 1.3, 0, 0, Math.PI * 2); g.fill(); });
+    if(strain){ g.fillStyle = "rgba(160,215,255,.9)"; g.beginPath(); g.ellipse(cx + rh * .95, ht + 3 + Math.sin(t * 4) * 1, 1.3, 2, 0, 0, Math.PI * 2); g.fill(); } }   // 땀 삐질
+  else { const k = 1 - pop / .7; g.strokeStyle = `rgba(255,255,255,${1 - k})`; g.lineWidth = 3; for(let i = 0; i < 12; i++){ const a = i / 12 * Math.PI * 2, r0 = 10 + k * 70, r1 = r0 + 12; g.beginPath(); g.moveTo(cx + Math.cos(a) * r0, base - 12 + Math.sin(a) * r0 * .6); g.lineTo(cx + Math.cos(a) * r1, base - 12 + Math.sin(a) * r1 * .6); g.stroke(); }
+    g.fillStyle = `rgba(255,255,255,${.85 * (1 - k)})`; g.beginPath(); g.ellipse(cx, base - 12, 10 + k * 90, 6 + k * 40, 0, 0, Math.PI * 2); g.fill(); }
 }
 /* 레벨은 대놓고 안 보여줌: 저 멀리서 레벨 팻말을 문 하찮은 종이접기 냥이가 가끔 뽈뽈뽈 지나간다 */
 function signEvery(){ const v = S.meta.settings.signCat; return v == null ? 60 : +v; }
