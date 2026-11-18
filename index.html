@@ -3735,12 +3735,12 @@ async function topUpPresets(){
 const nativeOk = c => { const u = S.meta.settings.ui, m = String(c.meaning || "").replace(/^[^·]*·\s*/, ""); return u === "ko" ? /[\uac00-\ud7af]/.test(m) : u === "ja" ? /[\u3040-\u30ff\u4e00-\u9fff]/.test(m) : true; };
 const JA_REN = { "終る":"終わる", "落る":"落ちる", "楽む":"楽しむ", "曲る":"曲がる", "落す":"落とす", "いくらても":"いくらでも" };
 async function fixPresetMeanings(){   // 일본어 단어장: 영어 뜻 → 한국어 사전 뜻 (한 번만, 사용자가 고친 뜻은 건드리지 않음)
-  const ui = S.meta.settings.ui; if((ui !== "ko" && ui !== "ja") || (S.meta.mfix || 0) >= 4) return; let n = 0;
+  const ui = S.meta.settings.ui; if((ui !== "ko" && ui !== "ja") || (S.meta.mfix || 0) >= 5) return; let n = 0;
   try{ for(const d of decks()){ if(!d.preset || !(ui === "ko" && /^ja-n\d$/.test(d.preset) || /^es-[abc]\d$/.test(d.preset))) continue; const data = await presetData(d.preset), map = {}, es = d.preset.startsWith("es-");
       data.items.forEach(it => { const nat = es ? (ui === "ko" ? it[1] : it[2]) : it[3]; if(nat) map[it[0]] = es ? ["", "", "", nat] : it; });
       Object.values(S.cards).forEach(c => { if(c.deck !== d.id || c.mOk) return; const w = JA_REN[c.word] || c.word, it = map[w]; if(!it) return;
         if(c.isNew || !nativeOk(c)){ c.word = w; c.meaning = (it[1] ? it[1] + " · " : "") + it[3]; c.mOk = 1; n++; } }); }
-    S.meta.mfix = 4; save(); if(n && !SES) renderAll(); }catch(e){} }
+    S.meta.mfix = 5; save(); if(n && !SES) renderAll(); }catch(e){} }
 function slimPresets(){
   let changed = false;
   decks().forEach(d => { if(!d.preset || d.preset.startsWith("script-") || d.preset.endsWith("-slang") || d.cursor !== undefined) return;
