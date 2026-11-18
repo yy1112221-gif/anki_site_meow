@@ -1583,6 +1583,7 @@ function nextItem(){
   if(!c){ SES.queue.shift(); return nextItem(); }
   if(c.lazy && !it.waited){ it.waited = 1; document.body.classList.add("focus"); $("#sessionBox").innerHTML = `<div class="stage">${say("load_run", esc(t().prepping))}</div>`;
     Promise.race([fillLazy(c), sleep(3000)]).then(() => { if(SES && SES.queue[0] === it) nextItem(); }); return; }
+  if(it.mode === "recall" && !c.script && !nativeOk(c)) it.mode = "meaning";
   SES.state = { answered: false }; document.body.classList.add("focus"); renderItem(c, it.mode);
   { const bx = $("#sessionBox"), sy = bx.querySelector(":scope > .say"), st = bx.querySelector(".stage"); if(sy && st){ st.prepend(sy); sy.classList.add("qc"); bindQcat(sy); } }   // 문제 내는 냥이: 작게, 만질 수 있게
   centerBox($("#sessionBox"));
@@ -3711,10 +3712,10 @@ function materialize(d, data, want){
   for(; i < data.items.length && n < want; i++){
     const it = data.items[i], w = it[0]; if(!w || have.has(norm(w)) || skip.has(w.toLowerCase())) continue;
     const o = { word: w, deck: d.id, lang };
-    if(lang === "ja"){ o.reading = it[1] || ""; o.meaning = (it[1] ? it[1] + " · " : "") + (it[2] || ""); o.lazy = 1; }
+    if(lang === "ja"){ o.reading = it[1] || ""; const nat = ui === "ko" ? it[3] : ""; o.meaning = (it[1] ? it[1] + " · " : "") + (nat || it[2] || ""); o.lazy = 1; if(nat) o.mOk = 1; }
     else if(lang === "ko"){ o.meaning = ui === "ja" ? (it[1] || it[2] || "") : (it[2] || it[1] || ""); o.example = it[3] || ""; o.lazy = o.meaning ? 0 : 1; }
     else o.lazy = 1;
-    const c = newCard(o); c.created = now + i; c.reading = o.reading || ""; if(o.lazy) c.lazy = 1; if(c.example) c.form = findForm(c.example, c.word);
+    const c = newCard(o); c.created = now + i; c.reading = o.reading || ""; if(o.lazy) c.lazy = 1; if(o.mOk) c.mOk = 1; if(c.example) c.form = findForm(c.example, c.word);
     S.cards[c.id] = c; have.add(norm(w)); n++;
   }
   d.cursor = i; d.total = data.items.length; return n;
@@ -3730,6 +3731,15 @@ async function topUpPresets(){
   if(added){ save(); if(!SES) renderAll(); }
 }
 /* 以前の版で全部カードにしてしまったセットを軽くする（まだ一度も出ていない語だけ） */
+const nativeOk = c => { const u = S.meta.settings.ui, m = String(c.meaning || "").replace(/^[^·]*·\s*/, ""); return u === "ko" ? /[\uac00-\ud7af]/.test(m) : u === "ja" ? /[\u3040-\u30ff\u4e00-\u9fff]/.test(m) : true; };
+const JA_REN = { "終る":"終わる", "落る":"落ちる", "楽む":"楽しむ", "曲る":"曲がる", "落す":"落とす", "いくらても":"いくらでも" };
+async function fixPresetMeanings(){   // 일본어 단어장: 영어 뜻 → 한국어 사전 뜻 (한 번만, 사용자가 고친 뜻은 건드리지 않음)
+  if(S.meta.settings.ui !== "ko" || (S.meta.mfix || 0) >= 1) return; let n = 0;
+  try{ for(const d of decks()){ if(!d.preset || !/^ja-n\d$/.test(d.preset)) continue; const data = await presetData(d.preset), map = {};
+      data.items.forEach(it => { if(it[3]) map[it[0]] = it; });
+      Object.values(S.cards).forEach(c => { if(c.deck !== d.id || c.mOk) return; const w = JA_REN[c.word] || c.word, it = map[w]; if(!it) return;
+        if(c.isNew || !nativeOk(c)){ c.word = w; c.meaning = (it[1] ? it[1] + " · " : "") + it[3]; c.mOk = 1; n++; } }); }
+    S.meta.mfix = 1; save(); if(n && !SES) renderAll(); }catch(e){} }
 function slimPresets(){
   let changed = false;
   decks().forEach(d => { if(!d.preset || d.preset.startsWith("script-") || d.preset.endsWith("-slang") || d.cursor !== undefined) return;
@@ -3759,7 +3769,7 @@ function fillLazy(c){
       if(cur.example && !cur.exampleKo){ try{ cur.exampleKo = await translate(cur.example, L); }catch(e){} }
       if(cur.meaning) delete cur.lazy; saveCard(cur); return; }
     const r = await lookup(c.word); const cur = S.cards[c.id]; if(!cur) return;
-    if(r.meaning) cur.meaning = (cur.reading ? cur.reading + " · " : "") + r.meaning;
+    if(r.meaning && !cur.mOk) cur.meaning = (cur.reading ? cur.reading + " · " : "") + r.meaning;
     if(!cur.example && r.cands && r.cands.length){ const cd = r.cands[0]; cur.example = cd.text; cur.form = cd.form; cur.src = cd.id; cur.audio = cd.audio || null; try{ cur.exampleKo = await trOf(cd); }catch(e){} }
     if(r.meaning || cur.meaning) delete cur.lazy; saveCard(cur);
   }catch(e){} finally { LAZY.delete(c.id); } })();
@@ -3938,7 +3948,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
 }
 
 if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
-load(); slimPresets(); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
+load(); slimPresets(); setTimeout(fixPresetMeanings, 1500); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
 if("serviceWorker" in navigator && location.protocol === "https:"){ navigator.serviceWorker.register("sw.js").catch(() => {}); }
