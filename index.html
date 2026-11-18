@@ -510,6 +510,13 @@ body.petopen{overflow:hidden}
 .dash-ov{position:fixed;inset:0;z-index:70;pointer-events:none} .dash-ov img{position:fixed;width:64px;height:auto;transform:translate(-50%,-50%);will-change:transform}
 .dash-flash{position:fixed;inset:0;background:#fff;opacity:0} .dash-crack{position:fixed;width:260px;height:260px;margin:-130px 0 0 -130px;opacity:0;transition:opacity .2s} .dash-crack.on{opacity:1}
 .slang-sec{margin-top:16px;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:var(--glass)} .slang-ask{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--glass-strong)} .sl-tag{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;background:#ff6b3d;color:#fff;font-size:.7rem;font-weight:800;vertical-align:middle}
+.tutask{position:fixed;z-index:40;left:50%;bottom:calc(78px + env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:8px 8px 8px 10px;border-radius:999px;background:var(--glass-strong);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1.5px solid var(--accent);box-shadow:0 8px 28px rgba(0,0,0,.28);font-size:.86rem;font-weight:700;color:var(--ink);white-space:nowrap;animation:tutIn .5s cubic-bezier(.3,1.6,.5,1) both, tutBob 2.4s ease-in-out .6s infinite}
+.tutask .nm{width:30px;height:30px} .tutask .ox{width:36px;height:36px;border-radius:50%;border:0;background:rgba(127,127,127,.14);font-size:1rem;cursor:pointer;display:grid;place-items:center;padding:0} .tutask .ox:active{transform:scale(.9)}
+.tutask.out{animation:tutOut .25s ease-in both} @keyframes tutIn{from{opacity:0;transform:translate(-50%,30px) scale(.8)}} @keyframes tutOut{to{opacity:0;transform:translate(-50%,20px) scale(.9)}} @keyframes tutBob{50%{transform:translate(-50%,-4px)}}
+.tour{position:fixed;inset:0;z-index:60} .tour-hole{position:fixed;border-radius:18px;box-shadow:0 0 0 9999px rgba(8,10,14,.62);transition:all .3s ease;pointer-events:none}
+.tour-tip{position:fixed;left:16px;right:16px;max-width:420px;margin:0 auto;padding:14px 16px;border-radius:18px;background:var(--surface,#fff);color:var(--ink);box-shadow:0 10px 30px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:10px;align-items:flex-end} .tour-tip p{margin:0;align-self:stretch;font-weight:600;line-height:1.5}
+.bubble.tapme{cursor:pointer;-webkit-user-select:none;user-select:none} .bubble.pop{animation:bubPop .35s cubic-bezier(.3,1.7,.5,1)} @keyframes bubPop{0%{transform:scale(.88)}100%{transform:none}}
+.row.tight{margin:-2px 0 4px;justify-content:center}
 nav.tabs{display:none!important} #forecast,#view-how .ladder,#view-how [data-i18n="forecastTitle"],#view-how [data-i18n="ladderTitle"],#view-how [data-i18n="ladderHelp"]{display:none!important}
 nav.subnav{position:fixed;z-index:30;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:6px;pointer-events:none}
 nav.subnav button{pointer-events:auto;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:52px;padding:7px 8px 6px;border-radius:16px;border:1px solid var(--glass-edge);background:var(--glass-strong);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--muted);box-shadow:var(--glass-shadow);cursor:pointer}
@@ -526,6 +533,10 @@ main, .wrap{padding-bottom:84px}
 /* 공간 다이어트 */
 header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:none} .logo .logo-b{font-size:1.75rem} .logo .logo-s{font-size:.62rem;margin-bottom:0}
 .poster{padding-bottom:4px!important;margin-bottom:0!important} .poster .ptitle{margin:2px 0!important} .poster .catbar{margin-top:8px!important}
+.poster{gap:4px!important} .poster .ptitle{font-size:clamp(1.45rem,6.4vw,1.9rem)!important;line-height:1.1!important} .poster .pweek{font-size:.66rem!important;letter-spacing:.18em!important} .poster .psub{font-size:.8rem!important;letter-spacing:.02em!important} .poster .catbar{margin-top:4px!important}
+#sessionStart .after-poster{border-top:0!important;padding-top:0!important;gap:8px!important} #sessionStart.card{gap:8px!important;padding-top:16px!important;padding-bottom:14px!important}
+#sessionStart .actrow{margin:6px 0 0} #sessionStart .actrow .btn{min-height:48px;font-size:.98rem;border-radius:15px} #sessionStart .petline{margin:0 2px 2px;font-size:.74rem} #sessionStart .row.tight{margin:-4px 0 0}
+#sessionStart .say .bubble{font-size:.86rem;padding:8px 12px} #sessionStart .say img.nm{width:52px;height:52px}
 #todaySide .streak{gap:5px} #todaySide .streak span{width:14px;height:14px} .sidebig{margin-bottom:6px}
 .pet-snd{position:absolute;z-index:5;left:12px;top:calc(64px + env(safe-area-inset-top));width:38px;height:38px;border-radius:50%;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:1.05rem;display:grid;place-items:center;cursor:pointer}
 .pet-bar{width:min(220px,100%);height:9px;border-radius:999px;background:rgba(255,255,255,.5);overflow:hidden} .pet-bar i{display:block;height:100%;background:linear-gradient(90deg,#ffb84d,#f2708f);border-radius:999px;transition:width .3s}
@@ -910,6 +921,8 @@ ja: {
   levels:["新出","〜2日","〜1週","〜1か月","〜3か月","3か月〜"], levelSuffix:"の段", chipNew:"新出", chipDone:"卒業", chipLeech:"苦手",
   emptyTitle:"単語を入れるだけで、復習スケジュールは自動で組みます",
   emptyBody:l=>`覚えたい${l}の単語を追加すると、意味と実際の例文を探して埋め、毎日その日に見るべき単語だけをクイズにします。`,
+  homeTalk:["…単語は裏切らない。裏切るのはおまえの記憶だ。", "今日覚えた単語が、明日のおまえを救う。…たぶんな。", "おやつは学びの対価。この世界の掟だ。", "やわらかさこそ力。覚えておけ。", "オレを突くその指…それで開始ボタンを押せ。", "一日5分。それがおまえとオレの契約だ。", "忘れることは罪ではない。覚え直さないことが罪だ。", "…ちゅるの香りがする。おまえが学びを終える時の香りだ。", "オレの腹は宇宙だ。おやつは星だ。", "今日も来たか。…悪くない。", "復習を先延ばしにする者は、明日倍泣く。", "ニャ…？ 今のは聞かなかったことにしろ。", "オレは溶けているのではない。くつろいでいるのだ。", "単語ひとつに、おやつひとつ。公正な取引だ。", "おまえの真面目さ、天が…いや、オレが見ている。", "間違えていい。間違えた単語ほど長く残る。科学だ。", "…眠い。だがおまえの学びは見届けよう。", "人間よ、今日の覚悟を見せろ。", "オレがやわらかい理由？ 秘密だ。…おやつのせいだ。", "世界を征服したいなら、まず単語を征服しろ。", "10秒だけ撫でてもいい。特別に許そう。", "記憶は筋肉だ。オレは筋肉の代わりにゼリーだが。", "忘れる直前にもう一度問う。それがオレの戦略だ。", "…腹が減ったとは言っていない。顔がそう言っただけだ。", "おまえは思ったよりやれている。オレが褒めるのは珍しいぞ。", "プデプデ…それは栄光の証だ。", "吹き出しをまた押したな。…話すことはまだある。", "電車で一問。それが達人の道だ。", "…この瞬間にも、忘却曲線は下がり続けている。"],
+  moreBtn:"もっと学習", moreNone:"今やれる単語がありません。単語を追加してください", tutAsk:"はじめて？ 1分チュートリアルを見る？", tutNext:"次へ", tutEnd:"はじめる", tutSteps:{ onb:"① 学ぶ言語とレベルを選ぶと、単語帳がすぐできます", start:"毎日このボタンひとつでOK。今日の復習と新しい単語を自動で選びます", pet:"勉強するとおやつが貯まります。ねこに投げて遊ぼう", bar:"ねこがちゅるを食べ進んだぶんが今日の進み具合です", menu:"単語の追加・単語帳・設定は右下にあります" },
   goAdd:"単語を追加する", seed:"サンプル5語で始める", addMore:"単語をもっと追加",
   doneTitle:"今日の分は終わり", noneTitle:"今日見るカードはありません",
   nextReview:(d,n)=>`次の復習：${d}（${n}日後）`, nextNone:"新しい単語を追加するとすぐ学習に入ります。",
@@ -996,6 +1009,8 @@ ko: {
   levels:["새 단어","~2일","~1주","~1달","~3달","3달~"], levelSuffix:" 칸", chipNew:"새 단어", chipDone:"졸업", chipLeech:"약점",
   emptyTitle:"단어를 넣으면 복습 일정은 알아서 짭니다",
   emptyBody:l=>`외울 ${l} 단어를 추가하면 뜻과 실제 예문을 찾아 채우고, 매일 그날 볼 단어만 골라 퀴즈를 냅니다.`,
+  homeTalk:["…단어는 배신하지 않는다. 배신하는 건 네 기억력이지.", "오늘 외운 단어가 내일의 너를 구한다. …아마도.", "간식은 공부의 대가. 이 세계의 법칙이다.", "말랑함은 힘이다. 기억해 둬라.", "나를 찌르는 그 손가락… 그걸로 시작 버튼을 눌러라.", "하루 5분. 그게 너와 나의 계약이다.", "잊는 건 죄가 아니다. 다시 안 외우는 게 죄지.", "…츄르 냄새가 난다. 네가 공부를 끝낼 때의 냄새다.", "내 배는 우주다. 간식은 별이고.", "오늘도 왔군. …나쁘지 않다.", "복습을 미루는 자, 내일 두 배로 운다.", "냥…? 방금 건 못 들은 걸로 해라.", "나는 녹아내린 게 아니다. 편안한 것이다.", "단어 하나에 간식 하나. 공정한 거래다.", "너의 성실함, 하늘이… 아니, 내가 보고 있다.", "틀려도 된다. 틀린 단어가 더 오래 남는다. 과학이다.", "…졸리다. 하지만 네 공부는 지켜보겠다.", "인간이여, 오늘의 각오를 보여라.", "내가 말랑한 이유? 비밀이다. …간식 때문이다.", "세상을 정복하려면 단어부터 정복해라.", "10초만 쓰다듬어도 된다. 특별히 허락하지.", "기억은 근육이다. 나는 근육 대신 젤리지만.", "잊어버리기 직전에 다시 묻는다. 그게 나의 전략이다.", "…배고프다고 한 적 없다. 표정이 그랬을 뿐.", "연속 기록은 쌓긴 어렵고 무너지긴 쉽다. 알지?", "너는 생각보다 잘하고 있다. 내가 칭찬하는 일은 드물다.", "푸데푸데… 그건 영광의 증거다.", "단어장 앞에서 망설이지 마라. 시작이 반이다.", "나의 꿈? 세계 제일의 말랑함이다.", "말풍선을 또 눌렀군. …할 말은 아직 많다.", "지하철에서 한 문제. 그게 고수의 길이다.", "외국어 한 마디가 문을 연다. 나는 냉장고 문이 좋지만.", "…지금 이 순간에도 망각 곡선은 내려가고 있다."],
+  moreBtn:"더 학습하기", moreNone:"더 할 단어가 없어요. 단어를 추가해 보세요", tutAsk:"처음이세요? 1분 튜토리얼 볼래요?", tutNext:"다음", tutEnd:"시작하기", tutSteps:{ onb:"① 배울 언어와 수준을 고르면 단어장이 바로 생겨요", start:"매일 이 버튼 하나면 돼요. 오늘 복습할 것과 새 단어를 알아서 골라줘요", pet:"공부하면 간식이 쌓여요. 냥이에게 던져주며 놀아요", bar:"냥이가 츄르를 먹어 나가는 만큼이 오늘 진도예요", menu:"단어 추가·단어장·설정은 오른쪽 아래에 있어요" },
   goAdd:"단어 추가하러 가기", seed:"예시 단어 5개로 시작", addMore:"단어 더 추가",
   doneTitle:"오늘 분량 끝", noneTitle:"오늘 볼 카드가 없어요",
   nextReview:(d,n)=>`다음 복습: ${d} (${n}일 뒤)`, nextNone:"새 단어를 추가하면 바로 학습에 들어갑니다.",
@@ -1396,7 +1411,19 @@ const scriptNewToday = () => Math.min(activeCards().filter(c => c.isNew && c.scr
 function recentAcc(){ const from = addDays(today(), -7); let n = 0, ok = 0; cardsHere().forEach(c => (c.log || []).forEach(l => { if(l.d >= from){ n++; if(l.ok) ok++; } })); return n >= 20 ? ok / n : null; }
 const struggling = () => { const a = recentAcc(); return a !== null && a < .6; };
 const newLimitNow = () => struggling() ? Math.max(2, Math.ceil(S.meta.settings.newLimit / 2)) : S.meta.settings.newLimit;
-const newQuota = () => Math.max(0, newLimitNow() - introducedToday());
+const bonusNew = () => (S.meta.bonus && S.meta.bonus.d === today()) ? S.meta.bonus.n : 0;
+const newQuota = () => Math.max(0, newLimitNow() + bonusNew() - introducedToday());
+const aheadCards = () => activeCards().filter(c => !c.mastered && !c.isNew && c.due && c.due > today()).sort((a, b) => a.due < b.due ? -1 : 1);
+const MORE_N = 5;
+function canMore(){ return newCandidates().length > 0 || aheadCards().length > 0; }
+function studyMore(){   // 오늘 분량을 끝낸 뒤 더: 새 단어 5개 → 없으면 곧 복습할 단어를 미리 10개
+  const x = t(); if(SES) return;
+  if(newCandidates().length){ S.meta.bonus = { d: today(), n: bonusNew() + MORE_N }; save(); startSession(); return; }
+  const ah = aheadCards().slice(0, 10); if(!ah.length){ toast(x.moreNone); return; }
+  const items = []; ah.forEach(c => reviewModes(c).forEach(m => items.push({ id: c.id, mode: m })));
+  const remaining = {}; items.forEach(it => remaining[it.id] = (remaining[it.id] || 0) + 1);
+  SES = { queue: items, done: 0, failed: {}, remaining, finished: [], state: null }; prefetchLazy([...new Set(items.map(it => it.id))]); saveSession();
+  $("#sessionStart").classList.add("hidden"); $("#sessionBox").classList.remove("hidden"); nextItem(); }
 /* 문제 고르기 (연구 근거: 수용 지식이 산출보다 먼저·빨리 붙고, 양방향 회상이 가장 효과적, 객관식보다 직접 떠올리기가 오래 감)
    새 단어: 맞혀보기(사전 시도) → 뜻 말하기(외국어→내 언어) → 빈칸/뜻 보고 쓰기(내 언어→외국어)
    복습: 단계가 낮을수록 '뜻 말하기' 비중↑, 올라갈수록 '쓰기·빈칸·문장'으로. 같은 방향만 계속 나오지 않게 돌아가며. */
@@ -1435,8 +1462,10 @@ function buildSession(){
 function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1); while(S.meta.days[d]){ n++; d = addDays(d, -1); } return n; }
 
 function renderStart(){
-  renderStartInner(); renderSide();
+  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900);
   const box = $("#sessionStart"), pos = box.querySelector(".poster");
+  box.querySelectorAll(".say .bubble").forEach(b => { b.classList.add("tapme"); b.onclick = () => { const L = t().homeTalk || []; if(!L.length) return; let i; do{ i = Math.floor(Math.random() * L.length); }while(L.length > 1 && i === renderStart.last); renderStart.last = i;
+      b.textContent = L[i]; b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); try{ sfxPoyon(.15); }catch(e){} }; });
   if(cardsHere().length){ bindPetOpen(box);
     const x = t(), notes = [], over = dueAll().length - dueCards().length, lang = S.meta.settings.lang;
     if(over > 0) notes.push(`<p class="hnote">📦 ${esc(x.capNote(over))}</p>`);
@@ -1492,6 +1521,25 @@ async function renderOnboard(box){   // 첫 시작: ① 배울 언어 ② 지금
   lv.querySelectorAll("[data-oblv]").forEach(b => b.onclick = () => addPreset(lang, b.dataset.oblv, b));
   const gs = $("#goScript"); if(gs) gs.onclick = async () => { showView("add"); await renderPresets(); const sc = document.querySelector(".script-sec"); if(sc) sc.scrollIntoView({ behavior: "smooth", block: "start" }); };
 }
+function syncOn(){ return !!(S.meta.sync && S.meta.sync.code); }
+function maybeTutAsk(){   // 첫 입장에만: 작지만 눈에 띄는 O/X. 동기화 코드가 있는 사람에겐 절대 안 띄움
+  const old = $("#tutAsk"); if(syncOn() || S.meta.tutAsked || Object.keys(S.meta.days || {}).length || document.body.dataset.view && document.body.dataset.view !== "today" || SES){ if(old) old.remove(); return; }
+  if(old) return; const x = t(), el = document.createElement("div"); el.id = "tutAsk"; el.className = "tutask"; el.setAttribute("role", "dialog");
+  el.innerHTML = `${nm("st_default", 30)}<span>${esc(x.tutAsk)}</span><button type="button" class="ox o" aria-label="O">⭕</button><button type="button" class="ox x" aria-label="X">❌</button>`;
+  document.body.appendChild(el);
+  const done = go => { S.meta.tutAsked = 1; save(); el.classList.add("out"); setTimeout(() => el.remove(), 250); if(go) setTimeout(runTour, 260); };
+  el.querySelector(".o").onclick = () => done(true); el.querySelector(".x").onclick = () => done(false); }
+function runTour(){
+  const x = t(), S2 = x.tutSteps, steps = [[".onb-langs", S2.onb], ["#startBtn, #resumeBtn, #moreBtn", S2.start], [".actrow .petbtn", S2.pet], ["#sessionStart .catbar", S2.bar], ["nav.subnav", S2.menu]]
+    .map(([q, tx]) => [document.querySelector(q), tx]).filter(([e]) => e && e.getClientRects().length);
+  if(!steps.length) return; let i = 0; const ov = document.createElement("div"); ov.className = "tour"; ov.innerHTML = `<div class="tour-hole"></div><div class="tour-tip"><p></p><button class="btn primary sm" type="button"></button></div>`; document.body.appendChild(ov);
+  const hole = ov.querySelector(".tour-hole"), tip = ov.querySelector(".tour-tip"), btn = tip.querySelector("button");
+  const show = () => { const [e, tx] = steps[i]; e.scrollIntoView({ block: "center", behavior: "auto" }); requestAnimationFrame(() => { const r = e.getBoundingClientRect(), pad = 8;
+      Object.assign(hole.style, { left: r.left - pad + "px", top: r.top - pad + "px", width: r.width + pad * 2 + "px", height: r.height + pad * 2 + "px" });
+      tip.querySelector("p").textContent = tx; btn.textContent = i === steps.length - 1 ? x.tutEnd : x.tutNext + ` (${i + 1}/${steps.length})`;
+      const below = r.bottom + 150 < innerHeight; tip.style.top = below ? r.bottom + 16 + "px" : ""; tip.style.bottom = below ? "" : innerHeight - r.top + 16 + "px"; }); };
+  const next = () => { i++; if(i >= steps.length){ ov.remove(); window.scrollTo({ top: 0, behavior: "smooth" }); return; } show(); };
+  ov.onclick = next; show(); }
 function renderStartInner(){
   const box = $("#sessionStart"), x = t();
   const due = dueCards().length, nq = Math.min(newQuota(), newCandidates().length) + scriptNewToday();
@@ -1499,7 +1547,9 @@ function renderStartInner(){
   }
   if(due + nq === 0){
     const next = cardsHere().filter(c => !c.mastered && c.due).map(c => c.due).sort()[0];
-    box.innerHTML = `${heroHTML(S.meta.days[today()] ? x.doneTitle : x.noneTitle, next ? x.nextReview(next, diffDays(today(), next)).replace(/<[^>]+>/g, "") : "", S.meta.days[today()] ? 100 : 0)}${actRow(`<button class="btn big" id="goAdd2" type="button">＋ ${PRESET_LANGS.includes(S.meta.settings.lang) && !decks().some(d => d.preset && !d.preset.startsWith("script-")) ? esc(x.presetTitle) : x.addMore}</button>`, true)}${say(S.meta.days[today()] ? "st_love" : "st_sleepy", esc(S.meta.days[today()] ? x.nmDone : x.nmNone))}${deckChips()}`;
+    const wantPreset = PRESET_LANGS.includes(S.meta.settings.lang) && !decks().some(d => d.preset && !d.preset.startsWith("script-"));
+    box.innerHTML = `${heroHTML(S.meta.days[today()] ? x.doneTitle : x.noneTitle, next ? x.nextReview(next, diffDays(today(), next)).replace(/<[^>]+>/g, "") : "", S.meta.days[today()] ? 100 : 0)}${actRow(canMore() && !wantPreset ? `<button class="btn primary big" id="moreBtn" type="button">＋ ${esc(x.moreBtn)}</button>` : `<button class="btn big${wantPreset ? " primary" : ""}" id="goAdd2" type="button">＋ ${wantPreset ? esc(x.presetTitle) : x.addMore}</button>`)}${canMore() && !wantPreset ? `<div class="row tight"><button class="linkbtn small" type="button" id="goAdd2">${x.addMore}</button></div>` : ""}${say(S.meta.days[today()] ? "st_love" : "st_sleepy", esc(S.meta.days[today()] ? x.nmDone : x.nmNone))}${deckChips()}`;
+    { const mb = $("#moreBtn"); if(mb) mb.onclick = studyMore; }
     $("#goAdd2").onclick = async () => { showView("add"); if(PRESET_LANGS.includes(S.meta.settings.lang)){ await renderPresets(); $("#presetCard").scrollIntoView({ behavior: "smooth", block: "start" }); } };
     return;
   }
@@ -1588,6 +1638,7 @@ function finishSession(){
   box.innerHTML = `${heroHTML(x.finishTitle, "", 100)}${say(ng ? "st_happy" : "st_love", esc(ng ? x.nmFinishSome : x.nmFinishAll))}${petGrantHTML(PG)}<p>${x.finishSum(ok, ng)}</p><div class="list">${rows}</div><div class="row">${petCount() ? `<button class="btn primary" type="button" data-petopen>🍖 ${esc(pt().throwNow)}</button>` : ""}<span class="grow"></span><button class="btn${petCount() ? "" : " primary"}" id="backHome" type="button">${x.ok}</button></div>`;
   bindPetOpen(box); (firstToday ? pawStamp() : Promise.resolve()).then(() => { if(PG) sfxFanfare(); if(petCount()) setTimeout(() => catDash(qRect).then(() => { if(!$("#pet") || $("#pet").classList.contains("hidden")) openPet(true); }), 500); });   // 학습 끝 → 자연스럽게 냥이한테
   paintHero(box);
+  if(canMore()){ const r = box.querySelector(".row:last-of-type"); if(r){ const b = document.createElement("button"); b.className = "btn"; b.type = "button"; b.textContent = "＋ " + x.moreBtn; b.onclick = () => { SES = null; document.body.classList.remove("focus"); box.classList.add("hidden"); $("#sessionStart").classList.remove("hidden"); studyMore(); }; r.prepend(b); } }
   $("#backHome").onclick = () => { SES = null; document.body.classList.remove("focus"); box.classList.add("hidden"); $("#sessionStart").classList.remove("hidden"); renderAll(); setTimeout(maybeRiskPrompt, 600); };
 }
 
@@ -2610,7 +2661,7 @@ function fillLangsOld(){
 function showView(v){
   document.querySelectorAll(".view").forEach(s => s.classList.add("hidden"));
   $("#view-" + v).classList.remove("hidden");
-  document.querySelectorAll("nav.tabs button, nav.subnav button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v ? "true" : "false")); document.body.dataset.view = v;
+  document.querySelectorAll("nav.tabs button, nav.subnav button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v ? "true" : "false")); document.body.dataset.view = v; if(v !== "today"){ const ta = $("#tutAsk"); if(ta) ta.remove(); }
   if(v === "list"){ renderDecks(); renderDeckFilter(); renderList(); } if(v === "how"){ renderHow(); renderSync(); const hs = $("#hshop"); if(hs){ hs.ontoggle = () => { if(hs.open) renderShop(); }; if(hs.open) renderShop(); } } if(v === "add"){ fillDeckSelects(); fillImport(); renderPresets(); }
   if(v === "today" && SES){ document.body.classList.add("focus"); centerBox($("#sessionBox")); }
   else { document.body.classList.remove("focus"); const first = $("#view-" + v + " .card"); if(first && first.getBoundingClientRect().top < 0 || v !== "today") window.scrollTo({ top: 0 }); }
@@ -2774,12 +2825,12 @@ const PET_ITEMS = [
 ];
 const PET_IT = Object.fromEntries(PET_ITEMS.map(i => [i.id, i]));
 const PT = {
-  ja:{ title:"おやつタイム", give:"おやつをあげる", snacks:n=>`おやつ ${n}個`, streakN:n=>`連続 ${n}日`, next:(it,d)=>`あと${d}日で ${it} 解禁`, maxed:"おやつ全部解禁ずみ！",
+  ja:{ eatTalk:["…ふむ。この味、覚えておこう。", "悪くない。次を持ってこい。", "ニャム…いや、今のは聞かなかったことにしろ。", "これが…努力の味か。", "腹が温かい。おまえのおかげだ。…一度しか言わん。", "おやつは消えた。だが心には残る。", "もっと…いや、威厳というものがある。", "この一口のために、おまえは今日学んだ。良い取引だった。", "プデプデ度が満ちていく…フフ。", "うまい。これは公式発表だ。", "本日のおやつ評価：星五つ。", "おまえ、投げる才能があるな。", "まだ一つ残っているのは知っている。", "…今のは少ししょっぱかった。それでも食った。", "このボディが柔らかくなる音が聞こえるか。", "学んだ手で投げたおやつは、味が違う。", "今日は特別に…笑ってやろう。ニャ。"], title:"おやつタイム", give:"おやつをあげる", snacks:n=>`おやつ ${n}個`, streakN:n=>`連続 ${n}日`, next:(it,d)=>`あと${d}日で ${it} 解禁`, maxed:"おやつ全部解禁ずみ！",
        empty:"おやつがないな。今日の学習を終えろ。…腹ならいつでも突いていい", grant:n=>`ごほうび おやつ ×${n}`, grantWhy:(s,b)=>`連続${s}日ボーナス${b ? ` ＋正解ボーナス${b}` : ""}`,
        throwNow:"おなかに投げる", lv:n=>`ぷにLv.${n}`, fat:"プデプデ度", snd:"音", lvUp:c=>`ポンッ…！ 限界を、超えた 🪙 +${c}`, unlock:"新たなおやつが…解禁された", freezeGot:"7日達成！ひとやすみ券ゲット（1日休んでも連続が続く）",
        freezeUsed:n=>`ひとやすみ券で ${n}日分の連続を守ったよ`, freezes:n=>`ひとやすみ券 ${n}`, main:"今日の目玉", combo:n=>`COMBO ×${n}`, shop:"おやつショップ", coins:"コイン", lack:"コインが足りないよ", bought:(it,n)=>`${it} ×${n} を買った！`, have:n=>`持ってる ${n}`, close:"閉じる", nudge:"🍖 …ねこが、待っている", sndMode:{ mix:"🔉 音楽といっしょに（マナーモードでは鳴らない）", loud:"🔊 マナーモードでも鳴らす（音楽は止まる）", off:"🔇 音オフ" }, welcome:"今日もよく耐えた…来い。思いきり投げろ 🍖", hint:"おやつは上にフリック · タップで自動 · おなかをなでる · 長押しでむぎゅっ · ほっぺはつまんで引っぱる", nice:"ナイス！", great:"グレート！", excellent:"エクセレント！", curve:"カーブ！", miss:"外したか。…もう一度だ",
        ranks:["見習い","ささみ級","ねこ缶級","おすし級","海の幸級","王様級","伝説級"], test:"テスト: おやつ+10", testStreak:"テスト: 連続日数" },
-  ko:{ title:"간식 타임", give:"간식 주기", snacks:n=>`간식 ${n}개`, streakN:n=>`연속 ${n}일`, next:(it,d)=>`${d}일 더 하면 ${it} 해금`, maxed:"간식 전부 해금 완료!",
+  ko:{ eatTalk:["…음. 이 맛, 기억해 두겠다.", "나쁘지 않군. 다음 것도 가져와라.", "냠… 아니, 지금 그 소리는 무시해라.", "이것이… 노력의 맛인가.", "배가 따뜻하다. 네 덕분이다. …딱 한 번만 말한다.", "간식은 사라졌다. 하지만 마음엔 남는다.", "더… 아니, 체면이 있지.", "이 한 입을 위해 넌 오늘 공부했다. 의미 있는 거래였다.", "푸데푸데가 차오른다… 후후.", "으음… 행복의 정의를 새로 써야겠다.", "맛있다. 이건 공식 발표다.", "오늘의 간식 평가: 별 다섯 개.", "너, 던지는 재능이 있군.", "씹을수록 단어가 떠오르는 맛이다. …농담이다.", "아직 하나 더 남은 거, 다 알고 있다.", "…방금 건 조금 짰다. 그래도 먹었다.", "이 몸이 말랑해지는 소리가 들리는가.", "공부한 손으로 던진 간식은 맛이 다르다.", "오늘은 특별히… 웃어 주지. 냥."], title:"간식 타임", give:"간식 주기", snacks:n=>`간식 ${n}개`, streakN:n=>`연속 ${n}일`, next:(it,d)=>`${d}일 더 하면 ${it} 해금`, maxed:"간식 전부 해금 완료!",
        empty:"간식이 없군. 오늘 학습을 끝내라. …배는 언제든 찔러도 좋다", grant:n=>`보상 간식 ×${n}`, grantWhy:(s,b)=>`연속 ${s}일 보너스${b ? ` + 정답 보너스 ${b}` : ""}`,
        throwNow:"배에 던지기", lv:n=>`말랑 Lv.${n}`, fat:"푸데푸데", snd:"소리", lvUp:c=>`펑…! 한계를, 넘었다 🪙 +${c}`, unlock:"새로운 간식이… 해금되었다", freezeGot:"7일 달성! 쉬는 날 쿠폰 획득 (하루 쉬어도 연속 유지)",
        freezeUsed:n=>`쉬는 날 쿠폰으로 ${n}일치 연속을 지켰어`, freezes:n=>`쉬는 날 쿠폰 ${n}`, main:"오늘의 메인", combo:n=>`COMBO ×${n}`, shop:"간식 상점", coins:"코인", lack:"코인이 부족해", bought:(it,n)=>`${it} ×${n} 구매!`, have:n=>`보유 ${n}`, close:"닫기", nudge:"🍖 …냥이가, 기다린다", sndMode:{ mix:"🔉 음악이랑 같이 (무음 모드면 안 들림)", loud:"🔊 무음 모드여도 소리 냄 (음악은 멈춤)", off:"🔇 소리 끔" }, welcome:"오늘도 버텼군. …와라. 마음껏 던져라 🍖", hint:"간식은 위로 휙 · 톡 치면 자동 · 배 문지르기 · 꾹 누르면 쭈욱 · 볼은 잡아당기기", nice:"나이스!", great:"그레이트!", excellent:"엑설런트!", curve:"커브!", miss:"빗나갔군. …다시",
@@ -3118,7 +3169,7 @@ function petLoop0(now){
   if((st.bliss || 0) > .8 && Math.random() < dt * 1.6){ const c = st.toScr(64 + (Math.random() - .5) * 50, 62); (st.hearts = st.hearts || []).push({ x: c.x, y: c.y, t: 0, s: .7 + Math.random() * .6, ph: Math.random() * 6 }); }
   if(st.hearts) st.hearts = st.hearts.filter(h => (h.t += dt * .45) < 1);
   st.bliss = Math.max(0, (st.bliss || 0) - dt * .012 + (st.holding && st.rubbed ? dt * .03 : 0)); fatStep(st, dt); signStep(st, dt);
-  if(st.nextSlang == null) st.nextSlang = now + 25000 + Math.random() * 20000; if(now > st.nextSlang){ st.nextSlang = now + 45000 + Math.random() * 45000; const m = $("#petMsg"); const l = slangLine(); if(l && m && !m.classList.contains("show") && !st.grab) petMsg(l, 3000); }
+  if(st.nextSlang == null) st.nextSlang = now + 15000 + Math.random() * 10000; if(now > st.nextSlang){ st.nextSlang = now + 25000 + Math.random() * 20000; const m = $("#petMsg"); const l = slangLine(); if(l && m && !m.classList.contains("show") && !st.grab) petMsg(l, 3000); }
   if(st.whale) whaleStep(st, dt);
   st.hit = Math.max(0, st.hit - dt * 3.5); st.flap = Math.max(0, st.flap - dt * .9); st.shake = Math.max(0, st.shake - dt * 14);
   petDraw(); st.raf = requestAnimationFrame(petLoop);
@@ -3507,8 +3558,12 @@ function whaleDraw(st, ctx){ const w = st.whale, W = st.W, H = st.H, t = w.t, c 
     if(u < 1.1){ const sz2 = big * 1.15, v = Math.max(0, u - .18); ctx.globalAlpha = Math.max(0, 1 - v * 1.3); petDrawItem(ctx, PET_IT.whale, c.x, c.y + sz2 * .05 + v * v * H * 1.1, sz2 * (1 - u * .15), -.1); ctx.globalAlpha = 1; }
     const rg = Math.min(1, u / 1.2); ctx.strokeStyle = `rgba(200,240,255,${.8 * (1 - rg)})`; ctx.lineWidth = 10 * (1 - rg) + 2; ctx.beginPath(); ctx.ellipse(c.x, st.toScr(64, 120).y, W * .15 + W * .9 * rg, (W * .15 + W * .9 * rg) * .22, 0, 0, Math.PI * 2); ctx.stroke(); }
   w.drops.forEach(d => { ctx.globalAlpha = Math.max(0, Math.min(1, d.life * 1.4)); ctx.fillStyle = "#bfeaff"; ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "rgba(255,255,255,.8)"; ctx.beginPath(); ctx.arc(d.x - d.r * .3, d.y - d.r * .3, d.r * .35, 0, Math.PI * 2); ctx.fill(); }); ctx.globalAlpha = 1; }
+function petTalkEat(){ const st = PET; if(!st) return; const now = performance.now(), first = !st.talked;
+  if(!first && (Math.random() > .4 || now - (st.talkAt || 0) < 7000)) return; st.talked = 1; st.talkAt = now;
+  setTimeout(() => { const m = $("#petMsg"); if(!m || (m.classList.contains("show") && !first)) return; const L = pt().eatTalk || [], sl = Math.random() < .25 && slangLine();
+    let i; do{ i = Math.floor(Math.random() * L.length); }while(L.length > 1 && i === st.talkLast); st.talkLast = i; petMsg(sl || L[i], 3000); }, first ? 1400 : 1100); }
 function petImpact(F, hx, hy, it, mul, labels){
-  const st = PET, now = performance.now();
+  const st = PET, now = performance.now(); if(it && !(it.id === "whale" && !it._egg)) petTalkEat();
   if(it && it.id === "whale" && !it._egg && !st.whale){ st.whale = { t: 0, F, mul, labels, it: Object.assign({}, it, { _egg: 1 }), slam: false, drops: [] }; sfxWhoosh(); buzz(20); return; }
   st.combo = it && now - st.lastHit < 750 ? st.combo + 1 : it ? 1 : st.combo; if(it) st.lastHit = now;
   jellyHit(st, F, hx, hy); st.hit = 1; st.flap = 1; st.shake = Math.max(st.shake, F > 1.4 ? F * 3 : F * .8);
