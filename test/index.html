@@ -500,7 +500,7 @@ body.petopen{overflow:hidden}
 #pet{position:fixed;inset:0;z-index:60;background:radial-gradient(120% 80% at 50% 40%,#c9eee0 0%,#8fcbb7 60%,#5f9e8a 100%);touch-action:none;-webkit-user-select:none;user-select:none}
 @media (prefers-color-scheme:dark){#pet{background:radial-gradient(120% 80% at 50% 40%,#2c5a4c 0%,#173a30 60%,#0d231d 100%)}}
 #pet.hidden{display:none}
-#petCv,#petGL{position:absolute;inset:0;width:100%;height:100%;display:block} #petGL{pointer-events:none}
+#petCv,#petGL{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none} #petGL{pointer-events:none}
 .pet-top{position:absolute;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));display:flex;align-items:center;gap:10px}
 .pet-lv{flex:1;display:flex;flex-direction:column;gap:4px;align-items:center} .pet-lv b{font-size:.95rem;color:var(--ink)}
 .pet-bar{width:min(220px,100%);height:9px;border-radius:999px;background:rgba(255,255,255,.5);overflow:hidden} .pet-bar i{display:block;height:100%;background:linear-gradient(90deg,#ffb84d,#f2708f);border-radius:999px;transition:width .3s}
@@ -2754,26 +2754,35 @@ function petStart(){
     st.TS = Math.max(3, Math.min(8, st.s * dpr * 1.05)); st.tex.width = Math.round((JX1 - JX0) * st.TS); st.tex.height = Math.round((JY1 - JY0) * st.TS); };
   resize(); st.onResize = resize; window.addEventListener("resize", resize);
   st.toScr = (ux, uy) => ({ x: st.cx + (ux - 64) * st.s * st.bw, y: st.by + (uy - 120) * st.s * st.bh });
-  // おなかのタッチ: 短く=つつく / 長押し=むぎゅっ → 離すとぽよん
-  cv.onpointerdown = e => { pa(); const r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top;
-    const ux = (px - st.cx) / (st.s * st.bw) + 64, uy = (py - st.by) / (st.s * st.bh) + 120; if(!st.mctx.isPointInPath(st.upath, ux, uy) && !(ux > -2 && ux < 130 && uy > 52 && uy < 124)) return;
-    st.holding = true; st.hold0 = st.still0 = performance.now(); st.hx = ux; st.hy = uy; st.ax = px; st.ay = py; st.rubbed = false; st.rvx = st.rvy = 0;
-    st.pull = (ux < 47 || ux > 81) && uy > 72 && uy < 102 ? { x0: ux, y0: uy, ox: 0, oy: 0, on: false } : null;   // ほっぺ: つまんで引っぱる
-    cv.setPointerCapture(e.pointerId); };
-  // 指を動かす＝なでる: 押したところがへこんだまま指についてくる。一か所でじっと押し続けたときだけ「むぎゅー」
-  cv.onpointermove = e => { if(!st.holding) return; const r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top;
-    const ux = (px - st.cx) / (st.s * st.bw) + 64, uyr = (py - st.by) / (st.s * st.bh) + 120, uy = Math.max(58, Math.min(118, uyr));
-    const pl = st.pull; if(pl){ const ox = ux - pl.x0, oy = uyr - pl.y0, L = Math.hypot(ox, oy);
-      if(!pl.on && L > 3){ pl.on = true; st.still0 = 1e15; if(SQZ) sfxSqueezeEnd(); st.squeeze = 0; buzz(10); }
-      if(pl.on){ const k = L > 0 ? 50 * Math.tanh(L * 1.04 / 50) / L : 0; pl.ox = ox * k; pl.oy = oy * k; st.flap = Math.max(st.flap, .4); if(Math.random() < .15) buzz(5); return; } }
+  // タッチ（指ごとに別々）: ほっぺ=つまんで引っぱる/寄せる（両手でも可） · おなか=つつく/なでる/一か所長押しでむぎゅっ
+  st.pulls = []; st.hpid = null;
+  const toU = e => { const r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top; return { px, py, ux: (px - st.cx) / (st.s * st.bw) + 64, uy: (py - st.by) / (st.s * st.bh) + 120 }; };
+  cv.onpointerdown = e => { pa(); const { px, py, ux, uy } = toU(e); if(!st.mctx.isPointInPath(st.upath, ux, uy) && !(ux > -2 && ux < 130 && uy > 52 && uy < 124)) return;
+    if((ux < 51 || ux > 77) && uy > 70 && uy < 104 && st.pulls.length < 2){ st.pulls.push({ pid: e.pointerId, x0: ux, y0: uy, ox: 0, oy: 0, on: false, side: ux < 64 ? -1 : 1, t0: performance.now() }); try{ cv.setPointerCapture(e.pointerId); }catch(_){} return; }
+    if(st.holding) return;
+    st.holding = true; st.hpid = e.pointerId; st.hold0 = st.still0 = performance.now(); st.hx = ux; st.hy = uy; st.ax = px; st.ay = py; st.rubbed = false; st.rvx = st.rvy = 0;
+    try{ cv.setPointerCapture(e.pointerId); }catch(_){} };
+  cv.onpointermove = e => { const { px, py, ux, uy: uyr } = toU(e);
+    const pl = st.pulls.find(q => q.pid === e.pointerId);
+    if(pl){ let ox = ux - pl.x0, oy = uyr - pl.y0; const L = Math.hypot(ox, oy);
+      if(!pl.on && L > 3){ pl.on = true; buzz(10); }
+      if(pl.on){ const inward = ox * pl.side < 0, cap = inward ? 20 : 50, k = L > 0 ? cap * Math.tanh(L * 1.04 / cap) / L : 0; pl.ox = ox * k; pl.oy = oy * k; st.flap = Math.max(st.flap, .4); if(Math.random() < .15) buzz(5); }
+      return; }
+    if(!st.holding || e.pointerId !== st.hpid) return;
+    const uy = Math.max(58, Math.min(118, uyr));
     st.rvx = st.rvx * .6 + (ux - st.hx) * 4; st.rvy = st.rvy * .6 + (uy - st.hy) * 4; st.hx = ux; st.hy = uy;
-    if(Math.hypot(px - st.ax, py - st.ay) > 10){ st.ax = px; st.ay = py; st.still0 = performance.now(); if(!st.rubbed){ st.rubbed = true; } if(st.squeeze > .05 && SQZ) sfxSqueezeEnd(); } };
-  cv.onpointerup = cv.onpointercancel = () => { if(!st.holding) return; st.holding = false; const held = performance.now() - st.hold0;
-    if(st.pull && st.pull.on){ const L = Math.hypot(st.pull.ox, st.pull.oy); st.pull = null; st.snap = .28; st.hit = Math.max(st.hit, .5); sfxPoyon(Math.min(1, L / 40)); buzz(25); st.flap = 1; st.lastHit = performance.now(); }
-    else if(!st.rubbed && held < 220 && st.squeeze < .05){ petImpact(.55, st.hx, Math.max(84, st.hy), null); sfxPoyon(0); }
+    if(Math.hypot(px - st.ax, py - st.ay) > 10){ st.ax = px; st.ay = py; st.still0 = performance.now(); st.rubbed = true; if(st.squeeze > .05 && SQZ) sfxSqueezeEnd(); } };
+  cv.onpointerup = cv.onpointercancel = e => {
+    const i = st.pulls.findIndex(q => q.pid === e.pointerId);
+    if(i >= 0){ const pl = st.pulls[i]; st.pulls.splice(i, 1);
+      if(pl.on){ const L = Math.hypot(pl.ox, pl.oy); st.snap = .28; st.hit = Math.max(st.hit, .5); sfxPoyon(Math.min(1, L / 40)); buzz(25); st.flap = 1; st.lastHit = performance.now(); }
+      else if(performance.now() - pl.t0 < 260){ petImpact(.45, pl.x0, pl.y0, null); sfxPoyon(0); }
+      return; }
+    if(!st.holding || e.pointerId !== st.hpid) return; st.holding = false; st.hpid = null; const held = performance.now() - st.hold0;
+    if(!st.rubbed && held < 220 && st.squeeze < .05){ petImpact(.55, st.hx, Math.max(84, st.hy), null); sfxPoyon(0); }
     else if(st.squeeze > .08){ const k = st.squeeze; if(SQZ) sfxSqueezeEnd(); jellyRelease(st, k); sfxPoyon(k); buzz(30); st.flap = 1; }
     else if(SQZ) sfxSqueezeEnd();
-    st.squeeze = 0; st.pull = null; };
+    st.squeeze = 0; };
   PET = st; petLvUI(); st.raf = requestAnimationFrame(petLoop);
 }
 function jellyHit(st, F, hx, hy){   // 叩かれた: その場がへこみ、上がつぶれ、横がふくらむ → ほっぺを離した時と同じ速いぷるぷる
@@ -2787,18 +2796,19 @@ function jellyRelease(st, k){   // むぎゅっと押していた手を離す: �
 }
 function petWave(F, hx){ if(PET) jellyHit(PET, F, hx, 96); }
 function jellyStep(st, h){
-  const N = st.N, dx = st.dx, dy = st.dy, vx = st.vx, vy = st.vy, sn = st.snap > 0, KA = sn ? 380 : 55, KS = 1300, C = sn ? 2 : 2.8, pl = st.pull;
-  const sq = st.holding && !(pl && pl.on) ? st.squeeze : 0, br = Math.sin(st.t * 2.1) * .9, sw = Math.sin(st.t * 1.35) * 1.1 + Math.sin(st.t * 3.1) * .35;   // 呼吸＋ゆらゆら
+  const N = st.N, dx = st.dx, dy = st.dy, vx = st.vx, vy = st.vy, sn = st.snap > 0, KA = sn ? 380 : 55, KS = 1300, C = sn ? 2 : 2.8;
+  const sq = st.holding ? st.squeeze : 0, br = Math.sin(st.t * 2.1) * .9, sw = Math.sin(st.t * 1.35) * 1.1 + Math.sin(st.t * 3.1) * .35;   // 呼吸＋ゆらゆら
   for(let j = 0; j < JNY; j++) for(let i = 0; i < JNX; i++){ const k = j * JNX + i;
     let lx = 0, ly = 0, n = 0;
     if(i > 0){ lx += dx[k - 1]; ly += dy[k - 1]; n++; } if(i < JNX - 1){ lx += dx[k + 1]; ly += dy[k + 1]; n++; }
     if(j > 0){ lx += dx[k - JNX]; ly += dy[k - JNX]; n++; } if(j < JNY - 1){ lx += dx[k + JNX]; ly += dy[k + JNX]; n++; }
     const rx = st.rx[k], ry = st.ry[k], top = Math.max(0, (118 - ry) / 64);
     let tx = sw * top * top, ty = br * top, ka = KA;
-    if(pl && pl.on){ const ddx = rx - pl.x0, ddy = ry - pl.y0, d2 = ddx * ddx + ddy * ddy, L = Math.hypot(pl.ox, pl.oy) || 1, ux = pl.ox / L, uy = pl.oy / L, al = ddx * ux + ddy * uy, pe = ddx * uy - ddy * ux;
-      // 引っぱる向きの先は丸ごとついてくる・後ろはなだらかに → 折れ返らずにびよーんと伸びる
-      const f = Math.exp(-pe * pe / (2 * 13 * 13)) * (al > 0 ? 1 : Math.exp(-al * al / (2 * 16 * 16))); tx += pl.ox * f; ty += pl.oy * f; ka += 900 * f * Math.exp(-d2 / (2 * 10 * 10)) + 200 * f; }
-    else if(st.dent > 0 && st.hx != null){ const ddx = rx - st.hx, ddy = ry - st.hy, f = Math.exp(-(ddx * ddx + ddy * ddy) / (2 * 11 * 11)) * st.dent;
+    for(const pl of st.pulls){ if(!pl.on) continue; const ddx = rx - pl.x0, ddy = ry - pl.y0, d2 = ddx * ddx + ddy * ddy, L = Math.hypot(pl.ox, pl.oy) || 1, ux = pl.ox / L, uy = pl.oy / L, al = ddx * ux + ddy * uy, pe = ddx * uy - ddy * ux;
+      // 外へ引っぱる: 向きの先は丸ごとついてくる（折れ返らない）/ 内へ寄せる: その場だけ寄って顔がむにゅっ
+      const inward = pl.ox * pl.side < 0, f = Math.exp(-pe * pe / (2 * 13 * 13)) * (al > 0 ? (inward ? Math.exp(-al * al / (2 * 20 * 20)) : 1) : Math.exp(-al * al / (2 * 16 * 16)));
+      tx += pl.ox * f; ty += pl.oy * f; ka += 900 * f * Math.exp(-d2 / (2 * 10 * 10)) + 200 * f; }
+    if(st.dent > 0 && st.hx != null){ const ddx = rx - st.hx, ddy = ry - st.hy, f = Math.exp(-(ddx * ddx + ddy * ddy) / (2 * 11 * 11)) * st.dent;
       ty += 7.5 * f + Math.max(-4, Math.min(4, st.rvy * .05)) * f; tx += .32 * f * ddx + Math.max(-6, Math.min(6, st.rvx * .06)) * f; }
     if(sq){ const f = Math.exp(-((rx - st.hx) ** 2 + (ry - st.hy) ** 2) / (2 * 16 * 16)); ty += sq * (16 * f + 13 * top); tx += sq * (.35 * f * (rx - st.hx) + 9 * Math.sign(rx - 64) * Math.exp(-((ry - 106) ** 2) / 242)); }
     if(st.pin[k]){ vx[k] += (-KA * 4 * (dx[k] - tx * .3) + KS * (lx - n * dx[k]) * .5 - C * 2 * vx[k]) * h; vy[k] = 0; dy[k] = 0; continue; }
@@ -2812,7 +2822,8 @@ function petLoop(now){
   if(st.holding && now - st.still0 > 480){ if(!SQZ) sfxSqueezeStart(); st.squeeze = Math.min(1, st.squeeze + dt * 1.3); if(Math.random() < .2) buzz(8); }
   else if(st.squeeze > 0) st.squeeze = Math.max(0, st.squeeze - dt * 2.5);   // 動かしたらむぎゅーはゆるむ
   if(st.snap > 0) st.snap -= dt;
-  st.dent = st.holding && !(st.pull && st.pull.on) ? Math.min(1, (st.dent || 0) + dt * 9) : Math.max(0, (st.dent || 0) - dt * 6); st.rvx *= Math.pow(.02, dt); st.rvy *= Math.pow(.02, dt);
+  if(st.pulls && st.pulls.filter(q => q.on).length === 2) st.hit = Math.max(st.hit, .35);
+  st.dent = st.holding ? Math.min(1, (st.dent || 0) + dt * 9) : Math.max(0, (st.dent || 0) - dt * 6); st.rvx *= Math.pow(.02, dt); st.rvy *= Math.pow(.02, dt);
   st.ring += dt; if(st.grab) st.grab.rot += dt * (3 + Math.abs(st.grab.acc) * 1.6) * (st.grab.acc < 0 ? -1 : 1);
   st.proj = st.proj.filter(q => petProjStep(st, q, dt));
   const steps = 6, h = dt / steps; for(let k = 0; k < steps; k++) jellyStep(st, h);
