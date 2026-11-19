@@ -12,14 +12,14 @@
 <meta property="og:site_name" content="MEOWCA!">
 <meta property="og:title" content="MEOWCA! 암기냥이 — 딱 필요한 만큼만 외우자냥">
 <meta property="og:description" content="최소 암기, 최대 냥이. 잊기 직전에만 다시 묻는 JLPT 단어 7,848개 · 공부하면 간식 · 무료">
-<meta property="og:url" content="https://yy1112221-gif.github.io/anki_site_meow/">
-<meta property="og:image" content="https://yy1112221-gif.github.io/anki_site_meow/og.png">
+<meta property="og:url" content="https://meowca.app/">
+<meta property="og:image" content="https://meowca.app/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="MEOWCA! 암기냥이 — 딱 필요한 만큼만 외우자냥">
 <meta name="twitter:description" content="최소 암기, 최대 냥이. JLPT 단어 7,848개 · 무료">
-<meta name="twitter:image" content="https://yy1112221-gif.github.io/anki_site_meow/og.png">
+<meta name="twitter:image" content="https://meowca.app/og.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -1629,11 +1629,17 @@ function bindCorner(){ const ko = S.meta.settings.ui === "ko", a = $("#tutAgain"
   a.textContent = ko ? "튜토리얼 다시 보기" : "チュートリアルをもう一度"; $("#trackLbl").textContent = ko ? "사용 기록 보내기(익명·개선용)" : "利用データを送る（匿名・改善用）";
   a.onclick = () => { showView("today"); if(cardsHere().length) setTimeout(runTour, 350); else { S.meta.tutWant = 1; save(); } };
   c.checked = !S.meta.noTrack; c.onchange = () => { S.meta.noTrack = !c.checked; save(); }; }
+let BIZ = null;   // biz.json: 사업자 정보 — 사업자등록번호가 채워지면 설정 화면 맨 아래에 자동 표시
+async function bizFill(){ try{ if(!BIZ){ const r = await fetch("biz.json", { cache: "no-cache" }); BIZ = r.ok ? await r.json() : {}; } }catch(_){ BIZ = {}; }
+  const el = $("#bizLine"); if(!el || !BIZ.regNo) return;
+  const ko = S.meta.settings.ui === "ko", b = BIZ, L = ko ? ["상호", "대표", "사업자등록번호", "통신판매업 신고", "주소", "문의"] : ["商号", "代表", "事業者登録番号", "通信販売業申告", "所在地", "お問い合わせ"];
+  el.innerHTML = [[L[0], b.name], [L[1], b.owner], [L[2], b.regNo], [L[3], b.mailOrderNo], [L[4], b.address], [L[5], b.email]].filter(x => x[1]).map(x => `${esc(x[0])} ${esc(x[1])}`).join(" · "); }
 function renderSupBox(){ const el = $("#supBox"); if(!el) return; const ko = S.meta.settings.ui === "ko";
   el.innerHTML = `<div class="sup-row">${nm("st_love", 52)}<div><b>${ko ? "MEOWCA! 암기냥이는 무료예요" : "MEOWCA!（ミョウカ）は無料です"}</b><p class="small muted" style="margin:.2em 0 0">${ko ? "광고도 없어요. 마음에 들면 친구에게 알려 주세요." : "広告もありません。気に入ったら友達に教えてください。"}</p></div></div>
     <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button>${(ko ? DONATE_KO : DONATE_JA) ? `<a class="btn primary" href="${ko ? DONATE_KO : DONATE_JA}" target="_blank" rel="noopener">🍖 ${ko ? "냥이에게 츄르 사주기" : "ネコにおやつを"}</a>` : ""}</div>
-    <p class="tiny muted" style="margin:0"><a href="privacy.html">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a></p>`;
-  $("#supShare").onclick = async () => { const url = "https://yy1112221-gif.github.io/anki_site_meow/?ref=invite", text = ko ? "MEOWCA! 암기냥이 — 가성비로 딱 필요한 만큼만 외우고, 나머진 말랑 냥이 괴롭히기 🐾 무료" : "MEOWCA!（ミョウカ）— もう無理やり暗記しなくていい。最小限だけ覚えて、あとはネコと遊ぶ 🐾 無料";
+    <p class="tiny muted" style="margin:0"><a href="privacy.html">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a> · <a href="terms.html">${ko ? "이용약관" : "利用規約"}</a></p><p class="tiny muted" id="bizLine" style="margin:0"></p>`;
+  bizFill();
+  $("#supShare").onclick = async () => { const url = "https://meowca.app/?ref=invite", text = ko ? "MEOWCA! 암기냥이 — 가성비로 딱 필요한 만큼만 외우고, 나머진 말랑 냥이 괴롭히기 🐾 무료" : "MEOWCA!（ミョウカ）— もう無理やり暗記しなくていい。最小限だけ覚えて、あとはネコと遊ぶ 🐾 無料";
     try{ if(navigator.share){ await navigator.share({ title: "MEOWCA!", text, url }); return; } await navigator.clipboard.writeText(text + " " + url); toast(ko ? "링크를 복사했어요" : "リンクをコピーしました"); }catch(e){} }; }
 function setAddPanel(k){   // 단어 추가: 스크롤 대신 메뉴에서 하나 고르기
   const v = $("#view-add"); if(!v) return; k = k || v.dataset.panel || "preset"; v.dataset.panel = k;
@@ -1797,8 +1803,8 @@ function shareCardImg(n){ return new Promise(res => { const W = 1080, H = 1350, 
   g.font = font(700, 50); g.fillStyle = "#5c5548"; g.fillText((ko ? "🔥 연속 " + sk + "일째 · " : "🔥 連続 " + sk + "日目 · ") + meltL().label + " " + meltPct() + "%", 90, 630);
   let done = false; const im = new Image(); im.onload = () => { const w = 860, h = w * im.height / im.width; g.drawImage(im, (W - w) / 2 + 40, H - h - 190, w, h); fin(); }; im.onerror = fin; im.src = "cat/melt/cat_love.svg"; setTimeout(fin, 2500);
   function fin(){ if(done) return; done = true; g.fillStyle = "#1d2b27"; g.fillRect(0, H - 170, W, 170); g.fillStyle = "#fff"; g.font = font(800, 48); g.fillText(ko ? "최소 암기, 최대 냥이" : "最小の暗記、最大のネコ", 90, H - 92);
-    g.fillStyle = "#3dc38f"; g.font = font(700, 32); g.fillText("yy1112221-gif.github.io/anki_site_meow", 90, H - 40); cv.toBlob(res, "image/png"); } }); }
-async function shareResult(n){ const x = t(), ko = S.meta.settings.ui === "ko", url = "https://yy1112221-gif.github.io/anki_site_meow/?ref=share", text = ko ? `오늘 딱 ${n}개만 외웠다냥 🐾 나머진 냥이랑 놀았다 (연속 ${streak()}일)` : `今日はたった${n}語だけおぼえたニャ 🐾`;
+    g.fillStyle = "#3dc38f"; g.font = font(700, 32); g.fillText("meowca.app", 90, H - 40); cv.toBlob(res, "image/png"); } }); }
+async function shareResult(n){ const x = t(), ko = S.meta.settings.ui === "ko", url = "https://meowca.app/?ref=share", text = ko ? `오늘 딱 ${n}개만 외웠다냥 🐾 나머진 냥이랑 놀았다 (연속 ${streak()}일)` : `今日はたった${n}語だけおぼえたニャ 🐾`;
   try{ const blob = await shareCardImg(n), file = new File([blob], "amginyang.png", { type: "image/png" });
     if(navigator.canShare && navigator.canShare({ files: [file] })){ await navigator.share({ files: [file], text: text + "\n" + url }); return; }
     if(navigator.share){ await navigator.share({ text, url }); return; }
@@ -2830,7 +2836,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v74";
+const APP_VER = "v75";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -2979,7 +2985,8 @@ let SBA = null, AUTH_USER = null, AUTH_PROV = null;
 async function sbAuth(){ if(SBA) return SBA; if(!window.supabase){ await loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"); }
   SBA = window.supabase.createClient(SB_URL, SB_KEY, { auth: { flowType: "pkce", persistSession: true, detectSessionInUrl: true, storageKey: "meowca-auth" } });
   SBA.auth.onAuthStateChange((ev, ses) => { AUTH_USER = ses && ses.user || null; if(ev === "SIGNED_IN") authLink(); renderAuthBox(); }); return SBA; }
-async function authProviders(){ if(AUTH_PROV) return AUTH_PROV; try{ const r = await fetch(`${SB_URL}/auth/v1/settings`, { headers: { apikey: SB_KEY } }); const j = await r.json(); const e = j.external || {};
+const KID = () => !!S.meta.by && new Date().getFullYear() - S.meta.by < 15;   // 만 14세 미만일 수 있으면 소셜 로그인 숨김(보호자 동의 대신 동기화 코드)
+async function authProviders(){ if(KID()) return []; if(AUTH_PROV) return AUTH_PROV; try{ const r = await fetch(`${SB_URL}/auth/v1/settings`, { headers: { apikey: SB_KEY } }); const j = await r.json(); const e = j.external || {};
   AUTH_PROV = ["google", "kakao", "apple"].filter(k => e[k]); if(LINE_PROVIDER) AUTH_PROV.push("line"); }catch(_){ AUTH_PROV = []; } return AUTH_PROV; }
 const PROV_UI = { google: ["Google", "#fff", "#1f1f1f"], kakao: ["카카오", "#FEE500", "#191600"], apple: ["Apple", "#000", "#fff"], line: ["LINE", "#06C755", "#fff"] };
 async function authBoot(){ try{ const hasSes = Object.keys(localStorage).some(k => k.startsWith("meowca-auth")); if(!hasSes && !/[?&]code=/.test(location.search)) return;
@@ -2997,9 +3004,10 @@ async function authLink(){ if(LINKING || !AUTH_USER) return; LINKING = true;
   }catch(e){ toast(S.meta.settings.ui === "ja" ? "ログインの連携に失敗しました。記録はそのままです。" : "로그인 연결에 실패했어요. 기록은 그대로예요."); }
   finally{ LINKING = false; renderAuthBox(); } }
 async function authOut(){ const sb = await sbAuth(); await sb.auth.signOut(); AUTH_USER = null; S.meta.acct = null; save(); renderAuthBox(); toast(S.meta.settings.ui === "ja" ? "ログアウトしたニャ。この端末の記録はそのまま。" : "로그아웃했다냥. 이 기기 기록은 그대로야."); }
-function provButtons(list){ return list.map(p => { const [n, bg, fg] = PROV_UI[p]; return `<button type="button" class="btn prov" data-prov="${p}" style="background:${bg};color:${fg};border-color:${p === "google" ? "#dadce0" : bg}">${esc(S.meta.settings.ui === "ja" ? n + "で続ける" : n + "로 계속하기")}</button>`; }).join(""); }
+function provButtons(list){ return list.map(p => { const [n, bg, fg] = PROV_UI[p]; return `<button type="button" class="btn prov" data-prov="${p}" style="background:${bg};color:${fg};border-color:${p === "google" ? "#dadce0" : bg}">${esc(S.meta.settings.ui === "ja" ? n + "で続ける" : n + (p === "line" ? "으로" : "로") + " 계속하기")}</button>`; }).join(""); }
 async function renderAuthBox(){ const box = $("#authBox"); if(!box) return; const ja = S.meta.settings.ui === "ja";
   if(AUTH_USER){ box.innerHTML = `<p class="small">${ja ? "✅ ログイン中" : "✅ 로그인됨"} · <b>${esc((AUTH_USER.app_metadata || {}).provider || "")}</b> ${ja ? "— どの端末でも同じ記録" : "— 어느 기기에서든 같은 기록"}</p><button type="button" class="linkbtn" id="authOut">${ja ? "ログアウト" : "로그아웃"}</button>`; $("#authOut").onclick = authOut; return; }
+  if(KID()){ box.innerHTML = `<p class="muted tiny">${ja ? "14歳未満かもしれないから、ログインの代わりに下の同期コードで記録を移せるニャ" : "만 14세 미만일 수 있어서 로그인 대신 아래 동기화 코드로 기록을 옮길 수 있다냥"}</p>`; return; }
   const list = await authProviders(); if(!list.length){ box.innerHTML = `<p class="muted tiny">${ja ? "ログインは準備中ニャ（今は同期コードで記録を移せるニャ）" : "로그인은 준비 중이다냥 (지금은 아래 동기화 코드로 기록을 옮길 수 있다냥)"}</p>`; return; }
   box.innerHTML = `<p class="small">${ja ? "ログインすると機種変更しても記録が消えないニャ" : "로그인하면 폰을 바꿔도 기록이 안 날아간다냥"}</p><div class="provs">${provButtons(list)}</div>`;
   box.querySelectorAll("[data-prov]").forEach(b => b.onclick = () => authStart(b.dataset.prov)); }
