@@ -1619,14 +1619,15 @@ function runTour(){
       const below = r.bottom + 150 < innerHeight; tip.style.top = below ? r.bottom + 16 + "px" : ""; tip.style.bottom = below ? "" : innerHeight - r.top + 16 + "px"; }); };
   const next = () => { i++; if(i >= steps.length){ ov.remove(); window.scrollTo({ top: 0, behavior: "smooth" }); return; } show(); };
   ov.onclick = next; show(); }
-const DONATE_URL = "";   // 토스 송금 링크 등 (비어 있으면 후원 버튼 숨김)
+const DONATE_KO = "https://qr.kakaopay.com/FONOyL9Fi";   // 카카오페이 송금코드 (한국어 화면만)
+const DONATE_JA = "";   // 일본 사용자용 후원 링크(Ko-fi 등) — 비어 있으면 숨김
 function bindCorner(){ const ko = S.meta.settings.ui === "ko", a = $("#tutAgain"), c = $("#trackOn"); if(!a) return;
   a.textContent = ko ? "튜토리얼 다시 보기" : "チュートリアルをもう一度"; $("#trackLbl").textContent = ko ? "사용 기록 보내기(익명·개선용)" : "利用データを送る（匿名・改善用）";
   a.onclick = () => { showView("today"); if(cardsHere().length) setTimeout(runTour, 350); else { S.meta.tutWant = 1; save(); } };
   c.checked = !S.meta.noTrack; c.onchange = () => { S.meta.noTrack = !c.checked; save(); }; }
 function renderSupBox(){ const el = $("#supBox"); if(!el) return; const ko = S.meta.settings.ui === "ko";
   el.innerHTML = `<div class="sup-row">${nm("st_love", 52)}<div><b>${ko ? "MEOWCA! 암기냥이는 무료예요" : "MEOWCA!（ミョウカ）は無料です"}</b><p class="small muted" style="margin:.2em 0 0">${ko ? "광고도 없어요. 마음에 들면 친구에게 알려 주세요." : "広告もありません。気に入ったら友達に教えてください。"}</p></div></div>
-    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button>${DONATE_URL ? `<a class="btn primary" href="${DONATE_URL}" target="_blank" rel="noopener">🍖 ${ko ? "냥이에게 츄르 사주기" : "ネコにおやつを"}</a>` : ""}</div>
+    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button>${(ko ? DONATE_KO : DONATE_JA) ? `<a class="btn primary" href="${ko ? DONATE_KO : DONATE_JA}" target="_blank" rel="noopener">🍖 ${ko ? "냥이에게 츄르 사주기" : "ネコにおやつを"}</a>` : ""}</div>
     <p class="tiny muted" style="margin:0"><a href="privacy.html">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a></p>`;
   $("#supShare").onclick = async () => { const url = "https://yy1112221-gif.github.io/anki_site_meow/?ref=invite", text = ko ? "MEOWCA! 암기냥이 — 가성비로 딱 필요한 만큼만 외우고, 나머진 말랑 냥이 괴롭히기 🐾 무료" : "MEOWCA!（ミョウカ）— もう無理やり暗記しなくていい。最小限だけ覚えて、あとはネコと遊ぶ 🐾 無料";
     try{ if(navigator.share){ await navigator.share({ title: "MEOWCA!", text, url }); return; } await navigator.clipboard.writeText(text + " " + url); toast(ko ? "링크를 복사했어요" : "リンクをコピーしました"); }catch(e){} }; }
@@ -2825,7 +2826,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v71";
+const APP_VER = "v72";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -2837,7 +2838,7 @@ function fbDiag(){ const s = S.meta.settings || {};
 const FB_TXT = {
  ko: { btn: "문의", title: "문의 냥이", hello: "무슨 일이냥? 골라 주면 바로 알려 줄게. 해결 안 되면 냥이가 운영자 집까지 물고 간다냥.",
    ph: "여기에 적어 줘 (무엇을 하다가 어떻게 됐는지)", send: "보내기", ok: "해결됐어", no: "그래도 안 돼", other: "다른 문제 / 하고 싶은 말",
-   sent: "냥이가 물고 출발했다냥! 🐾 답장이 오면 여기 빨간 점이 뜬다냥.", queued: "지금은 인터넷이 불안정하다냥. 연결되면 냥이가 바로 출발할게.",
+   sent: "냥이가 물고 출발했다냥! 🐾 운영자가 보통 하루 안에 답장해. 답장이 오면 왼쪽 아래 「문의」에 빨간 점이 뜬다냥.", queued: "지금은 인터넷이 불안정하다냥. 연결되면 냥이가 바로 출발할게.",
    thanks: "다행이다냥! 또 이상하면 언제든 불러.", reply: "운영자 답장 📮", short: "조금만 더 자세히 적어 줄래냥? (무엇을 했는데 → 어떻게 됐는지)", wait: "아직 답장 기다리는 중",
    faq: [
     { k: "bad", q: "문제/뜻이 이상해요", a: "방금 푼 문제를 같이 붙여서 보낼게. 어떤 점이 이상했는지 한 줄만 적어 줘!", direct: true, re: /뜻|의미|틀린|이상한 문제|오답|번역|문제가 이상/ },
@@ -2848,7 +2849,7 @@ const FB_TXT = {
     { k: "idea", q: "이런 기능 있으면 좋겠어요", a: "좋아! 적어 주면 그대로 운영자한테 물고 갈게.", direct: true, re: /기능|추가해|있으면|건의|제안/ } ] },
  ja: { btn: "質問", title: "おたすけネコ", hello: "どうしたニャ？選んでくれたらすぐ答えるニャ。解決しなければ、ネコが運営者の家までくわえていくニャ。",
    ph: "ここに書いてね（何をしていて、どうなったか）", send: "送る", ok: "解決した", no: "まだダメ", other: "ほかの問題 / ひとこと",
-   sent: "ネコがくわえて出発したニャ！🐾 返事が来たら赤い点が出るニャ。", queued: "今はネットが不安定ニャ。つながったらすぐ出発するニャ。",
+   sent: "ネコがくわえて出発したニャ！🐾 ふつう1日以内に返事するニャ。返事が来たら左下の「質問」に赤い点が出るニャ。", queued: "今はネットが不安定ニャ。つながったらすぐ出発するニャ。",
    thanks: "よかったニャ！またいつでも呼んで。", reply: "運営者からの返事 📮", short: "もう少しくわしく書いてくれるニャ？（何をしたら → どうなった）", wait: "返事待ち",
    faq: [
     { k: "bad", q: "問題・意味がおかしい", a: "さっき解いた問題もいっしょに送るニャ。どこがおかしかったか一行で書いてね！", direct: true, re: /意味|おかしい|間違|翻訳/ },
