@@ -631,6 +631,19 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .shop-it .nm{flex:1;min-width:0;font-size:.85rem;line-height:1.25} .shop-it .nm small{display:block;color:var(--muted);font-variant-numeric:tabular-nums} .shop-it .bb{display:flex;flex-direction:column;gap:4px} .shop-it .bb button{padding:3px 8px;font-size:.75rem}
 .pet-none{color:var(--muted);font-weight:600;padding:20px}
 .pet-hint{text-align:center;font-size:.72rem;color:var(--muted);margin:0}
+.aud{display:flex;flex:1 1 100%;align-items:stretch;border:1.5px solid var(--line);border-radius:999px;background:var(--glass,transparent);position:relative;flex-wrap:nowrap;max-width:100%}
+.aud-b{display:inline-flex;flex:1 1 0;justify-content:center;align-items:center;gap:5px;border:0;background:transparent;color:inherit;font:inherit;font-weight:700;font-size:.88rem;padding:10px 8px;cursor:pointer;white-space:nowrap;border-radius:999px;position:relative;z-index:1}
+.aud-b:active{background:var(--accent-soft,rgba(0,0,0,.06))} .aud-i{font-size:1.05rem;line-height:1}
+.dock .aud{margin-top:40px} .aud-sep{width:1.5px;margin:9px 0;background:var(--line);flex:0 0 auto}
+.aud-fw{position:relative;display:flex;flex:1.3 1 0} .aud-fw .aud-b{width:100%} .aud-fw .nm{position:absolute;left:50%;bottom:68%;width:78px;height:auto;transform:translate(-50%,75%) scale(.5);opacity:0;transition:transform .45s cubic-bezier(.5,0,.75,0),opacity .3s .15s;z-index:0;pointer-events:none}
+.aud-fw.on .nm{transform:translate(-50%,0) scale(1);opacity:1;transition:transform .5s cubic-bezier(.2,1.6,.4,1),opacity .15s}
+.aud-fast{background:var(--surface,#fff)} .aud-fw.on .aud-fast{color:var(--accent)}
+.aud-tg{display:inline-block;width:30px;height:18px;border-radius:9px;background:var(--line);position:relative;transition:background .2s;margin-left:2px} .aud-tg b{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.aud-fw.on .aud-tg{background:var(--accent)} .aud-fw.on .aud-tg b{transform:translateX(12px)}
+.grade{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.gr{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 8px 12px;border-radius:20px;border:2px solid var(--line);background:transparent;color:inherit;font:inherit;cursor:pointer;transition:transform .12s}
+.gr:active{transform:scale(.96)} .gr b{font-size:1.05rem;font-weight:800} .gr .nm{width:64px;height:auto}
+.gr-no{border-color:var(--bad);color:var(--bad)} .gr-ok{background:var(--accent);border-color:var(--accent);color:var(--on-accent,#fff)}
 .pet-cos{position:absolute;z-index:5;right:12px;top:calc(64px + env(safe-area-inset-top));height:38px;padding:0 12px;border-radius:19px;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:.85rem;font-weight:700;cursor:pointer;color:inherit}
 .cos-dr{position:absolute;z-index:9;left:0;right:0;bottom:0;max-height:40%;overflow:auto;padding:12px 12px calc(12px + env(safe-area-inset-bottom));background:#fff;border-radius:22px 22px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.18);touch-action:pan-y;animation:cosUp .25s ease-out}
 @keyframes cosUp{from{transform:translateY(100%)}to{transform:none}}
@@ -1184,7 +1197,7 @@ const LANGS = {
 const LADDER = [1, 7, 21, 60, 150];
 /* 암기냥이（cat/melt/ のSVG。cat/melt_wobble.py で生成） */
 const NM_BASE = "cat/";
-const CAT_OF = { cat_jpop:"ask", st_default:"ask", st_happy:"happy", st_surprised:"surprised", st_sleepy:"sleepy", st_love:"love", st_listening:"listen", listen_airpods:"listen", load_run:"think", load_done:"happy" };
+const CAT_OF = { st_aha:"aha", st_gloom:"gloom", st_bulb:"bulb", cat_jpop:"ask", st_default:"ask", st_happy:"happy", st_surprised:"surprised", st_sleepy:"sleepy", st_love:"love", st_listening:"listen", listen_airpods:"listen", load_run:"think", load_done:"happy" };
 const NM_EXT = { cat_jpop:"gif", listen_airpods:"gif", load_run:"gif", load_done:"gif" };
 const nm = (name, px) => `<img class="nm" src="${NM_BASE}melt/cat_${CAT_OF[name] || "ask"}.svg" width="${Math.round(px*1.36)}" height="${px}" alt="" decoding="async">`;
 const say = (name, text, big) => `<div class="say${big ? " big" : ""}">${nm(name, big ? 128 : 64)}<div class="bubble">${text}</div></div>`;
@@ -1470,7 +1483,7 @@ function ttsSpeak(text, slow, uiLang){
   const base = Number(S.meta.settings.rate) || 0.8;
   u.rate = slow ? Math.max(0.35, Math.min(0.55, base * 0.6)) : base;
   const v = pickVoice(); if(v){ u.voice = v; u.lang = v.lang; }
-  if(!slow) u.rate = Math.min(2, u.rate * spK(u.lang));
+  if(!slow && fastOn()) u.rate = Math.min(2, u.rate * 1.2);
   // Safari: cancel の直後に speak すると捨てられることがあるので、話している最中なら少し待つ
   ttsGo(u); return true;
 }
@@ -1915,12 +1928,17 @@ document.addEventListener("click", e => {
   S.meta.settings.handsFree = !S.meta.settings.handsFree; save();
   const it = SES.queue[0]; const c = it && S.cards[it.id]; if(c) renderItem(c, it.mode);
 });
-const listenBtn = (text, label) => canSpeak() && text ? `<button class="btn ghost" type="button" data-say="${esc(text)}">${label || t().listen}</button><button class="btn ghost" type="button" data-say="${esc(text)}" data-slow="1">${t().slow}</button>` : "";
+const fastOn = () => { const st = S.meta.settings; return st.fast == null ? ["ko", "en"].includes(st.lang) : !!st.fast; };
+const listenBtn = (text, label) => { if(!canSpeak() || !text) return ""; const ja = S.meta.settings.ui === "ja", on = fastOn();
+  return `<div class="aud" role="group"><button type="button" class="aud-b" data-say="${esc(text)}"><span class="aud-i">🔊</span>${esc(label || t().listen)}</button><i class="aud-sep"></i><button type="button" class="aud-b" data-say="${esc(text)}" data-slow="1"><span class="aud-i">🐢</span>${esc(t().slow)}</button><i class="aud-sep"></i><span class="aud-fw${on ? " on" : ""}">${nm("st_bulb", 34)}<button type="button" class="aud-b aud-fast" data-fast="${esc(text)}" aria-pressed="${on}"><span class="aud-i">⚡</span>${ja ? "速め" : "빠르게"}<span class="aud-tg"><b></b></span></button></span></div>`; };
 function bindQcat(sy){ const img = sy.querySelector("img.nm"); if(!img) return; const base = img.src, faces = ["happy", "love", "surprised", "happy"];
   const keep = e => { e.preventDefault(); e.stopPropagation(); };
   img.addEventListener("touchstart", e => { keep(e); qTap(); }, { passive: false }); img.addEventListener("mousedown", e => { keep(e); qTap(); }); img.addEventListener("click", keep);
   function qTap(){ img.classList.remove("boing"); void img.offsetWidth; img.classList.add("boing"); img.src = `${NM_BASE}melt/cat_${faces[Math.floor(Math.random() * faces.length)]}.svg`; clearTimeout(img._t); img._t = setTimeout(() => { img.src = base; }, 900); try{ sfxPoyon(.2 + Math.random() * .4); }catch(_){} buzz(10); } }
-function bindSay(box){ box.querySelectorAll("[data-say]").forEach(b => b.onclick = () => { if(!speak(b.dataset.say, { slow: b.dataset.slow === "1" })) toast(t().noVoice); }); }
+function bindSay(box){ box.querySelectorAll("[data-say]").forEach(b => b.onclick = () => { if(!speak(b.dataset.say, { slow: b.dataset.slow === "1" })) toast(t().noVoice); });
+  box.querySelectorAll("[data-fast]").forEach(b => b.onclick = () => { const on = !fastOn(); S.meta.settings.fast = on; save(); track("fast", { on });
+    box.querySelectorAll(".aud-fw").forEach(w => { w.classList.toggle("on", on); const f = w.querySelector("[data-fast]"); if(f) f.setAttribute("aria-pressed", String(on)); });
+    if(on) speak(b.dataset.fast); }); }
 const srcLine = c => c.src ? `<a class="tiny" href="https://tatoeba.org/sentences/show/${encodeURIComponent(c.src)}" target="_blank" rel="noopener">${esc(t().source(c.src))}</a>` : "";
 
 /* 入力式の問題（推測・穴埋め・意味から書く）共通：間違えたら答えを見せて書き写させる */
@@ -2017,7 +2035,8 @@ function askHandsFree(c, mode, promptHTML, target, isGuess){
     speak(c.example || c.word);
     $("#acts").innerHTML = `${listenBtn(c.example || c.word)}<span class="grow"></span>` + (isGuess
       ? `<button class="btn primary" type="button" id="sOk">${x.next}</button>`
-      : `<button class="btn bad" type="button" id="sNo">${x.forgot}</button><button class="btn good" type="button" id="sOk">${x.remembered}</button>`);
+      : "");
+    if(!isGuess){ const gd = document.createElement("div"); gd.className = "grade"; gd.innerHTML = `<button class="gr gr-no" type="button" id="sNo">${nm("st_gloom", 46)}<b>${esc(x.forgot)}</b></button><button class="gr gr-ok" type="button" id="sOk">${nm("st_aha", 46)}<b>${esc(x.remembered)}!</b></button>`; $("#acts").after(gd); }
     bindSay(box);
     $("#sOk").onclick = () => settleItem(true);
     const no = $("#sNo"); if(no) no.onclick = () => settleItem(false);
@@ -2855,7 +2874,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v81";
+const APP_VER = "v82";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
