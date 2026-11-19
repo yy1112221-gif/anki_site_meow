@@ -6,19 +6,19 @@
 <meta name="theme-color" content="#f3f3f0" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#121317" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="암기냥이">
-<title>암기냥이 — 커닝 말고, 진짜로 외우는 냥이</title>
-<meta name="description" content="말랑한 냥이가 잊어버리기 직전에 다시 물어보는 단어 암기 앱. JLPT N5~N1 전 단어 한국어 뜻 수록, 무료, 설치 없이 바로.">
+<title>암기냥이 — 딱 필요한 만큼만 외우자냥</title>
+<meta name="description" content="커닝할 필요 없이, 딱 필요한 만큼만. 잊기 직전에만 다시 묻고 나머지 시간은 말랑 냥이랑 놀기. JLPT N5~N1 7,848단어 무료.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="암기냥이">
-<meta property="og:title" content="암기냥이 — 커닝 말고, 진짜로 외우는 냥이">
-<meta property="og:description" content="JLPT 단어 7,848개 · 잊기 직전에 다시 묻는 간격 반복 · 공부하면 냥이에게 간식을. 무료, 설치 없이 바로.">
+<meta property="og:title" content="암기냥이 — 딱 필요한 만큼만 외우자냥">
+<meta property="og:description" content="최소 암기, 최대 냥이. 잊기 직전에만 다시 묻는 JLPT 단어 7,848개 · 공부하면 간식 · 무료">
 <meta property="og:url" content="https://yy1112221-gif.github.io/anki_site_meow/">
 <meta property="og:image" content="https://yy1112221-gif.github.io/anki_site_meow/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="암기냥이 — 커닝 말고, 진짜로 외우는 냥이">
-<meta name="twitter:description" content="JLPT 단어 7,848개 · 잊기 직전에 다시 묻는 간격 반복 · 무료">
+<meta name="twitter:title" content="암기냥이 — 딱 필요한 만큼만 외우자냥">
+<meta name="twitter:description" content="최소 암기, 최대 냥이. JLPT 단어 7,848개 · 무료">
 <meta name="twitter:image" content="https://yy1112221-gif.github.io/anki_site_meow/og.png">
 <meta name="robots" content="noindex">
 <link rel="icon" href="cat/melt/cat_ask.svg" type="image/svg+xml">
@@ -541,6 +541,8 @@ body.petopen{overflow:hidden}
 .tour{position:fixed;inset:0;z-index:60} .tour-hole{position:fixed;border-radius:18px;box-shadow:0 0 0 9999px rgba(8,10,14,.62);transition:all .3s ease;pointer-events:none}
 .tour-tip{position:fixed;left:16px;right:16px;max-width:420px;margin:0 auto;padding:14px 16px;border-radius:18px;background:var(--surface,#fff);color:var(--ink);box-shadow:0 10px 30px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:10px;align-items:flex-end} .tour-tip p{margin:0;align-self:stretch;font-weight:600;line-height:1.5}
 .bubble.tapme{cursor:pointer;-webkit-user-select:none;user-select:none} .bubble.pop{animation:bubPop .35s cubic-bezier(.3,1.7,.5,1)} @keyframes bubPop{0%{transform:scale(.88)}100%{transform:none}}
+.meltb{font-weight:700;color:var(--ink)} .meltbar{position:relative;height:6px;border-radius:99px;background:rgba(127,127,127,.18);margin:0 2px 8px;overflow:visible}
+.meltbar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,#9fb4c8,#f6b7c8 50%,#ff8fb1)} .meltbar s{position:absolute;top:-2px;width:2px;height:10px;background:var(--muted);opacity:.35;border-radius:1px}
 .row.tight{margin:-2px 0 4px;justify-content:center}
 nav.tabs{display:none!important} #forecast,#view-how .ladder,#view-how [data-i18n="forecastTitle"],#view-how [data-i18n="ladderTitle"],#view-how [data-i18n="ladderHelp"]{display:none!important}
 nav.subnav{position:fixed;z-index:30;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:6px;pointer-events:none}
@@ -1510,9 +1512,9 @@ function buildSession(){
 function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1); while(S.meta.days[d]){ n++; d = addDays(d, -1); } return n; }
 
 function renderStart(){
-  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900);
+  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck();
   const box = $("#sessionStart"), pos = box.querySelector(".poster");
-  box.querySelectorAll(".say .bubble").forEach(b => { b.classList.add("tapme"); b.onclick = () => { const L = t().homeTalk || []; if(!L.length) return; let i; do{ i = Math.floor(Math.random() * L.length); }while(L.length > 1 && i === renderStart.last); renderStart.last = i;
+  box.querySelectorAll(".say .bubble").forEach(b => { b.classList.add("tapme"); b.onclick = () => { const st = meltStage(), L = st ? meltL().home[st] : (t().homeTalk || []); if(!L.length) return; let i; do{ i = Math.floor(Math.random() * L.length); }while(L.length > 1 && i === renderStart.last); renderStart.last = i;
       b.textContent = L[i]; b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); try{ sfxPoyon(.15); }catch(e){} }; });
   if(cardsHere().length){ bindPetOpen(box);
     const x = t(), notes = [], over = dueAll().length - dueCards().length, lang = S.meta.settings.lang;
@@ -1547,7 +1549,8 @@ function renderSide(){
 function actRow(mainBtn, petFirst){   // 학습하기와 간식 주기를 같은 층위로 나란히
   const n = petCount(), x = pt(), p = petState(), sk = streak();
   const pet = `<button class="btn big petbtn${petFirst && n ? " primary" : ""}" type="button" data-petopen>🍖 ${esc(x.give)}${n ? `<b>${n}</b>` : ""}</button>`;
-  return `<div class="actrow">${mainBtn}${pet}</div><p class="petline">🔥 ${esc(x.streakN(sk))} · ${esc(x.ranks[petTier(sk)])} · <span>${esc(petNextInfo())}</span></p>`; }
+  const mp = meltPct(), ml = meltL();
+  return `<div class="actrow">${mainBtn}${pet}</div><p class="petline">🔥 ${esc(x.streakN(sk))} · <b class="meltb">${esc(ml.label)} ${mp}% · ${esc(ml.names[meltStage()])}</b> · <span>${esc(petNextInfo())}</span></p><div class="meltbar" aria-hidden="true"><i style="width:${mp}%"></i>${MELT_STEPS.slice(1).map(v => `<s style="left:${v / MELT_STEPS[3] * 100}%"></s>`).join("")}</div>`; }
 async function renderOnboard(box){   // 첫 시작: ① 배울 언어 ② 지금 실력 ③ 시작 — 한 화면에서 순서대로
   const x = t(), lang = S.meta.settings.lang;
   box.innerHTML = `<div class="onb">${say("st_default", esc(x.obHi))}
@@ -1593,7 +1596,7 @@ function renderSupBox(){ const el = $("#supBox"); if(!el) return; const ko = S.m
   el.innerHTML = `<div class="sup-row">${nm("st_love", 52)}<div><b>${ko ? "암기냥이는 무료예요" : "暗記ニャンは無料です"}</b><p class="small muted" style="margin:.2em 0 0">${ko ? "광고도 없어요. 마음에 들면 친구에게 알려 주세요." : "広告もありません。気に入ったら友達に教えてください。"}</p></div></div>
     <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button>${DONATE_URL ? `<a class="btn primary" href="${DONATE_URL}" target="_blank" rel="noopener">🍖 ${ko ? "냥이에게 츄르 사주기" : "ネコにおやつを"}</a>` : ""}</div>
     <p class="tiny muted" style="margin:0"><a href="privacy.html">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a></p>`;
-  $("#supShare").onclick = async () => { const url = "https://yy1112221-gif.github.io/anki_site_meow/?ref=invite", text = ko ? "커닝 말고 진짜로 외우는 냥이 🐾 JLPT 단어 무료" : "カンニングじゃなく本当におぼえるネコ 🐾";
+  $("#supShare").onclick = async () => { const url = "https://yy1112221-gif.github.io/anki_site_meow/?ref=invite", text = ko ? "딱 필요한 만큼만 외우자냥 🐾 JLPT 단어 무료" : "必要な分だけおぼえるニャ 🐾";
     try{ if(navigator.share){ await navigator.share({ title: "암기냥이", text, url }); return; } await navigator.clipboard.writeText(text + " " + url); toast(ko ? "링크를 복사했어요" : "リンクをコピーしました"); }catch(e){} }; }
 function setAddPanel(k){   // 단어 추가: 스크롤 대신 메뉴에서 하나 고르기
   const v = $("#view-add"); if(!v) return; k = k || v.dataset.panel || "preset"; v.dataset.panel = k;
@@ -1602,6 +1605,18 @@ function setAddPanel(k){   // 단어 추가: 스크롤 대신 메뉴에서 하�
   const dc = $("#addDeckCard"); if(dc) dc.classList.toggle("hidden", k === "preset" || k === "slang"); }
 document.addEventListener("click", e => { const b = e.target.closest(".addmenu .am"); if(!b) return; setAddPanel(b.dataset.panel);
   const pn = document.querySelector(`.addpanel[data-panel="${b.dataset.panel}"]`); if(pn) setTimeout(() => pn.scrollIntoView({ behavior: "smooth", block: "start" }), 30); });
+/* 함락도: 공부한 날 +1, 빠진 날 -1.5 (최소 0). 단계가 오를수록 근엄 → 흔들림 → 녹음 → 야옹 */
+const MELT = {"ko": {"names": ["근엄", "흔들림", "녹는 중", "함락"], "up": ["", "…냥이의 근엄함에 금이 갔다", "냥이가 녹기 시작했다", "냥이가 완전히 함락됐다"], "down": "하루 빠져서 냥이가 다시 조금 딱딱해졌다…", "home": [null, ["…오늘도 왔군. 기다린 건 아니다. 절대.", "단어는 최소한만. 그게 나의… 냐… 아니, 나의 방침이다.", "쓰다듬는 건 금지다. …3초는 허락하지.", "너의 성실함에 내 근엄함이 조금 흔들린다.", "딱 필요한 만큼만 외워라. 나머진… 놀아 줘도 된다.", "간식 냄새가 나면 집중이 안 된다. 이건 약점이 아니다.", "어제 안 왔으면 서운할 뻔… 아니, 아무것도 아니다.", "…냥. 방금 건 기침이다."], ["왔다냥…? 아, 아니 왔군. 왔다.", "오늘도 조금만 외우자냥. 진짜 조금만.", "근엄함이 녹아서 바닥에 흘렀다냥…", "너 없으면 심심하다… 이건 비밀이다냥.", "딱 필요한 것만 외우면 돼. 나머진 나랑 놀자냥.", "배 만져도 된다냥. 오늘만… 아니 매일.", "간식… 간식 생각만 해도 녹는다냥.", "하루 빠지면 다시 딱딱해질지도 모른다냥. 그러니까 내일도 와."], ["야옹.", "애옹… 애옹…", "냐아앙~ (공부하자는 뜻)", "미야… 왔다… 좋다…", "야옹 야옹 (단어 3개만)", "고롱고롱…", "냥! 냥냥! (간식)", "…애옹. (원래는 근엄했던 것 같다)", "뮤우… (내일도 와)"]], "eat": [null, ["…맛있군. 칭찬은 아니다. 맛 보고서다.", "하나 더 줘도 된다. 명령은 아니고… 부탁도 아니고…", "으음… 꼬리가 멋대로 움직인다.", "이 정도로 내가 넘어갈 것 같나… 냠.", "…좋다. 아주 좋다. 흠흠."], ["냠냠… 행복하다냥…", "이거 최고다냥… 더 줘…", "녹는다… 몸이 녹는다냥…", "너 던지는 거 좋아한다냥.", "냐하… 근엄이 뭐였더라…"], ["냐아아…", "고롱고롱고롱…", "애옹!! 애옹!!", "냠냠냠 야옹", "미야아앙~"]], "today": [null, "오늘은 복습 {a}장, 새 단어 {b}개. …빨리 끝내고 와라. 기다리는 건 아니다.", "복습 {a}장, 새 단어 {b}개다냥. 금방 끝나. 끝나면 놀자냥.", "냥! (복습 {a}장 · 새 단어 {b}개)"], "done": [null, "잘했다. …머리 정도는 쓰다듬어도 된다.", "잘했다냥! 이제 간식 시간이다냥…", "야옹~ 애옹~ (최고)"], "none": [null, "오늘은 할 게 없다. …그래도 잠깐 있다 가도 된다.", "오늘은 쉬는 날이다냥. 그냥 옆에 있어 줘.", "고롱… (쉬는 날)"], "label": "함락도"}, "ja": {"names": ["威厳", "ゆらぎ", "とろけ中", "陥落"], "up": ["", "…ネコの威厳にひびが入った", "ネコがとろけ始めた", "ネコが完全に陥落した"], "down": "一日休んだので、ネコが少し固くなった…", "home": [null, ["…今日も来たか。待っていたわけではない。断じて。", "単語は最小限でいい。それがオレの…ニャ…いや、方針だ。", "撫でるのは禁止だ。…3秒なら許そう。", "おまえの真面目さに、オレの威厳が少し揺らいでいる。", "必要な分だけ覚えろ。残りは…遊んでやってもいい。", "おやつの匂いがすると集中できん。弱点ではない。", "昨日来なかったら寂しかった…いや、何でもない。", "…ニャ。今のは咳だ。"], ["来たニャ…？ あ、いや、来たか。", "今日もちょっとだけ覚えようニャ。ほんとにちょっと。", "威厳が溶けて床に流れたニャ…", "おまえがいないと退屈ニャ…これは秘密ニャ。", "必要なのだけ覚えればいい。あとはオレと遊ぶニャ。", "お腹さわってもいいニャ。今日だけ…いや毎日。", "おやつ…考えるだけで溶けるニャ。", "一日休むとまた固くなるかもニャ。だから明日も来て。"], ["ニャー。", "にゃーん…にゃーん…", "ニャアアン～（勉強しよって意味）", "みゃ…来た…うれしい…", "ニャーニャー（単語3つだけ）", "ゴロゴロ…", "ニャッ！ニャニャッ！（おやつ）", "…にゃーん。（昔は威厳があった気がする）", "みゅう…（明日も来て）"]], "eat": [null, ["…うまいな。褒めてはいない。味の報告だ。", "もう一つくれてもいい。命令ではない…お願いでもない…", "むう…しっぽが勝手に動く。", "この程度でオレが落ちると思うか…ニャム。", "…いい。とてもいい。ゴホン。"], ["ニャムニャム…しあわせニャ…", "これ最高ニャ…もっと…", "溶ける…体が溶けるニャ…", "おまえの投げるの好きニャ。", "ニャハ…威厳ってなんだっけ…"], ["ニャアア…", "ゴロゴロゴロ…", "にゃーん！！にゃーん！！", "ニャムニャム ニャー", "みゃあああん～"]], "today": [null, "今日は復習{a}枚、新しい単語{b}つ。…早く終わらせて来い。待ってはいない。", "復習{a}枚、新しい単語{b}つニャ。すぐ終わる。終わったら遊ぶニャ。", "ニャッ！（復習{a}枚・新しい単語{b}つ）"], "done": [null, "よくやった。…頭くらいなら撫でてもいい。", "よくできたニャ！おやつの時間ニャ…", "ニャ～ にゃーん～（最高）"], "none": [null, "今日はやることがない。…でも少しいてもいいぞ。", "今日はお休みニャ。そばにいて。", "ゴロ…（お休み）"], "label": "陥落度"}};
+const MELT_STEPS = [0, 7, 21, 45];
+function meltPoints(){ const ds = Object.keys(S.meta.days || {}).filter(d => S.meta.days[d]).sort(); if(!ds.length) return 0; let p = 0, d = ds[0]; const td = today();
+  while(d <= td){ if(S.meta.days[d]) p += 1; else if(d !== td) p = Math.max(0, p - 1.5); d = addDays(d, 1); } return p; }
+function meltStage(p){ p = p == null ? meltPoints() : p; let st = 0; MELT_STEPS.forEach((v, i) => { if(p >= v) st = i; }); return st; }
+function meltPct(p){ p = p == null ? meltPoints() : p; return Math.min(100, Math.round(p / MELT_STEPS[3] * 100)); }
+function meltL(){ return MELT[S.meta.settings.ui] || MELT.ko; }
+function meltLine(kind, a, b){ const st = meltStage(), L = meltL()[kind]; if(!st || !L || !L[st]) return null; const v = L[st];
+  return Array.isArray(v) ? v[Math.floor(Math.random() * v.length)] : String(v).replace("{a}", a).replace("{b}", b); }
+function meltCheck(){ const st = meltStage(), seen = S.meta.meltSeen; if(seen == null){ S.meta.meltSeen = st; save(); return; }
+  if(st !== seen){ const m = meltL(); S.meta.meltSeen = st; save(); setTimeout(() => toast(st > seen ? "🐾 " + m.up[st] : "🧊 " + m.down), 1200); } }
 function renderStartInner(){
   const box = $("#sessionStart"), x = t();
   const due = dueCards().length, nq = Math.min(newQuota(), newCandidates().length) + scriptNewToday();
@@ -1610,7 +1625,7 @@ function renderStartInner(){
   if(due + nq === 0){
     const next = cardsHere().filter(c => !c.mastered && c.due).map(c => c.due).sort()[0];
     const wantPreset = PRESET_LANGS.includes(S.meta.settings.lang) && !decks().some(d => d.preset && !d.preset.startsWith("script-"));
-    box.innerHTML = `${heroHTML(S.meta.days[today()] ? x.doneTitle : x.noneTitle, next ? x.nextReview(next, diffDays(today(), next)).replace(/<[^>]+>/g, "") : "", S.meta.days[today()] ? 100 : 0)}${actRow(canMore() && !wantPreset ? `<button class="btn primary big" id="moreBtn" type="button">＋ ${esc(x.moreBtn)}</button>` : `<button class="btn big${wantPreset ? " primary" : ""}" id="goAdd2" type="button">＋ ${wantPreset ? esc(x.presetTitle) : x.addMore}</button>`)}${canMore() && !wantPreset ? `<div class="row tight"><button class="linkbtn small" type="button" id="goAdd2">${x.addMore}</button></div>` : ""}${say(S.meta.days[today()] ? "st_love" : "st_sleepy", esc(S.meta.days[today()] ? x.nmDone : x.nmNone))}${deckChips()}`;
+    box.innerHTML = `${heroHTML(S.meta.days[today()] ? x.doneTitle : x.noneTitle, next ? x.nextReview(next, diffDays(today(), next)).replace(/<[^>]+>/g, "") : "", S.meta.days[today()] ? 100 : 0)}${actRow(canMore() && !wantPreset ? `<button class="btn primary big" id="moreBtn" type="button">＋ ${esc(x.moreBtn)}</button>` : `<button class="btn big${wantPreset ? " primary" : ""}" id="goAdd2" type="button">＋ ${wantPreset ? esc(x.presetTitle) : x.addMore}</button>`)}${canMore() && !wantPreset ? `<div class="row tight"><button class="linkbtn small" type="button" id="goAdd2">${x.addMore}</button></div>` : ""}${say(S.meta.days[today()] ? "st_love" : "st_sleepy", esc(S.meta.days[today()] ? (meltLine("done") || x.nmDone) : (meltLine("none") || x.nmNone)))}${deckChips()}`;
     { const mb = $("#moreBtn"); if(mb) mb.onclick = studyMore; }
     $("#goAdd2").onclick = async () => { showView("add"); if(PRESET_LANGS.includes(S.meta.settings.lang)){ setAddPanel("preset"); await renderPresets(); $("#presetCard").scrollIntoView({ behavior: "smooth", block: "start" }); } };
     return;
@@ -1622,7 +1637,7 @@ function renderStartInner(){
     $("#restartBtn").onclick = () => { delete S.meta.session; save(); startSession(); };
     return;
   }
-  box.innerHTML = `${heroHTML(x.todayTitle, x.todayCounts(due, nq).replace(/<\/?b>/g, ""), 0)}${actRow(`<button class="btn primary big" id="startBtn" type="button">▶ ${x.start}</button>`)}${say("cat_jpop", esc(x.nmToday(due, nq)))}${todayNewPreview()}${deckChips()}`;
+  box.innerHTML = `${heroHTML(x.todayTitle, x.todayCounts(due, nq).replace(/<\/?b>/g, ""), 0)}${actRow(`<button class="btn primary big" id="startBtn" type="button">▶ ${x.start}</button>`)}${say("cat_jpop", esc(meltLine("today", due, nq) || x.nmToday(due, nq)))}${todayNewPreview()}${deckChips()}`;
   $("#startBtn").onclick = startSession;
 }
 function startSession(){
@@ -1694,14 +1709,14 @@ function shareCardImg(n){ return new Promise(res => { const W = 1080, H = 1350, 
   const bg = g.createRadialGradient(W * .7, H * .25, 50, W * .6, H * .4, H); bg.addColorStop(0, "#fffdf7"); bg.addColorStop(.6, "#f3efe6"); bg.addColorStop(1, "#e4ddcf"); g.fillStyle = bg; g.fillRect(0, 0, W, H);
   const font = (w, px) => `${w} ${px}px "Noto Sans KR","Noto Sans JP","Apple SD Gothic Neo","Hiragino Sans",sans-serif`;
   g.fillStyle = "#3dc38f"; g.font = font(800, 44); g.fillText((ko ? "암기냥이 · " : "暗記ニャン · ") + langName(), 90, 150);
-  g.fillStyle = "#1d2b27"; g.font = font(900, 92); g.fillText(ko ? "오늘 커닝 없이" : "今日はカンニングなしで", 90, 290);
+  g.fillStyle = "#1d2b27"; g.font = font(900, 92); g.fillText(ko ? "오늘 딱" : "今日はたった", 90, 290);
   g.font = font(900, 230); const num = String(n), nw = g.measureText(num).width; g.fillStyle = "#ffd84d"; g.fillRect(84, 450, nw + 30, 70); g.fillStyle = "#1d2b27"; g.fillText(num, 96, 520);
-  g.font = font(900, 92); g.fillText(ko ? "개 외웠다냥" : "語おぼえたニャ", 120 + nw, 520);
-  g.font = font(700, 50); g.fillStyle = "#5c5548"; g.fillText(ko ? "🔥 연속 " + sk + "일째" : "🔥 連続 " + sk + "日目", 90, 630);
+  g.font = font(900, 92); g.fillText(ko ? "개만 외웠다냥" : "語だけおぼえたニャ", 120 + nw, 520);
+  g.font = font(700, 50); g.fillStyle = "#5c5548"; g.fillText((ko ? "🔥 연속 " + sk + "일째 · " : "🔥 連続 " + sk + "日目 · ") + meltL().label + " " + meltPct() + "%", 90, 630);
   let done = false; const im = new Image(); im.onload = () => { const w = 860, h = w * im.height / im.width; g.drawImage(im, (W - w) / 2 + 40, H - h - 190, w, h); fin(); }; im.onerror = fin; im.src = "cat/melt/cat_love.svg"; setTimeout(fin, 2500);
-  function fin(){ if(done) return; done = true; g.fillStyle = "#1d2b27"; g.fillRect(0, H - 170, W, 170); g.fillStyle = "#fff"; g.font = font(800, 48); g.fillText(ko ? "커닝 말고, 진짜로 외우는 냥이" : "カンニングじゃなく、本当におぼえるネコ", 90, H - 92);
+  function fin(){ if(done) return; done = true; g.fillStyle = "#1d2b27"; g.fillRect(0, H - 170, W, 170); g.fillStyle = "#fff"; g.font = font(800, 48); g.fillText(ko ? "최소 암기, 최대 냥이" : "最小の暗記、最大のネコ", 90, H - 92);
     g.fillStyle = "#3dc38f"; g.font = font(700, 32); g.fillText("yy1112221-gif.github.io/anki_site_meow", 90, H - 40); cv.toBlob(res, "image/png"); } }); }
-async function shareResult(n){ const x = t(), ko = S.meta.settings.ui === "ko", url = "https://yy1112221-gif.github.io/anki_site_meow/?ref=share", text = ko ? `오늘 커닝 없이 ${n}개 외웠다냥 🐾 (연속 ${streak()}일)` : `今日はカンニングなしで${n}語おぼえたニャ 🐾`;
+async function shareResult(n){ const x = t(), ko = S.meta.settings.ui === "ko", url = "https://yy1112221-gif.github.io/anki_site_meow/?ref=share", text = ko ? `오늘 딱 ${n}개만 외웠다냥 🐾 나머진 냥이랑 놀았다 (연속 ${streak()}일)` : `今日はたった${n}語だけおぼえたニャ 🐾`;
   try{ const blob = await shareCardImg(n), file = new File([blob], "amginyang.png", { type: "image/png" });
     if(navigator.canShare && navigator.canShare({ files: [file] })){ await navigator.share({ files: [file], text: text + "\n" + url }); return; }
     if(navigator.share){ await navigator.share({ text, url }); return; }
@@ -3077,7 +3092,7 @@ function openPet(welcome){
     applySndMode(); if(PMASTER) PMASTER.gain.value = petSoundOn() ? 1 : 0; petMsg(pt().sndMode[m], 2600); if(petSoundOn()){ pa(); sfxPoyon(.3); } };
   const tb = $("#petTest"); if(tb){ tb.onclick = () => { const s = streak(), top = petTier(s); for(let i = 0; i < 10; i++){ const c = PET_ITEMS.filter(it => it.t <= top); const it = c[Math.floor(Math.random() * c.length)]; p.inv[it.id] = (p.inv[it.id] || 0) + 1; } save(); petTray(); };
     $("#petTestS").onchange = e => { const n = Math.max(0, Math.min(200, parseInt(e.target.value, 10) || 0)); S.meta.days = {}; for(let i = 0; i < n; i++) S.meta.days[addDays(today(), -i)] = true; save(); openPet(); }; }
-  petStart(); petTray(); el.classList.remove("enter"); void el.offsetWidth; el.classList.add("enter"); if(welcome === true) setTimeout(() => petMsg(pt().welcome, 3200), 450);
+  petStart(); petTray(); el.classList.remove("enter"); void el.offsetWidth; el.classList.add("enter"); if(welcome === true) setTimeout(() => petMsg(meltLine("done") || pt().welcome, 3200), 450);
   const top = petTier(streak()); if(top > p.seenTier){ const its = PET_ITEMS.filter(i => i.t === top); p.seenTier = top; save(); setTimeout(() => { petMsg(`${x.unlock} ${its.map(i => i.e || "").join("")} ${its.map(itName).join("・")}`, 3200); sfxFanfare(); }, 500); }
   else if(!petCount()) petMsg(x.empty, 4200);
 }
@@ -3643,7 +3658,7 @@ function whaleDraw(st, ctx){ const w = st.whale, W = st.W, H = st.H, t = w.t, c 
   w.drops.forEach(d => { ctx.globalAlpha = Math.max(0, Math.min(1, d.life * 1.4)); ctx.fillStyle = "#bfeaff"; ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "rgba(255,255,255,.8)"; ctx.beginPath(); ctx.arc(d.x - d.r * .3, d.y - d.r * .3, d.r * .35, 0, Math.PI * 2); ctx.fill(); }); ctx.globalAlpha = 1; }
 function petTalkEat(){ const st = PET; if(!st) return; const now = performance.now(), first = !st.talked;
   if(!first && (Math.random() > .4 || now - (st.talkAt || 0) < 7000)) return; st.talked = 1; st.talkAt = now;
-  setTimeout(() => { const m = $("#petMsg"); if(!m || (m.classList.contains("show") && !first)) return; const L = pt().eatTalk || [], sl = Math.random() < .25 && slangLine();
+  setTimeout(() => { const m = $("#petMsg"); if(!m || (m.classList.contains("show") && !first)) return; const ms = meltStage(), L = ms ? meltL().eat[ms] : (pt().eatTalk || []), sl = ms < 3 && Math.random() < .25 && slangLine();
     let i; do{ i = Math.floor(Math.random() * L.length); }while(L.length > 1 && i === st.talkLast); st.talkLast = i; petMsg(sl || L[i], 3000); }, first ? 1400 : 1100); }
 function petImpact(F, hx, hy, it, mul, labels){
   const st = PET, now = performance.now(); if(it && !(it.id === "whale" && !it._egg)) petTalkEat();

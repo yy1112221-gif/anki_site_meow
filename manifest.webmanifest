@@ -1,7 +1,7 @@
 {
-  "name": "암기냥이 — 진짜로 외우는 냥이",
+  "name": "암기냥이 — 딱 필요한 만큼만",
   "short_name": "암기냥이",
-  "description": "잊어버리기 직전에 다시 물어보는 단어 암기 앱 (JLPT·스페인어·한국어)",
+  "description": "커닝할 필요 없이, 딱 필요한 만큼만 외우는 단어 앱. 나머진 냥이랑 놀기.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
