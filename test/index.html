@@ -2830,7 +2830,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v72";
+const APP_VER = "v73";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -2974,7 +2974,7 @@ function moveBanner(){ if(!MOVE_ON || !isOldHome() || $("#moveBar")) return; con
 
 /* ════════ 로그인(기록 지키기): Supabase Auth — 구글·카카오·애플·LINE. 로그인하면 계정에 동기화 코드를 묶어 어느 기기에서든 같은 기록 ════════
    로그인 없이도 전부 쓸 수 있음. 서버의 user_link 표에는 동기화 코드만 저장(본인만 읽기). 공급자는 Supabase 설정에서 켠 것만 버튼이 보임 */
-const LINE_PROVIDER = "";   // Supabase에 LINE(사용자 지정 OIDC)을 만들면 "custom:line" 처럼 식별자를 넣기
+const LINE_PROVIDER = "custom:line-login";   // Supabase에 LINE(사용자 지정 OIDC)을 만들면 "custom:line" 처럼 식별자를 넣기
 let SBA = null, AUTH_USER = null, AUTH_PROV = null;
 async function sbAuth(){ if(SBA) return SBA; if(!window.supabase){ await loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"); }
   SBA = window.supabase.createClient(SB_URL, SB_KEY, { auth: { flowType: "pkce", persistSession: true, detectSessionInUrl: true, storageKey: "meowca-auth" } });
