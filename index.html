@@ -169,6 +169,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .su-wheel{position:relative;height:220px;overflow-y:auto;scroll-snap-type:y mandatory;border-radius:18px;background:var(--surface,#fff);border:2px solid var(--glass-edge,#ddd);padding:88px 0;-webkit-mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent)}
 .su-y{height:44px;line-height:44px;text-align:center;font-size:1.15rem;font-weight:700;color:var(--muted);scroll-snap-align:center;cursor:pointer} .su-y.on{color:var(--ink);font-size:1.6rem;font-weight:900}
 .su-row{display:flex;justify-content:space-between;align-items:center} .su-note{font-size:.8rem;color:var(--muted);text-align:center;margin:0} .su-back{align-self:flex-start;font-size:.85rem}
+.movebar{position:fixed;left:10px;right:10px;top:calc(8px + env(safe-area-inset-top));z-index:85;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:var(--surface,#fff);border:2px solid var(--accent);box-shadow:0 8px 24px rgba(0,0,0,.15);font-weight:700;font-size:.9rem} .movebar span{flex:1}
 .setcorner{margin-top:4px;opacity:.75} .setcorner label{display:inline-flex;align-items:center;gap:4px}
 .bubble.nerd{color:var(--ink);font-size:1.06rem;line-height:1.55;padding:14px 16px;min-height:6.4em;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.18),0 0 0 3px var(--accent);animation:nerdIn .18s ease-out;transform-origin:left bottom}
 .bubble.nerd.typing::after{content:"▌";animation:nerdCaret .5s steps(1) infinite;margin-left:1px;color:var(--accent)}
@@ -1536,7 +1537,7 @@ function buildSession(){
 function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1); while(S.meta.days[d]){ n++; d = addDays(d, -1); } return n; }
 
 function renderStart(){
-  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); }
+  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); moveIn(); setTimeout(moveBanner, 600); }
   const box = $("#sessionStart"), pos = box.querySelector(".poster");
   box.querySelectorAll(".say .bubble").forEach(b => { b.classList.add("tapme"); b.onclick = () => { if(NERD_ON) return; if(Math.random() < .08 && nerdPop(b)) return; if(Math.random() < .3){ b.textContent = sciLine(); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); try{ sfxPoyon(.15); }catch(e){} return; } const st = meltStage(), L = st ? meltL().home[st] : (t().homeTalk || []); if(!L.length) return; let i; do{ i = Math.floor(Math.random() * L.length); }while(L.length > 1 && i === renderStart.last); renderStart.last = i;
       b.textContent = L[i]; b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); try{ sfxPoyon(.15); }catch(e){} }; });
@@ -1653,7 +1654,7 @@ function nerdPop(b){ if(NERD_ON || !b) return false; NERD_ON = true; const N = N
 const SETUP_T = {
  ko: { hi: "…왔군. 세 가지만 탁탁탁 골라라.", ui: "화면 언어", learn: "배울 언어", born: "태어난 해", ok: "이걸로", skip: "건너뛰기", tut: "1분 튜토리얼 볼래?", tutNote: "나중에 설정에서 다시 볼 수 있으니 안심해라냥", back: "← 뒤로" },
  ja: { hi: "…来たか。三つだけ、ポンポンポンと選べ。", ui: "表示する言語", learn: "学ぶ言語", born: "生まれた年", ok: "これで", skip: "スキップ", tut: "1分チュートリアル見る？", tutNote: "あとで設定からまた見られるから安心するニャ", back: "← 戻る" } };
-const needSetup = () => !S.meta.setup && !Object.keys(S.cards).length && !Object.keys(S.meta.days || {}).length && !syncOn();
+const needSetup = () => !/move=/.test(location.hash) && !S.meta.setup && !Object.keys(S.cards).length && !Object.keys(S.meta.days || {}).length && !syncOn();
 function maybeSetup(){ if(!needSetup() || $("#setupBox")) return; const st = S.meta.settings, box = document.createElement("div"); box.id = "setupBox"; box.setAttribute("role", "dialog"); document.body.appendChild(box);
   let step = 0; const T0 = Date.now(); const Y = new Date().getFullYear(), years = []; for(let y = Y - 6; y >= Y - 80; y--) years.push(y);
   const draw = () => { const x = SETUP_T[st.ui] || SETUP_T.ko, tt = t(); let body = "";
@@ -2824,7 +2825,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v70";
+const APP_VER = "v71";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -2932,6 +2933,39 @@ function evBoot(){ const q = new URLSearchParams(location.search), s = S.meta.se
   const _fo = fbOpen; fbOpen = function(){ track("help_open"); return _fo.apply(this, arguments); };
   const _np = nerdPop; nerdPop = function(b){ const r = _np.apply(this, arguments); if(r) track("nerd"); return r; };
   const _ap = addPreset; addPreset = function(lang, lv){ track("preset", { lang, lv }); return _ap.apply(this, arguments); }; }
+
+/* ════════ 새 집으로 이사: 옛 주소(github.io) → meowca.app. 기록을 동기화 서버에 올려 새 주소에서 받아 옴 ════════
+   옛 주소의 기록은 지우지 않고 그대로 남김(되돌릴 수 있게). 새 주소는 기록이 비어 있을 때만 통째로 받음 */
+const NEW_HOME = (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get("newhome")) || "https://meowca.app/";   // 테스트용 바꿔치기는 내 컴퓨터에서만
+const MOVE_ON = true;   // false 로 바꾸면 옛 주소의 이사 안내가 꺼짐
+const isOldHome = () => /github\.io$/.test(location.hostname) || new URLSearchParams(location.search).has("oldhome");
+async function moveOut(btn){ const ko = S.meta.settings.ui !== "ja";
+  try{ if(btn){ btn.disabled = true; btn.textContent = ko ? "짐 싸는 중…" : "荷造り中…"; }
+    if(!(S.meta.sync && S.meta.sync.code)){ S.meta.sync = { code: newCode() }; save(); }
+    const code = S.meta.sync.code, id = await codeId(code);
+    const got = await sbRpc("sync_get", { p_id: id }); if(got && got.data) mergeData(got.data);
+    await sbRpc("sync_put", { p_id: id, p_data: payload() });
+    const chk = await sbRpc("sync_get", { p_id: id }); const n = Object.keys(S.cards).length;
+    if(!chk || !chk.data || Object.keys(chk.data.cards || {}).length !== n) throw new Error("verify");
+    S.meta.movedAt = Date.now(); S.meta.sync.lastAt = Date.now(); save(); track("move_out", { n });
+    location.href = NEW_HOME + "#move=" + encodeURIComponent(code);
+  }catch(e){ if(btn){ btn.disabled = false; btn.textContent = ko ? "다시 시도" : "もう一度"; } toast(ko ? "이사 실패: 인터넷 연결을 확인해 주세요. 기록은 그대로 있어요." : "引っ越し失敗：ネット接続を確認してください。記録はそのままです。"); } }
+async function moveIn(){ const m = location.hash.match(/move=([^&]+)/); if(!m) return false; const code = decodeURIComponent(m[1]);
+  const ko = (navigator.language || "").toLowerCase().startsWith("ko");
+  try{ let got = null; for(let i = 0; i < 4 && !(got && got.data && got.data.cards); i++){ if(i) await new Promise(r => setTimeout(r, 1500 * i)); try{ got = await sbRpc("sync_get", { p_id: await codeId(code) }); }catch(_){} }
+    if(!got || !got.data || !got.data.cards) throw new Error("none");
+    history.replaceState(null, "", location.pathname + location.search);
+    if(!Object.keys(S.cards).length){ const d = got.data; S.cards = d.cards; S.meta = Object.assign(S.meta, d.meta || {}); S.meta.settings = Object.assign({}, DEFAULT_SETTINGS, (d.meta || {}).settings || {}); }
+    else mergeData(got.data);
+    S.meta.sync = { code, lastAt: Date.now() }; S.meta.setup = 1; S.meta.movedIn = Date.now(); save(); track("move_in", { n: Object.keys(S.cards).length });
+    toast(S.meta.settings.ui === "ja" ? "🏠 引っ越し完了！記録はそのままだニャ" : "🏠 이사 완료! 기록은 그대로다냥"); renderAll(); return true;
+  }catch(e){ toast(ko ? "이사한 기록을 못 찾았어요. 옛 주소에 기록은 그대로 있어요." : "記録が見つかりません。前のアドレスに記録はそのままです。"); return false; } }
+function moveBanner(){ if(!MOVE_ON || !isOldHome() || $("#moveBar")) return; const ko = S.meta.settings.ui !== "ja", has = Object.keys(S.cards).length > 0;
+  if(!has && !Object.keys(S.meta.days || {}).length){ const q = new URLSearchParams(location.search); q.delete("oldhome"); q.delete("newhome"); location.replace(NEW_HOME + (q.toString() ? "?" + q : "")); return; }   // 기록 없는 사람은 바로 새 주소로
+  const el = document.createElement("div"); el.id = "moveBar"; el.className = "movebar";
+  el.innerHTML = S.meta.movedAt ? `<span>${ko ? "🏠 이사 완료! 이제 새 주소에서 써 주세요" : "🏠 引っ越し完了！新しいアドレスで使ってね"}</span><a class="btn primary sm" href="${NEW_HOME}">meowca.app →</a>`
+    : `<span>${ko ? "🏠 냥이가 새 집(meowca.app)으로 이사해요. 기록 그대로 가져가요" : "🏠 ネコが新しい家（meowca.app）へ引っ越し。記録もそのまま"}</span><button type="button" class="btn primary sm" id="moveGo">${ko ? "이사하기" : "引っ越す"}</button>`;
+  document.body.appendChild(el); const g = $("#moveGo"); if(g) g.onclick = () => moveOut(g); }
 
 /* ════════ 端末間の同期（Supabase・同期コード方式） ════════ */
 const SB_URL = "https://cgupivfptuzqyadhqhiz.supabase.co";
