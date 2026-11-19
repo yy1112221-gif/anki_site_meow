@@ -522,6 +522,18 @@ body.petopen{overflow:hidden}
 .dash-ov{position:fixed;inset:0;z-index:70;pointer-events:none} .dash-ov img{position:fixed;width:64px;height:auto;transform:translate(-50%,-50%);will-change:transform}
 .dash-flash{position:fixed;inset:0;background:#fff;opacity:0} .dash-crack{position:fixed;width:260px;height:260px;margin:-130px 0 0 -130px;opacity:0;transition:opacity .2s} .dash-crack.on{opacity:1}
 .slang-sec{margin-top:16px;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:var(--glass)} .slang-ask{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--glass-strong)} .sl-tag{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;background:#ff6b3d;color:#fff;font-size:.7rem;font-weight:800;vertical-align:middle}
+.addmenu{display:grid;gap:10px;margin-bottom:12px}
+.addmenu .am{position:relative;display:flex;align-items:center;gap:12px;width:100%;border:1.5px solid var(--glass-edge);background:var(--glass-strong);color:var(--ink);border-radius:20px;padding:14px 16px;text-align:left;cursor:pointer;box-shadow:var(--glass-shadow);font:inherit}
+.addmenu .am b{font-size:1rem;font-weight:800} .addmenu .am small{display:block;font-size:.76rem;color:var(--muted);margin-top:2px;font-weight:500}
+.addmenu .am-ic{font-size:1.5rem;line-height:1} .addmenu .am[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px rgba(61,195,143,.22),var(--glass-shadow)}
+.addmenu .am-1{min-height:96px;padding:18px;background:linear-gradient(135deg,rgba(61,195,143,.18),rgba(61,195,143,.04)),var(--glass-strong)} .addmenu .am-1 b{font-size:1.25rem} .addmenu .am-1 .am-ic{font-size:2.2rem}
+.addmenu .am-rec{position:absolute;top:10px;right:12px;font-style:normal;font-size:.7rem;font-weight:800;color:#fff;background:var(--accent);padding:3px 9px;border-radius:999px}
+.am-top{display:grid;grid-template-columns:1.55fr 1fr;gap:10px}
+.addmenu .am-sl{flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;padding:14px;background:linear-gradient(135deg,rgba(255,120,60,.22),rgba(255,200,60,.08)),var(--glass-strong)} .addmenu .am-sl b{font-size:1.05rem} .addmenu .am-sl .am-ic{font-size:1.8rem}
+.sl-hero{margin-bottom:10px} .sl-badge{display:inline-block;font-size:.66rem;font-weight:900;letter-spacing:.18em;color:#fff;background:linear-gradient(90deg,#ff6a3d,#ffb23d);padding:3px 10px;border-radius:999px}
+.addmenu .am-2{min-height:70px} .addmenu .am-2 .am-ic{font-size:1.8rem}
+.am-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px} .addmenu .am-3,.addmenu .am-4{flex-direction:column;align-items:flex-start;gap:6px;padding:12px 14px;min-height:76px} .addmenu .am-3 b,.addmenu .am-4 b{font-size:.86rem;line-height:1.3}
+.addmenu .am-5{width:auto;justify-self:center;padding:8px 16px;border-radius:999px;font-size:.84rem;font-weight:700;box-shadow:none;min-height:0}
 .supbox{gap:12px} .sup-row{display:flex;gap:12px;align-items:center} .supbox a.btn{text-decoration:none}
 .tutask{position:fixed;z-index:40;left:50%;bottom:calc(78px + env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:8px 8px 8px 10px;border-radius:999px;background:var(--glass-strong);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1.5px solid var(--accent);box-shadow:0 8px 28px rgba(0,0,0,.28);font-size:.86rem;font-weight:700;color:var(--ink);white-space:nowrap;animation:tutIn .5s cubic-bezier(.3,1.6,.5,1) both, tutBob 2.4s ease-in-out .6s infinite}
 .tutask .nm{width:30px;height:30px} .tutask .ox{width:36px;height:36px;border-radius:50%;border:0;background:rgba(127,127,127,.14);font-size:1rem;cursor:pointer;display:grid;place-items:center;padding:0} .tutask .ox:active{transform:scale(.9)}
@@ -755,11 +767,23 @@ h1 .logo .testtag{font-size:.55rem;letter-spacing:.1em;background:var(--accent);
   </section>
 
   <section id="view-add" class="view hidden">
-    <div class="card">
+    <nav class="addmenu" aria-label="add">
+      <div class="am-top">
+        <button type="button" class="am am-1" data-panel="preset"><span class="am-ic">📚</span><span class="am-tx"><b data-i18n="presetTitle"></b><small data-i18n="amPresetSub"></small></span><em class="am-rec" data-i18n="amRec"></em></button>
+        <button type="button" class="am am-sl" data-panel="slang"><span class="am-ic">🔥</span><b data-i18n="amSlang"></b><small data-i18n="amSlangSub"></small></button>
+      </div>
+      <button type="button" class="am am-2" data-panel="photo"><span class="am-ic">📷</span><span class="am-tx"><b data-i18n="photoTitle"></b><small data-i18n="amPhotoSub"></small></span></button>
+      <div class="am-pair">
+        <button type="button" class="am am-3" data-panel="imp"><span class="am-ic">🌐</span><b data-i18n="impTitle"></b></button>
+        <button type="button" class="am am-4" data-panel="bulk"><span class="am-ic">📝</span><b data-i18n="addBulk"></b></button>
+      </div>
+      <button type="button" class="am am-5" data-panel="one">✏️ <span data-i18n="addOne"></span></button>
+    </nav>
+    <div class="card" id="addDeckCard">
       <label for="addDeck"><span data-i18n="addTo"></span><select id="addDeck"></select></label>
       <div class="row hidden" id="newDeckRow"><input type="text" id="newDeckInline" data-i18n-ph="deckNamePh" style="flex:1"><button class="btn sm primary" id="newDeckInlineOk" type="button" data-i18n="create"></button></div>
     </div>
-    <div class="card">
+    <div class="card addpanel" data-panel="one">
       <h2 data-i18n="addOne"></h2>
       <form id="findForm" autocomplete="off">
         <label for="fWord"><span data-i18n="fWord"></span>
@@ -779,12 +803,13 @@ h1 .logo .testtag{font-size:.55rem;letter-spacing:.1em;background:var(--accent);
       </label>
       <div class="row end"><button class="btn primary" id="btnSave" type="button" data-i18n="save"></button></div>
     </div>
-    <div class="card" id="presetCard">
+    <div class="card addpanel" data-panel="preset" id="presetCard">
       <h2 data-i18n="presetTitle"></h2>
       <p class="muted small" data-i18n="presetHelp"></p>
       <div id="presetBox"></div>
     </div>
-    <div class="card">
+    <div class="card addpanel" data-panel="slang"><div id="slangBox"></div></div>
+    <div class="card addpanel" data-panel="photo">
       <h2 data-i18n="photoTitle"></h2>
       <p class="muted small" data-i18n="photoHelp"></p>
       <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn primary" type="button" id="camBtn"><span data-i18n="camBtn"></span></button>
@@ -794,7 +819,7 @@ h1 .logo .testtag{font-size:.55rem;letter-spacing:.1em;background:var(--accent);
       <div id="ocrQueue" class="ocrq hidden"></div>
       <div id="ocrBox" class="hidden"></div>
     </div>
-    <div class="card">
+    <div class="card addpanel" data-panel="imp">
       <h2 data-i18n="impTitle"></h2>
       <p class="muted small" data-i18n="impHelp"></p>
       <label for="impFrom"><span data-i18n="impFrom"></span><select id="impFrom"></select></label>
@@ -802,7 +827,7 @@ h1 .logo .testtag{font-size:.55rem;letter-spacing:.1em;background:var(--accent);
       <div class="row"><button class="btn sm" id="impAll" type="button" data-i18n="impAll"></button><span class="grow"></span><button class="btn primary" id="impGo" type="button" data-i18n="impGo"></button></div>
       <p class="muted small" id="impNote" aria-live="polite"></p>
     </div>
-    <div class="card">
+    <div class="card addpanel" data-panel="bulk">
       <h2 data-i18n="addBulk"></h2>
       <p class="muted small" data-i18n-html="bulkHelp"></p>
       <label for="fBulk"><span data-i18n="bulkLabel"></span>
@@ -913,7 +938,7 @@ ja: {
   appName:"暗記して ミヤオウ", learnLang:"学習する言語", summary:"今日のまとめ",
   statDue:"今日の復習", statNew:"今日の新出", statLearning:"学習中", statMastered:"卒業",
   tabToday:"今日", tabAdd:"単語を追加", tabList:"単語帳", tabHow:"設定",
-  addOne:"1語ずつ追加", fWord:"単語", btnFind:"意味・例文を探す", btnFindAgain:"もう一度探す", finding:"探しています…",
+  addOne:"ひとつずつ追加", amSlang:"いまどきスラング", amSlangSub:"毎日あたらしく収集", amSlangLong:"ニュースやブログで実際に使われている新語を毎日集めます。学習の合間に1日1〜2語ずつ混ぜます。", amSlangNone:"この言語のスラングはまだ集めていません。", amRec:"おすすめ", amPresetSub:"レベル別に数百語をまとめて", amPhotoSub:"教材を撮ると単語を取り出します", fWord:"単語", btnFind:"意味・例文を探す", btnFindAgain:"もう一度探す", finding:"探しています…",
   fMeaning:"意味", phMeaning:"例：(機会を)活かす", fExample:"例文（候補から選ぶか、辞書の例文を貼り付け）", fExampleTr:"例文の訳", phExampleTr:"例：いい天気を活かして出かけよう。",
   save:"保存", addBulk:"まとめて追加",
   bulkHelp:"1行に1語。<code>単語 = 意味 | 例文 | 訳</code> の形で、意味と例文は省略できます。",
@@ -1002,7 +1027,7 @@ ko: {
   appName:"암기냥이", learnLang:"학습 언어", summary:"오늘 요약",
   statDue:"오늘 복습", statNew:"오늘 새 단어", statLearning:"외우는 중", statMastered:"졸업",
   tabToday:"오늘", tabAdd:"단어 추가", tabList:"단어장", tabHow:"원리·설정",
-  addOne:"한 단어씩", fWord:"단어", btnFind:"뜻·예문 찾기", btnFindAgain:"다시 찾기", finding:"찾는 중…",
+  addOne:"하나씩 추가", amSlang:"요즘 슬랭", amSlangSub:"매일 새로 수집", amSlangLong:"뉴스·블로그에서 실제로 쓰이는 신조어를 매일 모아요. 공부할 단어 사이에 하루 1~2개씩 섞어 드려요.", amSlangNone:"이 언어는 아직 슬랭을 모으지 않아요.", amRec:"추천", amPresetSub:"JLPT·레벨별로 한 번에 수백 개", amPhotoSub:"교재·단어장을 찍으면 단어를 뽑아 줘요", fWord:"단어", btnFind:"뜻·예문 찾기", btnFindAgain:"다시 찾기", finding:"찾는 중…",
   fMeaning:"뜻", phMeaning:"예: (기회를) 활용하다", fExample:"예문 (후보에서 고르거나, 사전 예문을 직접 붙여넣기)", fExampleTr:"예문 해석", phExampleTr:"예: 좋은 날씨를 활용해야 해.",
   save:"저장", addBulk:"여러 개 한꺼번에",
   bulkHelp:"한 줄에 하나씩. <code>단어 = 뜻 | 예문 | 해석</code> 형식이고, 뜻·예문은 빼도 됩니다.",
@@ -1496,7 +1521,7 @@ function renderStart(){
     if(PRESET_LANGS.includes(lang) && !decks().some(d => d.preset && !d.preset.startsWith("script-")) && cardsHere().filter(c => !c.script).length < 30)
       notes.push(`<p class="hnote">💡 ${esc(x.smallHint)} <button type="button" class="linkbtn" id="hintPreset">📚 ${esc(x.presetTitle)}</button></p>`);
     if(notes.length){ const nd = document.createElement("div"); nd.className = "hnotes"; nd.innerHTML = notes.join(""); const anchor = box.querySelector(".petline") || pos; if(anchor) anchor.after(nd); else box.prepend(nd);
-      const hp = nd.querySelector("#hintPreset"); if(hp) hp.onclick = async () => { showView("add"); await renderPresets(); $("#presetCard").scrollIntoView({ behavior: "smooth", block: "start" }); }; } }
+      const hp = nd.querySelector("#hintPreset"); if(hp) hp.onclick = async () => { showView("add"); setAddPanel("preset"); await renderPresets(); $("#presetCard").scrollIntoView({ behavior: "smooth", block: "start" }); }; } }
   if(pos){ const rest = [...box.children].filter(el => el !== pos); if(rest.length){ const w = document.createElement("div"); w.className = "after-poster"; rest.forEach(el => w.appendChild(el)); box.appendChild(w); } }
   else box.style.background = "";
 }
@@ -1532,17 +1557,17 @@ async function renderOnboard(box){   // 첫 시작: ① 배울 언어 ② 지금
     <p class="small muted">${esc(x.obOwn)} <button class="linkbtn" type="button" id="goAdd">${esc(x.goAdd.replace(/<[^>]+>/g, ""))}</button>${lang === "es" ? ` · <button class="linkbtn" id="seed" type="button">${esc(x.seed)}</button>` : ""}</p></div>`;
   box.querySelectorAll("[data-oblang]").forEach(b => b.onclick = () => { S.meta.settings.lang = b.dataset.oblang; save(); fillLangs(); fillVoices(); renderAll(); drawRain(); });
   $("#obMore").onclick = () => $("#langBtn").click();
-  $("#goAdd").onclick = () => showView("add"); const sd = $("#seed"); if(sd) sd.onclick = seedExamples;
+  $("#goAdd").onclick = () => { showView("add"); setAddPanel("one"); }; const sd = $("#seed"); if(sd) sd.onclick = seedExamples;
   const lv = $("#onbLv"); let idx = null; try{ idx = await presetIndex(); }catch(e){}
   const set = idx && idx.sets[lang];
   if(!set){ lv.innerHTML = SCRIPT_SETS[lang] ? `<button class="btn primary" id="goScript" type="button">🔤 ${esc(x.scriptTitle)}</button>` : `<button class="btn primary" type="button" id="goAddB">${esc(x.goAdd.replace(/<[^>]+>/g, ""))}</button>`;
-    const gs = $("#goScript"); if(gs) gs.onclick = async () => { showView("add"); await renderPresets(); const sc = document.querySelector(".script-sec"); if(sc) sc.scrollIntoView({ behavior: "smooth", block: "start" }); };
+    const gs = $("#goScript"); if(gs) gs.onclick = async () => { showView("add"); setAddPanel("preset"); await renderPresets(); const sc = document.querySelector(".script-sec"); if(sc) sc.scrollIntoView({ behavior: "smooth", block: "start" }); };
     const gb = $("#goAddB"); if(gb) gb.onclick = () => showView("add"); return; }
   lv.innerHTML = `<button class="btn primary onb-diag" type="button" id="obDiag">🧪 ${esc(x.obDiag)}</button><div class="onb-pills">${set.levels.map(l => `<button class="btn" type="button" data-oblv="${l.id}">${esc(lvLabel(l))}</button>`).join("")}</div>
     ${SCRIPT_SETS[lang] ? `<button class="btn ghost sm" type="button" id="goScript">🔤 ${esc(x.scriptTitle)}</button>` : ""}`;
   $("#obDiag").onclick = () => { $("#obDiag").classList.add("hidden"); startDiag(lang); setTimeout(() => { const d = $("#diagBox"); if(d) d.scrollIntoView({ behavior: "smooth", block: "center" }); }, 60); };
   lv.querySelectorAll("[data-oblv]").forEach(b => b.onclick = () => addPreset(lang, b.dataset.oblv, b));
-  const gs = $("#goScript"); if(gs) gs.onclick = async () => { showView("add"); await renderPresets(); const sc = document.querySelector(".script-sec"); if(sc) sc.scrollIntoView({ behavior: "smooth", block: "start" }); };
+  const gs = $("#goScript"); if(gs) gs.onclick = async () => { showView("add"); setAddPanel("preset"); await renderPresets(); const sc = document.querySelector(".script-sec"); if(sc) sc.scrollIntoView({ behavior: "smooth", block: "start" }); };
 }
 function syncOn(){ return !!(S.meta.sync && S.meta.sync.code); }
 function maybeTutAsk(){   // 첫 입장에만: 작지만 눈에 띄는 O/X. 동기화 코드가 있는 사람에겐 절대 안 띄움
@@ -1570,6 +1595,13 @@ function renderSupBox(){ const el = $("#supBox"); if(!el) return; const ko = S.m
     <p class="tiny muted" style="margin:0"><a href="privacy.html">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a></p>`;
   $("#supShare").onclick = async () => { const url = "https://yy1112221-gif.github.io/anki_site_meow/?ref=invite", text = ko ? "커닝 말고 진짜로 외우는 냥이 🐾 JLPT 단어 무료" : "カンニングじゃなく本当におぼえるネコ 🐾";
     try{ if(navigator.share){ await navigator.share({ title: "암기냥이", text, url }); return; } await navigator.clipboard.writeText(text + " " + url); toast(ko ? "링크를 복사했어요" : "リンクをコピーしました"); }catch(e){} }; }
+function setAddPanel(k){   // 단어 추가: 스크롤 대신 메뉴에서 하나 고르기
+  const v = $("#view-add"); if(!v) return; k = k || v.dataset.panel || "preset"; v.dataset.panel = k;
+  v.querySelectorAll(".addpanel").forEach(el => el.classList.toggle("hidden", el.dataset.panel !== k));
+  v.querySelectorAll(".addmenu .am").forEach(b => b.setAttribute("aria-pressed", b.dataset.panel === k ? "true" : "false"));
+  const dc = $("#addDeckCard"); if(dc) dc.classList.toggle("hidden", k === "preset" || k === "slang"); }
+document.addEventListener("click", e => { const b = e.target.closest(".addmenu .am"); if(!b) return; setAddPanel(b.dataset.panel);
+  const pn = document.querySelector(`.addpanel[data-panel="${b.dataset.panel}"]`); if(pn) setTimeout(() => pn.scrollIntoView({ behavior: "smooth", block: "start" }), 30); });
 function renderStartInner(){
   const box = $("#sessionStart"), x = t();
   const due = dueCards().length, nq = Math.min(newQuota(), newCandidates().length) + scriptNewToday();
@@ -1580,7 +1612,7 @@ function renderStartInner(){
     const wantPreset = PRESET_LANGS.includes(S.meta.settings.lang) && !decks().some(d => d.preset && !d.preset.startsWith("script-"));
     box.innerHTML = `${heroHTML(S.meta.days[today()] ? x.doneTitle : x.noneTitle, next ? x.nextReview(next, diffDays(today(), next)).replace(/<[^>]+>/g, "") : "", S.meta.days[today()] ? 100 : 0)}${actRow(canMore() && !wantPreset ? `<button class="btn primary big" id="moreBtn" type="button">＋ ${esc(x.moreBtn)}</button>` : `<button class="btn big${wantPreset ? " primary" : ""}" id="goAdd2" type="button">＋ ${wantPreset ? esc(x.presetTitle) : x.addMore}</button>`)}${canMore() && !wantPreset ? `<div class="row tight"><button class="linkbtn small" type="button" id="goAdd2">${x.addMore}</button></div>` : ""}${say(S.meta.days[today()] ? "st_love" : "st_sleepy", esc(S.meta.days[today()] ? x.nmDone : x.nmNone))}${deckChips()}`;
     { const mb = $("#moreBtn"); if(mb) mb.onclick = studyMore; }
-    $("#goAdd2").onclick = async () => { showView("add"); if(PRESET_LANGS.includes(S.meta.settings.lang)){ await renderPresets(); $("#presetCard").scrollIntoView({ behavior: "smooth", block: "start" }); } };
+    $("#goAdd2").onclick = async () => { showView("add"); if(PRESET_LANGS.includes(S.meta.settings.lang)){ setAddPanel("preset"); await renderPresets(); $("#presetCard").scrollIntoView({ behavior: "smooth", block: "start" }); } };
     return;
   }
   const z = savedSession();
@@ -2366,8 +2398,8 @@ $("#camBtn").onclick = openCam;
 /* PC: ドラッグ＆ドロップ・貼り付け */
 document.addEventListener("dragover", e => { if([...(e.dataTransfer && e.dataTransfer.items || [])].some(i => i.kind === "file")){ e.preventDefault(); document.body.classList.add("dropping"); } });
 document.addEventListener("dragleave", e => { if(!e.relatedTarget) document.body.classList.remove("dropping"); });
-document.addEventListener("drop", e => { const fs = e.dataTransfer && e.dataTransfer.files; if(fs && fs.length){ e.preventDefault(); document.body.classList.remove("dropping"); showView("add"); ocrEnqueue(fs); const q = $("#ocrQueue"); if(q) q.scrollIntoView({ behavior: "smooth", block: "start" }); } });
-document.addEventListener("paste", e => { const fs = [...(e.clipboardData && e.clipboardData.files || [])].filter(f => /^image\//.test(f.type)); if(fs.length){ e.preventDefault(); showView("add"); ocrEnqueue(fs); } });
+document.addEventListener("drop", e => { const fs = e.dataTransfer && e.dataTransfer.files; if(fs && fs.length){ e.preventDefault(); document.body.classList.remove("dropping"); showView("add"); setAddPanel("photo"); ocrEnqueue(fs); const q = $("#ocrQueue"); if(q) q.scrollIntoView({ behavior: "smooth", block: "start" }); } });
+document.addEventListener("paste", e => { const fs = [...(e.clipboardData && e.clipboardData.files || [])].filter(f => /^image\//.test(f.type)); if(fs.length){ e.preventDefault(); showView("add"); setAddPanel("photo"); ocrEnqueue(fs); } });
 
 /* ════════ 難易度の目安: OpenSubtitles 頻度リスト（hermitdave/FrequencyWords） ════════ */
 const FREQ = {}, FREQ_LOADING = {};
@@ -2711,7 +2743,7 @@ function fillLangsOld(){
 
 function showView(v){
   document.querySelectorAll(".view").forEach(s => s.classList.add("hidden"));
-  $("#view-" + v).classList.remove("hidden"); if(v === "how") renderSupBox();
+  $("#view-" + v).classList.remove("hidden"); if(v === "how") renderSupBox(); if(v === "add") setAddPanel();
   document.querySelectorAll("nav.tabs button, nav.subnav button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v ? "true" : "false")); document.body.dataset.view = v; if(v !== "today"){ const ta = $("#tutAsk"); if(ta) ta.remove(); }
   if(v === "list"){ renderDecks(); renderDeckFilter(); renderList(); } if(v === "how"){ renderHow(); renderSync(); const hs = $("#hshop"); if(hs){ hs.ontoggle = () => { if(hs.open) renderShop(); }; if(hs.open) renderShop(); } } if(v === "add"){ fillDeckSelects(); fillImport(); renderPresets(); }
   if(v === "today" && SES){ document.body.classList.add("focus"); centerBox($("#sessionBox")); }
@@ -3722,13 +3754,15 @@ function slangSectionHTML(lang){ if(!SLANG_LANGS.includes(lang)) return ""; cons
   const mixTxt = d ? (d.slangMix ? x.slMixN(d.slangMix) : x.slMixAll) : "";
   return `<div class="slang-sec"><div class="row" style="align-items:center;gap:8px"><b>${esc(x.slTitle)}</b><span class="grow"></span>${d ? `<span class="small muted">${esc(mixTxt)}</span><button class="btn sm" type="button" id="slMix">${esc(x.slChange)}</button>` : `<button class="btn sm primary" type="button" id="slAdd">${esc(x.presetAdd)}</button>`}</div>
     <p class="small muted" style="margin:.3em 0 0">${esc(x.slDesc)}</p><div id="slAsk"></div></div>`; }
+function renderSlangBox(lang){ const b = $("#slangBox"); if(!b) return; const x = t();
+  b.innerHTML = SLANG_LANGS.includes(lang) ? `<div class="sl-hero"><span class="sl-badge">SLANG</span><p class="small muted" style="margin:.5em 0 0">${esc(x.amSlangLong)}</p></div>` + slangSectionHTML(lang) : `<p class="muted small">${esc(x.amSlangNone)}</p>`; bindSlangSection(lang); }
 function bindSlangSection(lang){ const a = $("#slAdd"), m = $("#slMix"); if(a) a.onclick = () => askSlangMix(lang, null); if(m) m.onclick = () => askSlangMix(lang, decks().find(d => d.preset === lang + "-slang")); }
 function askSlangMix(lang, d){   // 얼마나 섞을지 무조건 물어봄 (추천: 하루 1~2개)
   const x = t(), box = $("#slAsk"); if(!box) return;
   box.innerHTML = `<div class="slang-ask"><p><b>${esc(x.slAsk)}</b></p><div class="row" style="flex-wrap:wrap;gap:8px"><button class="btn primary" type="button" data-mix="1">${esc(x.slMixN(1))} · ${esc(x.slRec)}</button><button class="btn" type="button" data-mix="2">${esc(x.slMixN(2))}</button><button class="btn ghost" type="button" data-mix="0">${esc(x.slMixAll)}</button></div><p class="tiny muted">${esc(x.slWhy)}</p></div>`;
   box.querySelectorAll("[data-mix]").forEach(b => b.onclick = async () => { const mix = +b.dataset.mix; b.disabled = true;
     if(!d){ d = addDeck(x.slTitle); d.preset = lang + "-slang"; }
-    d.slangMix = mix; d.on = true; const n = await topUpSlang(d); save(); renderAll(); toast(x.slDone(n, mix)); renderPresets(); }); }
+    d.slangMix = mix; d.on = true; const n = await topUpSlang(d); save(); renderAll(); toast(x.slDone(n, mix)); renderPresets(); renderSlangBox(lang); }); }
 async function topUpSlang(d){ const lang = d.preset.split("-")[0]; let j; try{ const r = await fetch(SLANG_BASE + lang + ".json", { cache: "no-cache" }); if(!r.ok) return 0; j = await r.json(); }catch(e){ return 0; }
   const have = new Set(Object.values(S.cards).filter(c => (c.lang || "es") === lang).map(c => norm(c.word))); let n = 0; const now = Date.now();
   (j.terms || []).filter(x => x.ex && x.ex.length && x.def && x.def.length && (x.cue == null || x.cue >= 1)).slice(0, 40).forEach((x, i) => { if(have.has(norm(x.t))) return;
@@ -3743,12 +3777,12 @@ async function renderPresets(){
   const box = $("#presetBox"); if(!box) return; const x = t(), lang = S.meta.settings.lang;
   box.innerHTML = `<p class="muted small">${esc(x.presetLoading)}</p>`;
   let idx; try{ idx = await presetIndex(); }catch(e){ box.innerHTML = ""; $("#presetCard").classList.add("hidden"); return; }
-  const set = idx.sets[lang]; $("#presetCard").classList.toggle("hidden", !set && !SCRIPT_SETS[lang] && !SLANG_LANGS.includes(lang)); if(!set){ box.innerHTML = slangSectionHTML(lang) + scriptSectionHTML(lang); bindSlangSection(lang); box.querySelectorAll("[data-scr]").forEach(b => b.onclick = () => addScriptSet(lang, b.dataset.scr)); return; }
+  const set = idx.sets[lang]; $("#presetCard").classList.toggle("hidden", !set && !SCRIPT_SETS[lang] && !SLANG_LANGS.includes(lang)); renderSlangBox(lang); if(!set){ box.innerHTML = scriptSectionHTML(lang); box.querySelectorAll("[data-scr]").forEach(b => b.onclick = () => addScriptSet(lang, b.dataset.scr)); return; }
   const dg = (S.meta.diag || {})[lang];
   box.innerHTML = `<div class="row" style="gap:8px;flex-wrap:wrap;align-items:center"><button class="btn primary" type="button" id="diagBtn">${esc(x.diagBtn)}</button>${dg ? `<span class="small muted">${esc(x.lastDiag(dg.est, dg.date.slice(5).replace("-", "/")))}</span>` : ""}</div>
     <div id="diagBox"></div>
     <div class="plist">${set.levels.map(lv => { const done = decks().some(d => d.preset === lang + "-" + lv.id); return `<div class="pitem${dg && dg.rec === lv.id ? " rec" : ""}"><b>${esc(lvLabel(lv))}</b><span>${lv.n.toLocaleString()}</span><button class="btn sm${done ? "" : " primary"}" type="button" data-pre="${lv.id}" ${done ? "disabled" : ""}>${done ? "✓" : esc(x.presetAdd)}</button></div>`; }).join("")}</div>
-    <p class="tiny muted">${esc(x.presetSrc)}: <a href="${set.url}" target="_blank" rel="noopener">${esc(set.src)}</a></p><p class="small" id="presetNote" aria-live="polite"></p>${slangSectionHTML(lang)}${scriptSectionHTML(lang)}`; bindSlangSection(lang);
+    <p class="tiny muted">${esc(x.presetSrc)}: <a href="${set.url}" target="_blank" rel="noopener">${esc(set.src)}</a></p><p class="small" id="presetNote" aria-live="polite"></p>${scriptSectionHTML(lang)}`;
   box.querySelectorAll("[data-scr]").forEach(b => b.onclick = () => addScriptSet(lang, b.dataset.scr));
   box.querySelectorAll("[data-pre]").forEach(b => b.onclick = () => addPreset(lang, b.dataset.pre, b));
   $("#diagBtn").onclick = () => startDiag(lang);
