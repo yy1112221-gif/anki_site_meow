@@ -631,6 +631,21 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .shop-it .nm{flex:1;min-width:0;font-size:.85rem;line-height:1.25} .shop-it .nm small{display:block;color:var(--muted);font-variant-numeric:tabular-nums} .shop-it .bb{display:flex;flex-direction:column;gap:4px} .shop-it .bb button{padding:3px 8px;font-size:.75rem}
 .pet-none{color:var(--muted);font-weight:600;padding:20px}
 .pet-hint{text-align:center;font-size:.72rem;color:var(--muted);margin:0}
+.pet-cos{position:absolute;z-index:5;right:12px;top:calc(64px + env(safe-area-inset-top));height:38px;padding:0 12px;border-radius:19px;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:.85rem;font-weight:700;cursor:pointer;color:inherit}
+.cos-dr{position:absolute;z-index:9;left:0;right:0;bottom:0;max-height:40%;overflow:auto;padding:12px 12px calc(12px + env(safe-area-inset-bottom));background:#fff;border-radius:22px 22px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.18);touch-action:pan-y;animation:cosUp .25s ease-out}
+@keyframes cosUp{from{transform:translateY(100%)}to{transform:none}}
+.cos-dr h3{margin:0 0 2px;font-size:1.05rem} .cos-dr .cos-note{margin:0 0 10px;font-size:.75rem;color:var(--muted)}
+@media (prefers-color-scheme:dark){.cos-dr{background:#1f2128}}
+.cos-tabs{display:flex;gap:6px;margin:0 0 8px} .cos-tabs button{border:1px solid var(--line,#ddd);background:transparent;color:inherit;border-radius:999px;padding:5px 12px;font:inherit;font-size:.8rem;cursor:pointer} .cos-tabs button[aria-pressed="true"]{background:#f2708f;border-color:#f2708f;color:#fff;font-weight:800}
+.cos-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x mandatory}
+.cos-it{flex:0 0 104px;scroll-snap-align:start;border:2px solid var(--line,#ddd);border-radius:16px;padding:8px;text-align:center;background:transparent;color:inherit;cursor:pointer;font:inherit}
+.cos-it[aria-pressed="true"]{border-color:#f2708f;box-shadow:0 0 0 3px rgba(242,112,143,.18)}
+.cos-sw{width:40px;height:40px;border-radius:50%;margin:2px auto 6px;display:grid;place-items:center;font-size:1.6rem;box-shadow:inset 0 -4px 8px rgba(0,0,0,.08)}
+.cos-it b{display:block;font-size:.8rem;line-height:1.2} .cos-it small{display:block;font-size:.72rem;color:var(--muted);margin-top:2px}
+.cos-pick{margin-top:8px;padding:10px;border-radius:16px;background:rgba(242,112,143,.08);text-align:center} .cos-pick p{margin:0 0 8px;font-size:.85rem}
+.cos-pick .row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.cos-want{background:#f2708f;color:#fff;border:0;border-radius:999px;padding:10px 18px;font-weight:800;font:inherit;font-weight:800;cursor:pointer}
+.cos-want[disabled]{opacity:.6}
 
 .chiptog.star{border-color:var(--accent);font-weight:700}
 .olv{margin-left:5px;font-size:.62rem;font-weight:700;padding:1px 5px;border-radius:999px;background:var(--field);color:var(--muted);vertical-align:1px}
@@ -2836,7 +2851,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v74";
+const APP_VER = "v75";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3311,14 +3326,14 @@ function openPet(welcome){
   if(!$("#pet")){ const el = document.createElement("div"); el.id = "pet"; el.setAttribute("role", "dialog"); document.body.appendChild(el); }
   const el = $("#pet"); el.classList.remove("hidden"); document.body.classList.add("petopen");
   const isTest = /\/test\//.test(location.pathname) || location.protocol === "file:";
-  el.innerHTML = `<canvas id="petBG"></canvas><canvas id="petGL"></canvas><canvas id="petCv"></canvas><button type="button" class="pet-snd" id="petSnd" aria-label="${esc(x.snd)}">${{ mix: "🔉", loud: "🔊", off: "🔇" }[sndMode()]}</button>
+  el.innerHTML = `<canvas id="petBG"></canvas><canvas id="petGL"></canvas><canvas id="petCv"></canvas><button type="button" class="pet-snd" id="petSnd" aria-label="${esc(x.snd)}">${{ mix: "🔉", loud: "🔊", off: "🔇" }[sndMode()]}</button><button type="button" class="pet-cos" id="petCos">🎀 ${S.meta.settings.ui === "ja" ? "着せかえ" : "꾸미기"}</button>
     <div class="pet-top"><button class="btn sm" type="button" id="petClose">‹ ${esc(x.close)}</button>
       <div class="pet-lv"><canvas id="petFat" width="0" height="0"></canvas><b id="petLv"></b></div>
       <div class="pet-st"><b>🔥 ${streak()}</b><small>${esc(x.ranks[petTier(streak())])}${p.freezes ? ` · 🧊${p.freezes}` : ""}</small></div></div>
     <div class="pet-msg" id="petMsg" aria-live="polite"></div>
     <div class="pet-bottom"><p class="pet-hint">${esc(x.hint)}</p>
       ${isTest ? `<div class="row" style="justify-content:center;gap:6px"><button class="btn sm" type="button" id="petTest">${esc(x.test)}</button><label class="small" style="display:flex;gap:6px;align-items:center">${esc(x.testStreak)}<input id="petTestS" type="number" min="0" max="200" value="${streak()}" style="width:70px"></label></div>` : ""}</div>`;
-  $("#petClose").onclick = closePet;
+  $("#petClose").onclick = closePet; $("#petCos").onclick = cosOpen;
   $("#petSnd").onclick = () => { const nx = { mix: "loud", loud: false, off: true }[sndMode()]; S.meta.settings.petSound = nx; save(); const m = sndMode(); $("#petSnd").textContent = { mix: "🔉", loud: "🔊", off: "🔇" }[m];
     applySndMode(); if(PMASTER) PMASTER.gain.value = petSoundOn() ? 1 : 0; petMsg(pt().sndMode[m], 2600); if(petSoundOn()){ pa(); sfxPoyon(.3); } };
   const tb = $("#petTest"); if(tb){ tb.onclick = () => { const s = streak(), top = petTier(s); for(let i = 0; i < 10; i++){ const c = PET_ITEMS.filter(it => it.t <= top); const it = c[Math.floor(Math.random() * c.length)]; p.inv[it.id] = (p.inv[it.id] || 0) + 1; } save(); petTray(); };
@@ -3561,7 +3576,7 @@ function drawCatTex(st){
   // 細い輪郭線（シルエットの外側だけが残る）
   g0.strokeStyle = INKC; g0.lineWidth = 2.5; shapes.forEach(P => g0.stroke(P));
   // 中身（別キャンバス）: 体 → 腕の落ち影 → 腕・耳 → 全体に陰影
-  const fur = g.createRadialGradient(50, 74, 4, 64, 98, 74); fur.addColorStop(0, "#fffdf8"); fur.addColorStop(.55, "#f8f0e3"); fur.addColorStop(1, "#ecdfcb");
+  const fur = g.createRadialGradient(50, 74, 4, 64, 98, 74); const FC = cosFur(st); fur.addColorStop(0, FC[0]); fur.addColorStop(.55, FC[1]); fur.addColorStop(1, FC[2]);
   g.fillStyle = fur; g.fill(body); ears.forEach(e => g.fill(e.P));
   g.globalCompositeOperation = "source-atop";
   g.globalCompositeOperation = "source-atop"; (st.stains || []).forEach(sn => { g.globalAlpha = Math.max(0, sn.a); sn.blobs.forEach(b => { g.fillStyle = b.c || sn.col; g.beginPath(); g.ellipse(sn.ux + b.x, sn.uy + b.y, b.r, b.r * b.e, b.t, 0, Math.PI * 2); g.fill(); if(sn.grain){ g.strokeStyle = "rgba(120,100,80,.55)"; g.lineWidth = .35; g.stroke(); } }); g.globalAlpha = 1; });
@@ -3624,6 +3639,50 @@ function drawCatFace0(st, g){
   if(dopey && b > .7 && !cph){ const dl = 2 + (b - .7) * 16 + Math.sin(st.t * 2.3) * 1.2; g.fillStyle = "rgba(200,232,255,.9)"; g.beginPath(); g.moveTo(68.4, my + 3.4); g.quadraticCurveTo(70.4, my + 3.4 + dl * .6, 69.6, my + 3.4 + dl); g.arc(68.8, my + 3.4 + dl, 1.3, 0, Math.PI); g.quadraticCurveTo(67.6, my + 3.4 + dl * .5, 68.4, my + 3.4); g.fill(); }
   g.lineWidth = 1.1; g.strokeStyle = "rgba(60,48,38,.5)"; [[-1, 38], [1, 90]].forEach(([sx, x0]) => [[-3, -4], [1.5, 0], [6, 4]].forEach(([dy, an]) => { g.beginPath(); g.moveTo(x0, 84 + dy); const wd = (st.bliss || 0) * 5; g.quadraticCurveTo(x0 + sx * 9, 84 + dy + an * .4 + st.hit * 3 * an + wd * .4, x0 + sx * 16, 84 + dy + an + wd); g.stroke(); }));
 }
+/* ════════ 냥이 꾸미기 상점 (출시 전: 입어 보기 + 「사고 싶다냥」 찜·가격 반응 측정. 실제 결제는 사업자·통신판매업 신고 뒤 연결) ════════ */
+const COS_FUR0 = ["#fffdf8", "#f8f0e3", "#ecdfcb"];
+const COS = [
+  { id: "mochi_st", c: "skin", f: ["#fff6f8", "#ffdce4", "#f4b8c6"], e: "🍓", ko: "딸기 찹쌀떡", ja: "いちご大福", w: 1900, y: 200 },
+  { id: "mochi_mc", c: "skin", f: ["#f7fbec", "#dfeec3", "#bed597"], e: "🍵", ko: "말차 찹쌀떡", ja: "抹茶もち", w: 1900, y: 200 },
+  { id: "cheese",   c: "skin", f: ["#fff6e6", "#ffdcaa", "#f3b872"], e: "🧀", ko: "치즈 냥", ja: "チーズねこ", w: 1900, y: 200 },
+  { id: "pudding",  c: "skin", f: ["#fffbe2", "#ffe9a3", "#ebc96e"], e: "🍮", ko: "푸딩 말랑", ja: "プリンぷる", w: 1900, y: 200 },
+  { id: "soda",     c: "skin", f: ["#f1faff", "#cdeeff", "#a2d8f4"], e: "🫧", ko: "소다 젤리", ja: "ソーダゼリー", w: 2900, y: 300 },
+  { id: "sesame",   c: "skin", f: ["#f4f2f5", "#dcd7df", "#bfb7c4"], e: "🖤", ko: "흑임자 떡", ja: "黒ごまもち", w: 1900, y: 200 },
+  { id: "ribbon",   c: "acc", e: "🎀", ko: "리본", ja: "リボン", w: 990, y: 120 },
+  { id: "beanie",   c: "acc", e: "🧶", ko: "털모자", ja: "ニット帽", w: 990, y: 120 },
+  { id: "glasses",  c: "acc", e: "👓", ko: "공부 안경", ja: "勉強メガネ", w: 990, y: 120 },
+  { id: "crown",    c: "acc", e: "👑", ko: "함락 왕관", ja: "陥落の王冠", w: 1500, y: 160 },
+  { id: "snd_jelly",c: "snd", e: "🔔", ko: "말랑 효과음 팩", ja: "ぷにぷに効果音", w: 1500, y: 160 },
+  { id: "set1",     c: "set", e: "🎁", ko: "젤리 냥이 세트 (스킨 3 + 리본)", ja: "ゼリーねこセット（スキン3＋リボン）", w: 4900, y: 500 } ];
+const COS_T = {
+  ko: { title: "냥이 꾸미기", note: "곧 판매 예정 · 스킨은 눌러서 입어 볼 수 있다냥. 찜하면 나올 때 제일 먼저 알려 준다냥", cats: { skin: "말랑 스킨", acc: "소품", snd: "소리", set: "세트" }, want: "사고 싶다냥 ♥", wanted: "찜했다냥 ♥", soon: "준비 중",
+    q: p => `${p}이면?`, opts: ["더 싸면 살래", "이 가격이면 산다", "더 비싸도 산다", "안 살래"], thx: "고맙다냥! 나오면 제일 먼저 알려 주겠다냥", close: "닫기", cur: n => `₩${n.toLocaleString()}` },
+  ja: { title: "ネコの着せかえ", note: "近日発売予定 · スキンはタップで試着できるニャ。お気に入りすると発売時に真っ先に知らせるニャ", cats: { skin: "スキン", acc: "小物", snd: "サウンド", set: "セット" }, want: "欲しいニャ ♥", wanted: "お気に入り済み ♥", soon: "準備中",
+    q: p => `${p}なら？`, opts: ["もっと安ければ", "この値段なら買う", "もっと高くても買う", "買わない"], thx: "ありがとニャ！ 発売したら真っ先に知らせるニャ", close: "閉じる", cur: n => `¥${n.toLocaleString()}` } };
+function cosFur(st){ const id = (st && st.tryOn) || (S.meta.cos && S.meta.cos.on); const it = id && COS.find(c => c.id === id && c.f); return it ? it.f : COS_FUR0; }
+function cosOpen(){ const pet = $("#pet"); if(!pet || $("#cosDr")) return; const ja = S.meta.settings.ui === "ja", x = COS_T[ja ? "ja" : "ko"];
+  const cm = S.meta.cos || (S.meta.cos = {}); cm.want = cm.want || {}; track("cos_open");
+  const card = it => `<button type="button" class="cos-it" data-id="${it.id}" aria-pressed="${PET && PET.tryOn === it.id}"><div class="cos-sw" style="background:${it.f ? `radial-gradient(circle at 35% 30%,${it.f[0]},${it.f[1]} 55%,${it.f[2]})` : "rgba(0,0,0,.04)"}">${it.f ? "" : it.e}</div><b>${it.f ? it.e + " " : ""}${esc(ja ? it.ja : it.ko)}</b><small>${esc(x.cur(ja ? it.y : it.w))}${cm.want[it.id] ? " · ♥" : ""}${it.f ? "" : " · " + esc(x.soon)}</small></button>`;
+  const dr = document.createElement("div"); dr.className = "cos-dr"; dr.id = "cosDr";
+  dr.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><h3>🎀 ${esc(x.title)}</h3><button type="button" class="btn sm" id="cosX">${esc(x.close)}</button></div><p class="cos-note">${esc(x.note)}</p>
+    <div class="cos-tabs">${["skin", "acc", "snd", "set"].map((c, i) => `<button type="button" data-cat="${c}" aria-pressed="${!i}">${esc(x.cats[c])}</button>`).join("")}</div><div class="cos-row" id="cosRow"></div><div id="cosPick"></div>`;
+  ["pointerdown", "touchstart", "mousedown", "wheel"].forEach(ev => dr.addEventListener(ev, e => e.stopPropagation(), { passive: true }));
+  pet.appendChild(dr);
+  const pick = it => { const box = $("#cosPick"), price = x.cur(ja ? it.y : it.w), done = cm.want[it.id];
+    box.innerHTML = `<div class="cos-pick"><p><b>${it.e} ${esc(ja ? it.ja : it.ko)}</b> · ${esc(price)}</p><button type="button" class="cos-want" id="cosWant"${done ? " disabled" : ""}>${esc(done ? x.wanted : x.want)}</button><div id="cosQ"></div></div>`;
+    box.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    $("#cosWant").onclick = () => { cm.want[it.id] = Date.now(); save(); track("cos_want", { id: it.id, price: ja ? it.y : it.w, cur: ja ? "JPY" : "KRW" });
+      $("#cosWant").disabled = true; $("#cosWant").textContent = x.wanted;
+      $("#cosQ").innerHTML = `<p style="margin:10px 0 6px">${esc(x.q(price))}</p><div class="row">${x.opts.map((o, i) => `<button type="button" class="btn sm" data-v="${i}">${esc(o)}</button>`).join("")}</div>`;
+      $("#cosQ").querySelectorAll("[data-v]").forEach(b => b.onclick = () => { track("cos_price", { id: it.id, v: +b.dataset.v, price: ja ? it.y : it.w, cur: ja ? "JPY" : "KRW" }); $("#cosQ").innerHTML = `<p style="margin:10px 0 0">${esc(x.thx)}</p>`; if(PET) petMsg(x.thx, 2400); }); }; };
+  const tab = c => { $("#cosRow").innerHTML = COS.filter(i => i.c === c).map(card).join(""); dr.querySelectorAll(".cos-tabs button").forEach(z => z.setAttribute("aria-pressed", String(z.dataset.cat === c)));
+    $("#cosRow").querySelectorAll(".cos-it").forEach(b => b.onclick = () => onIt(b)); };
+  dr.querySelectorAll(".cos-tabs button").forEach(b => b.onclick = () => tab(b.dataset.cat));
+  const onIt = b => { const it = COS.find(c => c.id === b.dataset.id);
+    if(it.f && PET){ PET.tryOn = PET.tryOn === it.id ? null : it.id; dr.querySelectorAll(".cos-it").forEach(z => z.setAttribute("aria-pressed", String(PET.tryOn === z.dataset.id))); if(PET.tryOn){ try{ sfxPoyon(.25); }catch(_){} } }
+    track("cos_try", { id: it.id }); pick(it); };
+  tab("skin");
+  $("#cosX").onclick = () => { if(PET) PET.tryOn = null; dr.remove(); }; }
 function petDraw(){
   const st = PET, { ctx } = st, dpr = st.dpr, s = st.s;
   drawCatTex(st);
