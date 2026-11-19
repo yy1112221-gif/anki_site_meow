@@ -169,6 +169,8 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .su-y{height:44px;line-height:44px;text-align:center;font-size:1.15rem;font-weight:700;color:var(--muted);scroll-snap-align:center;cursor:pointer} .su-y.on{color:var(--ink);font-size:1.6rem;font-weight:900}
 .su-row{display:flex;justify-content:space-between;align-items:center} .su-note{font-size:.8rem;color:var(--muted);text-align:center;margin:0} .su-back{align-self:flex-start;font-size:.85rem}
 .movebar{position:fixed;left:10px;right:10px;top:calc(8px + env(safe-area-inset-top));z-index:85;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:var(--surface,#fff);border:2px solid var(--accent);box-shadow:0 8px 24px rgba(0,0,0,.15);font-weight:700;font-size:.9rem} .movebar span{flex:1}
+.provs{display:flex;flex-direction:column;gap:8px;margin:10px 0} .provs .btn.prov{justify-content:center;font-weight:800;min-height:48px;border:1px solid}
+.loginask{text-align:center} .loginask h2{margin:.4em 0 .2em} .loginask p{margin:.3em 0}
 .setcorner{margin-top:4px;opacity:.75} .setcorner label{display:inline-flex;align-items:center;gap:4px}
 .bubble.nerd{color:var(--ink);font-size:1.06rem;line-height:1.55;padding:14px 16px;min-height:6.4em;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.18),0 0 0 3px var(--accent);animation:nerdIn .18s ease-out;transform-origin:left bottom}
 .bubble.nerd.typing::after{content:"▌";animation:nerdCaret .5s steps(1) infinite;margin-left:1px;color:var(--accent)}
@@ -950,6 +952,7 @@ h1 .logo .testtag{font-size:.55rem;letter-spacing:.1em;background:var(--accent);
     </div>
     <div class="card" id="syncCard">
       <h2 data-i18n="syncTitle"></h2>
+      <div id="authBox"></div>
       <div id="syncBody"></div>
     </div>
     <div class="card">
@@ -1537,7 +1540,8 @@ function buildSession(){
 function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1); while(S.meta.days[d]){ n++; d = addDays(d, -1); } return n; }
 
 function renderStart(){
-  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); moveIn(); setTimeout(moveBanner, 600); }
+  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); moveIn(); setTimeout(moveBanner, 600); authBoot(); }
+  if(maybeLoginAsk._pending && !SES){ maybeLoginAsk._pending = 0; setTimeout(maybeLoginAsk, 1500); }
   const box = $("#sessionStart"), pos = box.querySelector(".poster");
   box.querySelectorAll(".say .bubble").forEach(b => { b.classList.add("tapme"); b.onclick = () => { if(NERD_ON) return; if(Math.random() < .08 && nerdPop(b)) return; if(Math.random() < .3){ b.textContent = sciLine(); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); try{ sfxPoyon(.15); }catch(e){} return; } const st = meltStage(), L = st ? meltL().home[st] : (t().homeTalk || []); if(!L.length) return; let i; do{ i = Math.floor(Math.random() * L.length); }while(L.length > 1 && i === renderStart.last); renderStart.last = i;
       b.textContent = L[i]; b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); try{ sfxPoyon(.15); }catch(e){} }; });
@@ -1775,7 +1779,7 @@ function settleItem(correct){
   saveSession(); updateStats(); nextItem();
 }
 const DAY_GOAL = 10;
-function secureDay(){   // 今日のノルマ達成: 連続日数・肉球スタンプ・おやつ。まだ問題が残っていれば続けられる
+function secureDay(){ setTimeout(() => { if(!SES || !SES.queue || !SES.queue.length) maybeLoginAsk(); else maybeLoginAsk._pending = 1; }, 2600);   // 今日のノルマ達成: 連続日数・肉球スタンプ・おやつ。まだ問題が残っていれば続けられる
   const first = !S.meta.days[today()] || S.meta.days[today()] === "freeze"; if(!first){ saveSession(); updateStats(); nextItem(); return; }
   S.meta.days[today()] = true; save(); saveSession(); updateStats();
   const ok = SES.finished.filter(f => f.ok).length, ng = SES.finished.length - ok, PG = petGrant(ok, ng);
@@ -2704,7 +2708,7 @@ $("#search").oninput = renderList;
 document.querySelectorAll("#filters button").forEach(b => b.onclick = () => { FILTER = b.dataset.f; renderList(); });
 
 /* ───────── しくみ・設定 ───────── */
-function renderHow(){ try{ bindCorner(); }catch(e){}
+function renderHow(){ try{ bindCorner(); renderAuthBox(); }catch(e){}
   const x = t(), counts = [0,0,0,0,0,0]; let mastered = 0;
   cardsHere().forEach(c => { if(c.mastered) mastered++; else counts[Math.min(c.level, 5)]++; });
   $("#ladder").innerHTML = x.levels.map((n,i) => `<div class="rung${counts[i] ? " hi" : ""}"><b>${counts[i]}</b><span>${n}</span></div>`).join("") + `<div class="rung${mastered ? " hi" : ""}"><b>${mastered}</b><span>${x.chipDone}</span></div>`;
@@ -2826,7 +2830,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v71";
+const APP_VER = "v72";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -2967,6 +2971,43 @@ function moveBanner(){ if(!MOVE_ON || !isOldHome() || $("#moveBar")) return; con
   el.innerHTML = S.meta.movedAt ? `<span>${ko ? "🏠 이사 완료! 이제 새 주소에서 써 주세요" : "🏠 引っ越し完了！新しいアドレスで使ってね"}</span><a class="btn primary sm" href="${NEW_HOME}">meowca.app →</a>`
     : `<span>${ko ? "🏠 냥이가 새 집(meowca.app)으로 이사해요. 기록 그대로 가져가요" : "🏠 ネコが新しい家（meowca.app）へ引っ越し。記録もそのまま"}</span><button type="button" class="btn primary sm" id="moveGo">${ko ? "이사하기" : "引っ越す"}</button>`;
   document.body.appendChild(el); const g = $("#moveGo"); if(g) g.onclick = () => moveOut(g); }
+
+/* ════════ 로그인(기록 지키기): Supabase Auth — 구글·카카오·애플·LINE. 로그인하면 계정에 동기화 코드를 묶어 어느 기기에서든 같은 기록 ════════
+   로그인 없이도 전부 쓸 수 있음. 서버의 user_link 표에는 동기화 코드만 저장(본인만 읽기). 공급자는 Supabase 설정에서 켠 것만 버튼이 보임 */
+const LINE_PROVIDER = "";   // Supabase에 LINE(사용자 지정 OIDC)을 만들면 "custom:line" 처럼 식별자를 넣기
+let SBA = null, AUTH_USER = null, AUTH_PROV = null;
+async function sbAuth(){ if(SBA) return SBA; if(!window.supabase){ await loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"); }
+  SBA = window.supabase.createClient(SB_URL, SB_KEY, { auth: { flowType: "pkce", persistSession: true, detectSessionInUrl: true, storageKey: "meowca-auth" } });
+  SBA.auth.onAuthStateChange((ev, ses) => { AUTH_USER = ses && ses.user || null; if(ev === "SIGNED_IN") authLink(); renderAuthBox(); }); return SBA; }
+async function authProviders(){ if(AUTH_PROV) return AUTH_PROV; try{ const r = await fetch(`${SB_URL}/auth/v1/settings`, { headers: { apikey: SB_KEY } }); const j = await r.json(); const e = j.external || {};
+  AUTH_PROV = ["google", "kakao", "apple"].filter(k => e[k]); if(LINE_PROVIDER) AUTH_PROV.push("line"); }catch(_){ AUTH_PROV = []; } return AUTH_PROV; }
+const PROV_UI = { google: ["Google", "#fff", "#1f1f1f"], kakao: ["카카오", "#FEE500", "#191600"], apple: ["Apple", "#000", "#fff"], line: ["LINE", "#06C755", "#fff"] };
+async function authBoot(){ try{ const hasSes = Object.keys(localStorage).some(k => k.startsWith("meowca-auth")); if(!hasSes && !/[?&]code=/.test(location.search)) return;
+  const sb = await sbAuth(); const { data } = await sb.auth.getSession(); AUTH_USER = data.session && data.session.user || null;
+  if(/[?&]code=/.test(location.search)) history.replaceState(null, "", location.pathname); if(AUTH_USER) authLink(); renderAuthBox(); }catch(_){} }
+async function authStart(p){ const sb = await sbAuth(); track("login_try", { p }); const provider = p === "line" ? LINE_PROVIDER : p;
+  const { error } = await sb.auth.signInWithOAuth({ provider, options: { redirectTo: location.origin + location.pathname } }); if(error) toast(error.message); }
+let LINKING = false;
+async function authLink(){ if(LINKING || !AUTH_USER) return; LINKING = true;
+  try{ const sb = await sbAuth(); const { data: row } = await sb.from("user_link").select("sync_code").eq("user_id", AUTH_USER.id).maybeSingle();
+    if(row && row.sync_code){ if(!(S.meta.sync && S.meta.sync.code === row.sync_code)){ S.meta.sync = { code: row.sync_code }; save(); await syncNow({}); } }
+    else { if(!(S.meta.sync && S.meta.sync.code)){ S.meta.sync = { code: newCode() }; save(); } await syncNow({});
+      await sb.from("user_link").upsert({ user_id: AUTH_USER.id, sync_code: S.meta.sync.code, updated_at: new Date().toISOString() }); }
+    S.meta.loginAsked = 1; S.meta.acct = (AUTH_USER.app_metadata || {}).provider || "account"; save(); track("login_ok", { p: S.meta.acct });
+  }catch(e){ toast(S.meta.settings.ui === "ja" ? "ログインの連携に失敗しました。記録はそのままです。" : "로그인 연결에 실패했어요. 기록은 그대로예요."); }
+  finally{ LINKING = false; renderAuthBox(); } }
+async function authOut(){ const sb = await sbAuth(); await sb.auth.signOut(); AUTH_USER = null; S.meta.acct = null; save(); renderAuthBox(); toast(S.meta.settings.ui === "ja" ? "ログアウトしたニャ。この端末の記録はそのまま。" : "로그아웃했다냥. 이 기기 기록은 그대로야."); }
+function provButtons(list){ return list.map(p => { const [n, bg, fg] = PROV_UI[p]; return `<button type="button" class="btn prov" data-prov="${p}" style="background:${bg};color:${fg};border-color:${p === "google" ? "#dadce0" : bg}">${esc(S.meta.settings.ui === "ja" ? n + "で続ける" : n + "로 계속하기")}</button>`; }).join(""); }
+async function renderAuthBox(){ const box = $("#authBox"); if(!box) return; const ja = S.meta.settings.ui === "ja";
+  if(AUTH_USER){ box.innerHTML = `<p class="small">${ja ? "✅ ログイン中" : "✅ 로그인됨"} · <b>${esc((AUTH_USER.app_metadata || {}).provider || "")}</b> ${ja ? "— どの端末でも同じ記録" : "— 어느 기기에서든 같은 기록"}</p><button type="button" class="linkbtn" id="authOut">${ja ? "ログアウト" : "로그아웃"}</button>`; $("#authOut").onclick = authOut; return; }
+  const list = await authProviders(); if(!list.length){ box.innerHTML = `<p class="muted tiny">${ja ? "ログインは準備中ニャ（今は同期コードで記録を移せるニャ）" : "로그인은 준비 중이다냥 (지금은 아래 동기화 코드로 기록을 옮길 수 있다냥)"}</p>`; return; }
+  box.innerHTML = `<p class="small">${ja ? "ログインすると機種変更しても記録が消えないニャ" : "로그인하면 폰을 바꿔도 기록이 안 날아간다냥"}</p><div class="provs">${provButtons(list)}</div>`;
+  box.querySelectorAll("[data-prov]").forEach(b => b.onclick = () => authStart(b.dataset.prov)); }
+async function maybeLoginAsk(){ if(AUTH_USER || S.meta.loginAsked || S.meta.acct) return; const list = await authProviders(); if(!list.length) return;
+  S.meta.loginAsked = 1; save(); track("login_ask"); const ja = S.meta.settings.ui === "ja";
+  const bg = openSheet(`<div class="loginask">${nm("st_love", 64)}<h2>${ja ? "第1ラウンド完了ニャ！" : "첫 바퀴 완주다냥!"}</h2><p>${ja ? "せっかくの記録、なくさないように3秒でログインしておくニャ？ 機種変更してもそのまま続けられるニャ。" : "모처럼 쌓은 기록, 날아가지 않게 3초 로그인 해 둘래냥? 폰을 바꿔도 그대로 이어진다냥."}</p>
+    <div class="provs">${provButtons(list)}</div><button type="button" class="linkbtn" id="loginLater">${ja ? "あとで" : "나중에"}</button><p class="muted tiny">${ja ? "ログインしなくても全部使えるニャ。設定からいつでもできるニャ。" : "로그인 안 해도 전부 쓸 수 있다냥. 설정에서 언제든 할 수 있다냥."}</p></div>`);
+  bg.querySelectorAll("[data-prov]").forEach(b => b.onclick = () => authStart(b.dataset.prov)); $("#loginLater").onclick = () => { track("login_later"); closePop(); }; }
 
 /* ════════ 端末間の同期（Supabase・同期コード方式） ════════ */
 const SB_URL = "https://cgupivfptuzqyadhqhiz.supabase.co";
@@ -4163,12 +4204,13 @@ function openRisk(){
   const close = () => { el.remove(); riskUI(); };
   el.innerHTML = `<div class="rp-card">${say("st_surprised", esc(x.riskTitle))}
     <ul class="rp-list">${(r.length ? r : [{ lv: 0, msg: x.riskSafe }]).map(v => `<li class="lv${v.lv}">${esc(v.msg)}</li>`).join("")}</ul>
-    ${!sy.code ? `<p class="small">${esc(x.riskWhy)}</p>` : ""}
+    ${!sy.code ? `<p class="small">${esc(x.riskWhy)}</p>` : ""}${!sy.code && !AUTH_USER && AUTH_PROV && AUTH_PROV.length ? `<div class="provs">${provButtons(AUTH_PROV)}</div>` : ""}
     <div class="rp-btns">${!sy.code ? `<button class="btn primary" type="button" id="rpMake">🔑 ${esc(x.riskMake)}</button>` : `<button class="btn primary" type="button" id="rpOpen">${esc(x.riskOpen)}</button>`}
       <button class="btn ghost" type="button" id="rpLater">${esc(r.length ? x.riskLater : x.riskOk)}</button></div></div>`;
   el.onclick = e => { if(e.target === el) $("#rpLater").click(); };
   $("#rpLater").onclick = () => { S.meta.riskSnooze = Date.now() + 2 * 864e5; save(); close(); };
   const op = $("#rpOpen"); if(op) op.onclick = () => { close(); showView("how"); setTimeout(() => $("#syncCard").scrollIntoView({ behavior: "smooth", block: "start" }), 120); };
+  el.querySelectorAll("[data-prov]").forEach(b => b.onclick = () => authStart(b.dataset.prov));
   const mk = $("#rpMake"); if(mk) mk.onclick = async () => {
     mk.disabled = true; S.meta.sync = { code: newCode() }; save(); const ok = await syncNow(); const code = S.meta.sync.code;
     el.querySelector(".rp-card").innerHTML = `${say(ok ? "st_love" : "st_surprised", esc(ok ? x.riskMade(code) : x.syncErr))}
@@ -4180,7 +4222,8 @@ function openRisk(){
 }
 /* 少し使ったのにコードがないとき、学習中でない落ち着いたタイミングで1回だけすすめる（「あとで」なら2日後にまた） */
 function maybeRiskPrompt(){
-  if(SES || $("#riskPop") || $("#pawFx") || $("#pet:not(.hidden)")) return;
+  if(SES || POP || $("#riskPop") || $("#pawFx") || $("#pet:not(.hidden)")) return;
+  if(AUTH_PROV && AUTH_PROV.length && !AUTH_USER && !S.meta.loginAsked){ maybeLoginAsk(); return; }
   const sy = S.meta.sync || {}; if(sy.code || !usedEnough()) return;
   if((S.meta.riskSnooze || 0) > Date.now()) return;
   openRisk();
