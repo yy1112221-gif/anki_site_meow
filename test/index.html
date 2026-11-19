@@ -555,7 +555,7 @@ body.petopen{overflow:hidden}
 .tutask{position:fixed;z-index:40;left:50%;bottom:calc(78px + env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:8px 8px 8px 10px;border-radius:999px;background:var(--glass-strong);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1.5px solid var(--accent);box-shadow:0 8px 28px rgba(0,0,0,.28);font-size:.86rem;font-weight:700;color:var(--ink);white-space:nowrap;animation:tutIn .5s cubic-bezier(.3,1.6,.5,1) both, tutBob 2.4s ease-in-out .6s infinite}
 .tutask .nm{width:30px;height:30px} .tutask .ox{width:36px;height:36px;border-radius:50%;border:0;background:rgba(127,127,127,.14);font-size:1rem;cursor:pointer;display:grid;place-items:center;padding:0} .tutask .ox:active{transform:scale(.9)}
 .tutask.out{animation:tutOut .25s ease-in both} @keyframes tutIn{from{opacity:0;transform:translate(-50%,30px) scale(.8)}} @keyframes tutOut{to{opacity:0;transform:translate(-50%,20px) scale(.9)}} @keyframes tutBob{50%{transform:translate(-50%,-4px)}}
-.tour{position:fixed;inset:0;z-index:60} .tour-hole{position:fixed;border-radius:18px;box-shadow:0 0 0 9999px rgba(8,10,14,.62);transition:all .3s ease;pointer-events:none}
+.tour{position:fixed;inset:0;z-index:60} .tour-x{position:fixed;z-index:2;top:calc(12px + env(safe-area-inset-top));right:12px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:#111;font-size:1.2rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25)} .tour-hole{position:fixed;border-radius:18px;box-shadow:0 0 0 9999px rgba(8,10,14,.62);transition:all .3s ease;pointer-events:none}
 .tour-tip{position:fixed;left:16px;right:16px;max-width:420px;margin:0 auto;padding:14px 16px;border-radius:18px;background:var(--surface,#fff);color:var(--ink);box-shadow:0 10px 30px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:10px;align-items:flex-end} .tour-tip p{margin:0;align-self:stretch;font-weight:600;line-height:1.5}
 .bubble.tapme{cursor:pointer;-webkit-user-select:none;user-select:none} .bubble.pop{animation:bubPop .35s cubic-bezier(.3,1.7,.5,1)} @keyframes bubPop{0%{transform:scale(.88)}100%{transform:none}}
 .meltb{font-weight:700;color:var(--ink)} .meltbar{position:relative;height:6px;border-radius:99px;background:rgba(127,127,127,.18);margin:0 2px 8px;overflow:visible}
@@ -1630,8 +1630,9 @@ function maybeTutAsk(){   // 첫 입장에만: 작지만 눈에 띄는 O/X. 동�
 function runTour(){
   const x = t(), S2 = x.tutSteps, steps = [[".onb-langs", S2.onb], ["#startBtn, #resumeBtn, #moreBtn", S2.start], [".actrow .petbtn", S2.pet], ["#sessionStart .catbar", S2.bar], ["nav.subnav", S2.menu]]
     .map(([q, tx]) => [document.querySelector(q), tx]).filter(([e]) => e && e.getClientRects().length);
-  if(!steps.length) return; let i = 0; const ov = document.createElement("div"); ov.className = "tour"; ov.innerHTML = `<div class="tour-hole"></div><div class="tour-tip"><p></p><button class="btn primary sm" type="button"></button></div>`; document.body.appendChild(ov);
-  const hole = ov.querySelector(".tour-hole"), tip = ov.querySelector(".tour-tip"), btn = tip.querySelector("button");
+  if(!steps.length) return; let i = 0; const ov = document.createElement("div"); ov.className = "tour"; ov.innerHTML = `<div class="tour-hole"></div><button type="button" class="tour-x" aria-label="${S.meta.settings.ui === "ja" ? "閉じる" : "닫기"}">✕</button><div class="tour-tip"><p></p><button class="btn primary sm" type="button"></button></div>`; document.body.appendChild(ov);
+  ov.querySelector(".tour-x").onclick = e => { e.stopPropagation(); track("tour_skip", { at: i }); ov.remove(); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const hole = ov.querySelector(".tour-hole"), tip = ov.querySelector(".tour-tip"), btn = tip.querySelector(".btn");
   const show = () => { const [e, tx] = steps[i]; e.scrollIntoView({ block: "center", behavior: "auto" }); requestAnimationFrame(() => { const r = e.getBoundingClientRect(), pad = 8;
       Object.assign(hole.style, { left: r.left - pad + "px", top: r.top - pad + "px", width: r.width + pad * 2 + "px", height: r.height + pad * 2 + "px" });
       tip.querySelector("p").textContent = tx; btn.textContent = i === steps.length - 1 ? x.tutEnd : x.tutNext + ` (${i + 1}/${steps.length})`;
@@ -1678,8 +1679,8 @@ function nerdPop(b){ if(NERD_ON || !b) return false; NERD_ON = true; const N = N
   return true; }
 /* ════════ 첫 접속 3초 설정: 화면 언어 → 배울 언어 → 태어난 해(스크롤) → 튜토리얼 O/X ════════ */
 const SETUP_T = {
- ko: { hi: "…왔군. 세 가지만 탁탁탁 골라라.", ui: "화면 언어", learn: "배울 언어", born: "태어난 해", ok: "이걸로", skip: "건너뛰기", tut: "1분 튜토리얼 볼래?", tutNote: "나중에 설정에서 다시 볼 수 있으니 안심해라냥", back: "← 뒤로" },
- ja: { hi: "…来たか。三つだけ、ポンポンポンと選べ。", ui: "表示する言語", learn: "学ぶ言語", born: "生まれた年", ok: "これで", skip: "スキップ", tut: "1分チュートリアル見る？", tutNote: "あとで設定からまた見られるから安心するニャ", back: "← 戻る" } };
+ ko: { hi: "…왔군. 세 가지만 탁탁탁 골라라.", ui: "너가 가장 편한 언어 (배우는 언어 말고)", learn: "배우는 언어", born: "태어난 해", ok: "이걸로", skip: "건너뛰기", tut: "1분 튜토리얼 볼래?", tutNote: "나중에 설정에서 다시 볼 수 있으니 안심해라냥", back: "← 뒤로" },
+ ja: { hi: "…来たか。三つだけ、ポンポンポンと選べ。", ui: "いちばん楽な言語（学ぶ言語じゃなくて）", learn: "学ぶ言語", born: "生まれた年", ok: "これで", skip: "スキップ", tut: "1分チュートリアル見る？", tutNote: "あとで設定からまた見られるから安心するニャ", back: "← 戻る" } };
 const needSetup = () => !/move=/.test(location.hash) && !S.meta.setup && !Object.keys(S.cards).length && !Object.keys(S.meta.days || {}).length && !syncOn();
 function maybeSetup(){ if(!needSetup() || $("#setupBox")) return; const st = S.meta.settings, box = document.createElement("div"); box.id = "setupBox"; box.setAttribute("role", "dialog"); document.body.appendChild(box);
   let step = 0; const T0 = Date.now(); const Y = new Date().getFullYear(), years = []; for(let y = Y - 6; y >= Y - 80; y--) years.push(y);
@@ -2851,7 +2852,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v79";
+const APP_VER = "v80";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
