@@ -2887,7 +2887,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v84";
+const APP_VER = "v85";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3447,7 +3447,7 @@ function petStart(){
   const cv = $("#petCv"), ctx = cv.getContext("2d"), gcv = $("#petGL");
   const st = { cv, ctx, gcv, flies: [], parts: [], texts: [], combo: 0, lastHit: 0, squeeze: 0, holding: false, hold0: 0, hit: 0, flap: 0, shake: 0, t: 0, last: performance.now(), proj: [], grab: null, ring: 0 };
   // 格子
-  const N = JNX * JNY; st.N = N; st.rx = new Float32Array(N); st.ry = new Float32Array(N); st.dx = new Float32Array(N); st.dy = new Float32Array(N); st.vx = new Float32Array(N); st.vy = new Float32Array(N); st.pin = new Uint8Array(N);
+  const N = JNX * JNY; st.N = N; st.rx = new Float32Array(N); st.ry = new Float32Array(N); st.dx = new Float32Array(N); st.dy = new Float32Array(N); st.vx = new Float32Array(N); st.vy = new Float32Array(N); st.pin = new Uint8Array(N); st.free = new Uint8Array(N);
   for(let j = 0; j < JNY; j++) for(let i = 0; i < JNX; i++){ const k = j * JNX + i; st.rx[k] = JX0 + (JX1 - JX0) * i / (JNX - 1); st.ry[k] = JY0 + (JY1 - JY0) * j / (JNY - 1); st.pin[k] = st.ry[k] >= 119.5 ? 1 : 0; }
   st.upath = new Path2D(PET_BASE); st.mctx = document.createElement("canvas").getContext("2d");
   st.tex = document.createElement("canvas"); st.tctx = st.tex.getContext("2d");
@@ -3461,7 +3461,8 @@ function petStart(){
   st.pulls = []; st.hpid = null;
   const toU = e => { const r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top; return { px, py, ux: (px - st.cx) / (st.s * st.bw) + 64, uy: (py - st.by) / (st.s * st.bh) + 120 }; };
   cv.onpointerdown = e => { pa(); const { px, py, ux, uy } = toU(e); st.mctx.lineWidth = 22; if(!st.mctx.isPointInPath(st.upath, ux, uy) && !st.mctx.isPointInStroke(st.upath, ux, uy) && !(ux > -10 && ux < 138 && uy > 44 && uy < 128)) return;
-    if((ux < 53 || ux > 75) && uy > 66 && uy < 106 && st.pulls.length < 2){ st.pulls.push({ pid: e.pointerId, x0: ux, y0: uy, ox: 0, oy: 0, on: false, side: ux < 64 ? -1 : 1, t0: performance.now() }); try{ cv.setPointerCapture(e.pointerId); }catch(_){} return; }
+    const flap = (ux < 24 || ux > 104) && uy > 97 && uy < 126, belly = ux > 47 && ux < 81 && uy > 101 && uy < 126;   // 뱃살: 양쪽 끝 + 가운데 대뱃살 (앞발 있는 곳은 제외)
+    if(((ux < 53 || ux > 75) && uy > 66 && uy < 106 && !flap || flap || belly) && st.pulls.length < 2){ st.pulls.push({ pid: e.pointerId, x0: ux, y0: Math.min(uy, 117), ox: 0, oy: 0, on: false, side: belly ? 0 : ux < 64 ? -1 : 1, belly: flap || belly ? 1 : 0, mid: belly ? 1 : 0, t0: performance.now() }); try{ cv.setPointerCapture(e.pointerId); }catch(_){} return; }
     if(st.holding) return;
     st.holding = true; st.hpid = e.pointerId; st.hold0 = st.still0 = performance.now(); st.hx = ux; st.hy = uy; st.ax = px; st.ay = py; st.rubbed = false; st.rvx = st.rvy = 0;
     try{ cv.setPointerCapture(e.pointerId); }catch(_){} };
@@ -3469,7 +3470,7 @@ function petStart(){
     const pl = st.pulls.find(q => q.pid === e.pointerId);
     if(pl){ let ox = ux - pl.x0, oy = uyr - pl.y0; const L = Math.hypot(ox, oy);
       if(!pl.on && L > 3){ pl.on = true; buzz(10); }
-      if(pl.on){ const inward = ox * pl.side < 0, cap = inward ? 26 : 78, k = L > 0 ? cap * Math.tanh(L * 1.25 / cap) / L : 0; pl.ox = ox * k; pl.oy = Math.max(-55, Math.min(oy * k, 118 - pl.y0)); st.flap = Math.max(st.flap, .4); if(Math.random() < .15) buzz(5); }
+      if(pl.on){ const inward = ox * pl.side < 0, cap = pl.mid ? 46 : pl.belly ? (inward ? 18 : 62) : inward ? 26 : 78, k = L > 0 ? cap * Math.tanh(L * 1.25 / cap) / L : 0; pl.ox = ox * k; pl.oy = Math.max(pl.belly ? -30 : -55, Math.min(oy * k, pl.mid ? 26 : pl.belly ? 30 : 118 - pl.y0)); st.flap = Math.max(st.flap, .4); if(Math.random() < .15) buzz(5); }
       return; }
     if(!st.holding || e.pointerId !== st.hpid) return;
     const uy = Math.max(58, Math.min(118, uyr));
@@ -3508,17 +3509,21 @@ function jellyStep(st, h){
     const rx = st.rx[k], ry = st.ry[k], top = Math.max(0, (118 - ry) / 64);
     let tx = sw * top * top, ty = br * top, ka = KA;
     if(st.chew){ const cb = chewBulge(st); if(cb){ [-1, 1].forEach(sd => { const f = Math.exp(-((rx - 64 - sd * 22) ** 2 + (ry - 92) ** 2) / (2 * 10 * 10)); tx += sd * cb * f; ty += cb * .35 * f; }); ka += 300 * Math.exp(-((ry - 92) ** 2) / 200); } }
+    let freeK = 0;
     for(const pl of st.pulls){ if(!pl.on) continue; const ddx = rx - pl.x0, ddy = ry - pl.y0, d2 = ddx * ddx + ddy * ddy, L = Math.hypot(pl.ox, pl.oy) || 1, ux = pl.ox / L, uy = pl.oy / L, al = ddx * ux + ddy * uy, pe = ddx * uy - ddy * ux;
+      if(pl.belly){ const sg = pl.mid ? 21 : 12, fb = Math.exp(-pe * pe / (2 * sg * sg)) * (al > 0 ? 1 : Math.exp(-al * al / (2 * 14 * 14))) * Math.exp(-(Math.max(0, pl.y0 - 6 - ry) ** 2) / (2 * 12 * 12));
+        tx += pl.ox * fb; ty += pl.oy * fb; ka += 900 * fb * Math.exp(-d2 / (2 * 10 * 10)) + 200 * fb; if(fb > .08) freeK = Math.max(freeK, fb); continue; }
       // 外へ引っぱる: 向きの先は丸ごとついてくる（折れ返らない）/ 内へ寄せる: その場だけ寄って顔がむにゅっ
       const inward = pl.ox * pl.side < 0, f = Math.exp(-pe * pe / (2 * 13 * 13)) * (al > 0 ? (inward ? Math.exp(-al * al / (2 * 20 * 20)) : 1) : Math.exp(-al * al / (2 * 16 * 16)));
       tx += pl.ox * f; ty += pl.oy * f; ka += 900 * f * Math.exp(-d2 / (2 * 10 * 10)) + 200 * f; }
     if(st.dent > 0 && st.hx != null){ const ddx = rx - st.hx, ddy = ry - st.hy, f = Math.exp(-(ddx * ddx + ddy * ddy) / (2 * 11 * 11)) * st.dent;
       ty += 7.5 * f + Math.max(-4, Math.min(4, st.rvy * .05)) * f; tx += .32 * f * ddx + Math.max(-6, Math.min(6, st.rvx * .06)) * f; }
     if(sq){ const f = Math.exp(-((rx - st.hx) ** 2 + (ry - st.hy) ** 2) / (2 * 16 * 16)); ty += sq * (16 * f + 13 * top); tx += sq * (.35 * f * (rx - st.hx) + 9 * Math.sign(rx - 64) * Math.exp(-((ry - 106) ** 2) / 242)); }
-    if(st.pin[k]){ vx[k] += (-KA * 4 * (dx[k] - tx * .3) + KS * (lx - n * dx[k]) * .5 - C * 2 * vx[k]) * h; vy[k] = 0; dy[k] = 0; continue; }
+    st.free[k] = freeK > 0 ? 1 : 0;
+    if(st.pin[k] && !freeK){ vx[k] += (-KA * 4 * (dx[k] - tx * .3) + KS * (lx - n * dx[k]) * .5 - C * 2 * vx[k]) * h; vy[k] = 0; dy[k] = 0; continue; }
     vx[k] += (-ka * (dx[k] - tx) + KS * (lx - n * dx[k]) - C * vx[k]) * h;
     vy[k] += (-ka * (dy[k] - ty) + KS * (ly - n * dy[k]) - C * vy[k]) * h; }
-  for(let k = 0; k < N; k++){ dx[k] += vx[k] * h; dy[k] += vy[k] * h; if(!st.pin[k]){ const lim = 120 - st.ry[k]; if(dy[k] > lim){ dy[k] = lim; if(vy[k] > 0) vy[k] *= -.2; } if(dy[k] < -20){ dy[k] = -20; if(vy[k] < 0) vy[k] *= .3; } } }
+  for(let k = 0; k < N; k++){ dx[k] += vx[k] * h; dy[k] += vy[k] * h; if(st.pin[k] && !st.free[k]){ if(Math.abs(dy[k]) > .01){ dy[k] *= .6; vy[k] = 0; } } if(!st.pin[k] && !st.free[k]){ const lim = 120 - st.ry[k]; if(dy[k] > lim){ dy[k] = lim; if(vy[k] > 0) vy[k] *= -.2; } if(dy[k] < -20){ dy[k] = -20; if(vy[k] < 0) vy[k] *= .3; } } }
 }
 function petLoop(now){ const st = PET; if(!st) return; try{ petLoop0(now); }catch(e){ console.error(e); st.raf = requestAnimationFrame(petLoop); } }
 function petLoop0(now){
@@ -3730,7 +3735,7 @@ function petDraw(){
     for(let k = 0; k < st.N; k++){ let ox = 0, oy = 0; const rx = st.rx[k], ry = st.ry[k];
       for(const r of rips){ const ddx = rx - r.x, ddy = ry - r.y, d = Math.hypot(ddx, ddy) || 1, ph = d - 48 * r.t, env = Math.exp(-ph * ph / (2 * 16 * 16)) * Math.exp(-1.7 * r.t) * Math.min(1, d / 6), w = r.A * env * Math.sin(ph / 18 * Math.PI * 2);
         ox += ddx / d * w; oy += ry < 119.5 ? ddy / d * w * .8 : 0; }
-      const X = st.cx + shx + (rx + st.dx[k] + ox - 64) * s * st.bw, Y = st.by + shy + (Math.min(120, ry + st.dy[k] + oy) - 120 + (ry > 120 ? ry - 120 : 0)) * s * st.bh; pos[k * 2] = X / W * 2 - 1; pos[k * 2 + 1] = 1 - Y / H * 2; }
+      const X = st.cx + shx + (rx + st.dx[k] + ox - 64) * s * st.bw, Y = st.by + shy + (st.free && st.free[k] ? ry + st.dy[k] + oy - 120 : Math.min(120, ry + st.dy[k] + oy) - 120 + (ry > 120 ? ry - 120 : 0)) * s * st.bh; pos[k * 2] = X / W * 2 - 1; pos[k * 2 + 1] = 1 - Y / H * 2; }
     gl.viewport(0, 0, st.gcv.width, st.gcv.height); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, st.tex);
     gl.bindBuffer(gl.ARRAY_BUFFER, bP); gl.bufferData(gl.ARRAY_BUFFER, pos, gl.DYNAMIC_DRAW); gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_SHORT, 0); }
