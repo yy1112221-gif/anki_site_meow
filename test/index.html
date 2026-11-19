@@ -1560,14 +1560,27 @@ function buildSession(){
   dueCards().forEach(c => reviewModes(c).forEach(m => items.push({ id: c.id, mode: m })));
   // 새 단어는 3개씩 묶어 단계를 번갈아(같은 단어를 연달아 묻지 않고 짧게 간격을 둠): 맞혀보기 → 뜻 말하기 → 빈칸 → 뜻 보고 쓰기
   const nw = pickNewWithSlang(newQuota());
-  for(let i = 0; i < nw.length; i += 3){ const g = nw.slice(i, i + 3);
+  const gs = []; { let n = nw.length, i = 0; const k = Math.max(1, Math.floor(n / 3)); for(let j = 0; j < k; j++){ const sz = Math.floor(n / k) + (j < n % k ? 1 : 0); gs.push(nw.slice(i, i + sz)); i += sz; } }   // 3개 안팎으로 나누되 1~2개만 남는 묶음이 없게
+  for(const g of gs){
     g.forEach(c => items.push({ id: c.id, mode: "study" })); g.forEach(c => items.push({ id: c.id, mode: "meaning" }));
     g.forEach(c => { if(clozeParts(c)) items.push({ id: c.id, mode: "cloze" }); }); g.slice().reverse().forEach(c => items.push({ id: c.id, mode: "recall" })); }
   const ns = activeCards().filter(c => c.isNew && c.script).sort((a, b) => (a.created || 0) - (b.created || 0)).slice(0, scriptNewToday());
   ns.forEach(c => items.push({ id: c.id, mode: "scriptNew" })); ns.slice().sort(() => Math.random() - .5).forEach(c => items.push({ id: c.id, mode: "script" }));
-  const remaining = {}; items.forEach(it => remaining[it.id] = (remaining[it.id]||0) + 1);
-  return { queue: items, done: 0, failed: {}, remaining, finished: [], state: null };
+  const q = spreadQueue(items, []), remaining = {}; q.forEach(it => remaining[it.id] = (remaining[it.id]||0) + 1);
+  return { queue: q, done: 0, failed: {}, remaining, finished: [], state: null };
 }
+/* 같은 단어가 연달아 나오지 않게: 단어마다 단계 순서(맞혀보기→뜻→빈칸→쓰기)는 지키면서, 같은 단어 사이에 최소 SPREAD_GAP개의 다른 문제를 끼움.
+   (같은 세션 안에서도 바로 다시 묻는 것보다 사이를 두고 꺼내 떠올리게 하는 편이 오래 남는다 — 간격 효과·인출 연습) 다른 단어가 없으면 어쩔 수 없이 가장 오래된 것부터 */
+const SPREAD_GAP = 2;
+function spreadQueue(items, recent){
+  const per = new Map(), order = []; items.forEach((it, i) => { if(!per.has(it.id)){ per.set(it.id, []); order.push(it.id); } per.get(it.id).push(Object.assign({ _o: i }, it)); });
+  const out = [], hist = (recent || []).slice(), lastAt = id => { for(let k = hist.length - 1, d = 0; k >= 0; k--, d++) if(hist[k] === id) return d; return Infinity; };
+  while(out.length < items.length){ const cands = order.filter(id => per.get(id).length).sort((a, b) => per.get(a)[0]._o - per.get(b)[0]._o);
+    const left = items.length - out.length, ready = cands.filter(x => lastAt(x) >= SPREAD_GAP);
+    const urgent = ready.filter(x => { const k = per.get(x).length; return left - k <= (k - 1) * SPREAD_GAP + 1; }).sort((a, b) => per.get(b).length - per.get(a).length);   // 남은 문제가 많은 단어를 미리 섞어 넣어 끝에 몰리지 않게
+    let id = urgent[0] != null ? urgent[0] : ready[0]; if(id == null) id = cands.slice().sort((a, b) => lastAt(b) - lastAt(a))[0];
+    const it = per.get(id).shift(); delete it._o; out.push(it); hist.push(id); }
+  return out; }
 function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1); while(S.meta.days[d]){ n++; d = addDays(d, -1); } return n; }
 
 function renderStart(){
@@ -1807,7 +1820,7 @@ function settleItem(correct){
   { const c = S.cards[it.id]; if(c){ LAST_Q.push({ w: c.word, m: String(c.meaning || "").slice(0, 60), md: it.mode, ok: !!correct }); if(LAST_Q.length > 3) LAST_Q.shift(); } }
   if(it.mode !== "study" && it.mode !== "scriptNew" && !correct){
     SES.failed[it.id] = true;
-    SES.queue.splice(Math.min(3, SES.queue.length), 0, { id: it.id, mode: it.mode });
+    SES.queue.splice(Math.min(3, SES.queue.length), 0, { id: it.id, mode: it.mode }); SES.queue = spreadQueue(SES.queue, [it.id]);
     SES.remaining[it.id]++;
   }
   SES.remaining[it.id]--; SES.done++;
@@ -2874,7 +2887,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v82";
+const APP_VER = "v83";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
