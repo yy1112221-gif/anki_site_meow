@@ -1218,7 +1218,7 @@ function firstVisitDefaults(){   // 처음 온 사람: 브라우저 언어로 �
   const q = new URLSearchParams(location.search), nl = (navigator.language || "").toLowerCase(), st = S.meta.settings;
   if(nl.startsWith("ja")){ st.ui = "ja"; st.lang = "ko"; } else { st.ui = "ko"; st.lang = "ja"; }
   if(["ko", "ja"].includes(q.get("ui"))) st.ui = q.get("ui"); if(q.get("lang") && LANGS[q.get("lang")] && q.get("lang") !== st.ui) st.lang = q.get("lang");
-  if(st.lang === "ja" || st.lang === "ko"){ st.handsFree = true; S.meta.hfTip = 1; } }   // 일본어 키보드 없는 사람이 막히지 않게: 처음엔 '입력 없이'(정답 보고 직접 채점)
+  st.handsFree = false; }   // 처음엔 직접 입력이 기본(무엇을 할지 바로 보임). '입력 없이'는 위 버튼으로 고르는 선택지
 /* 데이터 보호: ① 하루 한 번 기기 안 백업(-bak) ② 읽기 실패 시 원본을 -rescue 로 따로 보관하고, 보관 못 하면 덮어쓰기 금지 */
 let LOAD_BAD = false;
 function load(){ let raw = null; try{ raw = localStorage.getItem(LS_KEY); }catch(e){ LOAD_BAD = true; return; }
@@ -1460,14 +1460,17 @@ function plainAudio(url, text, opts){
 function fixAudioUrl(u){ const m = String(u||"").match(/api\.tatoeba\.org\/v1\/audio\/(\d+)\/file/); return m ? "https://tatoeba.org/audio/download/" + m[1] : u; }
 function audioFor(text){ const c = Object.values(S.cards).find(c => c.audio && c.example === text); return c ? c.audio : null; }
 const UI_SPEECH = { ja:"ja-JP", ko:"ko-KR" };
+const SPEED_K = { ko: 1.2, en: 1.2 };   // 한국어·영어 음성은 기본으로 1.2배 빠르게(설정 속도에 곱함)
+const spK = lang => SPEED_K[String(lang || "").slice(0, 2)] || 1;
 function ttsGo(u){ if(speechSynthesis.speaking || speechSynthesis.pending){ speechSynthesis.cancel(); setTimeout(() => speechSynthesis.speak(u), 140); } else speechSynthesis.speak(u); }
 function ttsSpeak(text, slow, uiLang){
   if(!canSpeak()) return false;
   const u = new SpeechSynthesisUtterance(text); u.lang = L().speech;
-  if(uiLang){ const want = UI_SPEECH[uiLang] || "ja-JP"; u.lang = want; const vv = voicesFor(want).sort((a,b) => voiceScore(b, want) - voiceScore(a, want))[0]; if(vv) u.voice = vv; u.rate = Number(S.meta.settings.rate) || 0.8; ttsGo(u); return true; }
+  if(uiLang){ const want = UI_SPEECH[uiLang] || "ja-JP"; u.lang = want; const vv = voicesFor(want).sort((a,b) => voiceScore(b, want) - voiceScore(a, want))[0]; if(vv) u.voice = vv; u.rate = Math.min(2, (Number(S.meta.settings.rate) || 0.8) * spK(want)); ttsGo(u); return true; }
   const base = Number(S.meta.settings.rate) || 0.8;
   u.rate = slow ? Math.max(0.35, Math.min(0.55, base * 0.6)) : base;
   const v = pickVoice(); if(v){ u.voice = v; u.lang = v.lang; }
+  if(!slow) u.rate = Math.min(2, u.rate * spK(u.lang));
   // Safari: cancel の直後に speak すると捨てられることがあるので、話している最中なら少し待つ
   ttsGo(u); return true;
 }
@@ -1692,7 +1695,7 @@ function maybeSetup(){ if(!needSetup() || $("#setupBox")) return; const st = S.m
     box.innerHTML = `<div class="su-in">${say("st_default", esc(x.hi))}<div class="su-dots">${[0, 1, 2, 3].map(i => `<i class="${i <= step ? "on" : ""}"></i>`).join("")}</div>${body}${step ? `<button type="button" class="linkbtn su-back" id="suBack">${esc(x.back)}</button>` : ""}</div>`;
     const bk = $("#suBack"); if(bk) bk.onclick = () => { step--; draw(); };
     box.querySelectorAll("[data-ui]").forEach(b => b.onclick = () => { if(st.lang === b.dataset.ui) st.lang = b.dataset.ui === "ko" ? "ja" : "ko"; setUiLang(b.dataset.ui); track("setup", { step: 0, v: st.ui, ms: Date.now() - T0 }); step = 1; draw(); });
-    box.querySelectorAll("[data-lg]").forEach(b => b.onclick = () => { st.lang = b.dataset.lg; st.handsFree = st.lang === "ja" || st.lang === "ko"; save(); track("setup", { step: 1, v: st.lang, ms: Date.now() - T0 }); step = 2; draw(); });
+    box.querySelectorAll("[data-lg]").forEach(b => b.onclick = () => { st.lang = b.dataset.lg; st.handsFree = false; save(); track("setup", { step: 1, v: st.lang, ms: Date.now() - T0 }); step = 2; draw(); });
     box.querySelectorAll("[data-tut]").forEach(b => b.onclick = () => finish(b.dataset.tut === "1"));
     const w = $("#suWheel"); if(w){ const def = S.meta.by || Y - 21, el = w.querySelector(`[data-y="${def}"]`) || w.children[15];
       const mark = () => { const r = w.getBoundingClientRect(), c = r.top + r.height / 2; let best = null, bd = 1e9; [...w.children].forEach(k => { const kr = k.getBoundingClientRect(), d = Math.abs(kr.top + kr.height / 2 - c); if(d < bd){ bd = d; best = k; } }); w.querySelectorAll(".on").forEach(k => k.classList.remove("on")); if(best) best.classList.add("on"); return best; };
@@ -2852,7 +2855,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v81";
+const APP_VER = "v82";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
