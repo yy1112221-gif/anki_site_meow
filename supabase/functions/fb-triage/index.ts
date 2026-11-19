@@ -43,7 +43,9 @@ Deno.serve(async (req) => {
     if (n === 3 || n === 10 || n === 30) await tg(`🚨 같은 오류 ${n}건 (6시간)\n${f.msg}\n${d}`);
     return new Response("ok");
   }
-  if (!AK) { await tg(`📮 [${f.kind}] ${f.msg}\n${d}`); await upd(f.id, { status: "waiting_owner", level: 3 }); return new Response("ok"); }
+  if (!AK) {                                       // API 키 없음: 운영자가 이 메시지를 그대로 복사해 Claude에 붙여넣기
+    await tg(`📮 MEOWCA 문의 (Claude에 통째로 붙여넣기)\n문의ID: ${f.id}\n종류: ${f.kind}\n시각: ${f.created_at}\n내용: ${f.msg}\n진단: ${d}`);
+    await upd(f.id, { status: "waiting_owner", level: 3 }); return new Response("ok"); }
 
   // ── 1단계: Haiku — 분류 + 쉬운 건 바로 답장
   const h = await claude("claude-haiku-5-5",
@@ -67,6 +69,6 @@ owner=true: 코드 수정·문제 데이터 수정이 필요하거나 데이터 
     reply: s.reply || null, replied_at: s.reply ? new Date().toISOString() : null });
 
   // ── 3단계: 운영자 호출 → Claude Code(Opus)에 그대로 붙여넣기
-  if (owner) await tg(`🆘 운영자 필요 (sev ${h.sev})\n문의: ${f.msg}\n추정: ${s.cause}\n수정: ${s.fix}\n\n👉 Claude에 붙여넣기:\n"암기냥이 문의 ${f.id} 고쳐줘. ${s.fix}"\n${d}`);
+  if (owner) await tg(`🆘 운영자 필요 (sev ${h.sev})\n문의ID: ${f.id}\n문의: ${f.msg}\n추정: ${s.cause}\n수정: ${s.fix}\n\n👉 Claude에 붙여넣기:\n"암기냥이 문의 ${f.id} 고쳐줘. ${s.fix}"\n${d}`);
   return new Response("ok");
 });
