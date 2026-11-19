@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-18T22:08:31.592052Z",
+ "updated": "2026-11-19T22:08:43.787833Z",
  "lang": "es",
  "terms": [
   {
@@ -12,20 +12,20 @@
    "first": "2026-11-18",
    "def": [],
    "ex": [],
-   "at": "2026-11-18T22:08:31.592052Z",
+   "at": "2026-11-19T22:08:43.787833Z",
    "cue": 10
   },
   {
    "t": "maxxing",
-   "n": 4,
+   "n": 5,
    "src": [
     "google_news"
    ],
-   "s": 6,
+   "s": 7,
    "first": "2026-11-18",
    "def": [],
    "ex": [],
-   "at": "2026-11-18T22:08:31.592052Z",
+   "at": "2026-11-19T22:08:43.787833Z",
    "cue": 5
   },
   {
@@ -37,37 +37,37 @@
    "s": 5,
    "first": "2026-11-18",
    "def": [
-    "No significa que si no hubiese venido aquí, hubiera dejado el golf, no.",
-    "golf"
+    "golf",
+    "No significa que si no hubiese venido aquí, hubiera dejado el golf, no."
    ],
    "ex": [
     "Para mí el golf es importante porque adoro jugar, pero lo más importante es mi familia.",
     "P: ¿El golf puede sobrevivir cada uno por su lado?",
     "P: Ahora está en el LIV Golf, un campeonato que tiene menos días de competición."
    ],
-   "at": "2026-11-18T22:08:31.592052Z",
-   "cue": 4
+   "at": "2026-11-19T22:08:43.787833Z",
+   "cue": 3
   },
   {
    "t": "farmear aura",
-   "n": 2,
+   "n": 3,
    "src": [
     "bing_news"
    ],
-   "s": 4,
+   "s": 5,
    "first": "2026-11-18",
    "def": [
-    "Así que, llevado al lenguaje de internet, “farmear aura” significa hacer cosas que “te dan puntos de aura”.",
-    "Agosto 21, 2026 • Gabriela Velasco Ceja Twitter Pinterest Tumblr Email ¿Qué significa farmear aura y por qué es una tendencia?",
-    "to aura farm"
+    "Y aunque el término comenzó a usarse para nombrar a las celebridades más cool, los jovenes también están dispuestos a farmear aura a como dé lugar.",
+    "to aura farm",
+    "Así que, llevado al lenguaje de internet, “farmear aura” significa hacer cosas que “te dan puntos de aura”."
    ],
    "ex": [
-    "Hablemos sobre una de las tendencias más populares del momento: farmear aura .",
-    "“Farmear aura” es una de las expresiones que más aparecen en redes sociales últimamente.",
+    "De hecho, hay quienes consideran que algunas personas irradian aura de manera natural, inclusive que algunas celebridades han nacido para farmear aura.",
     "- Farmear aura (ganar popularidad o mejorar la reputación dentro del grupo).",
-    "A expressão \"farmear aura\" se tornou um dos novos códigos da cultura da internet."
+    "Hablemos sobre una de las tendencias más populares del momento: farmear aura .",
+    "“Farmear aura” es una de las expresiones que más aparecen en redes sociales últimamente."
    ],
-   "at": "2026-11-18T22:08:31.592052Z",
+   "at": "2026-11-19T22:08:43.787833Z",
    "cue": 5
   },
   {
@@ -88,7 +88,7 @@
     "Inizialmente demure descrive una persona, generalmente una donna, caratterizzata da riservatezza, modestia, pudore e discrezione.",
     "En la cultura pop, \"demure\" ha adquirido un nuevo sentido tras volverse un meme este año."
    ],
-   "at": "2026-11-18T22:08:31.592052Z",
+   "at": "2026-11-19T22:08:43.787833Z",
    "cue": 14
   },
   {
@@ -101,7 +101,20 @@
    "first": "2026-11-18",
    "def": [],
    "ex": [],
-   "at": "2026-11-18T22:08:31.592052Z",
+   "at": "2026-11-19T22:08:43.787833Z",
+   "cue": 2
+  },
+  {
+   "t": "extraordinary",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-19",
+   "def": [],
+   "ex": [],
+   "at": "2026-11-19T22:08:43.787833Z",
    "cue": 2
   },
   {
@@ -117,7 +130,7 @@
     "La etiqueta #BlocusBCN identificaba mensajes que anunciaban la concentración en la capital catalana.",
     "El caso de Blocus muestra cómo las convocatorias juveniles pueden difundirse mediante diferentes plataformas digitales, desde perfiles públicos hasta grupos privados de mensajería."
    ],
-   "at": "2026-11-18T22:08:31.592052Z",
+   "at": "2026-11-19T22:08:43.787833Z",
    "cue": 2
   },
   {
@@ -137,7 +150,7 @@
     "No tanto, porque 'polyester' no apareció de la nada.",
     "La red no tardó en etiquetar este vídeo diseñado por y para el algoritmo, que aspira a ser modelo de vida, como 'polyester' o 'Polyester lifestyle'."
    ],
-   "at": "2026-11-18T22:08:31.592052Z",
+   "at": "2026-11-19T22:08:43.787833Z",
    "cue": 2
   },
   {
@@ -158,7 +171,7 @@
     "Alguna cosa similar ha ocurrido con ‘ALV’ .",
     "Las siglas 'ALV' son un ejemplo."
    ],
-   "at": "2026-11-18T22:08:31.592052Z",
+   "at": "2026-11-19T22:08:43.787833Z",
    "cue": 6
   },
   {
@@ -180,7 +193,7 @@
     "En resumen, evita cualquier acción que podría generarles cringe o vergüenza ajena a otros.",
     "- Cringe (algo que da vergüenza ajena)."
    ],
-   "at": "2026-11-18T22:08:31.592052Z",
+   "at": "2026-11-19T22:08:43.787833Z",
    "cue": 6
   },
   {
@@ -200,8 +213,8 @@
     "Sobre el registro: NPC es coloquial-juvenil y funciona bien en redes, chats y conversaciones informales.",
     "¿ Por qué se dice que NPC es un insulto ?"
    ],
-   "at": "2026-11-18T22:08:31.592052Z",
-   "cue": 4
+   "at": "2026-11-19T22:08:43.787833Z",
+   "cue": 5
   },
   {
    "t": "shippear",
@@ -222,7 +235,7 @@
     "Es parte del ritual de shippear.",
     "- Shippear (querer que dos personas sean pareja)."
    ],
-   "at": "2026-11-18T22:08:31.592052Z",
+   "at": "2026-11-19T22:08:43.787833Z",
    "cue": 3
   },
   {
@@ -243,7 +256,7 @@
     "Segundo os relatos nas redes sociais, a mentalidade \"delulu\" envolve o uso de afirmações, otimismo e pensamento positivo 👍 .",
     "- Delulu (persona que vive demasiado en su propia fantasía)."
    ],
-   "at": "2026-11-18T22:08:31.592052Z",
+   "at": "2026-11-19T22:08:43.787833Z",
    "cue": 5
   },
   {
@@ -264,7 +277,7 @@
     "“Llevo todo el curso sacando sobresalientes, estoy en mi prime”.",
     "No es la primera vez que sucede algo así."
    ],
-   "at": "2026-11-18T22:08:31.592052Z",
+   "at": "2026-11-19T22:08:43.787833Z",
    "cue": 3
   },
   {
@@ -286,8 +299,91 @@
     "Ghostear a una persona origina un dolor emocional y a veces es peor que una simple ruptura.",
     "- Ghostear (dejar de responder a alguien de repente)."
    ],
-   "at": "2026-11-18T22:08:31.592052Z",
+   "at": "2026-11-19T22:08:43.787833Z",
    "cue": 5
+  },
+  {
+   "t": "chats",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "A pesar de su amplio uso, no todos conocen su funcionamiento, por ejemplo ¿qué significa el punto verde en los chats ?"
+   ],
+   "ex": [
+    "Los trolls se dedican a sembrar cizaña por chats, foros, blogs y páginas web colaborativas.",
+    "Los trolls se dedican a sembrar cizaña en chats, foros, blogs y páginas web colaborativas.",
+    "En los chats de WhatsApp hay varios códigos secretos para comunicar ideas o emociones.",
+    "En mayúsculas es la versión original; en minúsculas es igual de común en chats y comentarios."
+   ],
+   "at": "2026-11-19T22:08:43.787833Z",
+   "cue": 2
+  },
+  {
+   "t": "no puedo más",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [],
+   "ex": [
+    "No puedo más con ello."
+   ],
+   "at": "2026-11-19T22:08:43.787833Z",
+   "cue": 1
+  },
+  {
+   "t": "fomo",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "side quest",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "boomers",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "farmeando aura",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "generación lamine yamal",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "al",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
   },
   {
    "t": "padrear",
@@ -328,89 +424,6 @@
    ],
    "at": "2026-11-18T22:08:31.592052Z",
    "cue": 6
-  },
-  {
-   "t": "no puedo más",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [],
-   "ex": [
-    "No puedo más con ello."
-   ],
-   "at": "2026-11-18T22:08:31.592052Z",
-   "cue": 1
-  },
-  {
-   "t": "boomers",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "fomo",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "side quest",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "generación lamine yamal",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "farmeando aura",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "al",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "chats",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "A pesar de su amplio uso, no todos conocen su funcionamiento, por ejemplo ¿qué significa el punto verde en los chats ?"
-   ],
-   "ex": [
-    "Los trolls se dedican a sembrar cizaña por chats, foros, blogs y páginas web colaborativas.",
-    "Los trolls se dedican a sembrar cizaña en chats, foros, blogs y páginas web colaborativas.",
-    "El punto verde ayuda a localizar los mensajes o chats pendientes por leer.",
-    "En los chats de WhatsApp hay varios códigos secretos para comunicar ideas o emociones."
-   ],
-   "at": "2026-11-18T12:56:47.068409Z",
-   "cue": 5
   }
  ]
 }
