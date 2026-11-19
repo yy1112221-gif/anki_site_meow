@@ -2851,7 +2851,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v77";
+const APP_VER = "v78";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3601,11 +3601,15 @@ function drawCatTex(st){
   drawCatFace(st, g);
   g0.setTransform(1, 0, 0, 1, 0, 0); g0.drawImage(st.tex2, 0, 0);
 }
-function omegaMouth(g, my, w, sq, open, tongue, tongueOut){
-  const P = (path) => { path.moveTo(64 - w - 2.5, my - 2.5 * sq); path.quadraticCurveTo(64 - w - 1.5, my + 1 * sq, 64 - w / 2, my + 3.2 * sq); path.quadraticCurveTo(63.4, my + 4.4 * sq, 64, my); path.quadraticCurveTo(64.6, my + 4.4 * sq, 64 + w / 2, my + 3.2 * sq); path.quadraticCurveTo(64 + w + 1.5, my + 1 * sq, 64 + w + 2.5, my - 2.5 * sq); };
-  if(open > 0){ const om = new Path2D(), o = open; om.moveTo(64 - w / 2 - .6, my + 2.6 * sq); om.quadraticCurveTo(63.4, my + 4.4 * sq, 64, my + .3); om.quadraticCurveTo(64.6, my + 4.4 * sq, 64 + w / 2 + .6, my + 2.6 * sq);
-    om.quadraticCurveTo(64 + w / 2, my + 4 + o * 2.4, 64, my + 4.6 + o * 2.4); om.quadraticCurveTo(64 - w / 2, my + 4 + o * 2.4, 64 - w / 2 - .6, my + 2.6 * sq); om.closePath();
-    g.fillStyle = "#6b2c34"; g.fill(om); if(tongue && !tongueOut){ g.save(); g.clip(om); g.fillStyle = "#ef8aa0"; g.beginPath(); g.ellipse(64, my + 4.4 + o * 2, Math.min(3.2, w * .55), 1.6 + o * .6, 0, 0, Math.PI * 2); g.fill(); g.restore(); } }
+function omegaMouth(g, my, w, sq, open, tongue, tongueOut){   // 부드러운 ω(눕힌 3): 둥근 혹 두 개, 가운데는 살짝 들어간 이음새, 양끝은 살짝 말려 올라감
+  const r = w * .52, h = 3 * sq, top = my + .2;
+  const P = (path) => { path.moveTo(64 - 2 * r - .9, top - .8); path.quadraticCurveTo(64 - 2 * r - .2, top - .5, 64 - 2 * r, top);
+    path.bezierCurveTo(64 - 2 * r, top + h * 1.33, 64, top + h * 1.33, 64, top + .15);
+    path.bezierCurveTo(64, top + h * 1.33, 64 + 2 * r, top + h * 1.33, 64 + 2 * r, top); path.quadraticCurveTo(64 + 2 * r + .2, top - .5, 64 + 2 * r + .9, top - .8); };
+  if(open > 0){ const om = new Path2D(), o = open, yb = top + h * .95;
+    om.moveTo(64 - r - .3, yb); om.bezierCurveTo(64 - r * .35, yb + .1, 64, top + h * .7, 64, top + .4); om.bezierCurveTo(64, top + h * .7, 64 + r * .35, yb + .1, 64 + r + .3, yb);
+    om.quadraticCurveTo(64 + r, yb + 1.4 + o * 2.4, 64, yb + 1.9 + o * 2.4); om.quadraticCurveTo(64 - r, yb + 1.4 + o * 2.4, 64 - r - .3, yb); om.closePath();
+    g.fillStyle = "#6b2c34"; g.fill(om); if(tongue && !tongueOut){ g.save(); g.clip(om); g.fillStyle = "#ef8aa0"; g.beginPath(); g.ellipse(64, yb + 1.6 + o * 2, Math.min(3, r * 1.05), 1.5 + o * .6, 0, 0, Math.PI * 2); g.fill(); g.restore(); } }
   const pth = new Path2D(); P(pth); g.strokeStyle = INKC; g.lineWidth = 2; g.stroke(pth); }
 function drawCatFace(st, g){ const fk = st.faceK || S.meta.settings.faceK || 1; g.save(); g.translate(64, 86); g.scale(fk, fk); g.translate(-64, -86); drawCatFace0(st, g); g.restore(); }
 function drawCatFace0(st, g){
