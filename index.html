@@ -1360,7 +1360,13 @@ const U = () => UI_LANG[S.meta.settings.ui] || UI_LANG.ja;
 const L = () => LANGS[S.meta.settings.lang] || LANGS.es;
 const langName = k => t().langNames[k || S.meta.settings.lang];
 let SAVE_FAIL = false;
-function save(){ S.meta.mu = Date.now(); if(LOAD_BAD) return; try{ const js = JSON.stringify(S); try{ localStorage.setItem(LS_KEY, js); }catch(q){ localStorage.removeItem(LS_KEY + "-bak"); localStorage.setItem(LS_KEY, js); } if(SAVE_FAIL){ SAVE_FAIL = false; riskUI(); } }catch(e){ toast(t().storageFull); if(!SAVE_FAIL){ SAVE_FAIL = true; riskUI(); } } scheduleSync(); }
+/* 저장은 반드시 persist()를 거친다: 읽기 실패(LOAD_BAD)면 절대 덮어쓰지 않음 · 용량 부족이면 백업부터 비움 */
+function persist(){ if(LOAD_BAD) return false; const js = JSON.stringify(S); try{ localStorage.setItem(LS_KEY, js); }catch(q){ ["-bak3", "-bak2", "-bak"].forEach(k => { try{ localStorage.removeItem(LS_KEY + k); }catch(_){} }); localStorage.setItem(LS_KEY, js); } return true; }
+/* 냥이(간식·코인)가 바뀌면 수정 시각 u를 올림 → 동기화 때 다른 기기 옛 냥이가 덮지 못함 */
+let PET_SIG = null;
+function petSig(){ const p = S.meta.pet; if(!p) return ""; const o = Object.assign({}, p); delete o.u; return JSON.stringify(o); }
+function petMark(){ const sg = petSig(); if(PET_SIG !== null && sg !== PET_SIG && S.meta.pet) S.meta.pet.u = Date.now(); PET_SIG = sg; }
+function save(){ S.meta.mu = Date.now(); if(LOAD_BAD) return; try{ petMark(); persist(); if(SAVE_FAIL){ SAVE_FAIL = false; riskUI(); } }catch(e){ toast(t().storageFull); if(!SAVE_FAIL){ SAVE_FAIL = true; riskUI(); } } scheduleSync(); }
 function firstVisitDefaults(){   // 처음 온 사람: 브라우저 언어로 화면 언어·학습 언어를 정함 (한국어 → 일본어 JLPT). ?ui=ko&lang=ja 로도 지정 가능
   const q = new URLSearchParams(location.search), nl = (navigator.language || "").toLowerCase(), st = S.meta.settings;
   if(nl.startsWith("ja")){ st.ui = "ja"; st.lang = "ko"; } else { st.ui = "ko"; st.lang = "ja"; }
@@ -1370,7 +1376,10 @@ function firstVisitDefaults(){   // 처음 온 사람: 브라우저 언어로 �
 let LOAD_BAD = false;
 function load(){ let raw = null; try{ raw = localStorage.getItem(LS_KEY); }catch(e){ LOAD_BAD = true; return; }
   if(raw){ try{ JSON.parse(raw); }catch(e){ try{ localStorage.setItem(LS_KEY + "-rescue-" + Date.now(), raw); }catch(_){ LOAD_BAD = true; } return; }
-    try{ const b = JSON.parse(localStorage.getItem(LS_KEY + "-bak") || "null"), d0 = new Date().toISOString().slice(0, 10); if((!b || b.d !== d0) && raw.length < 2e6) localStorage.setItem(LS_KEY + "-bak", JSON.stringify({ d: d0, raw })); }catch(_){} }
+    try{ const b = JSON.parse(localStorage.getItem(LS_KEY + "-bak") || "null"), d0 = new Date().toISOString().slice(0, 10);
+      if((!b || b.d !== d0) && raw.length < 2e6){   // 하루 한 번, 3일치 회전(-bak 오늘 · -bak2 · -bak3). 크면 1개만
+        if(b && raw.length < 8e5){ try{ const b2 = localStorage.getItem(LS_KEY + "-bak2"); if(b2) localStorage.setItem(LS_KEY + "-bak3", b2); localStorage.setItem(LS_KEY + "-bak2", JSON.stringify(b)); }catch(_){} }
+        localStorage.setItem(LS_KEY + "-bak", JSON.stringify({ d: d0, raw })); } }catch(_){} }
   try{ if(!raw){ firstVisitDefaults(); return; } const d = JSON.parse(raw); S.cards = d.cards || {}; S.meta = Object.assign(S.meta, d.meta||{}); S.meta.settings = Object.assign({}, DEFAULT_SETTINGS, (d.meta||{}).settings||{}); }catch(e){} }
 try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){}
 const cardsHere = () => Object.values(S.cards).filter(c => (c.lang||"es") === S.meta.settings.lang);
@@ -3341,9 +3350,9 @@ $("#btnCopy").onclick = async () => { const d = exportData(); try{ await navigat
 function importJSON(text){
   try{
     const d = JSON.parse(text); const arr = Array.isArray(d) ? d : (d.cards || []); let n = 0;
-    arr.forEach(c => { if(!c || !c.word) return; const lang = c.lang || "es"; const ex = Object.values(S.cards).find(o => (o.lang||"es") === lang && norm(o.word) === norm(c.word)); const card = Object.assign(newCard(c), c, { id: ex ? ex.id : (c.id || uid()), lang }); if(!Array.isArray(card.log)) card.log = []; S.cards[card.id] = card; n++; });
+    arr.forEach(c => { if(!c || !c.word) return; const lang = c.lang || "es"; const ex = Object.values(S.cards).find(o => (o.lang||"es") === lang && norm(o.word) === norm(c.word)); const card = Object.assign(newCard(c), c, { id: ex ? ex.id : (c.id || uid()), lang, u: Date.now() }); if(!Array.isArray(card.log)) card.log = []; S.cards[card.id] = card; n++; });
     if(d.settings) S.meta.settings = Object.assign({}, DEFAULT_SETTINGS, S.meta.settings, d.settings);
-    if(d.days) S.meta.days = Object.assign(S.meta.days, d.days);
+    if(d.days) Object.keys(d.days).forEach(k => { if(S.meta.days[k] !== true) S.meta.days[k] = d.days[k]; });
     save(); applyUi(); toast(t().imported(n)); return true;
   }catch(e){ toast(t().importFail); return false; }
 }
@@ -3616,6 +3625,7 @@ async function sbRpc(fn, body, keepalive){
   const tx = await r.text(); return tx ? JSON.parse(tx) : null;
 }
 function payload(){ const meta = Object.assign({}, S.meta); delete meta.session; delete meta.sync; return { v: 1, cards: S.cards, meta }; }
+const MERGE_LOCAL = ["session", "sync", "mu", "settings", "payPend", "payErr", "diag", "riskSnooze", "movedAt", "movedIn", "lastDeck"];   // 이 기기 전용: 다른 기기·탭 것을 받지 않음
 function mergeData(remote){
   if(!remote || !remote.cards) return;
   const rm = remote.meta || {};
@@ -3632,8 +3642,15 @@ function mergeData(remote){
   });
   S.cards = out;
   S.meta.deleted = del;
-  S.meta.days = Object.assign({}, rm.days || {}, S.meta.days || {});
-  if(rm.pet && (rm.pet.u || 0) > ((S.meta.pet || {}).u || 0)) S.meta.pet = rm.pet;
+  const dy = Object.assign({}, rm.days || {}, S.meta.days || {}); Object.keys(rm.days || {}).forEach(d => { if(rm.days[d] === true) dy[d] = true; }); S.meta.days = dy;   // 같은 날: 공부한 기록(true)이 이김
+  // 결제 지급 기록·꾸미기·후원 등급은 두 기기 것을 합침 (서버에서 한쪽 구매가 지워지지 않게)
+  if(rm.paid) S.meta.paid = Object.assign({}, rm.paid, S.meta.paid || {});
+  if(rm.cos && rm.cos.own){ const cm = S.meta.cos || (S.meta.cos = {}); cm.own = Object.assign({}, rm.cos.own, cm.own || {}); if(!cm.on && rm.cos.on) cm.on = rm.cos.on; }
+  if(rm.sup) S.meta.sup = Math.max(S.meta.sup || 0, rm.sup);
+  if(rm.nick && rm.nick.name && !rm.nick.auto && (!S.meta.nick || S.meta.nick.auto)) S.meta.nick = rm.nick;   // 자동 닉네임보다 직접 정한 닉네임 우선
+  // 이 기기에 아직 없는 기록(닉네임·계정·보너스 등)은 다른 기기 것을 받아 둠 — 있는 건 그대로
+  Object.keys(rm).forEach(k => { if(!MERGE_LOCAL.includes(k) && S.meta[k] === undefined) S.meta[k] = rm[k]; });
+  if(rm.pet && (rm.pet.u || 0) > ((S.meta.pet || {}).u || 0)){ S.meta.pet = rm.pet; PET_SIG = petSig(); }
   // 単語帳: 両方の単語帳を残す（同じ id はこの端末を優先）
   const dk = new Map(); (rm.decks || []).forEach(d => dk.set(d.id, d)); (S.meta.decks || []).forEach(d => dk.set(d.id, d)); if(dk.size) S.meta.decks = [...dk.values()];
   // 設定は新しく変えた方。ただし表示言語・学習言語はこの端末のまま
@@ -3651,9 +3668,9 @@ async function syncNow(opts){
     const got = await sbRpc("sync_get", { p_id: id });
     if(got && got.data) mergeData(got.data);
     else if(opts.mustExist){ throw new Error("notfound"); }
-    try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){}
+    try{ persist(); }catch(e){}
     await sbRpc("sync_put", { p_id: id, p_data: payload() });
-    S.meta.sync.lastAt = Date.now(); try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){}
+    S.meta.sync.lastAt = Date.now(); try{ persist(); }catch(e){}
     setSyncState("ok"); if(!SES) renderAll(); riskUI();
     return true;
   }catch(e){ setSyncState(e.message === "notfound" ? "notfound" : "err"); if(e.message === "notfound") throw e; return false; }
@@ -5276,9 +5293,11 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
-load(); slimPresets(); setTimeout(fixPresetMeanings, 1500); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+load(); PET_SIG = petSig(); slimPresets(); setTimeout(fixPresetMeanings, 1500); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
+addEventListener("storage", e => { if(e.key !== LS_KEY || !e.newValue || LOAD_BAD) return;   // 다른 탭에서 저장됨 → 이 탭 메모리에 합침(옛 탭이 새 기록을 덮지 않게)
+  try{ const d = JSON.parse(e.newValue); const keepSes = S.meta.session, st = S.meta.settings; mergeData(d); S.meta.settings = st; if(keepSes !== undefined) S.meta.session = keepSes; if(!SES) renderAll(); }catch(_){} });
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
 if("serviceWorker" in navigator && location.protocol === "https:"){ navigator.serviceWorker.register("sw.js").catch(() => {}); }
 })();
