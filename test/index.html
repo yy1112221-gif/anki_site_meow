@@ -658,6 +658,17 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .ms-tg{flex-direction:row;align-items:center;justify-content:space-between;font-weight:600} .ms-tg input[type=checkbox]{width:22px;height:22px} .ms-tg select{font:inherit;padding:6px 10px;border-radius:10px;flex:0 0 auto;width:auto} .ms-tg>span{white-space:nowrap}
 .ms-row>span{font-weight:700} .ms-nick{display:flex;gap:6px} .ms-nick input{flex:1;min-width:0;font:inherit;font-size:16px;padding:9px 12px;border-radius:12px;border:1.5px solid rgba(127,127,127,.3);background:transparent;color:inherit}
 .sup-early{border-radius:16px;padding:12px 14px;margin:0 0 12px;background:linear-gradient(135deg,rgba(255,214,120,.25),rgba(255,160,190,.2));border:1.5px dashed rgba(230,140,80,.5)} .sup-early p{margin:4px 0;font-size:.86rem;line-height:1.55} .sup-early ol{margin:4px 0 0;padding-left:1.3em;font-size:.82rem;line-height:1.6} .sup-was{opacity:.5;font-weight:600;font-size:.8em;margin-right:4px}
+#s7{position:fixed;inset:0;z-index:90;background:var(--bg,#f4f2ec);display:flex;flex-direction:column;padding:calc(10px + env(safe-area-inset-top)) 16px calc(14px + env(safe-area-inset-bottom))} @media (prefers-color-scheme:dark){#s7{background:#15171c;color:#eef0ee}}
+.s7-top{display:flex;align-items:center;gap:10px} .s7-bar{flex:1;height:8px;border-radius:99px;background:rgba(127,127,127,.2);overflow:hidden} .s7-bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .5s linear} #s7t{font-variant-numeric:tabular-nums;font-size:.95rem}
+.s7-body{flex:1;display:flex;align-items:center;justify-content:center;overflow:auto} .s7-foot{display:flex;flex-direction:column} .s7-foot .btn{width:100%;justify-content:center}
+.s7-intro,.s7-learn,.s7-quiz{text-align:center;width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:8px} .s7-intro h2{margin:6px 0 0}
+.s7-prev{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;font-size:1.6rem;font-weight:700} .s7-prev span{min-width:44px;padding:4px 6px;border-radius:12px;background:rgba(127,127,127,.12)}
+.s7-big{font-size:6.5rem;line-height:1.1;font-weight:700} .s7-read{font-size:1.25rem;font-weight:800;color:var(--accent)}
+.s7-ear{font-size:3.2rem;width:120px;height:120px;border-radius:50%;border:0;background:rgba(61,196,140,.15);cursor:pointer}
+.s7-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-top:6px} .s7-opts .btn{min-height:58px;justify-content:center;font-size:1.05rem;font-weight:800} .s7-opts.ch .btn{font-size:2rem}
+.s7-opts .btn.ok{background:#3dc48c;color:#fff;border-color:#3dc48c} .s7-opts .btn.no{background:#f2708f;color:#fff;border-color:#f2708f} .s7-gift{display:flex;align-items:center;gap:4px;justify-content:center}
+.s7c{display:flex;align-items:center;gap:10px;border-radius:18px;padding:10px 12px;margin:0 0 10px;background:rgba(61,196,140,.1);border:1.5px solid rgba(61,196,140,.35)} .s7c-ch{font-size:1.5rem;font-weight:800;letter-spacing:.05em;white-space:nowrap}
+.s7c-tx{flex:1;min-width:0;display:flex;flex-direction:column} .s7c-tx small{font-size:.74rem;color:var(--muted)} .s7c-tx b small{font-weight:600;margin-left:2px} .s7c-x{border:0;background:transparent;color:var(--muted);font-size:1rem;cursor:pointer;padding:4px}
 .sup-ov{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
 .sup-sh{width:min(560px,100%);max-height:88vh;overflow:auto;background:#fff;color:#1d2b27;border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom))}
 .sup-t{position:relative;border:1.5px solid rgba(127,127,127,.25);border-radius:16px;padding:12px 14px;margin:0 0 10px} .sup-t.hot{border-color:var(--accent);background:rgba(61,196,140,.08)}
@@ -1034,7 +1045,7 @@ h1 .logo .testtag{font-size:.55rem;letter-spacing:.1em;background:var(--accent);
       <label class="ms-row ms-tg"><span id="homePetLbl"></span><input type="checkbox" id="homePetOn"></label>
       <label class="ms-row ms-tg"><span id="petSensLbl"></span><select id="petSensSel"></select></label>
       <label class="ms-row ms-tg"><span id="trackLbl"></span><input type="checkbox" id="trackOn"></label>
-      <div class="ms-row"><button type="button" class="linkbtn" id="tutAgain"></button></div></div>
+      <div class="ms-row"><button type="button" class="linkbtn" id="tutAgain"></button><button type="button" class="linkbtn" id="s7Again"></button></div></div>
   </section>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1664,7 +1675,7 @@ function renderSide(){
 function actRow(mainBtn, petFirst){   // 학습하기와 간식 주기를 같은 층위로 나란히
   const n = petCount(), x = pt(), p = petState(), sk = streak();
   const pet = `<button class="btn big petbtn${petFirst && n ? " primary" : ""}" type="button" data-petopen>🍖 ${esc(x.give)}${n ? `<b>${n}</b>` : ""}</button>`;
-  return `<div class="actrow">${mainBtn}${pet}</div>${homeStats()}`; }
+  return `${scr7Card()}<div class="actrow">${mainBtn}${pet}</div>${homeStats()}`; }
 /* 홈 상태판: 연속·함락도는 작은 타일(냥이 표정 아이콘 + 큰 숫자), 다음 간식 해금은 큰 보상 카드 */
 function homeStats(){ const x = pt(), sk = streak(), mp = meltPct(), ml = meltL(), stg = meltStage(), ja = S.meta.settings.ui === "ja";
   const L = ja ? { st: "日 連続", melt: "陥落度", go: "で解禁！", left: d => `あと${d}日`, today: "今日やれば +1日", done: "今日の分クリア ✓", all: "おやつ全部解禁ずみ！" }
@@ -1688,13 +1699,13 @@ async function renderOnboard(box){   // 첫 시작: ① 배울 언어 ② 지금
   const lv = $("#onbLv"); let idx = null; try{ idx = await presetIndex(); }catch(e){}
   const set = idx && idx.sets[lang];
   if(!set){ lv.innerHTML = SCRIPT_SETS[lang] ? `<button class="btn primary" id="goScript" type="button">🔤 ${esc(x.scriptTitle)}</button>` : `<button class="btn primary" type="button" id="goAddB">${esc(x.goAdd.replace(/<[^>]+>/g, ""))}</button>`;
-    const gs = $("#goScript"); if(gs) gs.onclick = async () => { showView("add"); setAddPanel("preset"); await renderPresets(); const sc = document.querySelector(".script-sec"); if(sc) sc.scrollIntoView({ behavior: "smooth", block: "start" }); };
+    const gs = $("#goScript"); if(gs) gs.onclick = () => scr7Open();
     const gb = $("#goAddB"); if(gb) gb.onclick = () => showView("add"); return; }
   lv.innerHTML = `<button class="btn primary onb-diag" type="button" id="obDiag">🧪 ${esc(x.obDiag)}</button><div class="onb-pills">${set.levels.map(l => `<button class="btn" type="button" data-oblv="${l.id}">${esc(lvLabel(l))}</button>`).join("")}</div>
     ${SCRIPT_SETS[lang] ? `<button class="btn ghost sm" type="button" id="goScript">🔤 ${esc(x.scriptTitle)}</button>` : ""}`;
   $("#obDiag").onclick = () => { $("#obDiag").classList.add("hidden"); startDiag(lang); setTimeout(() => { const d = $("#diagBox"); if(d) d.scrollIntoView({ behavior: "smooth", block: "center" }); }, 60); };
   lv.querySelectorAll("[data-oblv]").forEach(b => b.onclick = () => addPreset(lang, b.dataset.oblv, b));
-  const gs = $("#goScript"); if(gs) gs.onclick = async () => { showView("add"); setAddPanel("preset"); await renderPresets(); const sc = document.querySelector(".script-sec"); if(sc) sc.scrollIntoView({ behavior: "smooth", block: "start" }); };
+  const gs = $("#goScript"); if(gs) gs.onclick = () => scr7Open();
 }
 function syncOn(){ return !!(S.meta.sync && S.meta.sync.code); }
 function maybeTutAsk(){   // 첫 입장에만: 작지만 눈에 띄는 O/X. 동기화 코드가 있는 사람에겐 절대 안 띄움
@@ -1725,7 +1736,8 @@ function bindCorner(){ const ko = S.meta.settings.ui === "ko", a = $("#tutAgain"
   a.onclick = () => { showView("today"); if(cardsHere().length) setTimeout(runTour, 350); else { S.meta.tutWant = 1; save(); } };
   c.checked = !S.meta.noTrack; c.onchange = () => { S.meta.noTrack = !c.checked; save(); };
   const hp = $("#homePetOn"); if(hp){ $("#homePetLbl").textContent = ko ? "앱 열면 냥이부터" : "起動したらネコから"; hp.checked = S.meta.settings.homePet !== false; hp.onchange = () => { S.meta.settings.homePet = hp.checked; save(); track("home_pet", { on: hp.checked }); }; }
-  bindNick(ko);
+  bindNick(ko); { const b = $("#s7Again"); if(b){ const lang = S.meta.settings.lang, ok = !!SCRIPT_SETS[lang]; b.style.display = ok ? "" : "none"; b.textContent = ko ? "🔤 글자 7분 코스 (다시 보이기·이어 하기)" : "🔤 文字7分コース（再表示・つづき）";
+    b.onclick = () => { const z = scr7State(lang); z.skip = 0; save(); showView("today"); renderAll(); setTimeout(scr7Open, 200); }; } }
   const ss = $("#petSensSel"); if(ss){ $("#petSensLbl").textContent = ko ? "냥이 감도" : "ネコの感度"; const o = ko ? ["둔하게", "조금 둔하게", "보통", "말랑하게", "초예민"] : ["にぶめ", "ややにぶめ", "ふつう", "やわらかめ", "超びんかん"], v = [.5, .75, 1, 1.35, 1.8];
     ss.innerHTML = v.map((z, i) => `<option value="${z}">${o[i]}</option>`).join(""); ss.value = String(petSens()); ss.onchange = () => { S.meta.settings.petSens = +ss.value; save(); track("pet_sens", { v: +ss.value }); }; } }
 /* 닉네임: 계정마다 하나, 중복 불가(서버 nick_claim), 언제든 변경. 안 정하면 냥이 밈 기본 닉네임 */
@@ -3007,7 +3019,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v95";
+const APP_VER = "v96";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3397,7 +3409,7 @@ function petGrantHTML(g){ if(!g) return ""; const x = pt();
     <div class="pg-items">${Object.keys(tally).map(id => `<span class="pg-it${id === g.main.id ? " main" : ""}">${petIconHTML(PET_IT[id], 24)}<i>×${tally[id]}</i></span>`).join("")}</div>
     <div class="pg-main">${esc(x.main)}: ${esc(itName(g.main))}</div>${g.freeze ? `<div class="pg-main">🧊 ${esc(x.freezeGot)}</div>` : ""}</div>`; }
 
-function bindPetOpen(root){ (root || document).querySelectorAll("[data-petopen]").forEach(b => b.onclick = () => openPet()); }
+function bindPetOpen(root){ (root || document).querySelectorAll("[data-petopen]").forEach(b => b.onclick = () => openPet()); scr7Bind(root); }
 
 /* ───────── 音（Web Audio で合成。ファイル不要） ───────── */
 let PA = null, PNOISE = null;
@@ -4626,6 +4638,60 @@ function scriptMeaning(o){ const ui = S.meta.settings.ui, h = ui === "ko" ? o.ko
 function scriptSectionHTML(lang){ const sets = SCRIPT_SETS[lang]; if(!sets) return ""; const x = t(), ui = S.meta.settings.ui;
   return `<div class="script-sec"><b>🔤 ${esc(x.scriptTitle)}</b><p class="small muted">${esc(x.scriptHelp)}</p><div class="plist">${sets.map(st => { const done = decks().some(d => d.preset === "script-" + st.id);
     return `<div class="pitem"><b class="sc-prev">${esc(st.items.slice(0, 3).map(o => o.ch).join(""))}</b><span>${esc(st[ui] || st.ja)} · ${st.items.length}</span><button class="btn sm${done ? "" : " primary"}" type="button" data-scr="${st.id}" ${done ? "disabled" : ""}>${done ? "✓" : esc(x.presetAdd)}</button></div>`; }).join("")}</div></div>`; }
+/* ════════ 글자 7분 코스: 하루 7분, 글자 8~10개 — ① 보고 듣기 → ② 퀴즈(글자→읽기 / 소리→글자, 틀리면 다시) → ③ 복습 카드로 저장 + 간식 ════════ */
+const SCR7_MIN = 7;
+function scr7Days(lang){ const out = []; (SCRIPT_SETS[lang] || []).forEach(st => { const n = Math.ceil(st.items.length / 10), sz = Math.ceil(st.items.length / n);
+  for(let i = 0; i < n; i++) out.push({ set: st, items: st.items.slice(i * sz, (i + 1) * sz) }); }); return out; }
+function scr7State(lang){ const m = S.meta.scr7 || (S.meta.scr7 = {}); return m[lang] || (m[lang] = { day: 0 }); }
+function scr7Card(){ const lang = S.meta.settings.lang, ui = S.meta.settings.ui; if(!SCRIPT_SETS[lang] || lang === ui) return ""; const z = scr7State(lang), days = scr7Days(lang);
+  if(z.skip || z.day >= days.length) return ""; const d = days[z.day], ko = ui === "ko", doneT = z.last === today();
+  return `<div class="s7c"><div class="s7c-ch" lang="${lang}">${esc(d.items.slice(0, 3).map(o => o.ch).join(" "))}</div><div class="s7c-tx"><b>🔤 ${ko ? "글자 7분" : "文字7分"} · Day ${z.day + 1}<small>/${days.length}</small></b><small>${doneT ? (ko ? "오늘 몫 끝! 더 해도 돼요" : "今日の分クリア！もっとやってもOK") : esc(d.set[ui] || d.set.ja)}</small></div><button type="button" class="btn sm${doneT ? "" : " primary"}" data-s7="go">${ko ? "시작" : "スタート"}</button><button type="button" class="s7c-x" data-s7="skip" aria-label="close">✕</button></div>`; }
+function scr7Bind(root){ (root || document).querySelectorAll("[data-s7]").forEach(b => b.onclick = () => { const lang = S.meta.settings.lang, ko = S.meta.settings.ui === "ko";
+  if(b.dataset.s7 === "skip"){ if(!confirm(ko ? "글자는 이미 다 읽을 수 있나요? (설정에서 언제든 다시 켤 수 있어요)" : "文字はもう全部読めますか？")) return; scr7State(lang).skip = 1; save(); track("s7_skip"); renderAll(); return; }
+  scr7Open(); }); }
+let S7 = null;
+function scr7Open(){ const lang = S.meta.settings.lang, ui = S.meta.settings.ui, ko = ui === "ko"; if(!SCRIPT_SETS[lang]) return; const z = scr7State(lang), days = scr7Days(lang);
+  if(z.day >= days.length){ toast(ko ? "글자 코스는 다 끝냈다냥!" : "文字コースは全部クリアだニャ！"); return; }
+  const d = days[z.day], prev = days.slice(0, z.day).flatMap(x => x.items);
+  const ov = document.createElement("div"); ov.id = "s7"; ov.setAttribute("role", "dialog"); document.body.appendChild(ov); document.body.classList.add("s7open");
+  S7 = { lang, ui, ko, d, prev, i: 0, t0: 0, q: [], ok: 0, ng: 0, ov, timer: null }; track("s7_open", { day: z.day + 1 });
+  const lab = o => scriptMeaning(o), say = o => { try{ speak(o.say || o.ch, { lang }); }catch(_){} };
+  const shell = (body, foot) => { ov.innerHTML = `<div class="s7-top"><button type="button" class="btn sm" id="s7x">✕</button><div class="s7-bar"><i id="s7bar"></i></div><b id="s7t">${SCR7_MIN}:00</b></div><div class="s7-body">${body}</div><div class="s7-foot">${foot || ""}</div>`;
+    $("#s7x").onclick = () => { if(S7 && S7.t0 && !confirm(ko ? "그만할까요? 여기까지 한 건 저장 안 돼요" : "やめますか？ここまでの分は保存されません")) return; scr7Close(); }; tick(); };
+  const left = () => S7.t0 ? Math.max(0, SCR7_MIN * 60000 - (Date.now() - S7.t0)) : SCR7_MIN * 60000;
+  const tick = () => { const el = $("#s7t"), bar = $("#s7bar"); if(!el) return; const l = left(); el.textContent = `${Math.floor(l / 60000)}:${String(Math.floor(l / 1000) % 60).padStart(2, "0")}`; if(bar) bar.style.width = `${100 - l / (SCR7_MIN * 600)}%`; };
+  S7.timer = setInterval(tick, 500);
+  // 0. 시작 화면
+  shell(`<div class="s7-intro">${nm("st_bulb", 70)}<h2>Day ${z.day + 1} · ${esc(d.set[ui] || d.set.ja)}</h2><div class="s7-prev" lang="${lang}">${d.items.map(o => `<span>${esc(o.ch)}</span>`).join("")}</div><p class="muted small">${ko ? `오늘은 ${d.items.length}글자. ① 보고 듣고 → ② 퀴즈. 딱 ${SCR7_MIN}분이면 끝.` : `今日は${d.items.length}文字。① 見て聞く → ② クイズ。${SCR7_MIN}分で終わり。`}</p></div>`,
+    `<button type="button" class="btn primary big" id="s7go">▶ ${ko ? "시작" : "スタート"}</button>`);
+  $("#s7go").onclick = () => { S7.t0 = Date.now(); learn(); };
+  // 1. 보고 듣기
+  const learn = () => { const o = d.items[S7.i]; shell(`<div class="s7-learn"><small class="muted">${ko ? "① 보고 듣기" : "① 見て聞く"} · ${S7.i + 1}/${d.items.length}</small><div class="s7-big" lang="${lang}">${esc(o.ch)}</div><div class="s7-read">${esc(lab(o))}</div>${o.ex ? `<div class="muted small">${esc(o.ex)}</div>` : ""}<button type="button" class="btn sm" id="s7say">🔊</button></div>`,
+      `<button type="button" class="btn primary big" id="s7n">${S7.i < d.items.length - 1 ? (ko ? "다음 →" : "次へ →") : (ko ? "퀴즈로 →" : "クイズへ →")}</button>`);
+    say(o); $("#s7say").onclick = () => say(o);
+    $("#s7n").onclick = () => { if(++S7.i < d.items.length) learn(); else { S7.q = []; d.items.forEach(o => { S7.q.push({ o, k: "r" }); S7.q.push({ o, k: "s" }); }); S7.q = shuffle(S7.q); quiz(); } }; };
+  const shuffle = a => { for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  // 2. 퀴즈: r = 글자 보고 읽기 고르기 / s = 소리 듣고 글자 고르기
+  const quiz = () => { if(!S7.q.length || left() <= 0) return finish(); const it = S7.q.shift(), o = it.o, pool = d.items.concat(prev).filter(z2 => z2.ch !== o.ch);
+    const opts = shuffle([o, ...shuffle(pool.slice()).filter((z2, i, a) => a.findIndex(y => lab(y) === lab(z2)) === i && lab(z2) !== lab(o)).slice(0, 3)]);
+    const r = it.k === "r";
+    shell(`<div class="s7-quiz"><small class="muted">${ko ? "② 퀴즈" : "② クイズ"} · ${ko ? "남은 문제" : "のこり"} ${S7.q.length + 1}</small>${r ? `<div class="s7-big" lang="${lang}">${esc(o.ch)}</div><p class="muted small">${ko ? "어떻게 읽을까?" : "どう読む？"}</p>` : `<button type="button" class="s7-ear" id="s7say">🔊</button><p class="muted small">${ko ? "들리는 글자는?" : "聞こえた文字は？"}</p>`}
+      <div class="s7-opts${r ? "" : " ch"}">${opts.map((z2, i) => `<button type="button" class="btn" data-i="${i}"${r ? "" : ` lang="${lang}"`}>${esc(r ? lab(z2) : z2.ch)}</button>`).join("")}</div><div id="s7fb"></div></div>`, "");
+    if(!r){ say(o); $("#s7say").onclick = () => say(o); }
+    ov.querySelectorAll("[data-i]").forEach(b => b.onclick = () => { const pick = opts[+b.dataset.i], good = pick === o; ov.querySelectorAll("[data-i]").forEach(z2 => { z2.disabled = true; const zz = opts[+z2.dataset.i]; if(zz === o) z2.classList.add("ok"); else if(z2 === b) z2.classList.add("no"); });
+      if(good){ S7.ok++; try{ sfxPoyon(.2); }catch(_){} } else { S7.ng++; S7.q.splice(Math.min(3, S7.q.length), 0, it); $("#s7fb").innerHTML = `<p class="small"><b lang="${lang}">${esc(o.ch)}</b> = ${esc(lab(o))}</p>`; }
+      if(r) say(o); setTimeout(quiz, good ? 650 : 1500); }); };
+  // 3. 끝: 오늘 글자를 복습 카드로 저장 + 간식
+  const finish = () => { clearInterval(S7.timer); const p = petState(), lower = PET_ITEMS.filter(i2 => i2.t <= petTier(streak())), give = [];
+    let dk = decks().find(x2 => x2.preset === "script-" + d.set.id); if(!dk){ dk = addDeck("🔤 " + (d.set[ui] || d.set.ja)); dk.preset = "script-" + d.set.id; }
+    let n = 0; const now = Date.now(); d.items.forEach((o, i) => { if(cardsHere().some(c => c.script && c.word === o.ch)) return; const c = newCard({ word: o.ch, meaning: scriptMeaning(o), deck: dk.id, lang }); c.created = now + i; c.script = { ans: o.ans, say: o.say, ex: o.ex || "" }; S.cards[c.id] = c; n++; });
+    for(let k = 0; k < 3 && lower.length; k++){ const it2 = lower[Math.floor(Math.random() * lower.length)]; p.inv[it2.id] = (p.inv[it2.id] || 0) + 1; give.push(it2); }
+    const full = !S7.q.length; if(full) z.day++; z.last = today(); z.n = (z.n || 0) + 1; if(!S.meta.days[today()]) S.meta.days[today()] = true; save(); track("s7_done", { day: z.day, ok: S7.ok, ng: S7.ng, sec: Math.round((Date.now() - S7.t0) / 1000) });
+    const nx = days[z.day], acc = Math.round(S7.ok / Math.max(1, S7.ok + S7.ng) * 100);
+    shell(`<div class="s7-intro">${nm("st_happy", 80)}<h2>${full ? (ko ? `Day ${z.day} 클리어!` : `Day ${z.day} クリア！`) : (ko ? "7분 끝! 남은 건 다음에 이어서" : "7分終了！残りは次回に")}</h2><p>${ko ? `정답률 ${acc}% · ${n}글자를 복습 카드에 넣었어요` : `正答率${acc}% · ${n}文字を復習カードに追加`}</p><p class="s7-gift">${give.map(i2 => petIconHTML(i2, 34)).join("")} <b>+${give.length}</b></p>${!full ? "" : nx ? `<p class="muted small">${ko ? "내일" : "明日"}: <span lang="${lang}">${esc(nx.items.slice(0, 5).map(o => o.ch).join(" "))}</span> …</p>` : `<p><b>${ko ? "🎉 글자 코스 완주! 이제 단어로 가자냥" : "🎉 文字コース完走！次は単語だニャ"}</b></p>`}</div>`,
+      `<button type="button" class="btn primary big" id="s7end">${ko ? "좋아!" : "OK！"}</button>`);
+    $("#s7end").onclick = () => { scr7Close(); renderAll(); }; clearInterval(S7.timer); }; }
+function scr7Close(){ if(S7){ clearInterval(S7.timer); S7 = null; } const ov = $("#s7"); if(ov) ov.remove(); document.body.classList.remove("s7open"); }
 function addScriptSet(lang, id){
   const st = (SCRIPT_SETS[lang] || []).find(s => s.id === id); if(!st) return; const ui = S.meta.settings.ui;
   const d = addDeck("🔤 " + (st[ui] || st.ja)); d.preset = "script-" + id; const now = Date.now(); let n = 0;
