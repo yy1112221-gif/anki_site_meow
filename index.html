@@ -655,6 +655,9 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .gr-no{border-color:var(--bad);color:var(--bad)} .gr-ok{background:var(--accent);border-color:var(--accent);color:var(--on-accent,#fff)}
 #pfCv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;display:none} #pet .pet-top{z-index:4} #pet.pf #pfCv{display:block}
 #pet.pf #petBG{opacity:0} #pet.pf{background:radial-gradient(120% 80% at 50% 45%,#fffdf8,#fbf1f4 60%,#f3e6ef)} #pet.pf #petGL{filter:saturate(1.18) brightness(1.05) drop-shadow(0 0 16px rgba(255,170,210,.75))}
+.myset h2{margin:0 0 8px} .ms-row{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid rgba(127,127,127,.15)} .ms-row:first-of-type{border-top:0}
+.ms-tg{flex-direction:row;align-items:center;justify-content:space-between;font-weight:600} .ms-tg input[type=checkbox]{width:22px;height:22px} .ms-tg select{font:inherit;padding:6px 10px;border-radius:10px;flex:0 0 auto;width:auto} .ms-tg>span{white-space:nowrap}
+.ms-row>span{font-weight:700} .ms-nick{display:flex;gap:6px} .ms-nick input{flex:1;min-width:0;font:inherit;font-size:16px;padding:9px 12px;border-radius:12px;border:1.5px solid rgba(127,127,127,.3);background:transparent;color:inherit}
 .sup-ov{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
 .sup-sh{width:min(560px,100%);max-height:88vh;overflow:auto;background:var(--card,#fff);color:var(--ink);border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom))}
 .sup-t{position:relative;border:1.5px solid rgba(127,127,127,.25);border-radius:16px;padding:12px 14px;margin:0 0 10px} .sup-t.hot{border-color:var(--accent);background:rgba(61,196,140,.08)}
@@ -1019,8 +1022,12 @@ h1 .logo{display:flex;flex-direction:column;align-items:flex-start;gap:0;letter-
       <div class="row end"><button class="btn" id="btnImport" type="button" data-i18n="btnImport"></button></div>
     </div>
     <p class="muted tiny" data-i18n-html="credits"></p>
-    <p class="tiny muted setcorner"><button type="button" class="linkbtn" id="tutAgain"></button> · <label><input type="checkbox" id="trackOn"> <span id="trackLbl"></span></label> · <label><input type="checkbox" id="homePetOn"> <span id="homePetLbl"></span></label> · <label><span id="petSensLbl"></span> <select id="petSensSel"></select></label></p>
-    <details class="hshop" id="hshop"><summary aria-label="shop">🐾</summary><div id="shopBody"></div></details>
+    <div class="card myset" id="mySet"><h2 id="mySetH"></h2>
+      <div class="ms-row"><span id="nickLbl"></span><div class="ms-nick"><input id="nickIn" maxlength="12" autocomplete="off"><button type="button" class="btn sm" id="nickDice" title="🎲">🎲</button><button type="button" class="btn sm primary" id="nickSave"></button></div><small id="nickMsg" class="muted"></small></div>
+      <label class="ms-row ms-tg"><span id="homePetLbl"></span><input type="checkbox" id="homePetOn"></label>
+      <label class="ms-row ms-tg"><span id="petSensLbl"></span><select id="petSensSel"></select></label>
+      <label class="ms-row ms-tg"><span id="trackLbl"></span><input type="checkbox" id="trackOn"></label>
+      <div class="ms-row"><button type="button" class="linkbtn" id="tutAgain"></button></div></div>
   </section>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1611,7 +1618,7 @@ function spreadQueue(items, recent){
 function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1); while(S.meta.days[d]){ n++; d = addDays(d, -1); } return n; }
 
 function renderStart(){
-  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); moveIn(); setTimeout(moveBanner, 600); authBoot(); setTimeout(homePetBoot, 450); }
+  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); moveIn(); setTimeout(moveBanner, 600); authBoot(); setTimeout(homePetBoot, 450); setTimeout(giftCheck, 600); setTimeout(nickBoot, 2500); }
   if(maybeLoginAsk._pending && !SES){ maybeLoginAsk._pending = 0; setTimeout(maybeLoginAsk, 1500); }
   const box = $("#sessionStart"), pos = box.querySelector(".poster");
   box.querySelectorAll(".say .bubble").forEach(b => { b.classList.add("tapme"); b.onclick = () => { if(NERD_ON) return; if(Math.random() < .08 && nerdPop(b)) return; if(Math.random() < .3){ b.textContent = sciLine(); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); try{ sfxPoyon(.15); }catch(e){} return; } const st = meltStage(), L = st ? meltL().home[st] : (t().homeTalk || []); if(!L.length) return; let i; do{ i = Math.floor(Math.random() * L.length); }while(L.length > 1 && i === renderStart.last); renderStart.last = i;
@@ -1711,8 +1718,41 @@ function bindCorner(){ const ko = S.meta.settings.ui === "ko", a = $("#tutAgain"
   a.onclick = () => { showView("today"); if(cardsHere().length) setTimeout(runTour, 350); else { S.meta.tutWant = 1; save(); } };
   c.checked = !S.meta.noTrack; c.onchange = () => { S.meta.noTrack = !c.checked; save(); };
   const hp = $("#homePetOn"); if(hp){ $("#homePetLbl").textContent = ko ? "앱 열면 냥이부터" : "起動したらネコから"; hp.checked = S.meta.settings.homePet !== false; hp.onchange = () => { S.meta.settings.homePet = hp.checked; save(); track("home_pet", { on: hp.checked }); }; }
+  bindNick(ko);
   const ss = $("#petSensSel"); if(ss){ $("#petSensLbl").textContent = ko ? "냥이 감도" : "ネコの感度"; const o = ko ? ["둔하게", "조금 둔하게", "보통", "말랑하게", "초예민"] : ["にぶめ", "ややにぶめ", "ふつう", "やわらかめ", "超びんかん"], v = [.5, .75, 1, 1.35, 1.8];
     ss.innerHTML = v.map((z, i) => `<option value="${z}">${o[i]}</option>`).join(""); ss.value = String(petSens()); ss.onchange = () => { S.meta.settings.petSens = +ss.value; save(); track("pet_sens", { v: +ss.value }); }; } }
+/* 닉네임: 계정마다 하나, 중복 불가(서버 nick_claim), 언제든 변경. 안 정하면 냥이 밈 기본 닉네임 */
+const NICK_BASE = { ko: ["냥이집사", "츄르도둑", "꾹꾹이장인", "말랑이수집가", "골골송DJ", "식빵굽는중", "냥펀치맞은자", "캣닢중독", "숨숨집주인", "젤리발바닥", "츄르셔틀", "냥모나이트", "고영희씨", "털뭉치", "냥냥펀치", "꼬리흔들기"],
+  ja: ["ネコの下僕", "ちゅーる泥棒", "ふみふみ職人", "香箱座り中", "猫パンチ被害者", "ゴロゴロDJ", "猫吸い常習犯", "肉球マニア", "毛玉製造機", "おやつ係", "にゃんモナイト", "ねこ様の家来"] };
+function nickRand(){ const a = NICK_BASE[S.meta.settings.ui === "ja" ? "ja" : "ko"]; return a[Math.floor(Math.random() * a.length)] + (1 + Math.floor(Math.random() * 999)); }
+function nickState(){ const n = S.meta.nick || (S.meta.nick = {}); if(!n.key){ const b = new Uint8Array(18); crypto.getRandomValues(b); n.key = [...b].map(v => v.toString(16).padStart(2, "0")).join(""); } return n; }
+const nickOk = v => /^[0-9A-Za-z_가-힣ぁ-んァ-ヶー一-龥]{2,12}$/.test(v) && !/(admin|운영자|관리자|meowca|묘카|암기냥이|ミョウカ|시발|씨발|병신|fuck|shit)/i.test(v);
+async function nickClaim(name){ const n = nickState();
+  try{ const r = await fetch(SB_URL + "/rest/v1/rpc/nick_claim", { method: "POST", headers: { apikey: SB_KEY, "Content-Type": "application/json" }, body: JSON.stringify({ p_key: n.key, p_name: name }) });
+    if(r.status === 404) return "nosrv"; if(!r.ok) return "err"; return await r.json(); }catch(e){ return "err"; } }
+async function nickBoot(){ const n = nickState(); if(n.name && n.srv) return; if(!n.name){ n.name = nickRand(); n.auto = 1; save(); }
+  for(let i = 0; i < 5; i++){ const r = await nickClaim(n.name); if(r === "ok"){ n.srv = 1; save(); return; } if(r === "taken" && n.auto){ n.name = nickRand(); save(); continue; } return; } }
+const myNick = () => (S.meta.nick && S.meta.nick.name) || "";
+function bindNick(ko){ const inp = $("#nickIn"); if(!inp) return; const n = nickState(), msg = $("#nickMsg");
+  $("#mySetH").textContent = ko ? "내 설정" : "マイ設定"; $("#nickLbl").textContent = ko ? "닉네임" : "ニックネーム"; $("#nickSave").textContent = ko ? "저장" : "保存";
+  inp.value = n.name || ""; inp.placeholder = ko ? "2~12자" : "2〜12文字"; msg.textContent = n.name && !n.srv ? (ko ? "중복 확인 대기 중" : "重複チェック待ち") : (ko ? "다른 사람과 겹칠 수 없어요. 언제든 바꿀 수 있어요." : "他の人と重複不可。いつでも変更できます。");
+  $("#nickDice").onclick = () => { inp.value = nickRand(); };
+  $("#nickSave").onclick = async () => { const v = inp.value.trim(); if(v === n.name && n.srv){ msg.textContent = ko ? "지금 쓰는 닉네임이에요" : "いまのニックネームです"; return; }
+    if(!nickOk(v)){ msg.textContent = ko ? "2~12자, 한글·일본어·영문·숫자·_만 쓸 수 있어요" : "2〜12文字、かな・漢字・英数字・_のみ"; return; }
+    msg.textContent = ko ? "확인 중…" : "確認中…"; const r = await nickClaim(v);
+    if(r === "ok"){ n.name = v; n.srv = 1; n.auto = 0; save(); msg.textContent = ko ? `✓ 「${v}」로 정했다냥` : `✓「${v}」に決定ニャ`; track("nick_set"); }
+    else if(r === "taken") msg.textContent = ko ? "이미 누가 쓰고 있다냥. 다른 걸로!" : "もう使われてるニャ。別のを！";
+    else if(r === "bad") msg.textContent = ko ? "쓸 수 없는 닉네임이에요" : "使えないニックネームです";
+    else { n.name = v; n.srv = 0; n.auto = 0; save(); msg.textContent = ko ? "저장했어요 (중복 확인은 연결되면 자동으로)" : "保存しました（重複チェックは接続後に自動）"; } }; }
+/* 운영자 선물: meowca.app/#gift=비밀값 → 간식 전부 100개 + 꾸미기 전부 보유 (비밀값의 해시만 코드에 있음) */
+const GIFT_H = ["3f18b5b1cc37906ec92ac474dfa6f9cd6717fb60a9fb8c78f0517aadb7590ce6"];
+async function giftCheck(){ const m = location.hash.match(/gift=([\w-]+)/); if(!m) return; history.replaceState(null, "", location.pathname + location.search);
+  let h = ""; try{ const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(m[1])); h = [...new Uint8Array(d)].map(v => v.toString(16).padStart(2, "0")).join(""); }catch(_){ return; }
+  if(!GIFT_H.includes(h)) return; const g = S.meta.giftDone || (S.meta.giftDone = {}); const ko = S.meta.settings.ui !== "ja";
+  if(g[h]){ toast(ko ? "선물은 이미 받았다냥" : "プレゼントはもう受け取ったニャ"); return; }
+  const p = petState(); PET_ITEMS.forEach(it => { p.inv[it.id] = Math.max(p.inv[it.id] || 0, 100); });
+  const cm = S.meta.cos || (S.meta.cos = {}); cm.own = cm.own || {}; COS.filter(c => c.c !== "snack").forEach(c => { cm.own[c.id] = 1; });
+  g[h] = Date.now(); save(); track("gift_in"); toast(ko ? "🎁 간식 전부 100개 + 꾸미기 전부 받았다냥!" : "🎁 おやつ全部100個＋着せかえ全部ゲットニャ！"); if(!SES) renderAll(); }
 function petSens(){ const v = +S.meta.settings.petSens; return v > 0 ? v : 1; }
 let BIZ = null;   // biz.json: 사업자 정보 — 사업자등록번호가 채워지면 설정 화면 맨 아래에 자동 표시
 async function bizFill(){ try{ if(!BIZ){ const r = await fetch("biz.json", { cache: "no-cache" }); BIZ = r.ok ? await r.json() : {}; } }catch(_){ BIZ = {}; }
@@ -2944,7 +2984,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v92";
+const APP_VER = "v93";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3781,6 +3821,8 @@ function cosOpen(){ const pet = $("#pet"); if(!pet || $("#cosDr")) return; const
   ["pointerdown", "touchstart", "mousedown", "wheel"].forEach(ev => dr.addEventListener(ev, e => e.stopPropagation(), { passive: true }));
   pet.appendChild(dr);
   const pick = it => { const box = $("#cosPick"), price = x.cur(ja ? it.y : it.w), done = cm.want[it.id];
+    const own = cm.own && cm.own[it.id]; if(own){ const on = cm.on === it.id; box.innerHTML = `<div class="cos-pick"><p><b>${it.e} ${esc(ja ? it.ja : it.ko)}</b> · ${ja ? "所持中 ✓" : "보유 중 ✓"}</p>${it.f ? `<button type="button" class="cos-want" id="cosEq">${on ? (ja ? "外す" : "벗기") : (ja ? "着る" : "입히기")}</button>` : ""}</div>`;
+      petLift(dr); const eq = $("#cosEq"); if(eq) eq.onclick = () => { cm.on = on ? null : it.id; if(PET) PET.tryOn = null; save(); track("cos_equip", { id: it.id, on: !on }); pick(it); }; return; }
     box.innerHTML = `<div class="cos-pick"><p><b>${it.e} ${esc(ja ? it.ja : it.ko)}</b> · ${esc(price)}</p><button type="button" class="cos-want" id="cosWant"${done ? " disabled" : ""}>${esc(done ? x.wanted : x.want)}</button><div id="cosQ"></div></div>`;
     petLift(dr); $("#cosWant").onclick = () => { cm.want[it.id] = Date.now(); save(); track("cos_want", { id: it.id, price: ja ? it.y : it.w, cur: ja ? "JPY" : "KRW" });
       $("#cosWant").disabled = true; $("#cosWant").textContent = x.wanted;
