@@ -912,6 +912,7 @@ body.focus .dock:has(.vk-host) .ans-btns .btn{min-height:calc(var(--vkh,44px) + 
 .brag-a3{grid-template-columns:1.2fr 1fr .9fr!important;padding-bottom:calc(10px + env(safe-area-inset-bottom))} .brag-a3 button{white-space:nowrap;padding:12px 6px;font-size:.92rem} .brag-a .alt2{background:transparent;color:inherit;box-shadow:inset 0 0 0 2px rgba(127,127,127,.4)}
 .brag-capr{display:flex;align-items:center;gap:8px;margin:0 0 10px;padding:6px 6px 6px 12px;border-radius:14px;background:rgba(127,127,127,.12)} .brag-capr span{flex:1;min-width:0;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-user-select:text;user-select:text}
 .brag-capr button{flex:0 0 auto;border:0;border-radius:999px;padding:8px 12px;font:inherit;font-weight:800;font-size:.85rem;background:var(--accent);color:#fff} .brag-capr button.ok{background:#3aa66b}
+.brag-how{margin:-4px 0 10px;font-size:.72rem;color:var(--muted);text-align:center}
 </style>
 </head>
 <body>
@@ -3414,7 +3415,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v118";
+const APP_VER = "v119";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -4310,6 +4311,22 @@ const BRAG_T = {
     realTop: (lv, d, m) => `Lv.${lv} · 勉強${d}日目 · 陥落度: ${m}`, realCap: n => n ? `実は今日${n}語だけ` : "実は今日0語…ネコ触ってただけ",
     txtCute: (lv, d) => `今日もキラキラ🎀 Lv.${lv}のぷにネコ育て中 (D+${d})`, txtReal: n => n ? `実は今日${n}語だけ…ニャ` : "実は今日はネコを触ってただけ", saved: "保存したニャ。写真・ファイルから投稿してね", noRec: "このブラウザは動画撮影に対応してないニャ。写真で自慢してね" } };
 const bt = () => Object.assign({}, BRAG_T[S.meta.settings.ui === "ja" ? "ja" : "ko"]);
+/* 자랑 문구: 후킹 한 줄(한·일 둘 다) → 같이 하자 → 해시태그. 매번 조금씩 바뀜 */
+const BRAG_HOOK = {
+  real: [[n => `사실 오늘 ${n}개 외웠다…냥`, n => `実は今日${n}つ覚えた…にゃん`], [n => `공부하는 척 아님. 진짜 ${n}개 함`, n => `勉強したフリじゃない。ほんとに${n}個`],
+    [n => `냥이 밥값은 단어 ${n}개로 냈다`, n => `ネコのごはん代、単語${n}個で払った`], [n => `오늘의 나: 단어 ${n}개 + 냥이 쓰다듬기`, n => `今日のわたし：単語${n}個＋ネコなでなで`]],
+  zero: [[() => "사실 오늘은 냥이만 만졌다…", () => "実は今日はネコを触ってただけ…"], [() => "단어는 내일의 내가 외운다냥", () => "単語は明日のわたしが覚えるにゃ"]],
+  cute: [[(n, d) => `${d}일째 안 빠지고 하는 중. 칭찬해라냥`, (n, d) => `${d}日目、サボらず継続中。褒めるにゃ`], [(n, d, lv) => `우리 냥이 Lv.${lv} 찍음. 갓생 인증 🎀`, (n, d, lv) => `うちのネコ Lv.${lv} 到達。キラキラ生活証明🎀`],
+    [(n, d) => `D+${d}, 오늘도 단어로 냥이 키움`, (n, d) => `D+${d}、今日も単語でネコ育て中`]] };
+const BRAG_TAGS = { ko: ["#한국어", "#韓国語", "#韓国語勉強"], ja: ["#일본어공부", "#日本語", "#일본어"], en: ["#영어공부", "#英語", "#英語勉強"], es: ["#스페인어", "#スペイン語", "#스페인어공부"] };
+const BRAG_FUN = ["#백수", "#갓생", "#공부스타그램", "#勉強垢", "#単語帳", "#고양이그림", "#냥스타그램"];
+function bragCaption(ver){ const st = bragStats(), ja = S.meta.settings.ui === "ja", pick = a => a[Math.floor(Math.random() * a.length)];
+  const pool = ver === "cute" ? BRAG_HOOK.cute : st.n ? BRAG_HOOK.real : BRAG_HOOK.zero, h = pick(pool), ko = h[0](st.n, st.d, st.lv), jp = h[1](st.n, st.d, st.lv);
+  const lines = ja ? [jp, ko] : [ko, jp];
+  const cta = ja ? "🔎 meowca.app で一緒に覚えようにゃ / meowca.app에서 같이 외우자냥" : "🔎 meowca.app에서 같이 외우자냥 / meowca.app で一緒に覚えようにゃ";
+  const fun = BRAG_FUN.slice().sort(() => Math.random() - .5).slice(0, 2);
+  const tags = ["#고양이", "#猫"].concat(BRAG_TAGS[S.meta.settings.lang] || [], fun, ["#MEOWCA", "#암기냥이"]);
+  return `${lines[0]}\n${lines[1]}\n${cta}\n\n${[...new Set(tags)].join(" ")}`; }
 function bragStats(){ const p = petState(), d = Object.values(S.meta.days || {}).filter(v => v === true).length, td = today();
   const n = Object.values(S.cards).filter(c => !c.isNew && c.last === td).length, lang = S.meta.settings.ui === "ja" ? "ja" : "ko";
   let m = ""; try{ m = MELT[lang].names[meltStage()]; }catch(_){}
@@ -4450,7 +4467,7 @@ function bragOpen(){ if(!PET) return; const x = bt(), ja = S.meta.settings.ui ==
   $("#bragPh").onclick = () => { track("brag_photo", { ver, th, zoom }); done();   // 창을 닫고 냥이를 제자리로 내린 뒤에 찍기
     setTimeout(() => { BRAG_SNAP = { ver, th, zoom, cb: out => out.toBlob(b => bragShare(b, "meowca.png", ver), "image/png") }; }, 90); };
   $("#bragVd").onclick = () => { done(); bragRec(ver, th, zoom); }; }
-async function bragShare(blob, name, ver){ const x = bt(), st = bragStats(), text = (ver === "cute" ? x.txtCute(st.lv, st.d) : x.txtReal(st.n)) + "\nhttps://meowca.app/?src=brag"; const file = new File([blob], name, { type: blob.type });
+async function bragShare(blob, name, ver){ const x = bt(), st = bragStats(), text = (bragShare._t || bragCaption(ver)); const file = new File([blob], name, { type: blob.type });
   const ja = S.meta.settings.ui === "ja"; let p = null;
   copyNow(text);   // 공유창이 뜨기 전에 동기식으로 복사(공유창이 뜨면 페이지가 포커스를 잃어 비동기 복사가 막힘)
   try{ if(navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) p = navigator.share({ files: [file] }); }catch(_){ p = null; }   // 탭한 그 순간에 바로 공유창
@@ -4475,7 +4492,7 @@ function bragStop(silent){ if(!BRAG || !BRAG.rec) return; const r = BRAG.rec; BR
   try{ if(BRAG_DEST && PMASTER) PMASTER.disconnect(BRAG_DEST); }catch(_){} BRAG_DEST = null; if(silent) r.onstop = null; try{ r.stop(); }catch(_){} }
 function bragDone(blob, name, ver, th, zoom){ if(!PET) return; const x = bt(), url = URL.createObjectURL(blob);
   const dr = bragSheet(`<div style="display:flex;justify-content:space-between;align-items:center"><h3>🎥 ${esc(x.title)}</h3><button type="button" class="btn sm" id="bragX">${esc(x.close)}</button></div>
-    <video class="brag-vid" src="${url}" playsinline loop muted autoplay></video>${(() => { const st = bragStats(), tx = (ver === "cute" ? x.txtCute(st.lv, st.d) : x.txtReal(st.n)) + "\nhttps://meowca.app/?src=brag"; return `<div class="brag-capr"><span>${esc(tx.replace(/\n/g, " "))}</span><button type="button" id="bragCp" data-t="${esc(tx)}">📋 ${S.meta.settings.ui === "ja" ? "文言コピー" : "문구 복사"}</button></div>`; })()}<div class="brag-a brag-a3"><button type="button" id="bragSh">📤 ${esc(x.share)}</button><button type="button" class="alt" id="bragSv">⬇️ ${esc(x.save)}</button><button type="button" class="alt2" id="bragRe">↺ ${esc(x.again)}</button></div>`); dr.classList.add("res"); { const v = dr.querySelector(".brag-vid"); v.onclick = () => v.paused ? v.play() : v.pause(); }
+    <video class="brag-vid" src="${url}" playsinline loop muted autoplay></video>${(() => { const tx = bragShare._t = bragCaption(ver); return `<div class="brag-capr"><span>${esc(tx.split("\n")[0])}</span><button type="button" id="bragCp" data-t="${esc(tx)}">📋 ${S.meta.settings.ui === "ja" ? "文言コピー" : "문구 복사"}</button></div><p class="brag-how">${S.meta.settings.ui === "ja" ? "① 文言コピー → ② シェア → インスタ → ③ 貼り付け" : "① 문구 복사 → ② 공유 → 인스타 → ③ 문구 칸에 붙여넣기"}</p>`; })()}<div class="brag-a brag-a3"><button type="button" id="bragSh">📤 ${esc(x.share)}</button><button type="button" class="alt" id="bragSv">⬇️ ${esc(x.save)}</button><button type="button" class="alt2" id="bragRe">↺ ${esc(x.again)}</button></div>`); dr.classList.add("res"); { const v = dr.querySelector(".brag-vid"); v.onclick = () => v.paused ? v.play() : v.pause(); }
   $("#bragCp").onclick = async e => { const b = e.currentTarget, tx = b.dataset.t, ja = S.meta.settings.ui === "ja"; let ok = false;
     try{ if(navigator.clipboard){ await navigator.clipboard.writeText(tx); ok = true; } }catch(_){} if(!ok) ok = copyNow(tx);
     b.textContent = ok ? (ja ? "✓ コピー完了" : "✓ 복사됨") : (ja ? "長押しでコピーしてね" : "길게 눌러 복사해 줘"); b.classList.toggle("ok", ok); if(!ok) b.previousElementSibling.style.userSelect = "text"; track("brag_copy", { ok }); };
