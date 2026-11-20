@@ -909,6 +909,8 @@ body.focus .dock:has(.vk-host) .ans-btns .btn{min-height:calc(var(--vkh,44px) + 
 .hv2-say .bubble.slam{background:var(--surface);opacity:1}
 #bragDr.res{max-height:72%;height:72%} #bragDr.res .brag-vid{flex:1 1 auto;min-height:0;height:auto;width:100%;max-width:100%;object-fit:contain;margin:6px 0 10px}
 .brag-a3{grid-template-columns:1.2fr 1fr .9fr!important;padding-bottom:calc(10px + env(safe-area-inset-bottom))} .brag-a3 button{white-space:nowrap;padding:12px 6px;font-size:.92rem} .brag-a .alt2{background:transparent;color:inherit;box-shadow:inset 0 0 0 2px rgba(127,127,127,.4)}
+.brag-capr{display:flex;align-items:center;gap:8px;margin:0 0 10px;padding:6px 6px 6px 12px;border-radius:14px;background:rgba(127,127,127,.12)} .brag-capr span{flex:1;min-width:0;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-user-select:text;user-select:text}
+.brag-capr button{flex:0 0 auto;border:0;border-radius:999px;padding:8px 12px;font:inherit;font-weight:800;font-size:.85rem;background:var(--accent);color:#fff} .brag-capr button.ok{background:#3aa66b}
 h1 .logo .testtag{font-size:.55rem;letter-spacing:.1em;background:var(--accent);color:#fff;border-radius:999px;padding:2px 7px;margin-left:6px}
 </style>
 </head>
@@ -3412,7 +3414,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v116";
+const APP_VER = "v117";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -4473,7 +4475,10 @@ function bragStop(silent){ if(!BRAG || !BRAG.rec) return; const r = BRAG.rec; BR
   try{ if(BRAG_DEST && PMASTER) PMASTER.disconnect(BRAG_DEST); }catch(_){} BRAG_DEST = null; if(silent) r.onstop = null; try{ r.stop(); }catch(_){} }
 function bragDone(blob, name, ver, th, zoom){ if(!PET) return; const x = bt(), url = URL.createObjectURL(blob);
   const dr = bragSheet(`<div style="display:flex;justify-content:space-between;align-items:center"><h3>🎥 ${esc(x.title)}</h3><button type="button" class="btn sm" id="bragX">${esc(x.close)}</button></div>
-    <video class="brag-vid" src="${url}" playsinline loop muted autoplay></video><div class="brag-a brag-a3"><button type="button" id="bragSh">📤 ${esc(x.share)}</button><button type="button" class="alt" id="bragSv">⬇️ ${esc(x.save)}</button><button type="button" class="alt2" id="bragRe">↺ ${esc(x.again)}</button></div>`); dr.classList.add("res"); { const v = dr.querySelector(".brag-vid"); v.onclick = () => v.paused ? v.play() : v.pause(); }
+    <video class="brag-vid" src="${url}" playsinline loop muted autoplay></video>${(() => { const st = bragStats(), tx = (ver === "cute" ? x.txtCute(st.lv, st.d) : x.txtReal(st.n)) + "\nhttps://meowca.app/?src=brag"; return `<div class="brag-capr"><span>${esc(tx.replace(/\n/g, " "))}</span><button type="button" id="bragCp" data-t="${esc(tx)}">📋 ${S.meta.settings.ui === "ja" ? "文言コピー" : "문구 복사"}</button></div>`; })()}<div class="brag-a brag-a3"><button type="button" id="bragSh">📤 ${esc(x.share)}</button><button type="button" class="alt" id="bragSv">⬇️ ${esc(x.save)}</button><button type="button" class="alt2" id="bragRe">↺ ${esc(x.again)}</button></div>`); dr.classList.add("res"); { const v = dr.querySelector(".brag-vid"); v.onclick = () => v.paused ? v.play() : v.pause(); }
+  $("#bragCp").onclick = async e => { const b = e.currentTarget, tx = b.dataset.t, ja = S.meta.settings.ui === "ja"; let ok = false;
+    try{ if(navigator.clipboard){ await navigator.clipboard.writeText(tx); ok = true; } }catch(_){} if(!ok) ok = copyNow(tx);
+    b.textContent = ok ? (ja ? "✓ コピー完了" : "✓ 복사됨") : (ja ? "長押しでコピーしてね" : "길게 눌러 복사해 줘"); b.classList.toggle("ok", ok); if(!ok) b.previousElementSibling.style.userSelect = "text"; track("brag_copy", { ok }); };
   $("#bragX").onclick = () => { dr.remove(); petLift(null); URL.revokeObjectURL(url); }; $("#bragSh").onclick = () => bragShare(blob, name, ver); $("#bragSv").onclick = () => bragSave(blob, name);
   $("#bragRe").onclick = () => { dr.remove(); petLift(null); URL.revokeObjectURL(url); bragRec(ver, th, zoom); }; }
 /* 앱을 열면 냥이부터(설정에서 끌 수 있음). 처음 온 사람·첫 설정·튜토리얼·이사 중에는 홈 그대로 */
