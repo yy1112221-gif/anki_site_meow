@@ -1711,7 +1711,7 @@ function runTour(){
       const below = r.bottom + 150 < innerHeight; tip.style.top = below ? r.bottom + 16 + "px" : ""; tip.style.bottom = below ? "" : innerHeight - r.top + 16 + "px"; }); };
   const next = () => { i++; if(i >= steps.length){ ov.remove(); window.scrollTo({ top: 0, behavior: "smooth" }); return; } show(); };
   ov.onclick = next; show(); }
-const DONATE_KO = "";   // 개인 송금 링크는 실명이 보여서 내림(2026-11-20). 결제는 사업자·PG 연동 후 후원 숍으로
+const DONATE_KO = "https://qr.kakaopay.com/FONOyL9Fi";   // 카카오페이 송금(한국어 화면만). 사용자 요청으로 사업자 등록 완료 때까지만 유지 → 그때 비우기
 const DONATE_JA = "";   // 일본 사용자용 후원 링크(Ko-fi 등) — 비어 있으면 숨김
 function bindCorner(){ const ko = S.meta.settings.ui === "ko", a = $("#tutAgain"), c = $("#trackOn"); if(!a) return;
   a.textContent = ko ? "튜토리얼 다시 보기" : "チュートリアルをもう一度"; $("#trackLbl").textContent = ko ? "사용 기록 보내기(익명·개선용)" : "利用データを送る（匿名・改善用）";
@@ -1778,7 +1778,7 @@ function supShopOpen(){ const ko = S.meta.settings.ui === "ko", m = S.meta.supWa
     b.disabled = true; b.textContent = ko ? "찜했다냥 ♥" : "予約したニャ ♥"; toast(ko ? "고맙다냥… 결제가 열리면 제일 먼저 알려 주겠다" : "ありがとニャ…決済が開いたら真っ先に知らせる"); }); }
 function renderSupBox(){ const el = $("#supBox"); if(!el) return; const ko = S.meta.settings.ui === "ko";
   el.innerHTML = `<div class="sup-row">${nm("st_love", 52)}<div><b>${ko ? "MEOWCA! 암기냥이는 무료예요" : "MEOWCA!（ミョウカ）は無料です"}</b><p class="small muted" style="margin:.2em 0 0">${ko ? "광고도 없어요. 마음에 들면 친구에게 알려 주세요." : "広告もありません。気に入ったら友達に教えてください。"}</p></div></div>
-    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button><button class="btn primary" type="button" id="supShop">🎁 ${ko ? "후원 숍 · 보상 있음" : "応援ショップ・特典つき"}</button></div>
+    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button><button class="btn primary" type="button" id="supShop">🎁 ${ko ? "후원 숍 · 보상 있음" : "応援ショップ・特典つき"}</button>${ko && DONATE_KO ? `<a class="btn" href="${DONATE_KO}" target="_blank" rel="noopener">🍖 카카오페이로 츄르 사주기</a>` : ""}</div>
     <p class="tiny muted" style="margin:0"><a href="privacy.html">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a> · <a href="terms.html">${ko ? "이용약관" : "利用規約"}</a></p><p class="tiny muted" id="bizLine" style="margin:0"></p>`;
   bizFill(); $("#supShop").onclick = supShopOpen;
   $("#supShare").onclick = async () => { const url = "https://meowca.app/?ref=invite", text = ko ? "MEOWCA! 암기냥이 — 가성비로 딱 필요한 만큼만 외우고, 나머진 말랑 냥이 괴롭히기 🐾 무료" : "MEOWCA!（ミョウカ）— もう無理やり暗記しなくていい。最小限だけ覚えて、あとはネコと遊ぶ 🐾 無料";
@@ -2984,7 +2984,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v93";
+const APP_VER = "v94";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3076,7 +3076,8 @@ function fbInit(){ const nav = $("nav.subnav"); if(!nav || $("#fbBtn")) return; 
    새 이벤트는 track("이름", {…}) 한 줄로 추가. 서버 표는 jsonb라 항목이 늘어도 표를 바꿀 필요 없음 */
 const EV_Q = []; let EV_T = null; const EV_SID = Math.random().toString(36).slice(2, 10);
 function devId(){ try{ let d = localStorage.getItem("meowca-dev"); if(!d){ d = uuid4(); localStorage.setItem("meowca-dev", d); } return d; }catch(_){ return "nostore"; } }
-function track(n, p){ try{ if(S.meta.noTrack) return; EV_Q.push({ n, p: p || {}, t: Date.now(), s: EV_SID, v: APP_VER }); if(EV_Q.length > 300) EV_Q.splice(0, EV_Q.length - 300);
+const EV_OFF = /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname) || /\/test\//.test(location.pathname) || navigator.webdriver === true;   // 테스트·자동화 브라우저는 사용 기록 안 보냄(이용자 수 부풀림 방지)
+function track(n, p){ try{ if(S.meta.noTrack || EV_OFF) return; EV_Q.push({ n, p: p || {}, t: Date.now(), s: EV_SID, v: APP_VER }); if(EV_Q.length > 300) EV_Q.splice(0, EV_Q.length - 300);
   if(EV_Q.length >= 25) evFlush(); else { clearTimeout(EV_T); EV_T = setTimeout(evFlush, 15000); } }catch(_){} }
 function evFlush(keep){ if(!EV_Q.length || !syncReady() || S.meta.noTrack) return; const batch = EV_Q.splice(0, 50);
   sbRpc("ev_put", { p_dev: devId(), p_events: batch }, keep).catch(() => { if(!keep) EV_Q.unshift(...batch.slice(-100)); }); }
