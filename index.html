@@ -1822,9 +1822,9 @@ function buyBoot(){ const id = new URLSearchParams(location.search).get("buy"); 
   if(!PET) openPet(); setTimeout(() => { cosOpen(); const it = COS.find(c => c.id === id); const dr = $("#cosDr"); if(!it || !dr) return; const tb = dr.querySelector(`[data-cat="${it.c}"]`); if(tb) tb.click(); const b = dr.querySelector(`.cos-it[data-id="${id}"]`); if(b) b.click(); }, 600); }
 
 /* ════════ 카드 결제 (토스페이먼츠 결제창 v2) ════════
-   TOSS_CK: 상점관리자 > 개발 > API 키의 「클라이언트 키」(공개용). 비어 있으면 결제 버튼이 「준비 중」으로 동작
+   TOSS_CK: 상점관리자 > 개발 > API 키의 「결제위젯 연동 키」 클라이언트 키(공개용, gck). 시크릿(gsk)은 Supabase Secrets TOSS_SECRET_KEY. 비어 있으면 결제 버튼이 「준비 중」으로 동작
    흐름: 상품 → 동의 → 주문서(서버 가격) → 토스 결제창 → meowca.app/?pay=ok… → pay-confirm 함수가 승인 → 앱에서 지급 */
-const TOSS_CK = "";
+const TOSS_CK = "test_gck_c19zDGFLKEWkuNsntlFU99pfuTjy8kvGWn";
 const PAY_FN = SB_URL_PAY();
 function SB_URL_PAY(){ return "https://cgupivfptuzqyadhqhiz.supabase.co/functions/v1/pay-confirm"; }
 const PAY_ITEMS = { snk_s: [990, "간식 한 줌 (10개 · 3일)"], snk_whale: [1500, "고래 한 마리 (7일)"], snk_m: [2900, "간식 한 봉지 (40개 · 7일)"], snk_l: [6900, "간식 트럭 (150개 · 14일)"],
@@ -1841,16 +1841,22 @@ function payOpen(id){ const it = PAY_ITEMS[id]; if(!it) return; const ko = S.met
     <p style="font-size:1.05rem;margin:14px 0 4px"><b>${esc(it[1])}</b></p><p style="font-size:1.6rem;font-weight:900;margin:0">${it[0].toLocaleString()}원 <small style="font-size:.8rem;color:var(--muted)">부가세 포함</small></p>
     <p class="small muted" style="margin:10px 0">결제 즉시 이 기기(계정)에 지급돼요. 7일 안에 쓰지 않은 아이템은 전액 환불, 이미 쓴 아이템은 청약철회가 제한돼요. <a href="terms#refund" target="_blank">환불 안내</a></p>
     <label style="display:flex;gap:8px;align-items:flex-start;margin:6px 0 14px"><input type="checkbox" id="payAgree" style="width:20px;height:20px;margin-top:2px"><span class="small">위 내용(디지털 아이템은 사용 후 청약철회가 제한됨)을 확인했고 동의해요.</span></label>
-    <button type="button" class="btn primary" id="payGo" style="width:100%;justify-content:center;min-height:50px" disabled>${it[0].toLocaleString()}원 카드로 결제</button></div>`;
+    <div id="payMeth" style="margin:0 -8px"></div><div id="payTerms" style="margin:0 -8px 8px"></div>
+    <button type="button" class="btn primary" id="payGo" style="width:100%;justify-content:center;min-height:50px" disabled>${it[0].toLocaleString()}원 결제하기</button></div>`;
   document.body.appendChild(ov); const close = () => ov.remove(); $("#payX").onclick = close; ov.onclick = e => { if(e.target === ov) close(); };
-  $("#payAgree").onchange = e => { $("#payGo").disabled = !e.target.checked; };
+  let wg = null, wgReady = false; const sync = () => { $("#payGo").disabled = !($("#payAgree").checked && wgReady); };
+  $("#payAgree").onchange = sync;
+  (async () => { try{ const TP = await loadToss(); wg = TP(TOSS_CK).widgets({ customerKey: TP.ANONYMOUS });
+      await wg.setAmount({ currency: "KRW", value: it[0] });
+      await Promise.all([wg.renderPaymentMethods({ selector: "#payMeth", variantKey: "DEFAULT" }), wg.renderAgreement({ selector: "#payTerms", variantKey: "AGREEMENT" })]);
+      wgReady = true; sync(); }catch(e){ if(document.body.contains(ov)) toast(ko ? "결제창을 불러오지 못했다냥. 잠시 뒤 다시 해 줘" : "決済画面を読み込めなかったニャ"); } })();
   $("#payGo").onclick = async () => { const b = $("#payGo"); b.disabled = true; b.textContent = "결제창 여는 중…";
     try{ const o = await sbRpc("pay_order_create", { p_item: id }); if(!o || !o.orderId) throw 0;
-      const TP = await loadToss(); const pay = TP(TOSS_CK).payment({ customerKey: TP.ANONYMOUS });
+      if(o.amount !== it[0]) await wg.setAmount({ currency: "KRW", value: o.amount });
       S.meta.payPend = { id, orderId: o.orderId, at: Date.now() }; save(); track("pay_go", { id, amount: o.amount });
-      await pay.requestPayment({ method: "CARD", amount: { currency: "KRW", value: o.amount }, orderId: o.orderId, orderName: o.orderName,
-        successUrl: location.origin + location.pathname + "?pay=ok", failUrl: location.origin + location.pathname + "?pay=fail", card: { useEscrow: false, flowMode: "DEFAULT", useCardPoint: false, useAppCardOnly: false } });
-    }catch(e){ b.disabled = false; b.textContent = `${it[0].toLocaleString()}원 카드로 결제`; if(e && e.code === "USER_CANCEL") return; toast(ko ? "결제를 시작하지 못했다냥. 잠시 뒤 다시 해 줘" : "決済を開始できなかったニャ"); } }; }
+      await wg.requestPayment({ orderId: o.orderId, orderName: o.orderName,
+        successUrl: location.origin + location.pathname + "?pay=ok", failUrl: location.origin + location.pathname + "?pay=fail" });
+    }catch(e){ b.disabled = false; b.textContent = `${it[0].toLocaleString()}원 결제하기`; if(e && e.code === "USER_CANCEL") return; toast(ko ? "결제를 시작하지 못했다냥. 잠시 뒤 다시 해 줘" : "決済を開始できなかったニャ"); } }; }
 function payGrant(id, orderId){ const p = petState(), g = S.meta.paid || (S.meta.paid = {}); if(g[orderId]) return false; g[orderId] = { id, at: Date.now() };
   const snack = (n, days) => { const pool = PET_ITEMS.filter(i => i.t <= petTier(streak()) && i.id !== "whale"); const per = {}; for(let k = 0; k < n; k++){ const it = pool[k % pool.length]; per[it.id] = (per[it.id] || 0) + 1; } Object.entries(per).forEach(([iid, c]) => buyGrant(iid, c, days)); };
   if(id === "snk_s") snack(10, 3); else if(id === "snk_m") snack(40, 7); else if(id === "snk_l") snack(150, 14); else if(id === "snk_whale") buyGrant("whale", 1, 7);
@@ -3099,7 +3105,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v101";
+const APP_VER = "v102";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
