@@ -1955,16 +1955,16 @@ async function payBoot(){ const q = new URLSearchParams(location.search), st = q
   history.replaceState(null, "", location.pathname);
   if(st === "fail"){ track("pay_fail", { code: q.get("code") }); if(q.get("code") !== "PAY_PROCESS_CANCELED") toast(ko ? "결제가 완료되지 않았다냥 (" + (q.get("message") || "") + ")" : "決済が完了しなかったニャ"); return; }
   const paymentKey = q.get("paymentKey"), orderId = q.get("orderId"), amount = q.get("amount"); if(!paymentKey || !orderId) return;
-  S.meta.payPend = Object.assign(S.meta.payPend || {}, { orderId, paymentKey, amount: +amount, back: Date.now() }); save(); payConfirm(); }
-async function payRetry(){ const pp = S.meta.payPend; if(!pp || !pp.paymentKey || new URLSearchParams(location.search).get("pay")) return;
+  S.meta.payPend = Object.assign(S.meta.payPend || {}, { orderId, paymentKey, amount: +amount, back: Date.now() }); save(); payBoot._done = 1; payConfirm(); }
+async function payRetry(){ if(payBoot._done) return; const pp = S.meta.payPend; if(!pp || !pp.paymentKey || new URLSearchParams(location.search).get("pay")) return;
   if(Date.now() - (pp.back || 0) > 864e5){ delete S.meta.payPend; save(); return; } payConfirm(); }
 async function payConfirm(){ const ko = S.meta.settings.ui !== "ja", pp = S.meta.payPend || {}, { paymentKey, orderId, amount } = pp; if(!paymentKey) return;
   toast(ko ? "결제 확인 중…" : "決済を確認中…");
   try{ const r = await fetch(PAY_FN, { method: "POST", headers: { "content-type": "application/json", apikey: SB_KEY }, body: JSON.stringify({ paymentKey, orderId, amount: +amount }) }); const j = await r.json();
     if(j.ok && j.item){ const fresh = payGrant(j.item, orderId); track("pay_ok", { id: j.item, amount: +amount }); delete S.meta.payPend; save(); renderAll();
       toast(fresh ? (ko ? "🎉 결제 완료! 바로 지급했다냥. 고맙다…" : "🎉 購入完了！すぐ届けたニャ") : (ko ? "이미 지급된 결제다냥" : "受け取り済みニャ")); if(fresh && !PET) setTimeout(() => openPet(), 600); }
-    else if(j.code === "ALREADY_PROCESSED_PAYMENT" || j.code === "NOT_FOUND_PAYMENT_SESSION"){ delete S.meta.payPend; save(); track("pay_bad", { code: j.code }); toast(ko ? "결제가 만료됐다냥. 돈이 빠져나갔다면 「문의」로 알려 줘" : "決済が期限切れニャ。「質問」から連絡してね"); }
-    else { delete S.meta.payPend; save(); track("pay_bad", { code: j.code }); toast(ko ? "결제 승인에 실패했다냥. 돈이 빠져나갔다면 「문의」로 알려 줘" : "決済の承認に失敗したニャ。「質問」から連絡してね"); }
+    else if(j.code === "ALREADY_PROCESSED_PAYMENT" || j.code === "NOT_FOUND_PAYMENT_SESSION"){ delete S.meta.payPend; save(); track("pay_bad", { code: j.code }); S.meta.payErr = { code: j.code, msg: j.msg || "", at: Date.now() }; save(); toast((ko ? "결제 승인 실패 [" : "決済承認失敗 [") + j.code + "] " + (ko ? "돈이 빠져나갔다면 「문의」로 알려 줘" : "「質問」から連絡してね"), 9000); }
+    else { delete S.meta.payPend; S.meta.payErr = { code: j.code, msg: j.msg || "", at: Date.now() }; save(); track("pay_bad", { code: j.code }); toast((j.code ? "[" + j.code + "] " : "") + (ko ? "결제 승인에 실패했다냥. 돈이 빠져나갔다면 「문의」로 알려 줘" : "決済の承認に失敗したニャ。「質問」から連絡してね")); }
   }catch(e){ toast(ko ? "결제 확인이 늦어진다냥. 새로고침해 줘" : "確認が遅れてるニャ。再読み込みしてね"); }
 }
 function renderSupBox(){ const el = $("#supBox"); if(!el) return; const ko = S.meta.settings.ui === "ko";
@@ -3410,7 +3410,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v112";
+const APP_VER = "v113";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
