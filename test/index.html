@@ -659,7 +659,7 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .ms-row>span{font-weight:700} .ms-nick{display:flex;gap:6px} .ms-nick input{flex:1;min-width:0;font:inherit;font-size:16px;padding:9px 12px;border-radius:12px;border:1.5px solid rgba(127,127,127,.3);background:transparent;color:inherit}
 .sup-early{border-radius:16px;padding:12px 14px;margin:0 0 12px;background:linear-gradient(135deg,rgba(255,214,120,.25),rgba(255,160,190,.2));border:1.5px dashed rgba(230,140,80,.5)} .sup-early p{margin:4px 0;font-size:.86rem;line-height:1.55} .sup-early ol{margin:4px 0 0;padding-left:1.3em;font-size:.82rem;line-height:1.6} .sup-was{opacity:.5;font-weight:600;font-size:.8em;margin-right:4px}
 .sup-ov{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
-.sup-sh{width:min(560px,100%);max-height:88vh;overflow:auto;background:var(--card,#fff);color:var(--ink);border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom))}
+.sup-sh{width:min(560px,100%);max-height:88vh;overflow:auto;background:#fff;color:#1d2b27;border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom))}
 .sup-t{position:relative;border:1.5px solid rgba(127,127,127,.25);border-radius:16px;padding:12px 14px;margin:0 0 10px} .sup-t.hot{border-color:var(--accent);background:rgba(61,196,140,.08)}
 .sup-hot{position:absolute;top:-9px;right:14px;background:var(--accent);color:#fff;font-size:.7rem;font-weight:800;border-radius:99px;padding:2px 9px}
 .sup-h{display:flex;align-items:center;gap:8px} .sup-e{font-size:1.5rem} .sup-h b{flex:1;font-size:1rem} .sup-p{font-weight:900;font-size:1.05rem}
@@ -685,7 +685,7 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .cos-dr{position:absolute;z-index:9;left:0;right:0;bottom:0;max-height:62%;overflow:auto;padding:12px 12px calc(12px + env(safe-area-inset-bottom));background:#fff;border-radius:22px 22px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.18);touch-action:pan-y;animation:cosUp .25s ease-out}
 @keyframes cosUp{from{transform:translateY(100%)}to{transform:none}}
 .cos-dr h3{margin:0 0 2px;font-size:1.05rem} .cos-dr .cos-note{margin:0 0 10px;font-size:.75rem;color:var(--muted)}
-@media (prefers-color-scheme:dark){.cos-dr{background:#1f2128}}
+@media (prefers-color-scheme:dark){.cos-dr{background:#1f2128} .sup-sh{background:#1f2128;color:#eef0ee} .sup-t.hot{background:rgba(61,196,140,.12)}}
 .cos-tabs{display:flex;gap:6px;margin:0 0 8px} .cos-tabs button{border:1px solid var(--line,#ddd);background:transparent;color:inherit;border-radius:999px;padding:5px 12px;font:inherit;font-size:.8rem;cursor:pointer} .cos-tabs button[aria-pressed="true"]{background:#f2708f;border-color:#f2708f;color:#fff;font-weight:800}
 .cos-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x mandatory}
 .cos-it{flex:0 0 104px;scroll-snap-align:start;border:2px solid var(--line,#ddd);border-radius:16px;padding:8px;text-align:center;background:transparent;color:inherit;cursor:pointer;font:inherit}
@@ -3007,7 +3007,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v94";
+const APP_VER = "v95";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3483,7 +3483,26 @@ function loadSlang(){ SLANG = { lang: slangLang(), terms: [] }; }
 function slangPick(){ const a = SLANG_LINES[slangLang()]; return a[Math.floor(Math.random() * a.length)]; }
 const hasBatchim = w => { const c = String(w).trim().slice(-1).charCodeAt(0); if(c >= 0xAC00 && c <= 0xD7A3) return (c - 0xAC00) % 28 !== 0; return /[13678LMNRlmnr0]$/.test(String(w).trim()); };
 const rago = w => `${w}${hasBatchim(w) ? "이라고" : "라고"}`;
-function slangLine(){ const t = slangPick(); if(!t) return null; const ko = slangLang() === "ko", q = `"${t}"`, v = ko ? [`…${t}.`, `${rago(t)} 하던가.`, `요즘 인간들은 ${q}${hasBatchim(t) ? "이라고" : "라고"} 한다지.`, `…${t}. 기억해 둬라.`] : [`…${t}。`, `「${t}」…と言うらしいな。`, `最近の人間は「${t}」と言うそうだ。`, `…${t}。覚えておけ。`]; return v[Math.floor(Math.random() * v.length)]; }
+/* 냥이 혼잣말: 말투(틀)는 고정, 들어가는 단어만 계속 바뀜 — 내 모국어 유행어 · 배우는 언어 유행어 · 자주 틀리는 단어 · 오늘 외울 단어를 섞어서 스며들게 */
+let LEARN_SL = null;
+function loadLearnSlang(){ const lang = S.meta.settings.lang; if(!CORE_SL.includes(lang) || (LEARN_SL && LEARN_SL.lang === lang)) return; LEARN_SL = { lang, terms: [] };
+  fetch(SLANG_BASE + lang + "_core.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(j => { if(j && LEARN_SL && LEARN_SL.lang === lang) LEARN_SL.terms = (j.terms || []).filter(x => x.t); }).catch(() => {}); }
+const pick1 = a => a[Math.floor(Math.random() * a.length)];
+function slangLine(){ const ko = slangLang() === "ko", ui = ko ? "ko" : "ja", lang = S.meta.settings.lang; loadLearnSlang();
+  const mean = c => String(c.meaning || c.gloss || "").split(/[;；,、\n]/)[0].trim().slice(0, 24);
+  const pools = [];
+  pools.push(["native", 2]);
+  if(lang !== ui && LEARN_SL && LEARN_SL.terms.length) pools.push(["lslang", 2]);
+  const wrong = cardsHere().filter(c => !c.isNew && (c.lapses || 0) > 0 && c.word && mean(c)); if(wrong.length) pools.push(["wrong", 2]);
+  const todo = cardsHere().filter(c => c.word && mean(c) && (c.isNew || (c.due && c.due <= today()))); if(todo.length) pools.push(["todo", 2]);
+  let r = Math.random() * pools.reduce((a, b) => a + b[1], 0), kind = "native"; for(const [k, w] of pools){ r -= w; if(r <= 0){ kind = k; break; } }
+  if(kind === "native"){ const t = slangPick(); const q = `"${t}"`; return pick1(ko ? [`…${t}.`, `${rago(t)} 하던가.`, `요즘 인간들은 ${q}${hasBatchim(t) ? "이라고" : "라고"} 한다지.`, `…${t}. 기억해 둬라.`] : [`…${t}。`, `「${t}」…と言うらしいな。`, `最近の人間は「${t}」と言うそうだ。`, `…${t}。覚えておけ。`]); }
+  if(kind === "lslang"){ const x = pick1(LEARN_SL.terms), m = String(x[ui] || x.ko || "").split(/[,(（]/)[0].trim(); track("cat_word", { k: "lslang" });
+    return pick1(ko ? [`저쪽 인간들은 "${x.t}"라고 한다지. …${m}.`, `"${x.t}". …${m}${hasBatchim(m) ? "이라는" : "라는"} 뜻이다. 써먹어 봐라.`, `…"${x.t}". 요즘 거기선 이게 유행이다.`] : [`向こうの人間は「${x.t}」と言うらしい。…${m}。`, `「${x.t}」。…${m}って意味だ。使ってみろ。`, `…「${x.t}」。あっちじゃ今これが流行りだ。`]); }
+  if(kind === "wrong"){ const c = pick1(wrong.sort((a, b) => (b.lapses || 0) - (a.lapses || 0)).slice(0, 8)); track("cat_word", { k: "wrong" });
+    return pick1(ko ? [`…"${c.word}". 또 틀리면 간식 없다. (${mean(c)})`, `"${c.word}" — ${mean(c)}. …너 이거 ${c.lapses}번 틀렸다.`, `잊지 마라. "${c.word}"… ${mean(c)}.`] : [`…「${c.word}」。また間違えたらおやつ抜きだ。（${mean(c)}）`, `「${c.word}」— ${mean(c)}。…おまえ、これ${c.lapses}回間違えたぞ。`, `忘れるな。「${c.word}」…${mean(c)}。`]); }
+  const c = pick1(todo.slice(0, 30)); track("cat_word", { k: "todo" });
+  return pick1(ko ? [`오늘 외울 거다. "${c.word}" — ${mean(c)}.`, `…"${c.word}". 곧 시험 나온다. (${mean(c)})`, `"${c.word}". ${mean(c)}. …미리 알려 주는 건 이번뿐이다.`] : [`今日覚えるやつだ。「${c.word}」— ${mean(c)}。`, `…「${c.word}」。もうすぐ出るぞ。（${mean(c)}）`, `「${c.word}」。${mean(c)}。…先に教えるのは今回だけだ。`]); }
 function petNudge(){ let b = $("#petNudge"); if(!b){ b = document.createElement("button"); b.id = "petNudge"; b.type = "button"; document.body.appendChild(b); }
   b.textContent = pt().nudge; b.classList.add("on"); b.onclick = () => { b.classList.remove("on"); openPet(true); }; clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove("on"), 12000); }
 function openPet(welcome){
@@ -4718,7 +4737,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { slangLine: () => slangLine(),  S: () => S, save, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 load(); slimPresets(); setTimeout(fixPresetMeanings, 1500); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
