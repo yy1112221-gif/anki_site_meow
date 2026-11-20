@@ -1409,7 +1409,7 @@ async function tatoeba(word){
     const exact = form && stripAcc(form.toLowerCase()) === stripAcc(term.toLowerCase());
     const score = (own ? 0 : 10) + Math.abs(words - 8) + (form ? 0 : 20) - (exact ? 8 : 0) + (r.text.length > 110 ? 10 : 0) - (audio ? 3 : 0);
     return { id: r.id, text: r.text, tr: own ? own.text : "", en: en ? en.text : "", form, score, audio };
-  }).sort((a,b) => a.score - b.score).slice(0, 6);
+  }).filter(x => x.form || !/[぀-ヿ一-龯가-힣]/.test(word)).sort((a,b) => a.score - b.score).slice(0, 6);
 }
 async function lookup(word){
   const [m, c, w] = await Promise.allSettled([ translate(searchTerm(word), L().mm), tatoeba(word), wiktionary(searchTerm(word)) ]);
@@ -1463,12 +1463,22 @@ function schedule(c, correct){
   if(iv > 180){ c.mastered = true; c.due = null; return; }
   c.due = addDays(d, Math.min(365, iv));
 }
+/* 단어 경계: 긴 단어의 일부를 잘라 정답으로 쓰지 않게 (예: ホームシック 안의 シック, 先生 안의 生) */
+const RX_KATA = /[ァ-ヺー・]/, RX_KAN = /[一-龯々]/, RX_HG = /[가-힣]/, RX_LAT = /\p{L}/u;
+function formBoundOk(ex, i, len, w){ const L = ex[i - 1] || "", R = ex[i + len] || "";
+  if(/^[ァ-ヺー・]+$/.test(w)) return !RX_KATA.test(L) && !RX_KATA.test(R);
+  if(RX_KAN.test(w[0]) && RX_KAN.test(L)) return false;
+  if(RX_KAN.test(w[w.length - 1]) && RX_KAN.test(R)) return false;
+  if(RX_HG.test(w[0])) return !RX_HG.test(L);
+  if(/^[\p{Script=Latin}]/u.test(w)) return !RX_LAT.test(L) && (!RX_LAT.test(R) || w.length >= 5);
+  return true; }
+function findAt(low, lw, ex, w){ let i = low.indexOf(lw); while(i >= 0){ if(formBoundOk(ex, i, lw.length, w)) return i; i = low.indexOf(lw, i + 1); } return -1; }
 function findForm(text, word){
   const ex = text || ""; const w = searchTerm(word);
   if(!ex || !w) return "";
   const low = stripAcc(ex.toLowerCase()), lw = stripAcc(w.toLowerCase());
-  const i = low.indexOf(lw); if(i >= 0) return ex.slice(i, i + w.length);
-  if(/\s/.test(w)) return "";
+  const i = findAt(low, lw, ex, w); if(i >= 0) return ex.slice(i, i + w.length);
+  if(/\s/.test(w) || /[぀-ヿ一-龯가-힣]/.test(w)) return "";
   const base = lw.replace(/se$/,"").replace(/(ar|er|ir|re|en)$/,""); const stem = base.length >= 3 ? base : lw.slice(0, 3);
   const re = /[\p{L}]+/gu; let m;
   while((m = re.exec(ex))){ if(stripAcc(m[0].toLowerCase()).startsWith(stem)) return m[0]; }
@@ -1476,9 +1486,9 @@ function findForm(text, word){
 }
 function clozeParts(c){
   const ex = c.example || ""; if(!ex) return null;
-  const f = (c.form && stripAcc(ex.toLowerCase()).includes(stripAcc(c.form.toLowerCase()))) ? c.form : findForm(ex, c.word);
+  const low = stripAcc(ex.toLowerCase()); let f = c.form && findAt(low, stripAcc(c.form.toLowerCase()), ex, c.form) >= 0 ? c.form : findForm(ex, c.word);
   if(!f) return null;
-  const i = stripAcc(ex.toLowerCase()).indexOf(stripAcc(f.toLowerCase()));
+  const i = findAt(low, stripAcc(f.toLowerCase()), ex, f); if(i < 0) return null;
   return { before: ex.slice(0, i), answer: ex.slice(i, i + f.length), after: ex.slice(i + f.length) };
 }
 function tokHTML(text, hlFrom, hlTo){
@@ -2401,7 +2411,9 @@ function askTyped(c, mode, promptHTML, target, isGuess){
   function submit(){
     if(phase === "answer" && SES.state.answered){ const nb = $("#nx"); if(nb) nb.click(); return; }
     if(!input.value.trim()){ input.focus({ preventScroll: true }); return; }
-    if(phase === "answer"){ if(SES.state.answered) return; let r = check(input.value, target); if(r === "no" && c.reading && !S.meta.settings.strictKanji && norm(target) === norm(c.word) && check(input.value, c.reading) !== "no") r = "ok"; reveal(r); return; }
+    if(phase === "answer"){ if(SES.state.answered) return; let r = check(input.value, target); if(r === "no" && c.reading && !S.meta.settings.strictKanji && norm(target) === norm(c.word) && check(input.value, c.reading) !== "no") r = "ok";
+      if(r === "no" && (SES.state.near || 0) < 2){ const nk = nearSyn(c, input.value); if(nk){ SES.state.near = (SES.state.near || 0) + 1; const fb = $("#fb"); if(fb) fb.innerHTML = `<div class="feedback meh">${say("st_surprised", esc(nearMsg(nk)))}</div>`; buzz(12); track("near_syn", { k: nk }); return; } }
+      reveal(r); return; }
     if(check(input.value, target) !== "no"){ toast(x.copyOk); finish(false); }
     else { input.value = ""; input.placeholder = x.copyAgain; input.focus(); toast(x.copyAgain); }
   }
@@ -3319,7 +3331,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v106";
+const APP_VER = "v107";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -4834,6 +4846,23 @@ async function topUpPresets(){
 /* 以前の版で全部カードにしてしまったセットを軽くする（まだ一度も出ていない語だけ） */
 const nativeOk = c => { const u = S.meta.settings.ui, m = String(c.meaning || "").replace(/^[^·]*·\s*/, ""); return u === "ko" ? /[\uac00-\ud7af]/.test(m) : u === "ja" ? /[\u3040-\u30ff\u4e00-\u9fff]/.test(m) : true; };
 const JA_REN = { "終る":"終わる", "落る":"落ちる", "楽む":"楽しむ", "曲る":"曲がる", "落す":"落とす", "いくらても":"いくらでも" };
+/* 예문이 단어를 다른 단어의 일부로만 담고 있으면(ホームシック→シック) 예문을 버리고 새로 받기 — 한 번만 */
+function fixCutExamples(){ if((S.meta.cfix || 0) >= 1) return; let n = 0;
+  try{ Object.values(S.cards || {}).forEach(c => { if(!c || !c.example || !/[぀-ヿ一-龯가-힣]/.test(c.word || "")) return; if(clozeParts(c)) return;
+      delete c.example; delete c.exampleKo; delete c.form; delete c.src; delete c.audio; if(c.mOk || c.meaning) c.mOk = 1; c.lazy = 1; n++; }); }catch(_){}
+  S.meta.cfix = 1; if(n){ save(); track("cut_ex_fix", { n }); } }
+/* 유의어·외래어로 답했을 때: 틀림 처리 대신 냥이가 다른 말로 유도 */
+const meanToks = m => String(m || "").replace(/^[^·]*·\s*/, "").replace(/[（(][^）)]*[）)]/g, "").split(/[,、;；/·]|\s+또는\s+/).map(x => x.trim().replace(/\s+/g, "")).filter(x => x.length >= 1);
+function nearSyn(c, typed){ const t = norm(typed), th = toHira(t); if(!t || !c.meaning) return null; const mine = new Set(meanToks(c.meaning)); if(!mine.size) return null; const lang = c.lang || S.meta.settings.lang;
+  const hit = (w, rd, m) => (norm(w) === t || (rd && toHira(norm(rd)) === th) || toHira(norm(w)) === th) && meanToks(m).some(x => mine.has(x));
+  let ok = Object.values(S.cards).some(o => o.id !== c.id && (o.lang || "es") === lang && hit(o.word, o.reading, o.meaning));
+  if(!ok) ok = Object.entries(PRESET_DATA).some(([id, d]) => id.startsWith(lang + "-") && (d.items || []).some(it => lang === "ja" ? hit(it[0], it[1], (it[3] || "") + "," + (it[2] || "")) : hit(it[0], "", (it[1] || "") + "," + (it[2] || ""))));
+  if(!ok) return null; const kt = /^[ァ-ヺー]+$/.test(c.word), tk = /^[ァ-ヺー]+$/.test(t);
+  return kt && !tk ? "loan" : !kt && tk ? "native" : "syn"; }
+function nearMsg(k){ const ja = S.meta.settings.ui === "ja";
+  return k === "loan" ? (ja ? "おしい！意味は合ってる。似た外来語で言ってみるニャ" : "아깝다! 뜻은 맞아. 비슷한 외래어로 말해 보라냥")
+    : k === "native" ? (ja ? "おしい！外来語じゃない、別の言い方があるニャ" : "아깝다! 외래어 말고 또 다른 말이 있다냥")
+    : (ja ? "おしい！似た言葉があるニャ。別の言い方で！" : "아깝다! 비슷한 말이 있어! 다른 말로 써 보라냥"); }
 async function fixPresetMeanings(){   // 일본어 단어장: 영어 뜻 → 한국어 사전 뜻 (한 번만, 사용자가 고친 뜻은 건드리지 않음)
   const ui = S.meta.settings.ui; if((ui !== "ko" && ui !== "ja") || (S.meta.mfix || 0) >= 6) return; let n = 0;
   try{ for(const d of decks()){ if(!d.preset || !(ui === "ko" && /^ja-n\d$/.test(d.preset) || /^es-[abc]\d$/.test(d.preset))) continue; const data = await presetData(d.preset), map = {}, es = d.preset.startsWith("es-");
@@ -5106,7 +5135,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
 }
 
 if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
-load(); slimPresets(); setTimeout(fixPresetMeanings, 1500); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
+load(); slimPresets(); setTimeout(fixPresetMeanings, 1500); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
 if("serviceWorker" in navigator && location.protocol === "https:"){ navigator.serviceWorker.register("sw.js").catch(() => {}); }
