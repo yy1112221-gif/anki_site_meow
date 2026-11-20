@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>상점 · MEOWCA! 암기냥이 묘카</title>
+<meta name="description" content="MEOWCA! 암기냥이 묘카 앱 안에서 쓰는 냥이 꾸미기 스킨·간식 묶음·후원 패키지. 학습은 무료입니다.">
+<link rel="icon" href="icon-192.png">
+<style>
+body{margin:0;font:16px/1.65 "Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;color:#1E1A16;background:#FDF4EA}
+.wrap{max-width:860px;margin:0 auto;padding:24px 18px 40px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.plate{display:inline-flex;align-items:center;background:#1E1A16;color:#FFFDF8;border-radius:12px;padding:6px 14px;font-weight:900;font-size:1.5rem;letter-spacing:.02em;text-decoration:none}
+.plate svg{width:1.1em;height:1.1em;margin:0 .04em}
+h1{font-size:1.7rem;margin:22px 0 4px} h2{font-size:1.2rem;margin:30px 0 10px} .muted{color:#6E6253;font-size:.92rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px}
+.card{background:#fff;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:6px;box-shadow:0 2px 10px rgba(120,60,80,.06)}
+.card .e{font-size:2rem;line-height:1} .card b{font-size:1.05rem} .card p{margin:0;font-size:.9rem;color:#5E5446}
+.price{font-size:1.25rem;font-weight:900;margin-top:auto} .price small{font-size:.75rem;color:#6E6253;font-weight:600}
+.buy{border:0;border-radius:999px;padding:11px;font:inherit;font-weight:800;background:#D94A7E;color:#fff;cursor:pointer;min-height:44px}
+.sw{width:44px;height:44px;border-radius:50%;border:2px solid rgba(0,0,0,.08)}
+.box{background:#fff;border-radius:18px;padding:16px 20px} .box ul{margin:6px 0;padding-left:1.2em}
+a{color:#C23C70} footer{margin-top:36px;padding-top:16px;border-top:1px solid #E8D9C8;font-size:.86rem;color:#5E5446}
+dialog{border:0;border-radius:18px;max-width:360px;padding:20px} dialog::backdrop{background:rgba(0,0,0,.4)}
+@media (prefers-color-scheme: dark){body{background:#121317;color:#ECEEF2}.card,.box{background:#1F2128;box-shadow:none}.card p,.muted,footer{color:#B9B2A8}footer{border-color:#2A2C33}a{color:#F28AB2}.plate{border:1px solid #3a3a44}dialog{background:#1F2128;color:#ECEEF2}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<a class="plate" href="./" aria-label="MEOWCA! 홈으로">ME<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M9.5 14 L9 4.5 L17 9.5 Z M30.5 14 L31 4.5 L23 9.5 Z" fill="#FFFDF8" stroke="#FFFDF8" stroke-width="3" stroke-linejoin="round"/><path d="M12 9.5 L11.6 7 L14.6 9 Z M28 9.5 L28.4 7 L25.4 9 Z" fill="#f2a1b4"/><ellipse cx="20" cy="22.5" rx="15.2" ry="14" fill="#FFFDF8" stroke="#FFFDF8" stroke-width="4.6"/><circle cx="14.6" cy="21" r="1.9" fill="#2a221c"/><circle cx="25.4" cy="21" r="1.9" fill="#2a221c"/><path d="M16.6 25.4 Q18.3 27.6 20 25.6 Q21.7 27.6 23.4 25.4" fill="none" stroke="#2a221c" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="11.8" cy="25.6" rx="2.3" ry="1.3" fill="#f2a1b4" opacity=".8"/><ellipse cx="28.2" cy="25.6" rx="2.3" ry="1.3" fill="#f2a1b4" opacity=".8"/></svg>WCA!</a>
+<a href="./">← 앱으로 돌아가기</a>
+</header>
+<h1>암기냥이 묘카 상점</h1>
+<p class="muted">단어 학습은 앞으로도 전부 무료예요. 여기 상품은 앱 안에서 쓰는 디지털 아이템이며, 결제 즉시 내 계정(기기)에 지급돼요. 가격은 모두 부가세 포함입니다.</p>
+
+<h2>🍖 간식 묶음</h2>
+<p class="muted">냥이에게 던져 주는 간식이에요. 산 간식은 표시된 기간 안에 써야 해요(공부로 받은 간식은 기한 없음).</p>
+<div class="grid" id="g-snack"></div>
+
+<h2>🎨 냥이 스킨</h2>
+<p class="muted">찹쌀떡 냥이의 털 색을 바꿔요. 한 번 사면 계속 쓸 수 있고 언제든 갈아입힐 수 있어요.</p>
+<div class="grid" id="g-skin"></div>
+
+<h2>🎁 후원 패키지</h2>
+<p class="muted">앱 운영을 응원하는 패키지예요. 금액별 보상이 지급돼요.</p>
+<div class="grid" id="g-sup"></div>
+
+<h2 id="delivery">📦 제공(배송) 안내</h2>
+<div class="box"><ul>
+<li>모든 상품은 실물 배송이 없는 <b>디지털 상품</b>이며, 배송비는 없습니다.</li>
+<li>결제가 끝나면 <b>즉시</b> 앱 안 내 계정(기기)에 지급됩니다. 지급이 안 됐다면 앱 「문의」로 알려 주세요. 바로 다시 지급합니다.</li>
+<li>로그인하거나 동기화 코드를 만들면 다른 기기에서도 같은 아이템을 쓸 수 있습니다.</li>
+</ul></div>
+
+<h2 id="refund">↩️ 환불 안내</h2>
+<div class="box"><ul>
+<li>구매일로부터 <b>7일 안</b>, 한 번도 쓰지 않은 아이템은 <b>전액 환불</b>합니다.</li>
+<li>스킨을 입히거나 간식을 준 경우처럼 이미 제공이 시작된 아이템은 「전자상거래 등에서의 소비자보호에 관한 법률」 제17조 제2항에 따라 청약철회가 제한되며, 결제 전에 이를 알리고 동의를 받습니다. 간식 묶음은 쓰지 않은 수량만큼 나누어 환불합니다.</li>
+<li>지급 오류·상품 설명과 다른 경우: 다시 지급하거나 전액 환불(지급일로부터 3개월 안).</li>
+<li>만 19세 미만이 법정대리인 동의 없이 결제한 경우 취소할 수 있습니다.</li>
+<li>신청: 앱 왼쪽 아래 「문의」 또는 아래 이메일. 영업일 3일 안에 결제한 수단으로 환불합니다. 자세한 내용은 <a href="terms#refund">이용약관</a>.</li>
+</ul></div>
+
+<footer>
+<div id="biz"></div>
+<p><a href="terms">이용약관</a> · <a href="privacy">개인정보처리방침</a> · <a href="./">앱 열기</a></p>
+</footer>
+</div>
+<dialog id="dlg"><p id="dlgT" style="margin:0 0 14px"></p><form method="dialog"><button class="buy" style="width:100%">확인</button></form></dialog>
+<script>
+const P = {
+  snack: [["snk_s","🐟","간식 한 줌","간식 10개 · 3일 안에 사용",990],["snk_whale","🐋","고래 한 마리","특별 간식 고래 1마리 · 7일 안에 사용",1500],["snk_m","🛍️","간식 한 봉지","간식 40개 · 7일 안에 사용",2900],["snk_l","🚚","간식 트럭","간식 150개 · 14일 안에 사용",6900]],
+  skin: [["mochi_st","#ffdce4","딸기 찹쌀떡","분홍빛 털 스킨",1900],["mochi_mc","#dfeec3","말차 찹쌀떡","연두빛 털 스킨",1900],["cheese","#ffe2a8","치즈 냥","노란 털 스킨",1900],["pudding","#f7e0b5","푸딩 말랑","캐러멜 털 스킨",1900],["sesame","#cfcac4","흑임자 떡","회색 털 스킨",1900],["soda","#bfe6ff","소다 젤리","반투명 하늘색 스킨",2900]],
+  sup: [["s1","🍖","츄르 한 개","냥이의 「고맙다냥」 전용 대사 · 후원 배지",1000],["s2","🛍️","츄르 한 봉지","위 보상 + 한정 스킨 「후원냥 골드」 + 자랑하기 VIP 프레임",3000],["s3","📦","츄르 한 박스","위 보상 + 새 간식 이름 투표권 + 앱 크레딧에 닉네임",10000],["s4","🐋","큰손 집사","위 보상 + 내가 쓴 대사 하나를 냥이 정식 대사로(검토 후)",30000]]
+};
+const won = n => n.toLocaleString("ko-KR") + "원";
+const esc = s => String(s).replace(/[<>&"]/g, c => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" })[c]);
+for (const [k, list] of Object.entries(P)) {
+  const g = document.getElementById("g-" + k);
+  g.innerHTML = list.map(([id, e, name, desc, price]) => `<div class="card">${e.startsWith("#") ? `<div class="sw" style="background:radial-gradient(circle at 35% 30%,#fff,${e})"></div>` : `<div class="e" aria-hidden="true">${e}</div>`}<b>${esc(name)}</b><p>${esc(desc)}</p><div class="price">${won(price)} <small>부가세 포함</small></div><button class="buy" type="button" data-id="${id}" data-name="${esc(name)}" data-price="${price}">구매하기</button></div>`).join("");
+}
+document.addEventListener("click", e => { const b = e.target.closest(".buy[data-id]"); if (!b) return;
+  location.href = "./?buy=" + encodeURIComponent(b.dataset.id); });
+</script>
+<script src="biz.js"></script>
+</body>
+</html>

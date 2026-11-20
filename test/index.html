@@ -1639,7 +1639,7 @@ function spreadQueue(items, recent){
 function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1); while(S.meta.days[d]){ n++; d = addDays(d, -1); } return n; }
 
 function renderStart(){
-  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); moveIn(); setTimeout(moveBanner, 600); authBoot(); setTimeout(homePetBoot, 450); setTimeout(giftCheck, 600); setTimeout(nickBoot, 2500); }
+  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); moveIn(); setTimeout(moveBanner, 600); authBoot(); setTimeout(buyBoot, 700); setTimeout(homePetBoot, 450); setTimeout(giftCheck, 600); setTimeout(nickBoot, 2500); }
   if(maybeLoginAsk._pending && !SES){ maybeLoginAsk._pending = 0; setTimeout(maybeLoginAsk, 1500); }
   const box = $("#sessionStart"), pos = box.querySelector(".poster");
   box.querySelectorAll(".say .bubble").forEach(b => { b.classList.add("tapme"); b.onclick = () => { if(NERD_ON) return; if(Math.random() < .08 && nerdPop(b)) return; if(Math.random() < .3){ b.textContent = sciLine(); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); try{ sfxPoyon(.15); }catch(e){} return; } const st = meltStage(), L = st ? meltL().home[st] : (t().homeTalk || []); if(!L.length) return; let i; do{ i = Math.floor(Math.random() * L.length); }while(L.length > 1 && i === renderStart.last); renderStart.last = i;
@@ -1783,8 +1783,8 @@ function petSens(){ const v = +S.meta.settings.petSens; return v > 0 ? v : 1; }
 let BIZ = null;   // biz.json: 사업자 정보 — 사업자등록번호가 채워지면 설정 화면 맨 아래에 자동 표시
 async function bizFill(){ try{ if(!BIZ){ const r = await fetch("biz.json", { cache: "no-cache" }); BIZ = r.ok ? await r.json() : {}; } }catch(_){ BIZ = {}; }
   const el = $("#bizLine"); if(!el || !BIZ.regNo) return;
-  const ko = S.meta.settings.ui === "ko", b = BIZ, L = ko ? ["상호", "대표", "사업자등록번호", "통신판매업 신고", "주소", "문의"] : ["商号", "代表", "事業者登録番号", "通信販売業申告", "所在地", "お問い合わせ"];
-  el.innerHTML = [[L[0], b.name], [L[1], b.owner], [L[2], b.regNo], [L[3], b.mailOrderNo], [L[4], b.address], [L[5], b.email]].filter(x => x[1]).map(x => `${esc(x[0])} ${esc(x[1])}`).join(" · "); }
+  const ko = S.meta.settings.ui === "ko", b = BIZ, L = ko ? ["상호", "대표", "사업자등록번호", "통신판매업 신고", "주소", "문의", "대표전화"] : ["商号", "代表", "事業者登録番号", "通信販売業申告", "所在地", "お問い合わせ", "電話"];
+  el.innerHTML = [[L[0], b.name], [L[1], b.owner], [L[2], b.regNo], [L[3], b.mailOrderNo], [L[4], b.address], [L[6] || "TEL", b.tel], [L[5], b.email]].filter(x => x[1]).map(x => `${esc(x[0])} ${esc(x[1])}`).join(" · "); }
 /* 후원 숍: 후원 금액별 보상. 결제는 사업자등록·통신판매업 신고 뒤 PG로 연결 — 지금은 「이걸로 후원할래」 의향만 모음 */
 const SUP_TIERS = [
   { id: "s1", e: "🍖", w: 1000, y: 100, ko: ["츄르 한 개", "냥이의 「고맙다냥」 전용 대사", "🎖 후원 배지 (홈·자랑 사진에 표시)"], ja: ["おやつ1本", "ネコの「ありがとニャ」専用セリフ", "🎖 応援バッジ（ホーム・自慢写真に表示）"] },
@@ -1814,9 +1814,13 @@ function supShopOpen(){ const ko = S.meta.settings.ui === "ko", m = S.meta.supWa
     track("sup_sent", { id: t.id, price: SUP_EARLY[t.id] }); b.disabled = true; b.textContent = "신청됨 ✓"; toast("고맙다냥…! 확인되면 「문의」함으로 보상 링크를 보내 주겠다"); });
   ov.querySelectorAll("[data-sup]").forEach(b => b.onclick = () => { const t = SUP_TIERS.find(z => z.id === b.dataset.sup); m[t.id] = Date.now(); save(); track("sup_want", { id: t.id, price: ko ? t.w : t.y, cur: ko ? "KRW" : "JPY" });
     b.disabled = true; b.textContent = ko ? "찜했다냥 ♥" : "予約したニャ ♥"; toast(ko ? "고맙다냥… 결제가 열리면 제일 먼저 알려 주겠다" : "ありがとニャ…決済が開いたら真っ先に知らせる"); }); }
+/* 상점 페이지(shop)에서 「구매하기」 → 앱으로 와서 해당 상품 창을 연다 (결제 연결은 PG 승인 후) */
+function buyBoot(){ const id = new URLSearchParams(location.search).get("buy"); if(!id) return; history.replaceState(null, "", location.pathname); track("buy_from_shop", { id });
+  if(/^s[1-4]$/.test(id)){ showView("how"); setTimeout(supShopOpen, 300); return; }
+  if(!PET) openPet(); setTimeout(() => { cosOpen(); const it = COS.find(c => c.id === id); const dr = $("#cosDr"); if(!it || !dr) return; const tb = dr.querySelector(`[data-cat="${it.c}"]`); if(tb) tb.click(); const b = dr.querySelector(`.cos-it[data-id="${id}"]`); if(b) b.click(); }, 600); }
 function renderSupBox(){ const el = $("#supBox"); if(!el) return; const ko = S.meta.settings.ui === "ko";
   el.innerHTML = `<div class="sup-row">${nm("st_love", 52)}<div><b>${ko ? "MEOWCA! 암기냥이는 무료예요" : "MEOWCA!（ミヤオウカ）は無料です"}</b><p class="small muted" style="margin:.2em 0 0">${ko ? "광고도 없어요. 마음에 들면 친구에게 알려 주세요." : "広告もありません。気に入ったら友達に教えてください。"}</p></div></div>
-    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button><button class="btn primary" type="button" id="supShop">🎁 ${ko ? "후원 숍 · 보상 있음" : "応援ショップ・特典つき"}</button>${ko && DONATE_KO ? `<a class="btn" href="${DONATE_KO}" target="_blank" rel="noopener">🍖 카카오페이로 츄르 사주기</a>` : ""}</div>
+    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button><a class="btn" href="shop">🛒 ${ko ? "상점" : "ショップ"}</a><button class="btn primary" type="button" id="supShop">🎁 ${ko ? "후원 숍 · 보상 있음" : "応援ショップ・特典つき"}</button>${ko && DONATE_KO ? `<a class="btn" href="${DONATE_KO}" target="_blank" rel="noopener">🍖 카카오페이로 츄르 사주기</a>` : ""}</div>
     <p class="tiny muted" style="margin:0"><a href="privacy.html">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a> · <a href="terms.html">${ko ? "이용약관" : "利用規約"}</a></p><p class="tiny muted" id="bizLine" style="margin:0"></p>`;
   bizFill(); $("#supShop").onclick = supShopOpen;
   $("#supShare").onclick = async () => { const url = "https://meowca.app/?ref=invite", text = ko ? "MEOWCA! 암기냥이 — 가성비로 딱 필요한 만큼만 외우고, 나머진 말랑 냥이 괴롭히기 🐾 무료" : "MEOWCA!（ミヤオウカ）— もう無理やり暗記しなくていい。最小限だけ覚えて、あとはネコと遊ぶ 🐾 無料";
@@ -3045,7 +3049,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v98";
+const APP_VER = "v99";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
