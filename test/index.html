@@ -645,7 +645,7 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .gr:active{transform:scale(.96)} .gr b{font-size:1.05rem;font-weight:800} .gr .nm{width:64px;height:auto}
 .gr-no{border-color:var(--bad);color:var(--bad)} .gr-ok{background:var(--accent);border-color:var(--accent);color:var(--on-accent,#fff)}
 #pfCv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;display:none} #pet.pf #pfCv{display:block}
-#pet.pf #petGL{filter:saturate(1.18) brightness(1.05) drop-shadow(0 0 16px rgba(255,170,210,.75))}
+#pet.pf #petBG{opacity:0} #pet.pf{background:radial-gradient(120% 80% at 50% 45%,#fffdf8,#fbf1f4 60%,#f3e6ef)} #pet.pf #petGL{filter:saturate(1.18) brightness(1.05) drop-shadow(0 0 16px rgba(255,170,210,.75))}
 .pet-brag{position:absolute;z-index:5;right:12px;top:calc(110px + env(safe-area-inset-top));height:38px;padding:0 12px;border-radius:19px;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:.85rem;font-weight:700;cursor:pointer;color:inherit}
 .brag-v{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 10px} .brag-v button{border:2px solid var(--line,#ddd);border-radius:16px;padding:10px 6px;background:transparent;color:inherit;font:inherit;font-weight:800;cursor:pointer;line-height:1.3}
 .brag-v button small{display:block;font-weight:600;font-size:.72rem;color:var(--muted)} .brag-v button[aria-pressed="true"]{border-color:#f2708f;background:rgba(242,112,143,.1)}
@@ -653,7 +653,8 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .rec-bar{position:absolute;z-index:9;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:rgba(20,20,24,.82);color:#fff;border-radius:999px;padding:8px 8px 8px 14px;font-weight:800;font-size:.9rem}
 .rec-bar i{width:11px;height:11px;border-radius:50%;background:#ff3b5c;animation:recb 1s infinite} @keyframes recb{50%{opacity:.25}}
 .rec-bar button{border:0;border-radius:999px;background:#fff;color:#111;font:inherit;font-weight:800;padding:6px 12px;cursor:pointer}
-.brag-vid{width:100%;max-height:38vh;border-radius:16px;background:#000;display:block;margin:4px 0 10px}
+#bragDr{max-height:86%} .brag-row{display:flex;gap:6px;overflow-x:auto;margin:0 0 10px;padding-bottom:2px} .brag-row button{flex:0 0 auto;border:2px solid var(--line,#ddd);border-radius:999px;padding:7px 12px;background:transparent;color:inherit;font:inherit;font-weight:800;font-size:.85rem;cursor:pointer} .brag-row button[aria-pressed="true"]{border-color:#f2708f;background:rgba(242,112,143,.12)} .brag-lb{font-size:.74rem;font-weight:800;color:var(--muted);margin:2px 2px 5px}
+.brag-vid{width:auto;max-width:100%;height:30vh;margin-left:auto;margin-right:auto;border-radius:16px;background:#000;display:block;margin:4px 0 10px}
 .pet-cos{position:absolute;z-index:5;right:12px;top:calc(64px + env(safe-area-inset-top));height:38px;padding:0 12px;border-radius:19px;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:.85rem;font-weight:700;cursor:pointer;color:inherit}
 .cos-dr{position:absolute;z-index:9;left:0;right:0;bottom:0;max-height:40%;overflow:auto;padding:12px 12px calc(12px + env(safe-area-inset-bottom));background:#fff;border-radius:22px 22px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.18);touch-action:pan-y;animation:cosUp .25s ease-out}
 @keyframes cosUp{from{transform:translateY(100%)}to{transform:none}}
@@ -2897,7 +2898,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v85";
+const APP_VER = "v86";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3751,76 +3752,113 @@ function bragStats(){ const p = petState(), d = Object.values(S.meta.days || {})
   const n = Object.values(S.cards).filter(c => !c.isNew && c.last === td).length, lang = S.meta.settings.ui === "ja" ? "ja" : "ko";
   let m = ""; try{ m = MELT[lang].names[meltStage()]; }catch(_){}
   return { lv: p.lv || 1, d: Math.max(1, d), n, m }; }
-/* 꾸밈 그리기(실시간 화면·사진·영상 공통): 리본 달린 둥근 액자, 바깥 파스텔 베일, 반짝이, 문구 */
-function bragDeco(g, W, H, cx, cy, R, t, ver, k){ const st = bragStats(), x = bt();
-  const font = (w, px) => `${w} ${Math.round(px * k)}px "Arial Rounded MT Bold","Hiragino Maru Gothic ProN","Apple SD Gothic Neo","Noto Sans CJK KR",sans-serif`;
+/* 꾸밈 그리기(실시간 화면·사진·영상 공통): 프레임 테마별 액자·바깥 파스텔 베일·장식·반짝이·문구 */
+const BRAG_TH = {
+  hime:  { e: "🎀", ko: "공주", ja: "姫", veil: ["rgba(255,214,232,.94)", "rgba(244,222,255,.92)", "rgba(255,236,214,.94)"], ring2: "#f7a8c4", dots: ["#ffd1e3", "#fff"], orn: "ribbon", sp: ["✦", "♡"], sc: ["#fff", "#ff8fb8"], pill: "#e0598b", cap: "#c2457a" },
+  cloud: { e: "☁️", ko: "구름", ja: "くも", veil: ["rgba(214,236,255,.95)", "rgba(232,226,255,.93)", "rgba(255,244,224,.94)"], ring2: "#9cc9f5", dots: ["#fff", "#d6ecff"], orn: "cloud", sp: ["☆", "✦"], sc: ["#fff", "#7fb0f0"], pill: "#4a86c5", cap: "#3f78b5" },
+  berry: { e: "🍓", ko: "딸기", ja: "いちご", veil: ["rgba(255,225,228,.95)", "rgba(255,243,240,.94)", "rgba(255,230,238,.95)"], ring2: "#ef6b7b", dots: ["#ef6b7b", "#fff"], orn: "berry", sp: ["🍓", "♡"], sc: ["#ef6b7b", "#ff9aa8"], pill: "#d9465c", cap: "#c23a50" },
+  heart: { e: "💌", ko: "하트", ja: "ハート", veil: ["rgba(255,222,236,.95)", "rgba(255,236,246,.94)", "rgba(248,220,255,.95)"], ring2: "#ff7eb0", dots: ["#ff7eb0", "#ffd1e3"], orn: "hearts", sp: ["♡", "♥"], sc: ["#ff7eb0", "#fff"], pill: "#e04f8c", cap: "#c23c7a" },
+  polar: { e: "📷", ko: "폴라로이드", ja: "チェキ", veil: ["rgba(240,232,220,.96)", "rgba(250,244,236,.95)", "rgba(236,226,212,.96)"], ring2: "#e6dccd", dots: [], orn: "polar", sp: ["✦"], sc: ["#fff"], pill: "#6b5b4b", cap: "#5a4a3a" } };
+function bragDeco(g, W, H, cx, cy, R, t, ver, k, th, zoom){ const st = bragStats(), x = bt(), T = BRAG_TH[th] || BRAG_TH.hime;
+  const font = (w, px, fam) => `${w} ${Math.round(px * k)}px ${fam || '"Arial Rounded MT Bold","Hiragino Maru Gothic ProN","Apple SD Gothic Neo","Noto Sans CJK KR",sans-serif'}`;
   const pill = (txt, y, px, bg, fg) => { g.font = font(800, px); const w = g.measureText(txt).width + 34 * k, h = px * k * 1.7; g.fillStyle = bg; g.beginPath(); g.roundRect(W / 2 - w / 2, y - h / 2, w, h, h / 2); g.fill(); g.fillStyle = fg; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(txt, W / 2, y + 1); };
   if(ver === "real"){ g.font = font(700, 15); g.textAlign = "left"; g.textBaseline = "alphabetic"; g.fillStyle = "rgba(30,30,30,.72)";
     g.fillText(x.realTop(st.lv, st.d, st.m), 16 * k, H - 44 * k); g.font = font(800, 17); g.fillText(x.realCap(st.n), 16 * k, H - 20 * k);
     g.font = font(700, 13); g.textAlign = "right"; g.fillStyle = "rgba(30,30,30,.5)"; g.fillText("meowca.app", W - 14 * k, H - 20 * k); return; }
-  g.save(); g.beginPath(); g.rect(0, 0, W, H); g.arc(cx, cy, R, 0, Math.PI * 2); const vg = g.createLinearGradient(0, 0, W, H); vg.addColorStop(0, "rgba(255,214,232,.94)"); vg.addColorStop(.5, "rgba(244,222,255,.92)"); vg.addColorStop(1, "rgba(255,236,214,.94)"); g.fillStyle = vg; g.fill("evenodd"); g.restore();
-  g.save(); g.lineWidth = 16 * k; g.strokeStyle = "#fff"; g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.stroke(); g.lineWidth = 5 * k; g.strokeStyle = "#f7a8c4"; g.beginPath(); g.arc(cx, cy, R + 9 * k, 0, Math.PI * 2); g.stroke();
-  for(let i = 0; i < 36; i++){ const a = i / 36 * Math.PI * 2; g.fillStyle = i % 2 ? "#ffd1e3" : "#fff"; g.beginPath(); g.arc(cx + Math.cos(a) * (R + 16 * k), cy + Math.sin(a) * (R + 16 * k), 4.5 * k, 0, Math.PI * 2); g.fill(); } g.restore();
-  // 리본
-  const rx = cx, ry = cy - R - 6 * k, rs = k * 1.15; g.save(); g.translate(rx, ry); g.scale(rs, rs); g.fillStyle = "#f7a8c4"; g.strokeStyle = "#e0789f"; g.lineWidth = 2.5;
-  [[-1], [1]].forEach(([d]) => { g.beginPath(); g.moveTo(0, 0); g.bezierCurveTo(d * 18, -26, d * 50, -22, d * 46, 2); g.bezierCurveTo(d * 44, 18, d * 18, 14, 0, 0); g.fill(); g.stroke();
-    g.beginPath(); g.moveTo(d * 4, 6); g.lineTo(d * 18, 40); g.lineTo(d * 26, 30); g.lineTo(d * 12, 4); g.closePath(); g.fill(); g.stroke(); });
-  g.fillStyle = "#ffc1d8"; g.beginPath(); g.ellipse(0, 1, 9, 10, 0, 0, Math.PI * 2); g.fill(); g.stroke(); g.restore();
-  // 반짝이·하트
-  for(let i = 0; i < 14; i++){ const a = i * 2.39996, rr = R * (1.08 + .32 * ((i * 37) % 10) / 10), px = cx + Math.cos(a) * rr, py = cy + Math.sin(a) * rr * 1.05, tw = .55 + .45 * Math.sin(t * 3 + i * 1.7);
-    if(px < 0 || px > W || py < 0 || py > H) continue; g.globalAlpha = tw; g.fillStyle = i % 3 ? "#fff" : "#ff8fb8"; g.font = font(900, 16 + (i % 3) * 5); g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(i % 4 === 0 ? "♡" : "✦", px, py + Math.sin(t * 2 + i) * 3 * k); }
-  g.globalAlpha = 1;
-  pill(x.top(st.lv, st.d), Math.max(cy - R - 64 * k, 54 * k), 17, "rgba(255,255,255,.92)", "#e0598b");
-  const by = Math.min(H - 70 * k, cy + R + 52 * k); g.font = font(900, 21); g.textAlign = "center"; g.textBaseline = "middle"; g.lineWidth = 6 * k; g.strokeStyle = "#fff"; g.strokeText(x.cap(st.n), W / 2, by); g.fillStyle = "#c2457a"; g.fillText(x.cap(st.n), W / 2, by);
+  const sparkle = (n, rr0) => { for(let i = 0; i < n; i++){ const a = i * 2.39996, rr = rr0 * (1.08 + .32 * ((i * 37) % 10) / 10), px = cx + Math.cos(a) * rr, py = cy + Math.sin(a) * rr * 1.05, tw = .55 + .45 * Math.sin(t * 3 + i * 1.7);
+    if(px < 0 || px > W || py < 0 || py > H) continue; g.globalAlpha = tw; g.fillStyle = T.sc[i % T.sc.length]; g.font = font(900, 16 + (i % 3) * 5); g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(T.sp[i % T.sp.length], px, py + Math.sin(t * 2 + i) * 3 * k); } g.globalAlpha = 1; };
+  const vg = g.createLinearGradient(0, 0, W, H); vg.addColorStop(0, T.veil[0]); vg.addColorStop(.5, T.veil[1]); vg.addColorStop(1, T.veil[2]);
+  if(zoom){ // 냥이만 확대: 액자 없이 가장자리만 살짝 물들이고 위에 레벨, 아래 주소
+    const eg = g.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .42, W / 2, H / 2, Math.max(W, H) * .62); eg.addColorStop(0, "rgba(255,255,255,0)"); eg.addColorStop(1, T.veil[0]); g.fillStyle = eg; g.fillRect(0, 0, W, H);
+    sparkle(10, Math.min(W, H) * .42); pill(x.top(st.lv, st.d), 46 * k, 17, "rgba(255,255,255,.92)", T.pill); pill("meowca.app", H - 40 * k, 13, "#111413", "#fff"); return; }
+  if(T.orn === "polar"){ // 폴라로이드: 하얀 사각 카드, 아래 여백에 손글씨 문구
+    const w = R * 2.15, h = R * 2.05, x0 = cx - w / 2, y0 = cy - h * .5, pad = R * .1, bot = R * .55;
+    g.save(); g.beginPath(); g.rect(0, 0, W, H); g.rect(x0 + pad, y0 + pad, w - pad * 2, h - pad * 2); g.fillStyle = vg; g.fill("evenodd");
+    g.shadowColor = "rgba(90,70,50,.25)"; g.shadowBlur = 24 * k; g.shadowOffsetY = 8 * k; g.fillStyle = "#fffdf9"; g.beginPath(); g.rect(x0, y0, w, pad); g.rect(x0, y0, pad, h + bot); g.rect(x0 + w - pad, y0, pad, h + bot); g.rect(x0, y0 + h - pad, w, pad + bot); g.fill(); g.restore();
+    g.fillStyle = "#cdbfae"; g.fillRect(cx - 40 * k, y0 - 14 * k, 80 * k, 26 * k);
+    g.font = font(700, 20, '"Bradley Hand","Segoe Print","Hiragino Maru Gothic ProN","Apple SD Gothic Neo",cursive'); g.fillStyle = T.cap; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(x.cap(st.n), cx, y0 + h + bot * .45);
+    pill(x.top(st.lv, st.d), Math.max(y0 - 50 * k, 46 * k), 16, "rgba(255,255,255,.92)", T.pill); pill("meowca.app", Math.min(H - 34 * k, y0 + h + bot + 40 * k), 13, "#111413", "#fff"); sparkle(6, R * 1.25); return; }
+  g.save(); g.beginPath(); g.rect(0, 0, W, H); g.arc(cx, cy, R, 0, Math.PI * 2); g.fillStyle = vg; g.fill("evenodd"); g.restore();
+  g.save(); g.lineWidth = 16 * k; g.strokeStyle = "#fff"; g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.stroke();
+  if(T.orn === "berry"){ for(let i = 0; i < 48; i++){ const a0 = i / 48 * Math.PI * 2; g.strokeStyle = i % 2 ? "#fff" : T.ring2; g.lineWidth = 10 * k; g.beginPath(); g.arc(cx, cy, R + 12 * k, a0, a0 + Math.PI * 2 / 48); g.stroke(); } }
+  else { g.lineWidth = 5 * k; g.strokeStyle = T.ring2; g.beginPath(); g.arc(cx, cy, R + 9 * k, 0, Math.PI * 2); g.stroke(); }
+  const N = T.orn === "hearts" ? 24 : 36;
+  for(let i = 0; i < N; i++){ const a = i / N * Math.PI * 2, px = cx + Math.cos(a) * (R + 20 * k), py = cy + Math.sin(a) * (R + 20 * k);
+    if(T.orn === "hearts"){ g.fillStyle = T.dots[i % 2]; g.font = font(900, 13); g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("♥", px, py); }
+    else if(T.orn === "cloud"){ g.fillStyle = "#fff"; g.beginPath(); g.arc(px, py, (i % 2 ? 7 : 10) * k, 0, Math.PI * 2); g.fill(); }
+    else if(T.orn !== "berry"){ g.fillStyle = T.dots[i % 2]; g.beginPath(); g.arc(px, py, 4.5 * k, 0, Math.PI * 2); g.fill(); } } g.restore();
+  const rx = cx, ry = cy - R - 6 * k; g.save(); g.translate(rx, ry); g.scale(k * 1.15, k * 1.15);
+  if(T.orn === "ribbon"){ g.fillStyle = "#f7a8c4"; g.strokeStyle = "#e0789f"; g.lineWidth = 2.5;
+    [-1, 1].forEach(d => { g.beginPath(); g.moveTo(0, 0); g.bezierCurveTo(d * 18, -26, d * 50, -22, d * 46, 2); g.bezierCurveTo(d * 44, 18, d * 18, 14, 0, 0); g.fill(); g.stroke();
+      g.beginPath(); g.moveTo(d * 4, 6); g.lineTo(d * 18, 40); g.lineTo(d * 26, 30); g.lineTo(d * 12, 4); g.closePath(); g.fill(); g.stroke(); });
+    g.fillStyle = "#ffc1d8"; g.beginPath(); g.ellipse(0, 1, 9, 10, 0, 0, Math.PI * 2); g.fill(); g.stroke(); }
+  else if(T.orn === "cloud"){ g.fillStyle = "#fff"; g.strokeStyle = "#cfe3f7"; g.lineWidth = 2.5; g.beginPath(); [[-30, 0, 18], [-8, -12, 24], [18, -6, 20], [36, 4, 14], [0, 6, 18]].forEach(([x1, y1, r1]) => { g.moveTo(x1 + r1, y1); g.arc(x1, y1, r1, 0, Math.PI * 2); }); g.fill(); g.stroke();
+    g.fillStyle = "#ffd34d"; g.font = "900 22px sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("★", 46, -20); }
+  else if(T.orn === "berry"){ g.font = "40px sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("🍓", -22, -4); g.fillText("🍓", 22, -4); g.font = "26px sans-serif"; g.fillText("🌼", 0, -16); }
+  else if(T.orn === "hearts"){ g.fillStyle = "#ff7eb0"; g.strokeStyle = "#fff"; g.lineWidth = 4; g.beginPath(); g.moveTo(0, 14); g.bezierCurveTo(-34, -6, -20, -36, 0, -18); g.bezierCurveTo(20, -36, 34, -6, 0, 14); g.fill(); g.stroke(); }
+  g.restore();
+  sparkle(14, R);
+  pill(x.top(st.lv, st.d), Math.max(cy - R - 64 * k, 54 * k), 17, "rgba(255,255,255,.92)", T.pill);
+  const by = Math.min(H - 70 * k, cy + R + 52 * k); g.font = font(900, 21); g.textAlign = "center"; g.textBaseline = "middle"; g.lineWidth = 6 * k; g.strokeStyle = "#fff"; g.strokeText(x.cap(st.n), W / 2, by); g.fillStyle = T.cap; g.fillText(x.cap(st.n), W / 2, by);
   pill("meowca.app", by + 40 * k, 14, "#111413", "#fff"); }
 function bragGeo(st){ const r = st.cv.getBoundingClientRect(), c = st.toScr(64, 92); return { w: r.width, h: r.height, cx: c.x, cy: c.y, R: Math.min(r.width * .44, st.s * st.bw * 62) }; }
 /* 한 장으로 합성: 배경·냥이(WebGL)·효과 + 꾸밈 → out 캔버스(W×H, 화면을 꽉 채우도록 자름) */
-function bragCompose(st, out, ver, t){ const g = out.getContext("2d"), W = out.width, H = out.height, G = bragGeo(st), k = Math.max(W / G.w, H / G.h), ox = (W - G.w * k) / 2, oy = (H - G.h * k) / 2;
-  const bg = $("#petBG"), gl = $("#petGL"), fx = st.cv; g.save(); g.clearRect(0, 0, W, H); g.fillStyle = "#f8f0e3"; g.fillRect(0, 0, W, H);
+function bragCompose(st, out, ver, t, th, zoom){ const g = out.getContext("2d"), W = out.width, H = out.height, G = bragGeo(st);
+  let k, ox, oy; if(zoom){ const ch = st.s * st.bh * 84, c = st.toScr(64, 86); k = H / (ch * 1.7); if(G.w * k < W) k = W / G.w; ox = W / 2 - c.x * k; oy = H * .5 - c.y * k; }   // 냥이만 확대: 냥이 높이가 화면의 약 60%가 되게
+  else { k = Math.max(W / G.w, H / G.h); ox = (W - G.w * k) / 2; oy = (H - G.h * k) / 2; }
+  const bg = $("#petBG"), gl = $("#petGL"), fx = st.cv; g.save(); g.clearRect(0, 0, W, H);
   const draw = c => { if(c && c.width) g.drawImage(c, 0, 0, c.width, c.height, ox, oy, G.w * k, G.h * k); };
-  draw(bg);
-  if(ver === "cute"){ try{ g.filter = "blur(14px) brightness(1.25) saturate(1.3)"; g.globalAlpha = .5; draw(gl); g.globalAlpha = 1; g.filter = "saturate(1.18) brightness(1.05) contrast(.96)"; }catch(_){} }
+  if(ver === "cute"){ const rg = g.createRadialGradient(W / 2, H * .45, 10, W / 2, H * .45, Math.max(W, H) * .7); rg.addColorStop(0, "#fffdf8"); rg.addColorStop(.6, "#fbf1f4"); rg.addColorStop(1, "#f3e6ef"); g.fillStyle = rg; g.fillRect(0, 0, W, H);
+    try{ g.filter = "blur(14px) brightness(1.25) saturate(1.3)"; g.globalAlpha = .5; draw(gl); g.globalAlpha = 1; g.filter = "saturate(1.18) brightness(1.05) contrast(.96)"; }catch(_){} }
+  else { g.fillStyle = "#f8f0e3"; g.fillRect(0, 0, W, H); draw(bg); }
   draw(gl); draw(fx); g.filter = "none"; g.restore();
-  bragDeco(g, W, H, ox + G.cx * k, oy + G.cy * k, G.R * k, t, ver, k); }
+  bragDeco(g, W, H, ox + G.cx * k, oy + G.cy * k, G.R * k, t, ver, zoom ? W / 390 : k, th, zoom); }
 let BRAG = null, BRAG_SNAP = null;
 function bragFrame(st){ const pet = $("#pet"); if(!pet) return; const t = performance.now() / 1000;
   if(pet.classList.contains("pf")){ const c = $("#pfCv"); if(c){ const dpr = Math.min(2, devicePixelRatio || 1), G = bragGeo(st); if(c.width !== Math.round(G.w * dpr)){ c.width = Math.round(G.w * dpr); c.height = Math.round(G.h * dpr); }
-    const g = c.getContext("2d"); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, c.width, c.height); bragDeco(g, c.width, c.height, G.cx * dpr, G.cy * dpr, G.R * dpr, t, "cute", dpr); } }
-  if(BRAG_SNAP){ const q = BRAG_SNAP; BRAG_SNAP = null; const out = document.createElement("canvas"); out.width = 1080; out.height = 1920; bragCompose(st, out, q.ver, t); q.cb(out); }
-  if(BRAG && BRAG.rec && BRAG.out){ bragCompose(st, BRAG.out, BRAG.ver, t); const sec = Math.floor((Date.now() - BRAG.t0) / 1000), el = $("#recT"); if(el) el.textContent = `${sec}s`; if(Date.now() - BRAG.t0 > 15000) bragStop(); } }
+    const g = c.getContext("2d"); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, c.width, c.height); bragDeco(g, c.width, c.height, G.cx * dpr, G.cy * dpr, G.R * dpr, t, "cute", dpr, S.meta.bragTh || "hime"); } }
+  if(BRAG_SNAP){ const q = BRAG_SNAP; BRAG_SNAP = null; const out = document.createElement("canvas"); out.width = 1080; out.height = 1920; bragCompose(st, out, q.ver, t, q.th, q.zoom); q.cb(out); }
+  if(BRAG && BRAG.rec && BRAG.out){ bragCompose(st, BRAG.out, BRAG.ver, t, BRAG.th, BRAG.zoom); const sec = Math.floor((Date.now() - BRAG.t0) / 1000), el = $("#recT"); if(el) el.textContent = `${sec}s`; if(Date.now() - BRAG.t0 > 15000) bragStop(); } }
 function bragSheet(html){ const pet = $("#pet"); let dr = $("#bragDr"); if(!dr){ dr = document.createElement("div"); dr.className = "cos-dr"; dr.id = "bragDr"; ["pointerdown", "touchstart", "mousedown", "wheel"].forEach(ev => dr.addEventListener(ev, e => e.stopPropagation(), { passive: true })); pet.appendChild(dr); }
   dr.innerHTML = html; return dr; }
-function bragOpen(){ if(!PET) return; const x = bt(); let ver = S.meta.pfOn ? "cute" : (S.meta.bragVer || "cute"); track("brag_open");
-  const setVer = v => { ver = v; S.meta.bragVer = v; S.meta.pfOn = v === "cute"; save(); $("#pet").classList.toggle("pf", v === "cute"); document.querySelectorAll("#bragDr [data-ver]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.ver === v))); };
-  const dr = bragSheet(`<div style="display:flex;justify-content:space-between;align-items:center"><h3>📸 ${esc(x.title)}</h3><button type="button" class="btn sm" id="bragX">${esc(x.close)}</button></div>
+function bragOpen(){ if(!PET) return; const x = bt(), ja = S.meta.settings.ui === "ja"; let ver = S.meta.pfOn ? "cute" : (S.meta.bragVer || "cute"), th = S.meta.bragTh || "hime", zoom = !!S.meta.bragZoom; track("brag_open");
+  const L = ja ? { frame: "フレーム", comp: "構図", full: "🖼 全体", zoom: "🔍 ネコだけアップ" } : { frame: "프레임", comp: "구도", full: "🖼 전체", zoom: "🔍 냥이만 확대" };
+  const dr = bragSheet(`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><h3>📸 ${esc(x.title)}</h3><button type="button" class="btn sm" id="bragX">${esc(x.close)}</button></div>
     <div class="brag-v"><button type="button" data-ver="cute">${esc(x.cute)}<small>${esc(x.cuteS)}</small></button><button type="button" data-ver="real">${esc(x.real)}<small>${esc(x.realS)}</small></button></div>
+    <div id="bragThW"><div class="brag-lb">${L.frame}</div><div class="brag-row">${Object.entries(BRAG_TH).map(([id, T]) => `<button type="button" data-th="${id}">${T.e} ${esc(ja ? T.ja : T.ko)}</button>`).join("")}</div></div>
+    <div class="brag-lb">${L.comp}</div><div class="brag-row"><button type="button" data-zm="0">${L.full}</button><button type="button" data-zm="1">${L.zoom}</button></div>
     <div class="brag-a"><button type="button" id="bragPh">${esc(x.photo)}</button><button type="button" id="bragVd">${esc(x.video)}</button></div><p class="cos-note" style="margin:8px 2px 0">${esc(x.note)}</p>`);
-  setVer(ver); dr.querySelectorAll("[data-ver]").forEach(b => b.onclick = () => setVer(b.dataset.ver));
+  const sync = () => { S.meta.bragVer = ver; S.meta.pfOn = ver === "cute"; S.meta.bragTh = th; S.meta.bragZoom = zoom; save(); $("#pet").classList.toggle("pf", ver === "cute");
+    dr.querySelectorAll("[data-ver]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.ver === ver))); dr.querySelectorAll("[data-th]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.th === th)));
+    dr.querySelectorAll("[data-zm]").forEach(b => b.setAttribute("aria-pressed", String((b.dataset.zm === "1") === zoom))); $("#bragThW").style.opacity = ver === "cute" ? 1 : .4; };
+  sync(); dr.querySelectorAll("[data-ver]").forEach(b => b.onclick = () => { ver = b.dataset.ver; sync(); });
+  dr.querySelectorAll("[data-th]").forEach(b => b.onclick = () => { th = b.dataset.th; if(ver !== "cute") ver = "cute"; sync(); track("brag_theme", { th }); });
+  dr.querySelectorAll("[data-zm]").forEach(b => b.onclick = () => { zoom = b.dataset.zm === "1"; sync(); });
   $("#bragX").onclick = () => dr.remove();
-  $("#bragPh").onclick = () => { track("brag_photo", { ver }); BRAG_SNAP = { ver, cb: out => out.toBlob(b => bragShare(b, "meowca.png", ver), "image/png") }; };   // 다음 화면 그리기 직후에 찍어야 냥이(WebGL)가 담김
-  $("#bragVd").onclick = () => { dr.remove(); bragRec(ver); }; }
+  $("#bragPh").onclick = () => { track("brag_photo", { ver, th, zoom }); BRAG_SNAP = { ver, th, zoom, cb: out => out.toBlob(b => bragShare(b, "meowca.png", ver), "image/png") }; };   // 다음 화면 그리기 직후에 찍어야 냥이(WebGL)가 담김
+  $("#bragVd").onclick = () => { dr.remove(); bragRec(ver, th, zoom); }; }
 async function bragShare(blob, name, ver){ const x = bt(), st = bragStats(), text = (ver === "cute" ? x.txtCute(st.lv, st.d) : x.txtReal(st.n)) + "\nhttps://meowca.app/?src=brag"; const file = new File([blob], name, { type: blob.type });
   try{ if(navigator.canShare && navigator.canShare({ files: [file] })){ await navigator.share({ files: [file], text }); track("brag_share", { kind: name.split(".").pop(), ver }); return; } }catch(e){ if(e && e.name === "AbortError") return; }
   bragSave(blob, name); }
 function bragSave(blob, name){ const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000); if(PET) petMsg(bt().saved, 2600); track("brag_save", { kind: name.split(".").pop() }); }
-function bragRec(ver){ const x = bt(); if(!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream){ petMsg(x.noRec, 3000); return; }
+function bragRec(ver, th, zoom){ const x = bt(); if(!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream){ petMsg(x.noRec, 3000); return; }
   const out = document.createElement("canvas"); out.width = 720; out.height = 1280; const stream = out.captureStream(30);
   try{ pa(); if(PA && PMASTER){ const dest = PA.createMediaStreamDestination(); PMASTER.connect(dest); stream.addTrack(dest.stream.getAudioTracks()[0]); BRAG_DEST = dest; } }catch(_){}
   const mime = ["video/mp4;codecs=avc1,mp4a.40.2", "video/mp4;codecs=avc1", "video/mp4", "video/webm;codecs=vp9,opus", "video/webm"].find(m => { try{ return MediaRecorder.isTypeSupported(m); }catch(_){ return false; } }) || "";
   let rec; try{ rec = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 4000000 } : {}); }catch(e){ petMsg(x.noRec, 3000); return; }
   const chunks = []; rec.ondataavailable = e => { if(e.data && e.data.size) chunks.push(e.data); };
-  rec.onstop = () => { const type = (rec.mimeType || mime || "video/webm").split(";")[0], blob = new Blob(chunks, { type }), ext = type.includes("mp4") ? "mp4" : "webm"; bragDone(blob, "meowca." + ext, ver); };
-  BRAG = { rec, out, ver, t0: Date.now() }; rec.start(250); track("brag_video", { ver, mime });
+  rec.onstop = () => { const type = (rec.mimeType || mime || "video/webm").split(";")[0], blob = new Blob(chunks, { type }), ext = type.includes("mp4") ? "mp4" : "webm"; bragDone(blob, "meowca." + ext, ver, th, zoom); };
+  BRAG = { rec, out, ver, th, zoom, t0: Date.now() }; rec.start(250); track("brag_video", { ver, th, zoom, mime });
   const bar = document.createElement("div"); bar.className = "rec-bar"; bar.id = "recBar"; bar.innerHTML = `<i></i><span id="recT">0s</span><button type="button" id="recStop">${esc(x.stop)}</button>`; $("#pet").appendChild(bar); $("#recStop").onclick = () => bragStop(); }
 let BRAG_DEST = null;
 function bragStop(silent){ if(!BRAG || !BRAG.rec) return; const r = BRAG.rec; BRAG.rec = null; const bar = $("#recBar"); if(bar) bar.remove();
   try{ if(BRAG_DEST && PMASTER) PMASTER.disconnect(BRAG_DEST); }catch(_){} BRAG_DEST = null; if(silent) r.onstop = null; try{ r.stop(); }catch(_){} }
-function bragDone(blob, name, ver){ if(!PET) return; const x = bt(), url = URL.createObjectURL(blob);
+function bragDone(blob, name, ver, th, zoom){ if(!PET) return; const x = bt(), url = URL.createObjectURL(blob);
   const dr = bragSheet(`<div style="display:flex;justify-content:space-between;align-items:center"><h3>🎥 ${esc(x.title)}</h3><button type="button" class="btn sm" id="bragX">${esc(x.close)}</button></div>
     <video class="brag-vid" src="${url}" controls playsinline loop muted autoplay></video><div class="brag-a"><button type="button" id="bragSh">${esc(x.share)}</button><button type="button" class="alt" id="bragSv">${esc(x.save)}</button></div>
     <div style="text-align:center;margin-top:8px"><button type="button" class="btn sm" id="bragRe">${esc(x.again)}</button></div>`);
   $("#bragX").onclick = () => { dr.remove(); URL.revokeObjectURL(url); }; $("#bragSh").onclick = () => bragShare(blob, name, ver); $("#bragSv").onclick = () => bragSave(blob, name);
-  $("#bragRe").onclick = () => { dr.remove(); URL.revokeObjectURL(url); bragRec(ver); }; }
+  $("#bragRe").onclick = () => { dr.remove(); URL.revokeObjectURL(url); bragRec(ver, th, zoom); }; }
 function petDraw(){
   const st = PET, { ctx } = st, dpr = st.dpr, s = st.s;
   drawCatTex(st);
