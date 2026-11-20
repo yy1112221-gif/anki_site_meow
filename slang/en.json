@@ -1,14 +1,14 @@
 {
- "updated": "2026-11-19T22:08:43.787833Z",
+ "updated": "2026-11-20T22:06:45.233563Z",
  "lang": "en",
  "terms": [
   {
    "t": "mogging",
-   "n": 26,
+   "n": 28,
    "src": [
     "google_news"
    ],
-   "s": 28,
+   "s": 30,
    "first": "2026-11-18",
    "def": [
     "The act or habit of being significantly more attractive than someone or something; a domination in appearance",
@@ -18,17 +18,17 @@
     "Are you mogging or maxxing?",
     "#WordOfTheDay: \"mogging\" Curious about the definition and etymology of our WOTD?"
    ],
-   "at": "2026-11-19T22:08:43.787833Z",
-   "cue": 31
+   "at": "2026-11-20T22:06:45.233563Z",
+   "cue": 34
   },
   {
    "t": "clock it",
-   "n": 3,
+   "n": 4,
    "src": [
     "bing_news",
     "google_news"
    ],
-   "s": 7,
+   "s": 8,
    "first": "2026-11-18",
    "def": [
     "A congratulation of success",
@@ -38,8 +38,23 @@
    "ex": [
     "BJP MP Bansuri Swaraj used the phrase \"clock it\" while supporting the Bill and praising the government's approach to tackling examination-related irregularities."
    ],
-   "at": "2026-11-19T22:08:43.787833Z",
-   "cue": 4
+   "at": "2026-11-20T22:06:45.233563Z",
+   "cue": 6
+  },
+  {
+   "t": "maxxing",
+   "n": 5,
+   "src": [
+    "google_news"
+   ],
+   "s": 7,
+   "first": "2026-11-18",
+   "def": [],
+   "ex": [
+    "Are you mogging or maxxing?"
+   ],
+   "at": "2026-11-20T22:06:45.233563Z",
+   "cue": 6
   },
   {
    "t": "delulu",
@@ -60,23 +75,8 @@
     "Within online spaces, using \"delulu\" to describe someone means they have unrealistic ideas about their interest.",
     "In other instances, \"delulu\" is used in a light-hearted manner, often in memes or social media comments, to poke fun at one's interests."
    ],
-   "at": "2026-11-19T22:08:43.787833Z",
+   "at": "2026-11-20T22:06:45.233563Z",
    "cue": 3
-  },
-  {
-   "t": "maxxing",
-   "n": 4,
-   "src": [
-    "google_news"
-   ],
-   "s": 6,
-   "first": "2026-11-18",
-   "def": [],
-   "ex": [
-    "Are you mogging or maxxing?"
-   ],
-   "at": "2026-11-19T22:08:43.787833Z",
-   "cue": 5
   },
   {
    "t": "skibidi",
@@ -87,32 +87,41 @@
    ],
    "s": 6,
    "first": "2026-11-19",
-   "def": [],
+   "def": [
+    "Skibidi word has various different meaning in some cases it can mean \"bad\" or \"cool,\" or it can be used in a meaningless way, according to the dictionary.",
+    "A nonsense word , sometimes used to form noun adjuncts for humorous effect",
+    "A strong reaction or an exclamation, sometimes used to replace words in set phrases or other interjections for humorous effect"
+   ],
    "ex": [
     "Skibidi we put the rhythm to the 'tism!",
-    "It originated from a YouTube videos series called ‘Skibidi Toilet’ that featured animated talking heads."
+    "Definition: There is no one definition for skibidi, it is more of an expression.",
+    "Skibidi toilet, gyatt, Ohio, rizz — what are the kids going on about these days?",
+    "The task of defining \"skibidi,\" a term derived from viral memes, was also taken on by the publishers."
    ],
-   "at": "2026-11-19T22:08:43.787833Z",
-   "cue": 2
+   "at": "2026-11-20T22:06:45.233563Z",
+   "cue": 5
   },
   {
-   "t": "human",
+   "t": "huss",
    "n": 2,
    "src": [
+    "bing_news",
     "google_news"
    ],
-   "s": 4,
-   "first": "2026-11-18",
+   "s": 6,
+   "first": "2026-11-20",
    "def": [
-    "Of or belonging to the species Homo sapiens or its closest relatives",
-    "Having the nature or attributes of a human being"
+    "But what exactly does \"huss\" mean, and where did it come from?",
+    "In memes, the term \"huss\" is used to refer to the act of sprinting or exerting yourself in some other way.",
+    "A dogfish"
    ],
    "ex": [
-    "To err is human ; to forgive, divine.",
-    "She's only human , so give her a break !"
+    "While telling the story, he's seen \"hussing\" while dribbling a basketball.",
+    "Throughout the video, while telling the story, we see him dribbling a basketball and yelling, \"Huss, huss, huss!\"",
+    "This meme might have been the final push that the term \"huss\" needed to go mainstream."
    ],
-   "at": "2026-11-19T22:08:43.787833Z",
-   "cue": 2
+   "at": "2026-11-20T22:06:45.233563Z",
+   "cue": 16
   },
   {
    "t": "code rot",
@@ -127,30 +136,8 @@
     "Synonym of bit rot : the development of bugs and incompatibilities of software due to changes in its environment , etc."
    ],
    "ex": [],
-   "at": "2026-11-19T22:08:43.787833Z",
+   "at": "2026-11-20T22:06:45.233563Z",
    "cue": 2
-  },
-  {
-   "t": "mid",
-   "n": 2,
-   "src": [
-    "bing_news"
-   ],
-   "s": 4,
-   "first": "2026-11-18",
-   "def": [
-    "According to Urban Dictionary , the slang \"mid\" is used to describe something or someone as below average or low quality.",
-    "The slang more so describes something that is just OK or mid-tier and is not used for things that are truly bad or awful.",
-    "ISO 639-3 language code for Mandaic"
-   ],
-   "ex": [
-    "We need to retake mid .",
-    "\"Have you watched the new season of 'YOU' on Netflix?\" \"I did, but it was mid.\"",
-    "Here is a rundown of the slang term \"mid.\"",
-    "According to Malik, \"mid\" was used by people in cannabis culture."
-   ],
-   "at": "2026-11-19T22:08:43.787833Z",
-   "cue": 9
   },
   {
    "t": "crashing out",
@@ -164,12 +151,12 @@
     "15 slang words Gen Zers are using in 2025 — and what they mean From the popular \"6-7\" to \"crashing out\" and looking \"chopped,\" these are 15 slang terms you might've heard your Gen Z coworkers using in 2025."
    ],
    "ex": [
-    "In 2025, if you're not locking in, you might be crashing out.",
     "If you've been online lately, you've likely seen people talking about crashing out.",
     "Well, not literally — though, plenty of people actually are crashing out.",
-    "For some, “crashing out” can be a liberating release of pent-up emotions."
+    "For some, “crashing out” can be a liberating release of pent-up emotions.",
+    "In 2025, if you're not locking in, you might be crashing out."
    ],
-   "at": "2026-11-19T22:08:43.787833Z",
+   "at": "2026-11-20T22:06:45.233563Z",
    "cue": 2
   },
   {
@@ -191,8 +178,8 @@
     "According to Zeltser, there is a possibility that \"Menty B\" sounds inconsiderate to some people who meet criteria for a mental health disorder.",
     "And terms like “Menty B” can make sharing heavy news easier."
    ],
-   "at": "2026-11-19T22:08:43.787833Z",
-   "cue": 1
+   "at": "2026-11-20T22:06:45.233563Z",
+   "cue": 7
   },
   {
    "t": "the rona",
@@ -209,7 +196,7 @@
    "ex": [
     "If I caught the rona , I'd make sure I self-isolate for two weeks minimum !"
    ],
-   "at": "2026-11-19T22:08:43.787833Z",
+   "at": "2026-11-20T22:06:45.233563Z",
    "cue": 1
   },
   {
@@ -229,7 +216,7 @@
     "Youngsters in the country are affectionately referring to the current economic backdrop as the \"cozzie livs.\"",
     "But as conversations move from online to in-person, it's going to be impossible to subtly search the definition of cozzie Livs when talking to younger staff members."
    ],
-   "at": "2026-11-19T22:08:43.787833Z",
+   "at": "2026-11-20T22:06:45.233563Z",
    "cue": 1
   },
   {
@@ -246,7 +233,7 @@
     "Modified or multiplied by a ratio ."
    ],
    "ex": [],
-   "at": "2026-11-19T22:08:43.787833Z",
+   "at": "2026-11-20T22:06:45.233563Z",
    "cue": 1
   },
   {
@@ -259,26 +246,27 @@
    "first": "2026-11-18",
    "def": [],
    "ex": [],
-   "at": "2026-11-19T22:08:43.787833Z",
-   "cue": 2
+   "at": "2026-11-20T22:06:45.233563Z",
+   "cue": 1
   },
   {
-   "t": "lol",
+   "t": "human",
    "n": 1,
    "src": [
     "google_news"
    ],
    "s": 3,
-   "first": "2026-11-19",
+   "first": "2026-11-18",
    "def": [
-    "ISO 639-2 & ISO 639-3 language code for Mongo",
-    "Alternative letter-case form of LOL"
+    "Of or belonging to the species Homo sapiens or its closest relatives",
+    "Having the nature or attributes of a human being"
    ],
    "ex": [
-    "Are you really that bad lol ?"
+    "To err is human ; to forgive, divine.",
+    "She's only human , so give her a break !"
    ],
-   "at": "2026-11-19T22:08:43.787833Z",
-   "cue": 1
+   "at": "2026-11-20T22:06:45.233563Z",
+   "cue": 2
   },
   {
    "t": "tante-tante code",
@@ -292,7 +280,7 @@
     "What Does the 'Tante-Tante Code' Mean?"
    ],
    "ex": [],
-   "at": "2026-11-19T22:08:43.787833Z",
+   "at": "2026-11-20T22:06:45.233563Z",
    "cue": 1
   },
   {
@@ -314,7 +302,29 @@
     "Although Cooper wasn't aware of \"sus\" at the time, he was struck by its familiarity to students.",
     "Players often use \"sus\" to describe others who are acting strange and could potentially be the imposter."
    ],
-   "at": "2026-11-19T22:08:43.787833Z",
+   "at": "2026-11-20T22:06:45.233563Z",
+   "cue": 12
+  },
+  {
+   "t": "mid",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "According to Urban Dictionary , the slang \"mid\" is used to describe something or someone as below average or low quality.",
+    "The slang more so describes something that is just OK or mid-tier and is not used for things that are truly bad or awful.",
+    "ISO 639-3 language code for Mandaic"
+   ],
+   "ex": [
+    "We need to retake mid .",
+    "According to Malik, \"mid\" was used by people in cannabis culture.",
+    "According to Wright, \"mid\" is older than modern English.",
+    "See more \"Mid\" is a slang word for anything that's ... blah."
+   ],
+   "at": "2026-11-20T22:06:45.233563Z",
    "cue": 12
   },
   {
@@ -336,8 +346,8 @@
     "You got her number ? W rizz !",
     "Merriam-Webster defines rizz as “romantic appeal or charm” when used as a noun."
    ],
-   "at": "2026-11-19T22:08:43.787833Z",
-   "cue": 2
+   "at": "2026-11-20T22:06:45.233563Z",
+   "cue": 22
   },
   {
    "t": "ijbol",
@@ -372,38 +382,6 @@
    "s": 3
   },
   {
-   "t": "or",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "cooked",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "coffee badging",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "six-seven",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
    "t": "huzz",
    "n": 1,
    "src": [
@@ -420,7 +398,23 @@
    "s": 3
   },
   {
-   "t": "brainrot",
+   "t": "or",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "six-seven",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "waste-guna-huiya",
    "n": 1,
    "src": [
     "bing_news"
@@ -436,28 +430,22 @@
    "s": 3
   },
   {
-   "t": "new",
+   "t": "lol",
    "n": 1,
    "src": [
-    "bing_news"
+    "google_news"
    ],
-   "s": 3
-  },
-  {
-   "t": "i really like",
-   "n": 1,
-   "src": [
-    "bing_news"
+   "s": 3,
+   "first": "2026-11-19",
+   "def": [
+    "ISO 639-2 & ISO 639-3 language code for Mongo",
+    "Alternative letter-case form of LOL"
    ],
-   "s": 3
-  },
-  {
-   "t": "the city",
-   "n": 1,
-   "src": [
-    "bing_news"
+   "ex": [
+    "Are you really that bad lol ?"
    ],
-   "s": 3
+   "at": "2026-11-19T22:08:43.787833Z",
+   "cue": 1
   },
   {
    "t": "oten",
