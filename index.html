@@ -645,6 +645,16 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .gr{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 8px 12px;border-radius:20px;border:2px solid var(--line);background:transparent;color:inherit;font:inherit;cursor:pointer;transition:transform .12s}
 .gr:active{transform:scale(.96)} .gr b{font-size:1.05rem;font-weight:800} .gr .nm{width:64px;height:auto}
 .gr-no{border-color:var(--bad);color:var(--bad)} .gr-ok{background:var(--accent);border-color:var(--accent);color:var(--on-accent,#fff)}
+#pfCv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;display:none} #pet.pf #pfCv{display:block}
+#pet.pf #petGL{filter:saturate(1.18) brightness(1.05) drop-shadow(0 0 16px rgba(255,170,210,.75))}
+.pet-brag{position:absolute;z-index:5;right:12px;top:calc(110px + env(safe-area-inset-top));height:38px;padding:0 12px;border-radius:19px;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:.85rem;font-weight:700;cursor:pointer;color:inherit}
+.brag-v{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 10px} .brag-v button{border:2px solid var(--line,#ddd);border-radius:16px;padding:10px 6px;background:transparent;color:inherit;font:inherit;font-weight:800;cursor:pointer;line-height:1.3}
+.brag-v button small{display:block;font-weight:600;font-size:.72rem;color:var(--muted)} .brag-v button[aria-pressed="true"]{border-color:#f2708f;background:rgba(242,112,143,.1)}
+.brag-a{display:grid;grid-template-columns:1fr 1fr;gap:8px} .brag-a button{border:0;border-radius:999px;padding:12px;font:inherit;font-weight:800;cursor:pointer;background:#f2708f;color:#fff} .brag-a button.alt{background:var(--line,#ddd);color:inherit}
+.rec-bar{position:absolute;z-index:9;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:rgba(20,20,24,.82);color:#fff;border-radius:999px;padding:8px 8px 8px 14px;font-weight:800;font-size:.9rem}
+.rec-bar i{width:11px;height:11px;border-radius:50%;background:#ff3b5c;animation:recb 1s infinite} @keyframes recb{50%{opacity:.25}}
+.rec-bar button{border:0;border-radius:999px;background:#fff;color:#111;font:inherit;font-weight:800;padding:6px 12px;cursor:pointer}
+.brag-vid{width:100%;max-height:38vh;border-radius:16px;background:#000;display:block;margin:4px 0 10px}
 .pet-cos{position:absolute;z-index:5;right:12px;top:calc(64px + env(safe-area-inset-top));height:38px;padding:0 12px;border-radius:19px;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:.85rem;font-weight:700;cursor:pointer;color:inherit}
 .cos-dr{position:absolute;z-index:9;left:0;right:0;bottom:0;max-height:40%;overflow:auto;padding:12px 12px calc(12px + env(safe-area-inset-bottom));background:#fff;border-radius:22px 22px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.18);touch-action:pan-y;animation:cosUp .25s ease-out}
 @keyframes cosUp{from{transform:translateY(100%)}to{transform:none}}
@@ -2887,7 +2897,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v85";
+const APP_VER = "v86";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3362,14 +3372,14 @@ function openPet(welcome){
   if(!$("#pet")){ const el = document.createElement("div"); el.id = "pet"; el.setAttribute("role", "dialog"); document.body.appendChild(el); }
   const el = $("#pet"); el.classList.remove("hidden"); document.body.classList.add("petopen");
   const isTest = /\/test\//.test(location.pathname) || location.protocol === "file:";
-  el.innerHTML = `<canvas id="petBG"></canvas><canvas id="petGL"></canvas><canvas id="petCv"></canvas><button type="button" class="pet-snd" id="petSnd" aria-label="${esc(x.snd)}">${{ mix: "🔉", loud: "🔊", off: "🔇" }[sndMode()]}</button><button type="button" class="pet-cos" id="petCos">🎀 ${S.meta.settings.ui === "ja" ? "着せかえ" : "꾸미기"}</button>
+  el.innerHTML = `<canvas id="petBG"></canvas><canvas id="petGL"></canvas><canvas id="petCv"></canvas><button type="button" class="pet-snd" id="petSnd" aria-label="${esc(x.snd)}">${{ mix: "🔉", loud: "🔊", off: "🔇" }[sndMode()]}</button><button type="button" class="pet-cos" id="petCos">🎀 ${S.meta.settings.ui === "ja" ? "着せかえ" : "꾸미기"}</button><button type="button" class="pet-brag" id="petBrag">📸 ${S.meta.settings.ui === "ja" ? "自慢する" : "자랑하기"}</button><canvas id="pfCv"></canvas>
     <div class="pet-top"><button class="btn sm" type="button" id="petClose">‹ ${esc(x.close)}</button>
       <div class="pet-lv"><canvas id="petFat" width="0" height="0"></canvas><b id="petLv"></b></div>
       <div class="pet-st"><b>🔥 ${streak()}</b><small>${esc(x.ranks[petTier(streak())])}${p.freezes ? ` · 🧊${p.freezes}` : ""}</small></div></div>
     <div class="pet-msg" id="petMsg" aria-live="polite"></div>
     <div class="pet-bottom"><p class="pet-hint">${esc(x.hint)}</p>
       ${isTest ? `<div class="row" style="justify-content:center;gap:6px"><button class="btn sm" type="button" id="petTest">${esc(x.test)}</button><label class="small" style="display:flex;gap:6px;align-items:center">${esc(x.testStreak)}<input id="petTestS" type="number" min="0" max="200" value="${streak()}" style="width:70px"></label></div>` : ""}</div>`;
-  $("#petClose").onclick = closePet; $("#petCos").onclick = cosOpen;
+  $("#petClose").onclick = closePet; $("#petCos").onclick = cosOpen; $("#petBrag").onclick = bragOpen; if(S.meta.pfOn) el.classList.add("pf");
   $("#petSnd").onclick = () => { const nx = { mix: "loud", loud: false, off: true }[sndMode()]; S.meta.settings.petSound = nx; save(); const m = sndMode(); $("#petSnd").textContent = { mix: "🔉", loud: "🔊", off: "🔇" }[m];
     applySndMode(); if(PMASTER) PMASTER.gain.value = petSoundOn() ? 1 : 0; petMsg(pt().sndMode[m], 2600); if(petSoundOn()){ pa(); sfxPoyon(.3); } };
   const tb = $("#petTest"); if(tb){ tb.onclick = () => { const s = streak(), top = petTier(s); for(let i = 0; i < 10; i++){ const c = PET_ITEMS.filter(it => it.t <= top); const it = c[Math.floor(Math.random() * c.length)]; p.inv[it.id] = (p.inv[it.id] || 0) + 1; } save(); petTray(); };
@@ -3378,7 +3388,7 @@ function openPet(welcome){
   const top = petTier(streak()); if(top > p.seenTier){ const its = PET_ITEMS.filter(i => i.t === top); p.seenTier = top; save(); setTimeout(() => { petMsg(`${x.unlock} ${its.map(i => i.e || "").join("")} ${its.map(itName).join("・")}`, 3200); sfxFanfare(); }, 500); }
   else if(!petCount()) petMsg(x.empty, 4200);
 }
-function closePet(){ const el = $("#pet"); if(el){ el.classList.add("hidden"); el.innerHTML = ""; } document.body.classList.remove("petopen"); if(PET){ cancelAnimationFrame(PET.raf); window.removeEventListener("resize", PET.onResize); PET = null; } sfxSqueezeEnd(); save(); renderAll(); }
+function closePet(){ bragStop(true); const el = $("#pet"); if(el){ el.classList.add("hidden"); el.innerHTML = ""; } document.body.classList.remove("petopen"); if(PET){ cancelAnimationFrame(PET.raf); window.removeEventListener("resize", PET.onResize); PET = null; } sfxSqueezeEnd(); save(); renderAll(); }
 let PMSG_T = null;
 function petMsg(txt, ms){ const m = $("#petMsg"); if(!m) return; m.textContent = txt; m.classList.add("show"); clearTimeout(PMSG_T); PMSG_T = setTimeout(() => m.classList.remove("show"), ms || 2200); }
 function petLvUI(){ const p = petState(); const a = petNeed(p.lv - 1 < 1 ? 0 : p.lv - 1) * (p.lv > 1 ? 1 : 0), b = petNeed(p.lv); const lv = $("#petLv"); if(!lv) return;
@@ -3557,7 +3567,7 @@ function petLoop0(now){
   if(st.nextSlang == null) st.nextSlang = now + 15000 + Math.random() * 10000; if(now > st.nextSlang){ st.nextSlang = now + 25000 + Math.random() * 20000; const m = $("#petMsg"); const l = slangLine(); if(l && m && !m.classList.contains("show") && !st.grab) petMsg(l, 3000); }
   if(st.whale) whaleStep(st, dt);
   st.hit = Math.max(0, st.hit - dt * 3.5); st.flap = Math.max(0, st.flap - dt * .9); st.shake = Math.max(0, st.shake - dt * 14);
-  petDraw(); st.raf = requestAnimationFrame(petLoop);
+  petDraw(); bragFrame(st); st.raf = requestAnimationFrame(petLoop);
 }
 /* WebGL: 下絵をばね格子の形に貼る */
 function jellyGL(cv){
@@ -3726,6 +3736,91 @@ function cosOpen(){ const pet = $("#pet"); if(!pet || $("#cosDr")) return; const
     track("cos_try", { id: it.id }); pick(it); };
   tab("skin");
   $("#cosX").onclick = () => { if(PET) PET.tryOn = null; dr.remove(); }; }
+/* ════════ 자랑하기: 내 냥이 사진·영상(직접 녹화)을 꾸민 버전(공주 필터) / 진짜 버전으로 골라 인스타·카톡·LINE 등에 공유 ════════ */
+const BRAG_T = {
+  ko: { title: "내 냥이 자랑하기", cute: "✨ 대외용", cuteS: "공주 필터·갓생 각", real: "🫥 진짜 모습", realS: "필터 없음·있는 그대로", photo: "📷 사진 공유", video: "🎥 영상 찍기", save: "저장", share: "공유하기", again: "다시 찍기", close: "닫기", stop: "그만", note: "영상은 최대 15초. 찍는 동안 냥이를 만지고 간식을 주면 그대로 담겨.",
+    top: (lv, d) => `Lv.${lv} 🎀 갓생 D+${d}`, cap: n => n ? `오늘도 딱 ${n}개 외우고 말랑 충전 완료` : "오늘도 냥이랑 갓생 중",
+    realTop: (lv, d, m) => `Lv.${lv} · 공부 ${d}일째 · 함락도: ${m}`, realCap: n => n ? `사실 오늘 ${n}개 외움` : "사실 오늘 0개… 냥이만 만졌다",
+    txtCute: (lv, d) => `오늘도 갓생 🎀 Lv.${lv} 말랑냥 키우는 중 (D+${d})`, txtReal: n => n ? `사실 오늘 ${n}개 외웠다…냥` : "사실 오늘은 냥이만 만졌다", saved: "저장했어. 사진첩·파일에서 올리면 돼냥", noRec: "이 브라우저는 영상 녹화를 지원하지 않는다냥. 사진으로 자랑해 줘" },
+  ja: { title: "うちのネコを自慢", cute: "✨ 外向け", cuteS: "姫フィルター・キラキラ", real: "🫥 ありのまま", realS: "フィルターなし", photo: "📷 写真をシェア", video: "🎥 動画を撮る", save: "保存", share: "シェア", again: "撮り直す", close: "閉じる", stop: "ストップ", note: "動画は最大15秒。撮影中にネコを触ったりおやつをあげるとそのまま入るよ。",
+    top: (lv, d) => `Lv.${lv} 🎀 キラキラ D+${d}`, cap: n => n ? `今日もちょうど${n}語おぼえて ぷにぷに充電完了` : "今日もネコとキラキラ生活",
+    realTop: (lv, d, m) => `Lv.${lv} · 勉強${d}日目 · 陥落度: ${m}`, realCap: n => n ? `実は今日${n}語だけ` : "実は今日0語…ネコ触ってただけ",
+    txtCute: (lv, d) => `今日もキラキラ🎀 Lv.${lv}のぷにネコ育て中 (D+${d})`, txtReal: n => n ? `実は今日${n}語だけ…ニャ` : "実は今日はネコを触ってただけ", saved: "保存したニャ。写真・ファイルから投稿してね", noRec: "このブラウザは動画撮影に対応してないニャ。写真で自慢してね" } };
+const bt = () => BRAG_T[S.meta.settings.ui === "ja" ? "ja" : "ko"];
+function bragStats(){ const p = petState(), d = Object.values(S.meta.days || {}).filter(v => v === true).length, td = today();
+  const n = Object.values(S.cards).filter(c => !c.isNew && c.last === td).length, lang = S.meta.settings.ui === "ja" ? "ja" : "ko";
+  let m = ""; try{ m = MELT[lang].names[meltStage()]; }catch(_){}
+  return { lv: p.lv || 1, d: Math.max(1, d), n, m }; }
+/* 꾸밈 그리기(실시간 화면·사진·영상 공통): 리본 달린 둥근 액자, 바깥 파스텔 베일, 반짝이, 문구 */
+function bragDeco(g, W, H, cx, cy, R, t, ver, k){ const st = bragStats(), x = bt();
+  const font = (w, px) => `${w} ${Math.round(px * k)}px "Arial Rounded MT Bold","Hiragino Maru Gothic ProN","Apple SD Gothic Neo","Noto Sans CJK KR",sans-serif`;
+  const pill = (txt, y, px, bg, fg) => { g.font = font(800, px); const w = g.measureText(txt).width + 34 * k, h = px * k * 1.7; g.fillStyle = bg; g.beginPath(); g.roundRect(W / 2 - w / 2, y - h / 2, w, h, h / 2); g.fill(); g.fillStyle = fg; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(txt, W / 2, y + 1); };
+  if(ver === "real"){ g.font = font(700, 15); g.textAlign = "left"; g.textBaseline = "alphabetic"; g.fillStyle = "rgba(30,30,30,.72)";
+    g.fillText(x.realTop(st.lv, st.d, st.m), 16 * k, H - 44 * k); g.font = font(800, 17); g.fillText(x.realCap(st.n), 16 * k, H - 20 * k);
+    g.font = font(700, 13); g.textAlign = "right"; g.fillStyle = "rgba(30,30,30,.5)"; g.fillText("meowca.app", W - 14 * k, H - 20 * k); return; }
+  g.save(); g.beginPath(); g.rect(0, 0, W, H); g.arc(cx, cy, R, 0, Math.PI * 2); const vg = g.createLinearGradient(0, 0, W, H); vg.addColorStop(0, "rgba(255,214,232,.94)"); vg.addColorStop(.5, "rgba(244,222,255,.92)"); vg.addColorStop(1, "rgba(255,236,214,.94)"); g.fillStyle = vg; g.fill("evenodd"); g.restore();
+  g.save(); g.lineWidth = 16 * k; g.strokeStyle = "#fff"; g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.stroke(); g.lineWidth = 5 * k; g.strokeStyle = "#f7a8c4"; g.beginPath(); g.arc(cx, cy, R + 9 * k, 0, Math.PI * 2); g.stroke();
+  for(let i = 0; i < 36; i++){ const a = i / 36 * Math.PI * 2; g.fillStyle = i % 2 ? "#ffd1e3" : "#fff"; g.beginPath(); g.arc(cx + Math.cos(a) * (R + 16 * k), cy + Math.sin(a) * (R + 16 * k), 4.5 * k, 0, Math.PI * 2); g.fill(); } g.restore();
+  // 리본
+  const rx = cx, ry = cy - R - 6 * k, rs = k * 1.15; g.save(); g.translate(rx, ry); g.scale(rs, rs); g.fillStyle = "#f7a8c4"; g.strokeStyle = "#e0789f"; g.lineWidth = 2.5;
+  [[-1], [1]].forEach(([d]) => { g.beginPath(); g.moveTo(0, 0); g.bezierCurveTo(d * 18, -26, d * 50, -22, d * 46, 2); g.bezierCurveTo(d * 44, 18, d * 18, 14, 0, 0); g.fill(); g.stroke();
+    g.beginPath(); g.moveTo(d * 4, 6); g.lineTo(d * 18, 40); g.lineTo(d * 26, 30); g.lineTo(d * 12, 4); g.closePath(); g.fill(); g.stroke(); });
+  g.fillStyle = "#ffc1d8"; g.beginPath(); g.ellipse(0, 1, 9, 10, 0, 0, Math.PI * 2); g.fill(); g.stroke(); g.restore();
+  // 반짝이·하트
+  for(let i = 0; i < 14; i++){ const a = i * 2.39996, rr = R * (1.08 + .32 * ((i * 37) % 10) / 10), px = cx + Math.cos(a) * rr, py = cy + Math.sin(a) * rr * 1.05, tw = .55 + .45 * Math.sin(t * 3 + i * 1.7);
+    if(px < 0 || px > W || py < 0 || py > H) continue; g.globalAlpha = tw; g.fillStyle = i % 3 ? "#fff" : "#ff8fb8"; g.font = font(900, 16 + (i % 3) * 5); g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(i % 4 === 0 ? "♡" : "✦", px, py + Math.sin(t * 2 + i) * 3 * k); }
+  g.globalAlpha = 1;
+  pill(x.top(st.lv, st.d), Math.max(cy - R - 64 * k, 54 * k), 17, "rgba(255,255,255,.92)", "#e0598b");
+  const by = Math.min(H - 70 * k, cy + R + 52 * k); g.font = font(900, 21); g.textAlign = "center"; g.textBaseline = "middle"; g.lineWidth = 6 * k; g.strokeStyle = "#fff"; g.strokeText(x.cap(st.n), W / 2, by); g.fillStyle = "#c2457a"; g.fillText(x.cap(st.n), W / 2, by);
+  pill("meowca.app", by + 40 * k, 14, "#111413", "#fff"); }
+function bragGeo(st){ const r = st.cv.getBoundingClientRect(), c = st.toScr(64, 92); return { w: r.width, h: r.height, cx: c.x, cy: c.y, R: Math.min(r.width * .44, st.s * st.bw * 62) }; }
+/* 한 장으로 합성: 배경·냥이(WebGL)·효과 + 꾸밈 → out 캔버스(W×H, 화면을 꽉 채우도록 자름) */
+function bragCompose(st, out, ver, t){ const g = out.getContext("2d"), W = out.width, H = out.height, G = bragGeo(st), k = Math.max(W / G.w, H / G.h), ox = (W - G.w * k) / 2, oy = (H - G.h * k) / 2;
+  const bg = $("#petBG"), gl = $("#petGL"), fx = st.cv; g.save(); g.clearRect(0, 0, W, H); g.fillStyle = "#f8f0e3"; g.fillRect(0, 0, W, H);
+  const draw = c => { if(c && c.width) g.drawImage(c, 0, 0, c.width, c.height, ox, oy, G.w * k, G.h * k); };
+  draw(bg);
+  if(ver === "cute"){ try{ g.filter = "blur(14px) brightness(1.25) saturate(1.3)"; g.globalAlpha = .5; draw(gl); g.globalAlpha = 1; g.filter = "saturate(1.18) brightness(1.05) contrast(.96)"; }catch(_){} }
+  draw(gl); draw(fx); g.filter = "none"; g.restore();
+  bragDeco(g, W, H, ox + G.cx * k, oy + G.cy * k, G.R * k, t, ver, k); }
+let BRAG = null, BRAG_SNAP = null;
+function bragFrame(st){ const pet = $("#pet"); if(!pet) return; const t = performance.now() / 1000;
+  if(pet.classList.contains("pf")){ const c = $("#pfCv"); if(c){ const dpr = Math.min(2, devicePixelRatio || 1), G = bragGeo(st); if(c.width !== Math.round(G.w * dpr)){ c.width = Math.round(G.w * dpr); c.height = Math.round(G.h * dpr); }
+    const g = c.getContext("2d"); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, c.width, c.height); bragDeco(g, c.width, c.height, G.cx * dpr, G.cy * dpr, G.R * dpr, t, "cute", dpr); } }
+  if(BRAG_SNAP){ const q = BRAG_SNAP; BRAG_SNAP = null; const out = document.createElement("canvas"); out.width = 1080; out.height = 1920; bragCompose(st, out, q.ver, t); q.cb(out); }
+  if(BRAG && BRAG.rec && BRAG.out){ bragCompose(st, BRAG.out, BRAG.ver, t); const sec = Math.floor((Date.now() - BRAG.t0) / 1000), el = $("#recT"); if(el) el.textContent = `${sec}s`; if(Date.now() - BRAG.t0 > 15000) bragStop(); } }
+function bragSheet(html){ const pet = $("#pet"); let dr = $("#bragDr"); if(!dr){ dr = document.createElement("div"); dr.className = "cos-dr"; dr.id = "bragDr"; ["pointerdown", "touchstart", "mousedown", "wheel"].forEach(ev => dr.addEventListener(ev, e => e.stopPropagation(), { passive: true })); pet.appendChild(dr); }
+  dr.innerHTML = html; return dr; }
+function bragOpen(){ if(!PET) return; const x = bt(); let ver = S.meta.pfOn ? "cute" : (S.meta.bragVer || "cute"); track("brag_open");
+  const setVer = v => { ver = v; S.meta.bragVer = v; S.meta.pfOn = v === "cute"; save(); $("#pet").classList.toggle("pf", v === "cute"); document.querySelectorAll("#bragDr [data-ver]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.ver === v))); };
+  const dr = bragSheet(`<div style="display:flex;justify-content:space-between;align-items:center"><h3>📸 ${esc(x.title)}</h3><button type="button" class="btn sm" id="bragX">${esc(x.close)}</button></div>
+    <div class="brag-v"><button type="button" data-ver="cute">${esc(x.cute)}<small>${esc(x.cuteS)}</small></button><button type="button" data-ver="real">${esc(x.real)}<small>${esc(x.realS)}</small></button></div>
+    <div class="brag-a"><button type="button" id="bragPh">${esc(x.photo)}</button><button type="button" id="bragVd">${esc(x.video)}</button></div><p class="cos-note" style="margin:8px 2px 0">${esc(x.note)}</p>`);
+  setVer(ver); dr.querySelectorAll("[data-ver]").forEach(b => b.onclick = () => setVer(b.dataset.ver));
+  $("#bragX").onclick = () => dr.remove();
+  $("#bragPh").onclick = () => { track("brag_photo", { ver }); BRAG_SNAP = { ver, cb: out => out.toBlob(b => bragShare(b, "meowca.png", ver), "image/png") }; };   // 다음 화면 그리기 직후에 찍어야 냥이(WebGL)가 담김
+  $("#bragVd").onclick = () => { dr.remove(); bragRec(ver); }; }
+async function bragShare(blob, name, ver){ const x = bt(), st = bragStats(), text = (ver === "cute" ? x.txtCute(st.lv, st.d) : x.txtReal(st.n)) + "\nhttps://meowca.app/?src=brag"; const file = new File([blob], name, { type: blob.type });
+  try{ if(navigator.canShare && navigator.canShare({ files: [file] })){ await navigator.share({ files: [file], text }); track("brag_share", { kind: name.split(".").pop(), ver }); return; } }catch(e){ if(e && e.name === "AbortError") return; }
+  bragSave(blob, name); }
+function bragSave(blob, name){ const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000); if(PET) petMsg(bt().saved, 2600); track("brag_save", { kind: name.split(".").pop() }); }
+function bragRec(ver){ const x = bt(); if(!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream){ petMsg(x.noRec, 3000); return; }
+  const out = document.createElement("canvas"); out.width = 720; out.height = 1280; const stream = out.captureStream(30);
+  try{ pa(); if(PA && PMASTER){ const dest = PA.createMediaStreamDestination(); PMASTER.connect(dest); stream.addTrack(dest.stream.getAudioTracks()[0]); BRAG_DEST = dest; } }catch(_){}
+  const mime = ["video/mp4;codecs=avc1,mp4a.40.2", "video/mp4;codecs=avc1", "video/mp4", "video/webm;codecs=vp9,opus", "video/webm"].find(m => { try{ return MediaRecorder.isTypeSupported(m); }catch(_){ return false; } }) || "";
+  let rec; try{ rec = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 4000000 } : {}); }catch(e){ petMsg(x.noRec, 3000); return; }
+  const chunks = []; rec.ondataavailable = e => { if(e.data && e.data.size) chunks.push(e.data); };
+  rec.onstop = () => { const type = (rec.mimeType || mime || "video/webm").split(";")[0], blob = new Blob(chunks, { type }), ext = type.includes("mp4") ? "mp4" : "webm"; bragDone(blob, "meowca." + ext, ver); };
+  BRAG = { rec, out, ver, t0: Date.now() }; rec.start(250); track("brag_video", { ver, mime });
+  const bar = document.createElement("div"); bar.className = "rec-bar"; bar.id = "recBar"; bar.innerHTML = `<i></i><span id="recT">0s</span><button type="button" id="recStop">${esc(x.stop)}</button>`; $("#pet").appendChild(bar); $("#recStop").onclick = () => bragStop(); }
+let BRAG_DEST = null;
+function bragStop(silent){ if(!BRAG || !BRAG.rec) return; const r = BRAG.rec; BRAG.rec = null; const bar = $("#recBar"); if(bar) bar.remove();
+  try{ if(BRAG_DEST && PMASTER) PMASTER.disconnect(BRAG_DEST); }catch(_){} BRAG_DEST = null; if(silent) r.onstop = null; try{ r.stop(); }catch(_){} }
+function bragDone(blob, name, ver){ if(!PET) return; const x = bt(), url = URL.createObjectURL(blob);
+  const dr = bragSheet(`<div style="display:flex;justify-content:space-between;align-items:center"><h3>🎥 ${esc(x.title)}</h3><button type="button" class="btn sm" id="bragX">${esc(x.close)}</button></div>
+    <video class="brag-vid" src="${url}" controls playsinline loop muted autoplay></video><div class="brag-a"><button type="button" id="bragSh">${esc(x.share)}</button><button type="button" class="alt" id="bragSv">${esc(x.save)}</button></div>
+    <div style="text-align:center;margin-top:8px"><button type="button" class="btn sm" id="bragRe">${esc(x.again)}</button></div>`);
+  $("#bragX").onclick = () => { dr.remove(); URL.revokeObjectURL(url); }; $("#bragSh").onclick = () => bragShare(blob, name, ver); $("#bragSv").onclick = () => bragSave(blob, name);
+  $("#bragRe").onclick = () => { dr.remove(); URL.revokeObjectURL(url); bragRec(ver); }; }
 function petDraw(){
   const st = PET, { ctx } = st, dpr = st.dpr, s = st.s;
   drawCatTex(st);
