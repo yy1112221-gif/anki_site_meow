@@ -1907,7 +1907,7 @@ function buyBoot(){ const id = new URLSearchParams(location.search).get("buy"); 
 /* ════════ 카드 결제 (토스페이먼츠 결제창 v2) ════════
    TOSS_CK: 상점관리자 > 개발 > API 키의 「결제위젯 연동 키」 클라이언트 키(공개용, gck). 시크릿(gsk)은 Supabase Secrets TOSS_SECRET_KEY. 비어 있으면 결제 버튼이 「준비 중」으로 동작
    흐름: 상품 → 동의 → 주문서(서버 가격) → 토스 결제창 → meowca.app/?pay=ok… → pay-confirm 함수가 승인 → 앱에서 지급 */
-const TOSS_CK = "test_gck_c19zDGFLKEWkuNsntlFU99pfuTjy8kvGWn";
+const TOSS_CK = "live_gck_c19zDGGqwk9CbeQw4WjY4DgrvhNHMHkOSD";
 const PAY_FN = SB_URL_PAY();
 function SB_URL_PAY(){ return "https://cgupivfptuzqyadhqhiz.supabase.co/functions/v1/bright-task"; }
 const PAY_ITEMS = { snk_s: [990, "간식 한 줌 (10개 · 3일)"], snk_whale: [1500, "고래 한 마리 (7일)"], snk_m: [2900, "간식 한 봉지 (40개 · 7일)"], snk_l: [6900, "간식 트럭 (150개 · 14일)"],
@@ -3410,7 +3410,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v113";
+const APP_VER = "v114";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
