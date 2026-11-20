@@ -1,13 +1,13 @@
 {
   "id": "./",
-  "name": "MEOWCA! 암기냥이 — 딱 필요한 만큼만",
+  "name": "MEOWCA! 암기냥이 묘카 — 딱 필요한 만큼만",
   "short_name": "MEOWCA!",
   "description": "커닝할 필요 없이, 딱 필요한 만큼만 외우는 단어 앱. 나머진 냥이랑 놀기.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#69a795",
-  "theme_color": "#69a795",
+  "background_color": "#FDF4EA",
+  "theme_color": "#D94A7E",
   "lang": "ko",
   "icons": [
     {

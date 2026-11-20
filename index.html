@@ -31,7 +31,7 @@
   /* レイアウト: 上に要約 → タブ → 1枚ずつめくるカード。スマホ片手操作が前提
      世界観: 音楽ポスターのような紙・深緑・錆色・黄土。数字と小ラベルは等幅 */
   --bg:#F2ECE1; --surface:#FBF8F2; --ink:#1E1A16; --muted:#7A6E5F; --line:#E3D9C8;
-  --accent:#2F6F66; --accent-soft:#E2ECE7; --on-accent:#FBF8F2;
+  --accent:#D94A7E; --accent-soft:#FBE3EC; --on-accent:#FFFDF8;
   --rust:#B4532A; --ochre:#C9973F; --navy:#1B1F3B; --cream:#EADBB8; --pink:#F28AB2;
   --good:#2F6F4F; --good-soft:#E3EEE5; --bad:#B4532A; --bad-soft:#F6E4DA; --warn:#9A6A1E; --warn-soft:#F4E9D2;
   --display:"Zen Kaku Gothic New", "IBM Plex Sans JP", system-ui, sans-serif;
@@ -43,7 +43,7 @@ html[lang="ko"]{ --body:"IBM Plex Sans KR", "Apple SD Gothic Neo", system-ui, sa
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#14172B; --surface:#1C2038; --ink:#EFE7D8; --muted:#A39C8C; --line:#2E3352;
-    --accent:#8FC3B5; --accent-soft:#233A3C; --on-accent:#14172B; --cream:#3B3524;
+    --accent:#F28AB2; --accent-soft:#3A2330; --on-accent:#1E1A16; --cream:#3B3524;
     --rust:#E07A55; --ochre:#E2B45A;
     --good:#8FC3B5; --good-soft:#1E3533; --bad:#E07A55; --bad-soft:#3A2420; --warn:#E2B45A; --warn-soft:#352C18;
     color-scheme: dark;
@@ -51,7 +51,7 @@ html[lang="ko"]{ --body:"IBM Plex Sans KR", "Apple SD Gothic Neo", system-ui, sa
 }
 :root[data-theme="dark"]{
   --bg:#14172B; --surface:#1C2038; --ink:#EFE7D8; --muted:#A39C8C; --line:#2E3352;
-  --accent:#8FC3B5; --accent-soft:#233A3C; --on-accent:#14172B; --cream:#3B3524;
+  --accent:#F28AB2; --accent-soft:#3A2330; --on-accent:#1E1A16; --cream:#3B3524;
   --rust:#E07A55; --ochre:#E2B45A;
   --good:#8FC3B5; --good-soft:#1E3533; --bad:#E07A55; --bad-soft:#3A2420; --warn:#E2B45A; --warn-soft:#352C18;
   color-scheme: dark;
@@ -235,25 +235,25 @@ h2{font-size:1.2rem}
    カードは紙ではなく「霧」: 背景を少しだけ曇らせて文字を読みやすくする。 */
 :root{
   --bg:#f3f3f0; --surface:rgba(255,255,255,.84); --ink:#111413; --muted:rgba(17,20,19,.6); --line:rgba(17,20,19,.12);
-  --accent:#006945; --accent-soft:rgba(0,105,69,.13); --on-accent:#eaf4f0;
-  --rust:#006945; --ochre:#006945; --cream:rgba(234,244,240,.32); --navy:#06120f;
+  --accent:#D94A7E; --accent-soft:rgba(217,74,126,.13); --on-accent:#FFFDF8;
+  --rust:#D94A7E; --ochre:#D94A7E; --cream:rgba(234,244,240,.32); --navy:#06120f;
   --good:#006945; --good-soft:rgba(0,105,69,.14); --bad:#7d2a1f; --bad-soft:rgba(125,42,31,.12); --warn:#06120f; --warn-soft:rgba(6,18,15,.08);
   --display:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
   --body:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
   --mono:var(--body);
-  --rain1:#e4e4df; --rain2:#d8d8d2; --rain3:#ebebe7; --rainHi:#cfe5da;
+  --rain1:#e4e4df; --rain2:#d8d8d2; --rain3:#ebebe7; --rainHi:#f6d5e1;
 }
 html[lang="ko"]{ --display:"Apple SD Gothic Neo","Noto Sans KR","Hiragino Sans",sans-serif; --body:"Apple SD Gothic Neo","Noto Sans KR","Hiragino Sans",sans-serif; }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#121317; --surface:rgba(28,30,36,.86); --ink:#eceef2; --muted:rgba(236,238,242,.62); --line:rgba(236,238,242,.13);
-  --accent:#3fc28c; --accent-soft:rgba(63,194,140,.14); --on-accent:#06120f; --rust:#3fc28c; --cream:rgba(220,239,232,.1);
+  --accent:#F28AB2; --accent-soft:rgba(242,138,178,.14); --on-accent:#1E1A16; --rust:#F28AB2; --cream:rgba(220,239,232,.1);
   --good:#3fc28c; --good-soft:rgba(63,194,140,.14); --bad:#ef8a72; --bad-soft:rgba(239,138,114,.12); --warn:#dcefe8; --warn-soft:rgba(220,239,232,.07);
-  --rain1:#1c1e24; --rain2:#16171c; --rain3:#212329; --rainHi:#1d3a30; color-scheme:dark; } }
+  --rain1:#1c1e24; --rain2:#16171c; --rain3:#212329; --rainHi:#3a2330; color-scheme:dark; } }
 :root[data-theme="dark"]{
   --bg:#121317; --surface:rgba(28,30,36,.86); --ink:#eceef2; --muted:rgba(236,238,242,.62); --line:rgba(236,238,242,.13);
-  --accent:#3fc28c; --accent-soft:rgba(63,194,140,.14); --on-accent:#06120f; --rust:#3fc28c; --cream:rgba(220,239,232,.1);
+  --accent:#F28AB2; --accent-soft:rgba(242,138,178,.14); --on-accent:#1E1A16; --rust:#F28AB2; --cream:rgba(220,239,232,.1);
   --good:#3fc28c; --good-soft:rgba(63,194,140,.14); --bad:#ef8a72; --bad-soft:rgba(239,138,114,.12); --warn:#dcefe8; --warn-soft:rgba(220,239,232,.07);
-  --rain1:#1c1e24; --rain2:#16171c; --rain3:#212329; --rainHi:#1d3a30; color-scheme:dark; }
+  --rain1:#1c1e24; --rain2:#16171c; --rain3:#212329; --rainHi:#3a2330; color-scheme:dark; }
 html,body{background:var(--bg)}
 #rain{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none;display:block}
 .wrap{position:relative;z-index:1}
@@ -665,17 +665,17 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .s7-intro,.s7-learn,.s7-quiz{text-align:center;width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:8px} .s7-intro h2{margin:6px 0 0}
 .s7-prev{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;font-size:1.6rem;font-weight:700} .s7-prev span{min-width:44px;padding:4px 6px;border-radius:12px;background:rgba(127,127,127,.12)}
 .s7-big{font-size:6.5rem;line-height:1.1;font-weight:700} .s7-read{font-size:1.25rem;font-weight:800;color:var(--accent)}
-.s7-ear{font-size:3.2rem;width:120px;height:120px;border-radius:50%;border:0;background:rgba(61,196,140,.15);cursor:pointer}
+.s7-ear{font-size:3.2rem;width:120px;height:120px;border-radius:50%;border:0;background:rgba(217,74,126,.15);cursor:pointer}
 .s7-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-top:6px} .s7-opts .btn{min-height:58px;justify-content:center;font-size:1.05rem;font-weight:800} .s7-opts.ch .btn{font-size:2rem}
-.s7-opts .btn.ok{background:#3dc48c;color:#fff;border-color:#3dc48c} .s7-opts .btn.no{background:#f2708f;color:#fff;border-color:#f2708f} .s7-gift{display:flex;align-items:center;gap:4px;justify-content:center}
-.s7c{display:flex;align-items:center;gap:10px;border-radius:18px;padding:10px 12px;margin:0 0 10px;background:rgba(61,196,140,.1);border:1.5px solid rgba(61,196,140,.35)} .s7c-ch{font-size:1.5rem;font-weight:800;letter-spacing:.05em;white-space:nowrap}
+.s7-opts .btn.ok{background:var(--good);color:#fff;border-color:var(--good)} .s7-opts .btn.no{background:#f2708f;color:#fff;border-color:#f2708f} .s7-gift{display:flex;align-items:center;gap:4px;justify-content:center}
+.s7c{display:flex;align-items:center;gap:10px;border-radius:18px;padding:10px 12px;margin:0 0 10px;background:rgba(217,74,126,.1);border:1.5px solid rgba(217,74,126,.35)} .s7c-ch{font-size:1.5rem;font-weight:800;letter-spacing:.05em;white-space:nowrap}
 .s7c-tx{flex:1;min-width:0;display:flex;flex-direction:column} .s7c-tx small{font-size:.74rem;color:var(--muted)} .s7c-tx b small{font-weight:600;margin-left:2px} .s7c-x{border:0;background:transparent;color:var(--muted);font-size:1rem;cursor:pointer;padding:4px}
-.ord-ans{min-height:64px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;padding:10px;border-radius:14px;border:2px dashed rgba(127,127,127,.3);margin:10px 0} .ord-ans.ok{border-color:#3dc48c;border-style:solid} .ord-ans.no{border-color:#f2708f;border-style:solid}
+.ord-ans{min-height:64px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;padding:10px;border-radius:14px;border:2px dashed rgba(127,127,127,.3);margin:10px 0} .ord-ans.ok{border-color:var(--good);border-style:solid} .ord-ans.no{border-color:#f2708f;border-style:solid}
 .ord-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:50px} .ord-t{border:2px solid rgba(127,127,127,.3);background:var(--card-bg,rgba(255,255,255,.7));color:inherit;border-radius:12px;padding:8px 12px;font:inherit;font-size:1.1rem;font-weight:700;cursor:pointer}
 @media (prefers-color-scheme:dark){.ord-t{background:rgba(255,255,255,.06)}}
 .sup-ov{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
 .sup-sh{width:min(560px,100%);max-height:88vh;overflow:auto;background:#fff;color:#1d2b27;border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom))}
-.sup-t{position:relative;border:1.5px solid rgba(127,127,127,.25);border-radius:16px;padding:12px 14px;margin:0 0 10px} .sup-t.hot{border-color:var(--accent);background:rgba(61,196,140,.08)}
+.sup-t{position:relative;border:1.5px solid rgba(127,127,127,.25);border-radius:16px;padding:12px 14px;margin:0 0 10px} .sup-t.hot{border-color:var(--accent);background:rgba(217,74,126,.08)}
 .sup-hot{position:absolute;top:-9px;right:14px;background:var(--accent);color:#fff;font-size:.7rem;font-weight:800;border-radius:99px;padding:2px 9px}
 .sup-h{display:flex;align-items:center;gap:8px} .sup-e{font-size:1.5rem} .sup-h b{flex:1;font-size:1rem} .sup-p{font-weight:900;font-size:1.05rem}
 .sup-t ul{margin:6px 0 10px;padding-left:1.2em;font-size:.85rem;line-height:1.6} .sup-t .btn{width:100%;justify-content:center} .sup-t .row .btn{width:auto;text-decoration:none;white-space:nowrap} .sup-t .row a.btn{flex:1 1 auto} .sup-t .row button.btn{flex:0 0 auto}
@@ -700,7 +700,7 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .cos-dr{position:absolute;z-index:9;left:0;right:0;bottom:0;max-height:62%;overflow:auto;padding:12px 12px calc(12px + env(safe-area-inset-bottom));background:#fff;border-radius:22px 22px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.18);touch-action:pan-y;animation:cosUp .25s ease-out}
 @keyframes cosUp{from{transform:translateY(100%)}to{transform:none}}
 .cos-dr h3{margin:0 0 2px;font-size:1.05rem} .cos-dr .cos-note{margin:0 0 10px;font-size:.75rem;color:var(--muted)}
-@media (prefers-color-scheme:dark){.cos-dr{background:#1f2128} .sup-sh{background:#1f2128;color:#eef0ee} .sup-t.hot{background:rgba(61,196,140,.12)}}
+@media (prefers-color-scheme:dark){.cos-dr{background:#1f2128} .sup-sh{background:#1f2128;color:#eef0ee} .sup-t.hot{background:rgba(217,74,126,.12)}}
 .cos-tabs{display:flex;gap:6px;margin:0 0 8px} .cos-tabs button{border:1px solid var(--line,#ddd);background:transparent;color:inherit;border-radius:999px;padding:5px 12px;font:inherit;font-size:.8rem;cursor:pointer} .cos-tabs button[aria-pressed="true"]{background:#f2708f;border-color:#f2708f;color:#fff;font-weight:800}
 .cos-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x mandatory}
 .cos-it{flex:0 0 104px;scroll-snap-align:start;border:2px solid var(--line,#ddd);border-radius:16px;padding:8px;text-align:center;background:transparent;color:inherit;cursor:pointer;font:inherit}
@@ -838,8 +838,8 @@ body.focus .feedback .fb-answer{font-size:1.35rem}
 /* 로고: Anki site(작게) + MEOW!(크게) — O는 암기냥이, ! 점은 하찮은 낙서냥 */
 h1 .logo{display:flex;flex-direction:column;align-items:flex-start;gap:0;letter-spacing:0;line-height:1}
 .logo .logo-s{font-size:.66rem;font-weight:700;letter-spacing:.04em;color:var(--muted);text-transform:none;margin:0 0 2px 2px}
-.logo .logo-b{display:inline-flex;align-items:center;font-size:2.15rem;font-weight:900;letter-spacing:.01em;line-height:1;color:var(--ink);font-family:"Arial Rounded MT Bold","SF Pro Rounded",ui-rounded,var(--display)}
-.logo .lo2{width:.98em;height:.98em;margin:0 .02em;transform:translateY(-.07em);color:var(--ink)} .logo .lx{width:.5em;height:.92em;margin-left:-.02em;color:var(--ink);transform:translateY(-.02em)}
+.logo .logo-b{display:inline-flex;align-items:center;font-size:2.15rem;font-weight:900;letter-spacing:.01em;line-height:1;color:#FFFDF8;background:#1E1A16;border-radius:.34em;padding:.16em .36em .14em;font-family:"Arial Rounded MT Bold","SF Pro Rounded",ui-rounded,var(--display)}
+.logo .lo2{width:.98em;height:.98em;margin:0 .02em;transform:translateY(-.07em);color:#FFFDF8} .logo .lx{width:.5em;height:.92em;margin-left:-.02em;color:#FFFDF8;transform:translateY(-.02em)} .logo .lo2 path[fill="#fffdf8"], .logo .lo2 ellipse[fill="#fffdf8"], .logo .lx g{fill:#FFFDF8}
 .catbar{position:relative;height:44px;min-width:120px;margin:-7px 0} .catbar .cb-cv{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
 .poster .catbar{margin-top:14px}
 </style>
@@ -1059,7 +1059,7 @@ h1 .logo{display:flex;flex-direction:column;align-items:flex-start;gap:0;letter-
 /* ───────── 表示言語 (日本語が基本、韓国語はオプション) ───────── */
 const T = {
 ja: {
-  appName:"ミョウカ", logoTag:"暗記して、ミヤオウ！", learnLang:"学習する言語", summary:"今日のまとめ",
+  appName:"ミヤオウカ", logoTag:"暗記して、ミヤオウ！", learnLang:"学習する言語", summary:"今日のまとめ",
   statDue:"今日の復習", statNew:"今日の新出", statLearning:"学習中", statMastered:"卒業",
   tabToday:"今日", tabAdd:"単語を追加", tabList:"単語帳", tabHow:"設定",
   addOne:"ひとつずつ追加", amSlang:"いまどきスラング", amSlangSub:"毎日あたらしく収集", amSlangLong:"ニュースやブログで実際に使われている新語を毎日集めます。学習の合間に1日1〜2語ずつ混ぜます。", amSlangNone:"この言語のスラングはまだ集めていません。", amRec:"おすすめ", amPresetSub:"レベル別に数百語をまとめて", amPhotoSub:"教材を撮ると単語を取り出します", fWord:"単語", btnFind:"意味・例文を探す", btnFindAgain:"もう一度探す", finding:"探しています…",
@@ -1148,7 +1148,7 @@ ja: {
   seedData:[["aprovechar","(機会を)活かす","Hay que aprovechar el buen tiempo para salir.","いい天気を活かして出かけなきゃ。","aprovechar"],["madrugar","早起きする","Mañana tengo que madrugar para ir al aeropuerto.","明日は空港に行くので早起きしないと。","madrugar"],["quedar","待ち合わせる、残る","Quedamos a las ocho delante del cine.","8時に映画館の前で会おう。","Quedamos"],["el sueldo","給料","Con este sueldo no puedo pagar el alquiler.","この給料じゃ家賃が払えない。","sueldo"],["agotado","くたくたの、売り切れの","Después del trabajo llegué a casa agotado.","仕事のあと、くたくたで家に帰った。","agotado"]]
 },
 ko: {
-  appName:"암기냥이", logoTag:"딱 필요한 만큼만 외우자냥", learnLang:"학습 언어", summary:"오늘 요약",
+  appName:"암기냥이 묘카", logoTag:"딱 필요한 만큼만 외우자냥", learnLang:"학습 언어", summary:"오늘 요약",
   statDue:"오늘 복습", statNew:"오늘 새 단어", statLearning:"외우는 중", statMastered:"졸업",
   tabToday:"오늘", tabAdd:"단어 추가", tabList:"단어장", tabHow:"원리·설정",
   addOne:"하나씩 추가", amSlang:"요즘 슬랭", amSlangSub:"매일 새로 수집", amSlangLong:"뉴스·블로그에서 실제로 쓰이는 신조어를 매일 모아요. 공부할 단어 사이에 하루 1~2개씩 섞어 드려요.", amSlangNone:"이 언어는 아직 슬랭을 모으지 않아요.", amRec:"추천", amPresetSub:"JLPT·레벨별로 한 번에 수백 개", amPhotoSub:"교재·단어장을 찍으면 단어를 뽑아 줘요", fWord:"단어", btnFind:"뜻·예문 찾기", btnFindAgain:"다시 찾기", finding:"찾는 중…",
@@ -1748,7 +1748,7 @@ const NICK_BASE = { ko: ["냥이집사", "츄르도둑", "꾹꾹이장인", "말
   ja: ["ネコの下僕", "ちゅーる泥棒", "ふみふみ職人", "香箱座り中", "猫パンチ被害者", "ゴロゴロDJ", "猫吸い常習犯", "肉球マニア", "毛玉製造機", "おやつ係", "にゃんモナイト", "ねこ様の家来"] };
 function nickRand(){ const a = NICK_BASE[S.meta.settings.ui === "ja" ? "ja" : "ko"]; return a[Math.floor(Math.random() * a.length)] + (1 + Math.floor(Math.random() * 999)); }
 function nickState(){ const n = S.meta.nick || (S.meta.nick = {}); if(!n.key){ const b = new Uint8Array(18); crypto.getRandomValues(b); n.key = [...b].map(v => v.toString(16).padStart(2, "0")).join(""); } return n; }
-const nickOk = v => /^[0-9A-Za-z_가-힣ぁ-んァ-ヶー一-龥]{2,12}$/.test(v) && !/(admin|운영자|관리자|meowca|묘카|암기냥이|ミョウカ|시발|씨발|병신|fuck|shit)/i.test(v);
+const nickOk = v => /^[0-9A-Za-z_가-힣ぁ-んァ-ヶー一-龥]{2,12}$/.test(v) && !/(admin|운영자|관리자|meowca|묘카|암기냥이|ミヤオウカ|시발|씨발|병신|fuck|shit)/i.test(v);
 async function nickClaim(name){ const n = nickState();
   try{ const r = await fetch(SB_URL + "/rest/v1/rpc/nick_claim", { method: "POST", headers: { apikey: SB_KEY, "Content-Type": "application/json" }, body: JSON.stringify({ p_key: n.key, p_name: name }) });
     if(r.status === 404) return "nosrv"; if(!r.ok) return "err"; return await r.json(); }catch(e){ return "err"; } }
@@ -1815,11 +1815,11 @@ function supShopOpen(){ const ko = S.meta.settings.ui === "ko", m = S.meta.supWa
   ov.querySelectorAll("[data-sup]").forEach(b => b.onclick = () => { const t = SUP_TIERS.find(z => z.id === b.dataset.sup); m[t.id] = Date.now(); save(); track("sup_want", { id: t.id, price: ko ? t.w : t.y, cur: ko ? "KRW" : "JPY" });
     b.disabled = true; b.textContent = ko ? "찜했다냥 ♥" : "予約したニャ ♥"; toast(ko ? "고맙다냥… 결제가 열리면 제일 먼저 알려 주겠다" : "ありがとニャ…決済が開いたら真っ先に知らせる"); }); }
 function renderSupBox(){ const el = $("#supBox"); if(!el) return; const ko = S.meta.settings.ui === "ko";
-  el.innerHTML = `<div class="sup-row">${nm("st_love", 52)}<div><b>${ko ? "MEOWCA! 암기냥이는 무료예요" : "MEOWCA!（ミョウカ）は無料です"}</b><p class="small muted" style="margin:.2em 0 0">${ko ? "광고도 없어요. 마음에 들면 친구에게 알려 주세요." : "広告もありません。気に入ったら友達に教えてください。"}</p></div></div>
+  el.innerHTML = `<div class="sup-row">${nm("st_love", 52)}<div><b>${ko ? "MEOWCA! 암기냥이는 무료예요" : "MEOWCA!（ミヤオウカ）は無料です"}</b><p class="small muted" style="margin:.2em 0 0">${ko ? "광고도 없어요. 마음에 들면 친구에게 알려 주세요." : "広告もありません。気に入ったら友達に教えてください。"}</p></div></div>
     <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button><button class="btn primary" type="button" id="supShop">🎁 ${ko ? "후원 숍 · 보상 있음" : "応援ショップ・特典つき"}</button>${ko && DONATE_KO ? `<a class="btn" href="${DONATE_KO}" target="_blank" rel="noopener">🍖 카카오페이로 츄르 사주기</a>` : ""}</div>
     <p class="tiny muted" style="margin:0"><a href="privacy.html">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a> · <a href="terms.html">${ko ? "이용약관" : "利用規約"}</a></p><p class="tiny muted" id="bizLine" style="margin:0"></p>`;
   bizFill(); $("#supShop").onclick = supShopOpen;
-  $("#supShare").onclick = async () => { const url = "https://meowca.app/?ref=invite", text = ko ? "MEOWCA! 암기냥이 — 가성비로 딱 필요한 만큼만 외우고, 나머진 말랑 냥이 괴롭히기 🐾 무료" : "MEOWCA!（ミョウカ）— もう無理やり暗記しなくていい。最小限だけ覚えて、あとはネコと遊ぶ 🐾 無料";
+  $("#supShare").onclick = async () => { const url = "https://meowca.app/?ref=invite", text = ko ? "MEOWCA! 암기냥이 — 가성비로 딱 필요한 만큼만 외우고, 나머진 말랑 냥이 괴롭히기 🐾 무료" : "MEOWCA!（ミヤオウカ）— もう無理やり暗記しなくていい。最小限だけ覚えて、あとはネコと遊ぶ 🐾 無料";
     try{ if(navigator.share){ await navigator.share({ title: "MEOWCA!", text, url }); return; } await navigator.clipboard.writeText(text + " " + url); toast(ko ? "링크를 복사했어요" : "リンクをコピーしました"); }catch(e){} }; }
 function setAddPanel(k){   // 단어 추가: 스크롤 대신 메뉴에서 하나 고르기
   const v = $("#view-add"); if(!v) return; k = k || v.dataset.panel || "preset"; v.dataset.panel = k;
@@ -1976,7 +1976,7 @@ function secureDay(){ setTimeout(() => { if(!SES || !SES.queue || !SES.queue.len
 function shareCardImg(n){ return new Promise(res => { const W = 1080, H = 1350, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const g = cv.getContext("2d"), ko = S.meta.settings.ui === "ko", sk = streak();
   const bg = g.createRadialGradient(W * .7, H * .25, 50, W * .6, H * .4, H); bg.addColorStop(0, "#fffdf7"); bg.addColorStop(.6, "#f3efe6"); bg.addColorStop(1, "#e4ddcf"); g.fillStyle = bg; g.fillRect(0, 0, W, H);
   const font = (w, px) => `${w} ${px}px "Noto Sans KR","Noto Sans JP","Apple SD Gothic Neo","Hiragino Sans",sans-serif`;
-  g.fillStyle = "#3dc38f"; g.font = font(800, 44); g.fillText((ko ? "MEOWCA! 암기냥이 · " : "MEOWCA! ミョウカ · ") + langName(), 90, 150);
+  g.fillStyle = "#3dc38f"; g.font = font(800, 44); g.fillText((ko ? "MEOWCA! 암기냥이 · " : "MEOWCA! ミヤオウカ · ") + langName(), 90, 150);
   g.fillStyle = "#1d2b27"; g.font = font(900, 92); g.fillText(ko ? "오늘 딱" : "今日はたった", 90, 290);
   g.font = font(900, 230); const num = String(n), nw = g.measureText(num).width; g.fillStyle = "#ffd84d"; g.fillRect(84, 450, nw + 30, 70); g.fillStyle = "#1d2b27"; g.fillText(num, 96, 520);
   g.font = font(900, 92); g.fillText(ko ? "개만 외웠다냥" : "語だけおぼえたニャ", 120 + nw, 520);
@@ -2409,10 +2409,10 @@ function renderDeckFilter(){
 /* ════════ 今日のアート: 日付ごとに形と色が変わる ════════ */
 const ART_PALETTES = [
   { bg:"#1B1F3B", fg:"#EFE7D8", c:["#7FC4B8","#E9DCC3","#F2C14E","#3E4A7A"] },
-  { bg:"#E7D9BE", fg:"#1E1A16", c:["#B3753C","#2F6F66","#A0482F","#D9B98A"] },
-  { bg:"#2F6F66", fg:"#F4EEE3", c:["#E7D9BE","#F28A6B","#9CC9BE","#1F4D47"] },
-  { bg:"#8FC3B5", fg:"#1B1F3B", c:["#1B1F3B","#F2C14E","#E9DCC3","#B3753C"] },
-  { bg:"#E9DCC3", fg:"#1E1A16", c:["#2F6F66","#A0482F","#C9973F","#1B1F3B"] }
+  { bg:"#E7D9BE", fg:"#1E1A16", c:["#B3753C","#D94A7E","#A0482F","#D9B98A"] },
+  { bg:"#D94A7E", fg:"#FFFDF8", c:["#E7D9BE","#F28A6B","#F7C9D9","#7A2347"] },
+  { bg:"#F2B5CB", fg:"#1B1F3B", c:["#1B1F3B","#F2C14E","#E9DCC3","#B3753C"] },
+  { bg:"#E9DCC3", fg:"#1E1A16", c:["#D94A7E","#A0482F","#C9973F","#1B1F3B"] }
 ];
 function seededRand(seed){ let h = 1779033703 ^ seed.length; for(let i = 0; i < seed.length; i++){ h = Math.imul(h ^ seed.charCodeAt(i), 3432918353); h = h << 13 | h >>> 19; } return () => { h = Math.imul(h ^ h >>> 16, 2246822507); h = Math.imul(h ^ h >>> 13, 3266489909); return ((h ^= h >>> 16) >>> 0) / 4294967296; }; }
 
@@ -3045,7 +3045,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v98";
+const APP_VER = "v99";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
