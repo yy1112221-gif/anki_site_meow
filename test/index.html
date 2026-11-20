@@ -858,6 +858,13 @@ h1 .logo{display:flex;flex-direction:column;align-items:flex-start;gap:0;letter-
 .vk-input{caret-color:transparent} .mic-steps{margin:8px 0 14px 1.2em;line-height:1.7}
 body.focus .dock:has(.vk-host .vk) .aud{margin-top:6px} body.focus .dock:has(.vk-host .vk) .hf-big{min-height:42px;margin-top:4px;font-size:.95rem}
 @media (prefers-color-scheme:dark){.vk-k{background:#4a4d55;color:#f2f2f2;box-shadow:0 1px 0 rgba(0,0,0,.5)} .vk-fn{background:#33363d} .vk-ok{background:var(--accent);color:#1d1d1d}}
+.ic-cat{height:1.55em;width:auto;vertical-align:middle;display:inline-block;margin:-.25em 0} .aud-i .ic-cat{height:1.35em;margin:-.3em -.1em} .aud .aud-b{gap:3px} #gradBtn .ic-cat{height:1.7em}
+.mic-in .ic-cat{height:26px} .btn.mic .ic-cat{height:1.6em}
+.ansrow{display:flex} .ans-field{position:relative;flex:1;display:flex;min-width:0} .ans-field input{flex:1;min-width:0;padding-right:96px}
+.ans-ics{position:absolute;right:6px;top:50%;transform:translateY(-50%);display:flex;gap:4px;align-items:center}
+.ans-ic,.ans-ics .mic-in{width:42px;height:42px;min-width:0;padding:0;border-radius:50%;border:0;background:rgba(127,127,127,.12);font-size:1.15rem;display:flex;align-items:center;justify-content:center;box-shadow:none}
+.ans-ics .mic-in.on{background:var(--accent)}
+.ans-btns{display:flex;gap:8px} .ans-btns .btn{min-height:50px;justify-content:center;font-weight:800} .ans-btns #chk,.ans-btns #nx{flex:1.5} .ans-btns .idk-b{flex:1;white-space:nowrap;font-size:.92rem;padding:0 10px;background:transparent;border:2px solid var(--line);color:inherit}
 h1 .logo .testtag{font-size:.55rem;letter-spacing:.1em;background:var(--accent);color:#fff;border-radius:999px;padding:2px 7px;margin-left:6px}
 </style>
 </head>
@@ -1273,6 +1280,7 @@ const LADDER = [1, 7, 21, 60, 150];
 const NM_BASE = "cat/";
 const CAT_OF = { st_aha:"aha", st_gloom:"gloom", st_bulb:"bulb", cat_jpop:"ask", st_default:"ask", st_happy:"happy", st_surprised:"surprised", st_sleepy:"sleepy", st_love:"love", st_listening:"listen", listen_airpods:"listen", load_run:"think", load_done:"happy" };
 const NM_EXT = { cat_jpop:"gif", listen_airpods:"gif", load_run:"gif", load_done:"gif" };
+const icCat = (n, cls) => `<img class="ic-cat${cls ? " " + cls : ""}" src="${NM_BASE}ic/${n}.svg" alt="" decoding="async">`;
 const nm = (name, px) => `<img class="nm" src="${NM_BASE}melt/cat_${CAT_OF[name] || "ask"}.svg" width="${Math.round(px*1.36)}" height="${px}" alt="" decoding="async">`;
 const say = (name, text, big) => `<div class="say${big ? " big" : ""}">${nm(name, big ? 128 : 64)}<div class="bubble">${text}</div></div>`;
 const fbh = (name, text) => `<div class="fbh">${nm(name, 64)}<strong>${text}</strong></div>`;
@@ -1952,11 +1960,11 @@ const needSetup = () => !/move=/.test(location.hash) && !S.meta.setup && !Object
 function maybeSetup(){ if(!needSetup() || $("#setupBox")) return; const st = S.meta.settings, box = document.createElement("div"); box.id = "setupBox"; box.setAttribute("role", "dialog"); document.body.appendChild(box);
   let step = 0; const T0 = Date.now(); const Y = new Date().getFullYear(), years = []; for(let y = Y - 6; y >= Y - 80; y--) years.push(y);
   const draw = () => { const x = SETUP_T[st.ui] || SETUP_T.ko, tt = t(); let body = "";
-    if(step === 0) body = `<h3>${esc(x.ui)}</h3><div class="su-big">${[["ko", "🇰🇷 한국어"], ["ja", "🇯🇵 日本語"]].map(([k, l]) => `<button type="button" class="su-opt${st.ui === k ? " on" : ""}" data-ui="${k}">${l}</button>`).join("")}</div>`;
+    if(step === 0) body = `<h3>${esc(SETUP_T.ko.ui)}<br><small style="font-weight:600;opacity:.75">${esc(SETUP_T.ja.ui)}</small></h3><div class="su-big">${[["ko", "🇰🇷 한국어<small> 韓国語</small>"], ["ja", "🇯🇵 日本語<small> 일본어</small>"]].map(([k, l]) => `<button type="button" class="su-opt${st.ui === k ? " on" : ""}" data-ui="${k}">${l}</button>`).join("")}</div>`;
     if(step === 1) body = `<h3>${esc(x.learn)}</h3><div class="su-grid">${["ja", "ko", "en", "es"].filter(k => k !== st.ui).map(k => `<button type="button" class="su-opt${st.lang === k ? " on" : ""}" data-lg="${k}">${FLAGS[k] || ""} ${esc(tt.langNames[k])}</button>`).join("")}</div>`;
     if(step === 2) body = `<h3>${esc(x.born)}</h3><div class="su-wheel" id="suWheel">${years.map(y => `<div class="su-y" data-y="${y}">${y}</div>`).join("")}</div><div class="su-row"><button type="button" class="linkbtn" id="suSkip">${esc(x.skip)}</button><button type="button" class="btn primary big" id="suOk">${esc(x.ok)}</button></div>`;
     if(step === 3) body = `<h3>${esc(x.tut)}</h3><div class="su-big"><button type="button" class="su-opt ox" data-tut="1">⭕</button><button type="button" class="su-opt ox" data-tut="0">❌</button></div><p class="su-note">${esc(x.tutNote)}</p>`;
-    box.innerHTML = `<div class="su-in">${say("st_default", esc(x.hi))}<div class="su-dots">${[0, 1, 2, 3].map(i => `<i class="${i <= step ? "on" : ""}"></i>`).join("")}</div>${body}${step ? `<button type="button" class="linkbtn su-back" id="suBack">${esc(x.back)}</button>` : ""}</div>`;
+    box.innerHTML = `<div class="su-in">${say("st_default", step === 0 ? esc(SETUP_T.ko.hi) + "<br>" + esc(SETUP_T.ja.hi) : esc(x.hi))}<div class="su-dots">${[0, 1, 2, 3].map(i => `<i class="${i <= step ? "on" : ""}"></i>`).join("")}</div>${body}${step ? `<button type="button" class="linkbtn su-back" id="suBack">${esc(x.back)}</button>` : ""}</div>`;
     const bk = $("#suBack"); if(bk) bk.onclick = () => { step--; draw(); };
     box.querySelectorAll("[data-ui]").forEach(b => b.onclick = () => { if(st.lang === b.dataset.ui) st.lang = b.dataset.ui === "ko" ? "ja" : "ko"; setUiLang(b.dataset.ui); track("setup", { step: 0, v: st.ui, ms: Date.now() - T0 }); step = 1; draw(); });
     box.querySelectorAll("[data-lg]").forEach(b => b.onclick = () => { st.lang = b.dataset.lg; st.handsFree = false; save(); track("setup", { step: 1, v: st.lang, ms: Date.now() - T0 }); step = 2; draw(); });
@@ -2172,7 +2180,7 @@ function catBarDraw(el, t){ const cv = el.firstElementChild; if(!cv || !el.offse
   const my = 3.6, mw = 2.8, sq = .7 + chew * .5; g.strokeStyle = "#2a221c"; g.lineWidth = 1.2; g.lineCap = "round"; g.beginPath(); g.moveTo(-mw - 1.3, my - 1.2 * sq); g.quadraticCurveTo(-mw - .8, my + .6 * sq, -mw / 2, my + 1.6 * sq); g.quadraticCurveTo(-.3, my + 2.2 * sq, 0, my); g.quadraticCurveTo(.3, my + 2.2 * sq, mw / 2, my + 1.6 * sq); g.quadraticCurveTo(mw + .8, my + .6 * sq, mw + 1.3, my - 1.2 * sq); g.stroke();
   g.strokeStyle = "rgba(90,80,70,.55)"; g.lineWidth = .7; [-1, 1].forEach(d => { g.beginPath(); g.moveTo(d * 9, 1); g.lineTo(d * 17, -.5); g.moveTo(d * 9, 3); g.lineTo(d * 16.5, 4); g.stroke(); });
   g.restore(); }
-function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="row" style="flex-wrap:nowrap;gap:10px"><button class="btn sm ghost" type="button" id="homeBtn">‹ ${esc(t().home)}</button>${catBarHTML(pct)}<button class="btn sm ghost" type="button" id="gradBtn" title="${esc(t().gradTitle)}">🎓 ${esc(t().grad)}</button></div><div class="modehead"><span class="muted small">${t().modes[mode]}${c.slang ? `<span class="sl-tag">${esc(t().slTag)}</span>` : ""} · ${t().left(SES.queue.length)}</span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}" title="${esc(t().hfHelp)}">${hf ? t().hfOn : t().hfOff}</button>${levelChip(c)}</span></div>${say(MODE_NM[mode] || "st_default", esc(t().nmAsk[mode](langName())))}`; }
+function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="row" style="flex-wrap:nowrap;gap:10px"><button class="btn sm ghost" type="button" id="homeBtn">‹ ${esc(t().home)}</button>${catBarHTML(pct)}<button class="btn sm ghost" type="button" id="gradBtn" title="${esc(t().gradTitle)}">${icCat("grad")} ${esc(t().grad)}</button></div><div class="modehead"><span class="muted small">${t().modes[mode]}${c.slang ? `<span class="sl-tag">${esc(t().slTag)}</span>` : ""} · ${t().left(SES.queue.length)}</span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}" title="${esc(t().hfHelp)}">${hf ? t().hfOn : t().hfOff}</button>${levelChip(c)}</span></div>${say(MODE_NM[mode] || "st_default", esc(t().nmAsk[mode](langName())))}`; }
 document.addEventListener("click", e => {
   if(!e.target.closest("#gradBtn") || !SES) return;
   const it = SES.queue[0]; const c = it && S.cards[it.id]; if(!c) return;
@@ -2203,7 +2211,7 @@ document.addEventListener("click", e => {
 });
 const fastOn = () => { const st = S.meta.settings; return st.fast == null ? ["ko", "en"].includes(st.lang) : !!st.fast; };
 const listenBtn = (text, label) => { if(!canSpeak() || !text) return ""; const ja = S.meta.settings.ui === "ja", on = fastOn();
-  return `<div class="aud" role="group"><button type="button" class="aud-b" data-say="${esc(text)}"><span class="aud-i">🔊</span>${esc(label || t().listen)}</button><i class="aud-sep"></i><button type="button" class="aud-b" data-say="${esc(text)}" data-slow="1"><span class="aud-i">🐢</span>${esc(t().slow)}</button><i class="aud-sep"></i><span class="aud-fw${on ? " on" : ""}">${nm("st_bulb", 34)}<button type="button" class="aud-b aud-fast" data-fast="${esc(text)}" aria-pressed="${on}"><span class="aud-i">⚡</span>${ja ? "速め" : "빠르게"}<span class="aud-tg"><b></b></span></button></span></div>`; };
+  return `<div class="aud" role="group"><button type="button" class="aud-b" data-say="${esc(text)}"><span class="aud-i">${icCat("listen")}</span>${esc(label || t().listen)}</button><i class="aud-sep"></i><button type="button" class="aud-b" data-say="${esc(text)}" data-slow="1"><span class="aud-i">${icCat("slow")}</span>${esc(t().slow)}</button><i class="aud-sep"></i><span class="aud-fw${on ? " on" : ""}">${nm("st_bulb", 34)}<button type="button" class="aud-b aud-fast" data-fast="${esc(text)}" aria-pressed="${on}"><span class="aud-i">${icCat("fast")}</span>${ja ? "速め" : "빠르게"}<span class="aud-tg"><b></b></span></button></span></div>`; };
 function bindQcat(sy){ const img = sy.querySelector("img.nm"); if(!img) return; const base = img.src, faces = ["happy", "love", "surprised", "happy"];
   const keep = e => { e.preventDefault(); e.stopPropagation(); };
   img.addEventListener("touchstart", e => { keep(e); qTap(); }, { passive: false }); img.addEventListener("mousedown", e => { keep(e); qTap(); }); img.addEventListener("click", keep);
@@ -2296,7 +2304,7 @@ function vkAttach(input, lang){ if(!input || !vkOn()) return null; const box = i
     if(v === "@show"){ draw(); return; }
     if(v === "@sw"){ reset(); const ls = vkLayouts(lang); kind = ls[(ls.indexOf(kind) + 1) % ls.length]; pref[lang] = kind; save(); draw(); return; }
     if(v === "@sh"){ shift = !shift; draw(); return; }
-    if(v === "@ok"){ reset(); const f = input.form; const b = f && (f.querySelector("#chk") || f.querySelector("[type=submit]")); if(b) b.click(); else if(f) f.requestSubmit ? f.requestSubmit() : f.dispatchEvent(new Event("submit", { cancelable: true })); return; }
+    if(v === "@ok"){ reset(); const f = input.form; const b = box.querySelector("#chk, #nx") || (f && f.querySelector("[type=submit]")); if(b) b.click(); else if(f) f.requestSubmit ? f.requestSubmit() : f.dispatchEvent(new Event("submit", { cancelable: true })); return; }
     if(v === "@br"){ reset(); return; }
     if(v === "@bs"){
       if(kind === "kocj" && st.cj){ st.cj = st.cj.slice(0, -1); if(st.cj) setV(cjVal()); else { setV(st.snap); } return; }
@@ -2337,11 +2345,11 @@ function vkAttach(input, lang){ if(!input || !vkOn()) return null; const box = i
   host.addEventListener("click", e => e.preventDefault());
   input.addEventListener("focus", () => { if(input.readOnly) input.blur(); });
   input.addEventListener("click", () => { if(host.querySelector(".vk-open")) draw(); });
-  draw(); return host; }
+  host._press = press; draw(); return host; }
 
 /* 🎤 입력: 답 칸 옆 마이크. 말한 내용을 칸에 채워 줌(자동 제출은 안 함) */
 function micAttach(input, speechLang){ if(!SR || !input || !input.form) return; const x = t(), ko = S.meta.settings.ui !== "ja";
-  const b = document.createElement("button"); b.type = "button"; b.className = "btn mic-in"; b.textContent = "🎤"; b.setAttribute("aria-label", ko ? "말로 입력" : "音声入力");
+  const b = document.createElement("button"); b.type = "button"; b.className = "btn mic-in"; b.innerHTML = icCat("mic"); b.setAttribute("aria-label", ko ? "말로 입력" : "音声入力");
   input.after(b); let rec = null;
   b.addEventListener("pointerdown", e => e.preventDefault());
   b.onclick = () => { if(rec){ try{ rec.stop(); }catch(e){} return; }
@@ -2497,7 +2505,17 @@ function hfBig(){ if(!SES) return; const box = $("#sessionBox"), dock = box && b
   const b = document.createElement("button"); b.type = "button"; b.className = "btn hf-big" + (hf ? " on" : "");
   b.innerHTML = hf ? (ja ? "⌨️ 自分で入力する" : "⌨️ 직접 입력하기로 바꾸기") : (ja ? "👆 入力なしで解く <small>（タイピングなし・見て答える）</small>" : "👆 입력 없이 풀기 <small>(타자 없이 보고 맞히기)</small>");
   b.addEventListener("pointerdown", e => e.preventDefault()); dock.appendChild(b); }
-function renderItem(c, mode){ const r = renderItem0(c, mode); try{ hfBig(); }catch(_){} return r; }
+/* 답 영역 정리: [입력칸(안에 🎤·⌨️)] → [모르겠어요 | 이거 같아요] → 화면 자판 → 기타. 상태가 바뀌어도 자리가 안 움직이게 */
+function dockTidy(){ const box = $("#sessionBox"), dock = box && box.querySelector(".dock"); if(!dock || dock.dataset.tidy) return; const form = dock.querySelector("form.ansrow"), input = form && form.querySelector("#ans"); if(!input) return; dock.dataset.tidy = 1;
+  const ja = S.meta.settings.ui === "ja", fld = document.createElement("div"); fld.className = "ans-field"; input.before(fld); fld.appendChild(input);
+  const ic = document.createElement("div"); ic.className = "ans-ics"; fld.appendChild(ic);
+  const host = dock.querySelector(".vk-host"); if(host){ const kb = document.createElement("button"); kb.type = "button"; kb.className = "ans-ic kb-ic"; kb.innerHTML = "⌨️"; kb.setAttribute("aria-label", ja ? "キーボード" : "자판"); kb.addEventListener("pointerdown", e => e.preventDefault()); kb.onclick = () => host._press(host.querySelector(".vk-open") ? "@show" : "@hide"); ic.appendChild(kb); }
+  const mic = form.querySelector(".mic-in"); if(mic){ mic.classList.add("ans-ic"); ic.appendChild(mic); }
+  const chk = form.querySelector("#chk"), idk = dock.querySelector("#idk"); const row = document.createElement("div"); row.className = "ans-btns"; form.after(row);
+  if(idk){ idk.classList.remove("ghost"); idk.classList.add("idk-b"); row.appendChild(idk); } if(chk) row.appendChild(chk);
+  const upd = () => { if(idk) idk.classList.toggle("hidden", !!(SES && SES.state.answered)); }; upd();
+  new MutationObserver(upd).observe(dock, { subtree: true, childList: true, attributes: true, attributeFilter: ["id", "class"] }); }
+function renderItem(c, mode){ const r = renderItem0(c, mode); try{ dockTidy(); }catch(_){} try{ hfBig(); }catch(_){} return r; }
 function renderItem0(c, mode){
   if(c.script) return askScript(c, mode);
   if(mode === "order") return askOrder(c);
@@ -2552,7 +2570,7 @@ function renderItem0(c, mode){
       <p class="q-hint">${x.speakPrompt(esc(langName()), esc(c.word))}</p>
       <p class="sentence">${esc(c.exampleKo)}</p>
       <p class="q-hint" id="heard" aria-live="polite"></p><div id="fb"></div></div>
-      <div class="dock"><div class="row" id="acts">${SR ? `<button class="btn mic" type="button" id="micBtn">${x.micStart}</button>` : ""}<span class="grow"></span><button class="btn primary" type="button" id="rv">${x.reveal}</button></div></div>`;
+      <div class="dock"><div class="row" id="acts">${SR ? `<button class="btn mic" type="button" id="micBtn">${icCat("mic")} <span>${x.micStart}</span></button>` : ""}<span class="grow"></span><button class="btn primary" type="button" id="rv">${x.reveal}</button></div></div>`;
     let heard = "";
     if(SR){
       const mb = $("#micBtn"); let rec = null;
@@ -2561,9 +2579,9 @@ function renderItem0(c, mode){
         try{
           rec = new SR(); rec.lang = L().speech; rec.interimResults = true; rec.maxAlternatives = 1;
           rec.onresult = e => { heard = Array.from(e.results).map(r => r[0].transcript).join(" "); $("#heard").textContent = x.heard + heard; };
-          rec.onend = () => { rec = null; mb.classList.remove("on"); mb.textContent = x.micAgain; };
+          rec.onend = () => { rec = null; mb.classList.remove("on"); mb.innerHTML = icCat("mic") + " <span>" + x.micAgain + "</span>"; };
           rec.onerror = ev => { if(/not-allowed|service-not-allowed/.test(ev.error)) micHelp(); };
-          const r0 = rec; micReady().then(ok => { if(!ok || rec !== r0){ rec = null; return; } try{ r0.start(); mb.classList.add("on"); mb.textContent = x.micStop; }catch(e){ rec = null; toast(x.micNo); } });
+          const r0 = rec; micReady().then(ok => { if(!ok || rec !== r0){ rec = null; return; } try{ r0.start(); mb.classList.add("on"); mb.innerHTML = icCat("mic") + " <span>" + x.micStop + "</span>"; }catch(e){ rec = null; toast(x.micNo); } });
         }catch(e){ toast(x.micNo); }
       };
     }
@@ -3331,7 +3349,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v106";
+const APP_VER = "v107";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
