@@ -669,6 +669,9 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .s7-opts .btn.ok{background:#3dc48c;color:#fff;border-color:#3dc48c} .s7-opts .btn.no{background:#f2708f;color:#fff;border-color:#f2708f} .s7-gift{display:flex;align-items:center;gap:4px;justify-content:center}
 .s7c{display:flex;align-items:center;gap:10px;border-radius:18px;padding:10px 12px;margin:0 0 10px;background:rgba(61,196,140,.1);border:1.5px solid rgba(61,196,140,.35)} .s7c-ch{font-size:1.5rem;font-weight:800;letter-spacing:.05em;white-space:nowrap}
 .s7c-tx{flex:1;min-width:0;display:flex;flex-direction:column} .s7c-tx small{font-size:.74rem;color:var(--muted)} .s7c-tx b small{font-weight:600;margin-left:2px} .s7c-x{border:0;background:transparent;color:var(--muted);font-size:1rem;cursor:pointer;padding:4px}
+.ord-ans{min-height:64px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;padding:10px;border-radius:14px;border:2px dashed rgba(127,127,127,.3);margin:10px 0} .ord-ans.ok{border-color:#3dc48c;border-style:solid} .ord-ans.no{border-color:#f2708f;border-style:solid}
+.ord-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:50px} .ord-t{border:2px solid rgba(127,127,127,.3);background:var(--card-bg,rgba(255,255,255,.7));color:inherit;border-radius:12px;padding:8px 12px;font:inherit;font-size:1.1rem;font-weight:700;cursor:pointer}
+@media (prefers-color-scheme:dark){.ord-t{background:rgba(255,255,255,.06)}}
 .sup-ov{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
 .sup-sh{width:min(560px,100%);max-height:88vh;overflow:auto;background:#fff;color:#1d2b27;border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom))}
 .sup-t{position:relative;border:1.5px solid rgba(127,127,127,.25);border-radius:16px;padding:12px 14px;margin:0 0 10px} .sup-t.hot{border-color:var(--accent);background:rgba(61,196,140,.08)}
@@ -1094,7 +1097,7 @@ ja: {
   slTitle:"🔥 いまどきスラング", slDesc:"毎日ニュースから自動で集めた流行語を、実際に使われた文で覚えます。スラングばかりでは使えないので、ふだんの単語に少しだけ混ぜるのがおすすめ。", slAsk:"スラングはどれくらい混ぜますか？", slRec:"おすすめ", slMixN:n=>`1日${n}語だけ混ぜる`, slMixAll:"スラング中心", slChange:"変更", slWhy:"普段の単語と一緒に少しずつ覚えると、実際の会話で自然に使えます。", slDone:(n,m)=>`スラング${n}語を準備しました（${m ? `1日${m}語` : "中心"}）`, slTag:"スラング",
   obHi:"…来たか。まず三つだけ決めろ", obLang:"何語を覚える？", obLevel:"今の実力は？（わからなければテスト）", obDiag:"1分でレベル診断", obGo:"準備ができたら「学習を始める」を押せ", obOwn:"自分の単語を入れたいなら", srsOne:"忘れそうになる直前に、もう一度出します（間隔反復）。",
   meanPh:"意味を日本語で", meanSame:"合ってた（意味は同じ）", meanDiff:"違った", meanMeh:"答えはこれだ。…貴様の答え、意味は同じか？",
-  modes:{ meaning:"意味を答える", scriptNew:"文字を覚える", script:"文字を読む", study:"まず当ててみる", cloze:"穴埋め", recall:"意味から書く", write:"作文", speak:"スピーキング" },
+  modes:{ meaning:"意味を答える", scriptNew:"文字を覚える", script:"文字を読む", study:"まず当ててみる", cloze:"穴埋め", order:"語順ならべ", recall:"意味から書く", write:"作文", speak:"スピーキング" },
   left:n=>`残り${n}枚`, listen:"発音を聞く", listenEx:"例文を聞く", listenAgain:"もう一度聞く", listenMine:"自分の文を聞く",
   noExample:"例文がありません。単語帳で追加すると穴埋め問題が出ます。", gotIt:"覚えた、次へ",
   setSign:"看板ねこが通る間隔（ペット画面）", signOff:"出さない", sign30:"30秒ごと", sign60:"1分ごと", sign180:"3分ごと", sign600:"10分ごと",
@@ -1115,7 +1118,7 @@ ja: {
   qTitle:(d,n)=>`読み取り ${d}/${n}枚`, qClear:"写真をすべて消す", qDone:"ぜんぶ読み取りました", camDone:"完了", camHint:"画面のどこをタップしても撮れます。どんどん撮ってOK（読み取りは裏で進みます）", textFold:"読み取った文を見る・直す", qEmpty:"文字なし", qErr:"失敗",
   ocrLoading:"文字認識エンジンを準備中…（初回だけ数秒かかります）", ocrReading:n=>`読み取り中… ${n}%`, ocrFail:"読み取れませんでした。明るい場所で、文字が大きく写るように撮ってみてください。", ocrText:"読み取った文（間違いは直せます）", ocrReparse:"この文から単語を拾い直す", ocrPickWords:"学習優先度の高い順。★はおすすめ（選択ずみ・タップで外せます）", ocrScoring:"単語の優先度を計算中…", ocrLvUnknown:"珍", ocrWhy:w=>`優先度 ${Math.round((w.score||0)*100)}${w.rank ? ` · 頻度 ${w.rank}位` : ""} · 抜くと意味が変わる度 ${Math.round((w.abl||0)*100)} · つながり ${Math.round((w.tr||0)*100)}${w.tf > 1 ? ` · 写真に${w.tf}回` : ""}`, ocrUseLine:"写真の文を例文にする", ocrAdd:n=>`選んだ${n}語を追加`, ocrInDeck:"登録済み", ocrNone:"単語が見つかりませんでした。",
   impTitle:"ほかの言語から取り込む", impHelp:"別の言語で覚えている単語を、この言語に訳して追加します。同じ意味の単語どうしがつながり、カードに並んで表示されます。", impFrom:"取り込み元", impAll:"すべて選択", impGo:"選んだ単語を取り込む", impNoSource:"ほかの言語の単語がまだありません。", impWorking:(i,n)=>`訳しています（${i}/${n}）…`, impDone:(n,f)=>`${n}語を取り込みました。${f ? "訳せなかった単語は単語帳で直せます。" : ""}`, impPickSome:"取り込む単語を選んでください。",
-  nmAsk:{ meaning:l=>"この単語…意味は何だ？ 己の言葉で答えろ", scriptNew:l=>"新たなる文字だ…形と音、共に刻め", script:l=>"この文字…読んでみろ", study:l=>"初めて見る単語か…勘でいい、書け。迷いは敗北だ", cloze:l=>"空白…埋めてみせろ", recall:l=>`この意味…${l}で言ってみろ`, write:l=>"この単語で一文…創ってみせろ", speak:l=>"声に出せ。…聞いているぞ" },
+  nmAsk:{ meaning:l=>"この単語…意味は何だ？ 己の言葉で答えろ", scriptNew:l=>"新たなる文字だ…形と音、共に刻め", script:l=>"この文字…読んでみろ", study:l=>"初めて見る単語か…勘でいい、書け。迷いは敗北だ", cloze:l=>"空白…埋めてみせろ", order:l=>"バラバラだ…正しく並べてみせろ", recall:l=>`この意味…${l}で言ってみろ`, write:l=>"この単語で一文…創ってみせろ", speak:l=>"声に出せ。…聞いているぞ" },
   nmToday:(a,b)=>`今日は復習${a}枚、新しい単語${b}つ。…覚悟はいいか？`, nmEmpty:"…まだ単語がないようだな。覚えたい単語を持ってこい", nmNone:"今日やることはない。我は…少し目を閉じる", nmDone:"今日もよく耐えた…また明日来るがいい", nmResume:"戻ったか。さっきの続きから始めろ",
   nmFinishAll:"全て一発で…だと？ …認めよう。貴様は強い", nmFinishSome:"ご苦労だった。間違えた奴らは…明日また始末する", resumeTitle:"途中から再開できます", resumeBody:(n,d)=>`前回の続きです。終わった問題 ${d}・残り ${n}問。答えた分はすべて保存されています。`, resume:"続きから", restart:"最初からやり直す", guessLead:"初めての単語です。答えを見る前に、まず推測して書いてみましょう。", copyPrompt:"正解を1回書いてから次へ進みましょう。", copyPh:"正解を書き写す", copyAgain:"もう一度だ。正解をそのまま書け", copyOk:"よし。書けたな", skipCopy:"入力せずに次へ", hfOn:"入力なし ON", hfOff:"入力なし", hfHelp:"歩きながら・電車で：書かずに、答えを聞いて自己採点", remembered:"覚えてた", forgot:"忘れてた", setHf:"入力なしモード（答えを聞いて自己採点）", slow:"ゆっくり", popDetail:"詳細を見る", popAdd:"単語帳に追加", popInDeck:"単語帳にあり", popNoMeaning:"意味を取得できませんでした", popDict:"辞書で調べる", popExamples:"例文", popLoading:"例文を探しています…", popNoEx:"ほかの例文は見つかりませんでした。", popAdded:w=>`「${w}」を単語帳に追加しました。`, popClose:"閉じる", popHint:"文中の単語をタップすると意味と発音が見られます。", voice:"読み上げの声", voiceAuto:"自動（いちばん自然な声）", rate:"読み上げの速さ", preview:"試しに聞く", voiceTip:"iPhoneは「設定 › アクセシビリティ › 読み上げコンテンツ › 声」で「拡張」や「プレミアム」の声をダウンロードすると、ずっと聞き取りやすくなります。ネイティブ録音がある例文は録音を優先して再生します。", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"空欄に入る単語はどれ？ 初めてでもOK、まず推測してみましょう。", guessMCm:(m,l)=>`「${m}」は${l}でどれ？ まず推測してみましょう。`, guessType:"推測して入力（間違えて大丈夫）", guessBtn:"これだと思う", guessRight:"当てたか…やるな", guessWrong:"答えはこれだ。先に悩んだ分、すでに深く刻まれている", guessSkip:"見当もつかない",
   hint:(m,c)=>`ヒント：${m} · 「${c}」で始まる`, recallQ:l=>`この意味の${l}の単語は？`, noMeaning:"（意味なし）",
@@ -1183,7 +1186,7 @@ ko: {
   slTitle:"🔥 요즘 슬랭", slDesc:"뉴스에서 매일 자동으로 모은 유행어를, 실제로 쓰인 문장으로 배워요. 슬랭만 배우면 쓸 데가 없으니, 평소 단어에 조금씩 섞는 걸 추천해요.", slAsk:"슬랭은 얼마나 섞을까요?", slRec:"추천", slMixN:n=>`하루 ${n}개만 섞기`, slMixAll:"슬랭 위주", slChange:"바꾸기", slWhy:"평소 단어랑 같이 한두 개씩 배워야 실제 대화에서 자연스럽게 써먹어요.", slDone:(n,m)=>`슬랭 ${n}개 준비 완료 (${m ? `하루 ${m}개씩` : "슬랭 위주"})`, slTag:"슬랭",
   obHi:"…왔군. 딱 세 가지만 정해라", obLang:"무슨 언어를 외울 건가?", obLevel:"지금 실력은? (모르겠으면 테스트)", obDiag:"1분 레벨 테스트", obGo:"준비되면 ‘학습 시작’을 눌러라", obOwn:"내 단어를 직접 넣고 싶으면", srsOne:"잊어버리기 직전에 다시 물어보는 방식(간격 반복)으로 복습해요.",
   meanPh:"뜻을 한국어로", meanSame:"맞았어 (뜻이 같아)", meanDiff:"틀렸어", meanMeh:"정답은 이것. …네 답, 뜻이 같나?",
-  modes:{ meaning:"뜻 말하기", scriptNew:"글자 외우기", script:"글자 읽기", study:"먼저 맞혀보기", cloze:"빈칸 채우기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
+  modes:{ meaning:"뜻 말하기", scriptNew:"글자 외우기", script:"글자 읽기", study:"먼저 맞혀보기", cloze:"빈칸 채우기", order:"어순 맞추기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
   left:n=>`남은 ${n}장`, listen:"발음 듣기", listenEx:"예문 듣기", listenAgain:"다시 듣기", listenMine:"내 문장 듣기",
   noExample:"예문이 없어요. 단어장에서 넣으면 빈칸 문제가 생깁니다.", gotIt:"외웠어요, 다음",
   setSign:"팻말 냥이 지나가는 간격 (펫 화면)", signOff:"안 나옴", sign30:"30초마다", sign60:"1분마다", sign180:"3분마다", sign600:"10분마다",
@@ -1204,7 +1207,7 @@ ko: {
   qTitle:(d,n)=>`읽는 중 ${d}/${n}장`, qClear:"사진 모두 지우기", qDone:"모두 읽었어요", camDone:"완료", camHint:"화면 아무 데나 탭하면 찍혀요. 마구 찍어도 OK (읽기는 뒤에서 진행돼요)", textFold:"읽은 문장 보기·고치기", qEmpty:"글자 없음", qErr:"실패",
   ocrLoading:"글자 인식 엔진 준비 중… (처음 한 번만 몇 초 걸려요)", ocrReading:n=>`읽는 중… ${n}%`, ocrFail:"글자를 읽지 못했어요. 밝은 곳에서 글자가 크게 나오게 찍어 보세요.", ocrText:"읽은 문장 (틀린 곳은 고칠 수 있어요)", ocrReparse:"이 문장에서 단어 다시 뽑기", ocrPickWords:"학습 우선순위 높은 순. ★는 추천(미리 선택됨 · 눌러서 빼기)", ocrScoring:"단어 우선순위 계산 중…", ocrLvUnknown:"희귀", ocrWhy:w=>`우선순위 ${Math.round((w.score||0)*100)}${w.rank ? ` · 빈도 ${w.rank}위` : ""} · 빼면 의미가 바뀌는 정도 ${Math.round((w.abl||0)*100)} · 연결성 ${Math.round((w.tr||0)*100)}${w.tf > 1 ? ` · 사진에 ${w.tf}번` : ""}`, ocrUseLine:"사진 속 문장을 예문으로 쓰기", ocrAdd:n=>`고른 ${n}개 추가`, ocrInDeck:"이미 있음", ocrNone:"단어를 찾지 못했어요.",
   impTitle:"다른 언어에서 가져오기", impHelp:"다른 언어로 외우고 있는 단어를 이 언어로 옮겨 추가해요. 같은 뜻의 단어끼리 연결돼서 카드에 함께 보여요.", impFrom:"가져올 언어", impAll:"전체 선택", impGo:"고른 단어 가져오기", impNoSource:"다른 언어 단어가 아직 없어요.", impWorking:(i,n)=>`번역 중 (${i}/${n})…`, impDone:(n,f)=>`${n}개 가져왔어요.${f ? " 번역 못 한 단어는 단어장에서 고칠 수 있어요." : ""}`, impPickSome:"가져올 단어를 골라 주세요.",
-  nmAsk:{ meaning:l=>"이 단어… 무슨 뜻이지? 네 말로 답해라", scriptNew:l=>"…새로운 글자다. 형태와 소리, 함께 새겨라", script:l=>"이 글자… 읽어 봐라", study:l=>"처음 보는 단어군. 감으로라도 써라. 망설임은 패배다", cloze:l=>"빈칸… 채워 봐라", recall:l=>`이 뜻을… ${l}로 말해 봐라`, write:l=>"이 단어로 문장 하나. 만들어라", speak:l=>"소리 내어 말해라. …듣고 있다" },
+  nmAsk:{ meaning:l=>"이 단어… 무슨 뜻이지? 네 말로 답해라", scriptNew:l=>"…새로운 글자다. 형태와 소리, 함께 새겨라", script:l=>"이 글자… 읽어 봐라", study:l=>"처음 보는 단어군. 감으로라도 써라. 망설임은 패배다", cloze:l=>"빈칸… 채워 봐라", order:l=>"흩어졌다… 제대로 줄 세워 봐라", recall:l=>`이 뜻을… ${l}로 말해 봐라`, write:l=>"이 단어로 문장 하나. 만들어라", speak:l=>"소리 내어 말해라. …듣고 있다" },
   nmToday:(a,b)=>`오늘은 복습 ${a}장, 새 단어 ${b}개. …각오는 됐나?`, nmEmpty:"…아직 단어가 없군. 외울 단어를 가져와라", nmNone:"오늘 할 일은 없다. 나는… 잠시 눈을 감겠다", nmDone:"오늘도 버텼군. …내일 다시 오너라", nmResume:"돌아왔군. 아까 멈춘 곳에서 이어가라",
   nmFinishAll:"전부 단번에…? …인정하지. 넌 강하다", nmFinishSome:"수고했다. 틀린 놈들은… 내일 다시 처리한다", resumeTitle:"이어서 할 수 있어요", resumeBody:(n,d)=>`지난번에 하던 거예요. 끝낸 문제 ${d}개 · 남은 문제 ${n}개. 답한 건 모두 저장돼 있어요.`, resume:"이어서 하기", restart:"처음부터 다시", guessLead:"처음 보는 단어예요. 답을 보기 전에 먼저 짐작해서 써보세요.", copyPrompt:"정답을 한 번 따라 쓰고 넘어가요.", copyPh:"정답 따라 쓰기", copyAgain:"다시. 정답을 그대로 써라", copyOk:"좋다. 써냈군", skipCopy:"안 쓰고 넘어가기", hfOn:"입력 없이 ON", hfOff:"입력 없이", hfHelp:"걸으면서·지하철에서: 쓰지 않고 정답 듣고 직접 채점", remembered:"기억났어요", forgot:"까먹었어요", setHf:"입력 없이 모드 (정답 듣고 직접 채점)", slow:"느리게", popDetail:"상세 보기", popAdd:"단어장에 추가", popInDeck:"단어장에 있음", popNoMeaning:"뜻을 가져오지 못했어요", popDict:"사전에서 찾기", popExamples:"예문", popLoading:"예문 찾는 중…", popNoEx:"다른 예문을 찾지 못했어요.", popAdded:w=>`"${w}"을(를) 단어장에 추가했어요.`, popClose:"닫기", popHint:"문장 속 단어를 누르면 뜻과 발음을 볼 수 있어요.", voice:"읽어주는 목소리", voiceAuto:"자동 (가장 자연스러운 목소리)", rate:"읽기 속도", preview:"들어보기", voiceTip:"아이폰은 설정 › 손쉬운 사용 › 콘텐츠 말하기 › 음성에서 「향상된」·「프리미엄」 음성을 내려받으면 훨씬 잘 들립니다. 원어민 녹음이 있는 예문은 녹음을 먼저 재생합니다.", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"빈칸에 들어갈 단어는? 처음이어도 괜찮아요, 먼저 짐작해 보세요.", guessMCm:(m,l)=>`"${m}"은(는) ${l}로 뭘까요? 먼저 짐작해 보세요.`, guessType:"짐작해서 입력 (틀려도 괜찮아요)", guessBtn:"이거 같아요", guessRight:"맞혔군. …제법이다", guessWrong:"정답은 이것. 먼저 고민한 만큼, 이미 더 깊이 새겨졌다", guessSkip:"전혀 모르겠어요",
   hint:(m,c)=>`힌트: ${m} · ${c}로 시작`, recallQ:l=>`이 뜻의 ${l} 단어는?`, noMeaning:"(뜻 없음)",
@@ -1593,8 +1596,8 @@ function reviewModes(c){
   const st = S.meta.settings, hasCloze = !!clozeParts(c), r = (c.reps || 0) + (c.level || 0);
   if(isLeech(c)) return [r % 2 ? "meaning" : (hasCloze ? "cloze" : "recall"), "recall"];   // 자꾸 틀리는 단어: 양방향 둘 다
   if(c.level <= 1) return [r % 2 ? (hasCloze ? "cloze" : "recall") : "meaning"];
-  if(c.level === 2) return [r % 3 === 0 ? "meaning" : "recall"];
-  const pool = ["meaning", "recall"]; if(hasCloze) pool.push("cloze", "recall");
+  if(c.level === 2) return [r % 3 === 0 ? "meaning" : (r % 3 === 1 && canOrder(c)) ? "order" : "recall"];
+  const pool = ["meaning", "recall"]; if(hasCloze) pool.push("cloze", "recall"); if(canOrder(c)) pool.push("order");
   if(st.writing) pool.push("write");
   if(st.speaking && c.example && c.exampleKo) pool.push("speak");
   return [pool[r % pool.length]];
@@ -2187,8 +2190,31 @@ function askHandsFree(c, mode, promptHTML, target, isGuess){
     const no = $("#sNo"); if(no) no.onclick = () => settleItem(false);
   };
 }
+/* 어순 맞추기: 예문을 조각으로 나눠 섞고, 번역을 보고 순서대로 탭해서 문장 완성 (일본어는 단어 분리 후 조사를 앞 조각에 붙임) */
+function orderTiles(text, lang){ text = String(text || "").trim(); if(!text) return null; let toks = [];
+  if(lang === "ja" || lang === "zh"){ try{ const sg = new Intl.Segmenter(lang, { granularity: "word" }); toks = [...sg.segment(text)].map(x => x.segment); }catch(e){ return null; }
+    const out = []; toks.forEach(tk => { const small = /^(は|が|を|に|へ|と|で|も|の|や|か|ね|よ|な|ば|から|まで|より|って|です|ます|ました|でした|た|て|だ|ない|たい)$/.test(tk) || /^[。、！？!?「」『』…・\s]+$/.test(tk); const prevK = out.length && /[一-龥々]$/.test(out[out.length - 1]) && /^[ぁ-ゖ]+/.test(tk), glue = /^[っゃゅょぁぃぅぇぉんー]/.test(tk); if(out.length && (small || prevK || glue)) out[out.length - 1] += tk; else out.push(tk); }); toks = out.map(x => x.trim()).filter(Boolean);
+    while(toks.length > 7){ let k = 0, best = 1e9; for(let i = 0; i < toks.length - 1; i++){ const l = toks[i].length + toks[i + 1].length; if(l < best){ best = l; k = i; } } toks.splice(k, 2, toks[k] + toks[k + 1]); } }
+  else toks = text.split(/\s+/).filter(Boolean);
+  if(toks.length < 3 || toks.length > 8) return null; return toks; }
+function canOrder(c){ return !!(c.example && c.exampleKo && orderTiles(c.example, c.lang)); }
+function askOrder(c){ const box = $("#sessionBox"), x = t(), ko = S.meta.settings.ui === "ko", toks = orderTiles(c.example, c.lang); if(!toks) return renderItem(c, "recall");
+  SES.state = { answered: false }; const sep = (c.lang === "ja" || c.lang === "zh") ? "" : " ";
+  let pool = toks.map((w, i) => ({ w, i })); for(let k = 0; k < 6; k++){ pool.sort(() => Math.random() - .5); if(pool.some((p2, j) => p2.i !== j)) break; } const picked = [];
+  box.innerHTML = head(c, "order") + `<div class="stage"><p class="q-sub" style="font-size:1.05rem">${esc(c.exampleKo)}</p><div class="ord-ans" id="ordA" lang="${esc(c.lang)}"></div><div class="ord-pool" id="ordP" lang="${esc(c.lang)}"></div><div id="fb"></div></div>
+    <div class="dock"><div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${x.idk}</button><span class="grow"></span><button class="btn primary" type="button" id="chk" disabled>${x.check}</button></div></div>`;
+  const draw = () => { $("#ordA").innerHTML = picked.map((p2, j) => `<button type="button" class="ord-t" data-a="${j}">${esc(p2.w)}</button>`).join("") || `<span class="muted small">${ko ? "아래 조각을 순서대로 눌러 봐" : "下のピースを順番にタップ"}</span>`;
+    $("#ordP").innerHTML = pool.map((p2, j) => `<button type="button" class="ord-t" data-p="${j}">${esc(p2.w)}</button>`).join(""); $("#chk").disabled = !!pool.length;
+    if(SES.state.answered) return; box.querySelectorAll("[data-p]").forEach(b => b.onclick = () => { picked.push(pool.splice(+b.dataset.p, 1)[0]); draw(); if(!pool.length) check(); });
+    box.querySelectorAll("[data-a]").forEach(b => b.onclick = () => { pool.push(picked.splice(+b.dataset.a, 1)[0]); draw(); }); };
+  const done = ok => { if(SES.state.answered) return; SES.state.answered = true; $("#ordA").classList.add(ok ? "ok" : "no"); pool.length = 0; draw();
+    $("#fb").innerHTML = `<div class="feedback ${ok ? "ok" : "no"}"><strong>${esc(ok ? (ko ? "완벽하다냥" : "完璧だニャ") : (ko ? "정답은 이거다" : "正解はこれだ"))}</strong><span class="fb-answer" lang="${esc(c.lang)}">${esc(c.example)}</span><span class="fb-mean">${esc(c.word)} · ${esc(c.meaning || "")}</span></div>`;
+    try{ speak(c.example); }catch(_){} track("order", { ok }); const nb = $("#chk"); nb.disabled = false; nb.textContent = x.next; nb.onclick = () => settleItem(ok); $("#idk").remove(); };
+  const check = () => done(picked.map(p2 => p2.w).join(sep).replace(/\s+/g, "") === toks.join(sep).replace(/\s+/g, ""));
+  $("#chk").onclick = check; $("#idk").onclick = () => done(false); draw(); }
 function renderItem(c, mode){
   if(c.script) return askScript(c, mode);
+  if(mode === "order") return askOrder(c);
   const box = $("#sessionBox"), x = t();
   const hf = !!S.meta.settings.handsFree;
   if(hf && mode === "write") mode = (c.example && c.exampleKo) ? "speak" : "recall";
@@ -3019,7 +3045,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v96";
+const APP_VER = "v97";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -4803,7 +4829,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { slangLine: () => slangLine(),  S: () => S, save, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { slangLine: () => slangLine(), askOrder: c => askOrder(c),  S: () => S, save, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 load(); slimPresets(); setTimeout(fixPresetMeanings, 1500); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
