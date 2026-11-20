@@ -913,6 +913,11 @@ body.focus .dock:has(.vk-host) .ans-btns .btn{min-height:calc(var(--vkh,44px) + 
 .brag-capr{display:flex;align-items:center;gap:8px;margin:0 0 10px;padding:6px 6px 6px 12px;border-radius:14px;background:rgba(127,127,127,.12)} .brag-capr span{flex:1;min-width:0;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-user-select:text;user-select:text}
 .brag-capr button{flex:0 0 auto;border:0;border-radius:999px;padding:8px 12px;font:inherit;font-weight:800;font-size:.85rem;background:var(--accent);color:#fff} .brag-capr button.ok{background:#3aa66b}
 .brag-how{margin:-4px 0 10px;font-size:.72rem;color:var(--muted);text-align:center}
+.dpg{display:flex;flex-direction:column;gap:10px} .dpg-h{display:flex;justify-content:space-between;align-items:center} .dpg-n{font-weight:900;color:var(--accent)}
+.dpg-bar{height:6px;border-radius:99px;background:rgba(127,127,127,.18);overflow:hidden} .dpg-bar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .25s}
+.dpg-w{display:grid;grid-template-columns:1fr;gap:8px} .dpg-w .chiptog{min-height:48px;font-size:1.1rem;justify-content:center;width:100%}
+.dpg-a{display:grid;grid-template-columns:1fr 1fr;gap:8px} .dpg-a .btn{min-height:50px;justify-content:center;font-weight:800;white-space:nowrap;font-size:.95rem} .dpg-a .btn.ghost{box-shadow:inset 0 0 0 2px var(--line)} .dpg-a .dim{opacity:.45}
+.dpg-f{display:flex;justify-content:space-between;font-size:.85rem}
 </style>
 </head>
 <body>
@@ -3415,7 +3420,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v119";
+const APP_VER = "v120";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5027,19 +5032,38 @@ async function prefetchLazy(ids){ for(const id of ids){ const c = S.cards[id]; i
 /* レベル診断: 各レベルから数語＋存在しない単語。わかる率を「うそ○」で補正（yes/no 語彙テスト） */
 async function startDiag(lang, host){
   const x = t(), idx = await presetIndex(), dg = idx.diag[lang], set = idx.sets[lang]; if(!dg) return;
-  const per = set.levels.length >= 5 ? 8 : 12, pick = (a, n) => a.slice().sort(() => Math.random() - .5).slice(0, n);
-  const items = [];
-  set.levels.forEach(lv => pick(dg.levels[lv.id], per).forEach(w => items.push({ w: Array.isArray(w) ? w[0] : w, r: Array.isArray(w) ? w[1] : "", lv: lv.id })));
-  pick(dg.fake, 8).forEach(w => items.push({ w: Array.isArray(w) ? w[0] : w, r: "", fake: 1 }));
-  items.sort(() => Math.random() - .5);
+  // 적응형: 한 페이지 = 지금 레벨 단어 4 + 없는 단어 1. 잘 알면 한 단계 위, 모르면 한 단계 아래로 (10페이지)
+  const shuf = a => a.slice().sort(() => Math.random() - .5), pools = {}, fakes = shuf(dg.fake), L = set.levels.map(l => l.id);
+  set.levels.forEach(lv => pools[lv.id] = shuf(dg.levels[lv.id] || []));
+  const items = [], PAGES = 10; let cur = Math.min(1, L.length - 1);
+  const mk = w => ({ w: Array.isArray(w) ? w[0] : w, r: Array.isArray(w) ? w[1] : "" });
+  const addPage = () => { let li = cur; while(li >= 0 && pools[L[li]].length < 4) li--; if(li < 0){ li = cur; while(li < L.length && pools[L[li]].length < 4) li++; } if(li >= L.length) return false;
+    const pg = pools[L[li]].splice(0, 4).map(w => Object.assign(mk(w), { lv: L[li] })); if(fakes.length) pg.push(Object.assign(mk(fakes.shift()), { fake: 1 }));
+    shuf(pg).forEach(it => items.push(it)); return true; };
+  addPage();
   const box = host || $("#diagBox"); const known = new Set(); if(!box) return; box.scrollIntoView({ behavior: "smooth", block: "center" });
-  box.innerHTML = `<div class="diag"><b>${esc(x.diagTitle)}</b><p class="small muted">${esc(x.diagHelp)}</p><div class="chips">${items.map((it, i) => `<button type="button" class="chiptog" data-di="${i}" aria-pressed="false">${esc(it.w)}${it.r && lang === "ja" ? `<span class="tiny muted"> ${esc(it.r)}</span>` : ""}</button>`).join("")}</div>
-    <div class="row" style="gap:8px"><button class="btn ghost" type="button" id="diagX">${esc(x.diagCancel)}</button><span class="grow"></span><button class="btn primary" type="button" id="diagGo">${esc(x.diagJudge)}</button></div></div>`;
-  box.querySelectorAll("[data-di]").forEach(b => b.onclick = () => { const i = +b.dataset.di; if(known.has(i)) known.delete(i); else known.add(i); b.setAttribute("aria-pressed", known.has(i)); });
-  $("#diagX").onclick = () => { box.innerHTML = ""; };
-  $("#diagGo").onclick = () => {
+  const PG = 5, total = PAGES, ja = S.meta.settings.ui === "ja"; let page = 0;   // 5개씩, 1/10 처럼 넘기며 (긴 스크롤 대신)
+  const draw = () => { const sl = items.slice(page * PG, page * PG + PG), last = page === total - 1;
+    box.innerHTML = `<div class="diag dpg"><div class="dpg-h"><b>${esc(x.diagTitle)}</b><span class="dpg-n">${page + 1} / ${total}</span></div><div class="dpg-bar"><i style="width:${Math.round((page + 1) / total * 100)}%"></i></div>
+      <p class="small muted">${esc(ja ? "意味がわかる単語だけ押してね（存在しない単語も混ざってる）" : "뜻을 아는 단어만 눌러 줘 (없는 단어도 섞여 있어)")}</p>
+      <div class="dpg-w">${sl.map((it, k) => { const i = page * PG + k; return `<button type="button" class="chiptog" data-di="${i}" aria-pressed="${known.has(i)}">${esc(it.w)}${it.r && lang === "ja" ? `<span class="tiny muted"> ${esc(it.r)}</span>` : ""}</button>`; }).join("")}</div>
+      <div class="dpg-a"><button class="btn ghost" type="button" id="diagNone">${esc(ja ? "ひとつも知らない" : "하나도 모르겠어요")}</button><button class="btn primary" type="button" id="diagNext">${esc(last ? x.diagJudge : (ja ? "次へ →" : "다음 →"))}</button></div>
+      <div class="dpg-f">${page ? `<button class="linkbtn" type="button" id="diagPrev">← ${ja ? "前へ" : "이전"}</button>` : "<span></span>"}<button class="linkbtn" type="button" id="diagX">${esc(x.diagCancel)}</button></div></div>`;
+    box.querySelectorAll("[data-di]").forEach(b => b.onclick = () => { const i = +b.dataset.di; if(known.has(i)) known.delete(i); else known.add(i); b.setAttribute("aria-pressed", known.has(i)); upd(); });
+    const upd = () => { const any = sl.some((it, k) => known.has(page * PG + k)); $("#diagNone").classList.toggle("dim", any); }; upd();
+    const go = () => { if(last) return judge();
+      const real = sl.filter(it => !it.fake), k = real.filter(it => known.has(items.indexOf(it))).length, fk = sl.some(it => it.fake && known.has(items.indexOf(it)));
+      const lvi = L.indexOf(real[0] && real[0].lv); if(lvi >= 0){ if(k >= 3 && !fk) cur = Math.min(L.length - 1, lvi + 1); else if(k <= 1) cur = Math.max(0, lvi - 1); else cur = lvi; }
+      if(page + 1 >= items.length / PG && !addPage()) return judge(); page++; draw(); };
+    $("#diagNext").onclick = go; $("#diagNone").onclick = () => { sl.forEach((it, k) => known.delete(page * PG + k)); go(); };
+    const pv = $("#diagPrev"); if(pv) pv.onclick = () => { page--; draw(); };
+    $("#diagX").onclick = () => { box.innerHTML = ""; }; };
+  draw();
+  const judge = () => {
     const fakes = items.filter(it => it.fake), fa = fakes.filter(it => known.has(items.indexOf(it))).length, f = fa / fakes.length;
-    const res = set.levels.map(lv => { const its = items.filter(it => it.lv === lv.id), h = its.filter(it => known.has(items.indexOf(it))).length / its.length; return { lv, h, adj: f >= 1 ? 0 : Math.max(0, (h - f) / (1 - f)) }; });
+    const seen = set.levels.map(lv => items.some(it => it.lv === lv.id)), firstSeen = seen.indexOf(true);
+    const res = set.levels.map((lv, i) => { const its = items.filter(it => it.lv === lv.id); if(!its.length) return { lv, h: i < firstSeen ? 1 : 0, adj: i < firstSeen ? 1 : 0 };
+      const h = its.filter(it => known.has(items.indexOf(it))).length / its.length; return { lv, h, adj: f >= 1 ? 0 : Math.max(0, (h - f) / (1 - f)) }; });
     let est = null, rec = null; for(const r of res){ if(r.adj >= .7) est = r; else { rec = r; break; } }
     const knownWords = items.filter((it, i) => known.has(i) && !it.fake).map(it => it.w);
     S.meta.diag = S.meta.diag || {}; S.meta.diag[lang] = { date: today(), est: est ? lvLabel(est.lv) : x.diagStart, rec: rec ? rec.lv.id : null, adj: res.map(r => Math.round(r.adj * 100)) }; save();
@@ -5049,7 +5073,7 @@ async function startDiag(lang, host){
       <p>${rec ? esc(x.diagRec(lvLabel(rec.lv))) : esc(x.diagAll)}</p>${!est && SCRIPT_SETS[lang] && res[0].adj < .3 ? `<p class="small"><b>🔤 ${esc(x.diagScript)}</b></p>` : ""}
       <div class="row" style="gap:8px;flex-wrap:wrap">${rec && !decks().some(d => d.preset === lang + "-" + rec.lv.id) ? `<button class="btn primary" type="button" id="diagAdd">${esc(x.diagRecAdd(lvLabel(rec.lv)))}</button>` : ""}<button class="btn ghost" type="button" id="diagRe">${esc(x.diagAgain)}</button></div></div>`;
     const da = $("#diagAdd"); if(da) da.onclick = () => addPreset(lang, rec.lv.id, da, knownWords);
-    $("#diagRe").onclick = () => startDiag(lang);
+    $("#diagRe").onclick = () => startDiag(lang, box);
     document.querySelectorAll(".pitem [data-pre]").forEach(bt => bt.closest(".pitem").classList.toggle("rec", !!rec && bt.dataset.pre === rec.lv.id));
   };
 }
