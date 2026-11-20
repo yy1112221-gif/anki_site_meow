@@ -1923,7 +1923,7 @@ function payOpen(id){ const it = PAY_ITEMS[id]; if(!it) return; const ko = S.met
   ov.innerHTML = `<div class="sup-sh"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">🛒 ${ko ? "구매하기" : "購入"}</h3><button type="button" class="btn sm" id="payX">${ko ? "닫기" : "閉じる"}</button></div>
     <p style="font-size:1.05rem;margin:14px 0 4px"><b>${esc(it[1])}</b></p><p style="font-size:1.6rem;font-weight:900;margin:0">${it[0].toLocaleString()}원 <small style="font-size:.8rem;color:var(--muted)">부가세 포함</small></p>
     ${payWhat(id)}
-    <p class="small muted" style="margin:10px 0">결제 즉시 이 기기(계정)에 지급돼요. 7일 안에 쓰지 않은 아이템은 전액 환불, 이미 쓴 아이템은 청약철회가 제한돼요. <a href="terms#refund" target="_blank">환불 안내</a></p>
+    <p class="small muted" style="margin:10px 0">결제 즉시 이 기기(계정)에 지급돼요. 환불은 자동이 아니라 요청할 때만: 구매 후 7일 안에 하나도 쓰지 않았다면 「문의」로 요청하면 전액 환불돼요. 하나라도 쓰면 청약철회가 제한돼요. <a href="terms#refund" target="_blank">환불 안내</a></p>
     <label style="display:flex;gap:8px;align-items:flex-start;margin:6px 0 14px"><input type="checkbox" id="payAgree" style="width:20px;height:20px;margin-top:2px"><span class="small">위 내용(디지털 아이템은 사용 후 청약철회가 제한됨)을 확인했고 동의해요.</span></label>
     <div id="payMeth" style="margin:0 -8px"></div><div id="payTerms" style="margin:0 -8px 8px"></div>
     <button type="button" class="btn primary" id="payGo" style="width:100%;justify-content:center;min-height:50px" disabled>${it[0].toLocaleString()}원 결제하기</button></div>`;
@@ -3410,7 +3410,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v113";
+const APP_VER = "v114";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
