@@ -2921,7 +2921,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v90";
+const APP_VER = "v91";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3389,10 +3389,14 @@ function catDash(r){ return new Promise(res => {
 /* 유행어: GitHub Actions 수집기(tools/slang_collect.py)가 매일 모은 slang/{ko,ja}.json 을 읽어서, 냥이가 근엄하게 내뱉는다 */
 const SLANG_BASE = "slang/"; let SLANG = null;
 function slangLang(){ return S.meta.settings.ui === "ko" ? "ko" : "ja"; }
-function loadSlang(){ const lang = slangLang(); try{ const c = JSON.parse(localStorage.getItem("slang-cache") || "null"); if(c && c.lang === lang){ SLANG = c; if(Date.now() - c.at < 12 * 3600e3) return; } }catch(_){}
-  fetch(SLANG_BASE + lang + ".json", { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(j => { if(!j || !j.terms) return; SLANG = { lang, at: Date.now(), terms: j.terms.slice(0, 30).map(x => ({ t: x.t, s: x.s || x.n || 1 })) }; try{ localStorage.setItem("slang-cache", JSON.stringify(SLANG)); }catch(_){} }).catch(() => {}); }
-function slangPick(){ if(!SLANG || SLANG.lang !== slangLang() || !SLANG.terms.length) return null; const ts = SLANG.terms.slice(0, 20), w = ts.map(x => x.s * x.s), tot = w.reduce((a, b) => a + b, 0); let r = Math.random() * tot; for(let i = 0; i < ts.length; i++){ r -= w[i]; if(r <= 0) return ts[i].t; } return ts[0].t; }
-function slangLine(){ const t = slangPick(); if(!t) return null; const ko = slangLang() === "ko", v = ko ? [`…${t}.`, `${t}… 라고 하던가.`, `요즘 인간들은 "${t}"라고 한다지.`, `…${t}. 기억해 둬라.`] : [`…${t}。`, `「${t}」…と言うらしいな。`, `最近の人間は「${t}」と言うそうだ。`, `…${t}。覚えておけ。`]; return v[Math.floor(Math.random() * v.length)]; }
+/* 냥이가 내뱉는 유행어는 사람이 고른 목록만 씀(자동 수집 목록엔 사람 이름·작품명·뉴스 키워드가 섞여서 대사로 부적합) */
+const SLANG_LINES = { ko: ["갓생", "킹받네", "중꺾마", "어쩔티비", "알잘딱깔센", "오운완", "점메추", "스불재", "꾸안꾸", "내돈내산", "존맛탱", "찐텐", "갓벽", "완내스", "군싹", "핑프", "킹정", "디토", "도파민 중독", "MBTI 과몰입", "추구미", "자만추", "갑분싸", "TMI", "얼죽아", "소확행", "가성비", "레게노", "억텐", "킹받쥬"],
+  ja: ["草", "それな", "エモい", "ぴえん", "推し", "尊い", "ガチ", "沼る", "映え", "蛙化現象", "ワンチャン", "秒で", "優勝", "知らんけど", "盛れる", "タイパ", "推し活", "量産型", "チルい", "ドパガキ", "言語化", "メンブレ", "あざまる", "それって感想ですよね", "ありよりのあり", "バイブス", "親ガチャ", "さすがに草", "エグい", "ビジュいい"] };
+function loadSlang(){ SLANG = { lang: slangLang(), terms: [] }; }
+function slangPick(){ const a = SLANG_LINES[slangLang()]; return a[Math.floor(Math.random() * a.length)]; }
+const hasBatchim = w => { const c = String(w).trim().slice(-1).charCodeAt(0); if(c >= 0xAC00 && c <= 0xD7A3) return (c - 0xAC00) % 28 !== 0; return /[13678LMNRlmnr0]$/.test(String(w).trim()); };
+const rago = w => `${w}${hasBatchim(w) ? "이라고" : "라고"}`;
+function slangLine(){ const t = slangPick(); if(!t) return null; const ko = slangLang() === "ko", q = `"${t}"`, v = ko ? [`…${t}.`, `${rago(t)} 하던가.`, `요즘 인간들은 ${q}${hasBatchim(t) ? "이라고" : "라고"} 한다지.`, `…${t}. 기억해 둬라.`] : [`…${t}。`, `「${t}」…と言うらしいな。`, `最近の人間は「${t}」と言うそうだ。`, `…${t}。覚えておけ。`]; return v[Math.floor(Math.random() * v.length)]; }
 function petNudge(){ let b = $("#petNudge"); if(!b){ b = document.createElement("button"); b.id = "petNudge"; b.type = "button"; document.body.appendChild(b); }
   b.textContent = pt().nudge; b.classList.add("on"); b.onclick = () => { b.classList.remove("on"); openPet(true); }; clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove("on"), 12000); }
 function openPet(welcome){
