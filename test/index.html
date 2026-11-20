@@ -3412,7 +3412,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v115";
+const APP_VER = "v116";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -4450,12 +4450,14 @@ function bragOpen(){ if(!PET) return; const x = bt(), ja = S.meta.settings.ui ==
   $("#bragVd").onclick = () => { done(); bragRec(ver, th, zoom); }; }
 async function bragShare(blob, name, ver){ const x = bt(), st = bragStats(), text = (ver === "cute" ? x.txtCute(st.lv, st.d) : x.txtReal(st.n)) + "\nhttps://meowca.app/?src=brag"; const file = new File([blob], name, { type: blob.type });
   const ja = S.meta.settings.ui === "ja"; let p = null;
-  try{ if(navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) p = navigator.share({ files: [file] }); }catch(_){ p = null; }   // 탭한 그 순간에 바로 공유창(먼저 await 하면 iOS가 막음)
-  try{ if(navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {}); }catch(_){}
+  copyNow(text);   // 공유창이 뜨기 전에 동기식으로 복사(공유창이 뜨면 페이지가 포커스를 잃어 비동기 복사가 막힘)
+  try{ if(navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) p = navigator.share({ files: [file] }); }catch(_){ p = null; }   // 탭한 그 순간에 바로 공유창
   if(p){ if(PET) petMsg(ja ? "キャプションはコピー済み。投稿画面で貼り付けてニャ" : "문구는 복사해 뒀다냥. 올릴 때 붙여넣기!", 3200);
     try{ await p; track("brag_share", { kind: name.split(".").pop(), ver }); return; }catch(e){ if(e && e.name === "AbortError") return; } }
   if(PET) petMsg(ja ? "この端末は直接シェアできないから保存したニャ。アルバムから投稿してね" : "이 폰은 바로 공유가 안 돼서 저장했다냥. 앨범에서 올려 줘", 3600);
   bragSave(blob, name); }
+function copyNow(text){ let ok = false; try{ const ta = document.createElement("textarea"); ta.value = text; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;top:0;left:0;opacity:0;font-size:16px"; document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, text.length); ok = document.execCommand("copy"); ta.remove(); }catch(_){}
+  if(!ok){ try{ navigator.clipboard && navigator.clipboard.writeText(text).catch(() => {}); }catch(_){} } return ok; }
 function bragSave(blob, name){ const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000); if(PET) petMsg(bt().saved, 2600); track("brag_save", { kind: name.split(".").pop() }); }
 function bragRec(ver, th, zoom){ const x = bt(); if(!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream){ petMsg(x.noRec, 3000); return; }
   const out = document.createElement("canvas"); out.width = 720; out.height = 1280; const stream = out.captureStream(30);
