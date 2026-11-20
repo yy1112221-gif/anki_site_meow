@@ -849,6 +849,16 @@ h1 .logo{display:flex;flex-direction:column;align-items:flex-start;gap:0;letter-
 .kk-r{display:grid;grid-template-columns:repeat(5,1fr);gap:5px} .kk-r i{display:block} .kk button{min-height:36px;border-radius:10px;border:1px solid rgba(0,0,0,.12);background:#fff;color:#1d2b27;font-size:1.15rem;font-family:inherit;touch-action:manipulation} .kk button:active{background:rgba(217,74,126,.18)}
 .kk-fn{grid-template-columns:repeat(6,1fr)} .kk-fn button{font-size:1rem;background:#f3eee8} .kk-fn button.on{background:var(--accent);color:#fff}
 @media (prefers-color-scheme:dark){.kk button{background:#2a2d35;color:#eef0ee;border-color:rgba(255,255,255,.12)} .kk-fn button{background:#22252c}}
+.vk-host{margin-top:2px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.vk{display:grid;gap:5px} .vk-g5{grid-template-columns:.8fr 1fr 1fr 1fr .8fr} .vk-g4{grid-template-columns:1fr 1fr 1fr .8fr}
+.vk-qw{display:flex;flex-direction:column;gap:6px} .vk-row{display:flex;gap:4px;justify-content:center} .vk-row .vk-k{flex:1 1 0;min-width:0;padding:0} .vk-row.vk-in{padding:0 4.5%} .vk-row .vk-sp{flex:4} .vk-row .vk-fn{flex:1.4}
+.vk-k{min-height:44px;border-radius:10px;border:0;background:#fff;color:#1d2b27;font:inherit;font-size:1.15rem;box-shadow:0 1px 0 rgba(0,0,0,.18);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;touch-action:manipulation}
+.vk-k small{font-size:.55rem;opacity:.5;letter-spacing:.05em} .vk-k.dn{background:rgba(217,74,126,.25);transform:scale(.97)}
+.vk-fn{background:#e6e0d8;font-size:.95rem} .vk-fn.on{background:var(--accent);color:#fff} .vk-sw{font-size:.78rem} .vk-ok{background:var(--accent);color:#fff;font-size:1.3rem} .vk-r2{grid-row:span 2}
+.vk-ext .vk-k{min-height:36px;font-size:1rem} .vk-c{font-size:1.25rem} .vk-open{width:100%;min-height:40px;font-size:.95rem}
+.vk-input{caret-color:transparent} .mic-steps{margin:8px 0 14px 1.2em;line-height:1.7}
+body.focus .dock:has(.vk-host .vk) .aud{margin-top:6px} body.focus .dock:has(.vk-host .vk) .hf-big{min-height:42px;margin-top:4px;font-size:.95rem}
+@media (prefers-color-scheme:dark){.vk-k{background:#4a4d55;color:#f2f2f2;box-shadow:0 1px 0 rgba(0,0,0,.5)} .vk-fn{background:#33363d} .vk-ok{background:var(--accent);color:#1d1d1d}}
 </style>
 </head>
 <body>
@@ -1053,6 +1063,8 @@ h1 .logo{display:flex;flex-direction:column;align-items:flex-start;gap:0;letter-
     <div class="card myset" id="mySet"><h2 id="mySetH"></h2>
       <div class="ms-row"><span id="nickLbl"></span><div class="ms-nick"><input id="nickIn" maxlength="12" autocomplete="off"><button type="button" class="btn sm" id="nickDice" title="🎲">🎲</button><button type="button" class="btn sm primary" id="nickSave"></button></div><small id="nickMsg" class="muted"></small></div>
       <label class="ms-row ms-tg"><span id="homePetLbl"></span><input type="checkbox" id="homePetOn"></label>
+      <label class="ms-row ms-tg"><span id="vkLbl"></span><input type="checkbox" id="vkOnChk"></label>
+      <label class="ms-row ms-tg" id="kanjiRow"><span id="kanjiLbl"></span><input type="checkbox" id="kanjiChk"></label>
       <label class="ms-row ms-tg"><span id="petSensLbl"></span><select id="petSensSel"></select></label>
       <label class="ms-row ms-tg"><span id="trackLbl"></span><input type="checkbox" id="trackOn"></label>
       <div class="ms-row"><button type="button" class="linkbtn" id="tutAgain"></button><button type="button" class="linkbtn" id="s7Again"></button></div></div>
@@ -1747,6 +1759,8 @@ function bindCorner(){ const ko = S.meta.settings.ui === "ko", a = $("#tutAgain"
   a.textContent = ko ? "튜토리얼 다시 보기" : "チュートリアルをもう一度"; $("#trackLbl").textContent = ko ? "사용 기록 보내기(익명·개선용)" : "利用データを送る（匿名・改善用）";
   a.onclick = () => { showView("today"); if(cardsHere().length) setTimeout(runTour, 350); else { S.meta.tutWant = 1; save(); } };
   c.checked = !S.meta.noTrack; c.onchange = () => { S.meta.noTrack = !c.checked; save(); };
+  const vk = $("#vkOnChk"); if(vk){ $("#vkLbl").textContent = ko ? "화면 자판 쓰기 (끄면 폰 키보드)" : "画面キーボードを使う（オフでスマホのキーボード）"; vk.checked = vkOn(); vk.onchange = () => { S.meta.settings.vk = vk.checked; save(); track("vk_set", { on: vk.checked }); }; }
+  const kj = $("#kanjiChk"); if(kj){ $("#kanjiLbl").textContent = ko ? "일본어: 한자까지 정확히 써야 정답 (끄면 히라가나도 정답)" : "日本語：漢字まで正確に書かないと不正解（オフならひらがなもOK）"; kj.checked = !!S.meta.settings.strictKanji; $("#kanjiRow").classList.toggle("hidden", S.meta.settings.lang !== "ja"); kj.onchange = () => { S.meta.settings.strictKanji = kj.checked; save(); }; }
   const hp = $("#homePetOn"); if(hp){ $("#homePetLbl").textContent = ko ? "앱 열면 냥이부터" : "起動したらネコから"; hp.checked = S.meta.settings.homePet !== false; hp.onchange = () => { S.meta.settings.homePet = hp.checked; save(); track("home_pet", { on: hp.checked }); }; }
   bindNick(ko); { const b = $("#s7Again"); if(b){ const lang = S.meta.settings.lang, ok = !!SCRIPT_SETS[lang]; b.style.display = ok ? "" : "none"; b.textContent = ko ? "🔤 글자 7분 코스 (다시 보이기·이어 하기)" : "🔤 文字7分コース（再表示・つづき）";
     b.onclick = () => { const z = scr7State(lang); z.skip = 0; save(); showView("today"); renderAll(); setTimeout(scr7Open, 200); }; } }
@@ -2191,6 +2205,130 @@ function bindSay(box){ box.querySelectorAll("[data-say]").forEach(b => b.onclick
 const srcLine = c => c.src ? `<a class="tiny" href="https://tatoeba.org/sentences/show/${encodeURIComponent(c.src)}" target="_blank" rel="noopener">${esc(t().source(c.src))}</a>` : "";
 
 
+/* ════════ 앱 자판(화면 키보드): 폰 키보드가 문제·답을 가리지 않게 앱 안에서 직접 입력 ════════
+   기본 ON. 설정에서 끄면 폰 키보드. 일본어(12키 플릭·로마자), 한국어(천지인·쿼티), 라틴(영어·스페인어 등) */
+const vkOn = () => S.meta.settings.vk !== false;
+const HG_CHO = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ", HG_JUNG = "ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ",
+  HG_JONG = ["", "ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"],
+  HG_VC = { "ㅗㅏ":"ㅘ","ㅗㅐ":"ㅙ","ㅗㅣ":"ㅚ","ㅜㅓ":"ㅝ","ㅜㅔ":"ㅞ","ㅜㅣ":"ㅟ","ㅡㅣ":"ㅢ" },
+  HG_JC = { "ㄱㅅ":"ㄳ","ㄴㅈ":"ㄵ","ㄴㅎ":"ㄶ","ㄹㄱ":"ㄺ","ㄹㅁ":"ㄻ","ㄹㅂ":"ㄼ","ㄹㅅ":"ㄽ","ㄹㅌ":"ㄾ","ㄹㅍ":"ㄿ","ㄹㅎ":"ㅀ","ㅂㅅ":"ㅄ" };
+const hgS = (c, v, t) => String.fromCharCode(0xAC00 + (c * 21 + v) * 28 + t);
+const hgD = ch => { const k = ch.charCodeAt(0) - 0xAC00; return k >= 0 && k < 11172 ? [Math.floor(k / 588), Math.floor(k % 588 / 28), k % 28] : null; };
+const hgSplit = (m, x) => { const e = Object.entries(m).find(([k, v]) => v === x); return e ? [e[0][0], e[0][1]] : null; };
+function hgFeed(text, j){ const last = text.slice(-1), pre = text.slice(0, -1), isV = HG_JUNG.includes(j), d = last ? hgD(last) : null;
+  if(d){ const [c, v, t] = d;
+    if(!isV){ if(!t && HG_JONG.indexOf(j) > 0) return pre + hgS(c, v, HG_JONG.indexOf(j)); const cj = t && HG_JC[HG_JONG[t] + j]; if(cj) return pre + hgS(c, v, HG_JONG.indexOf(cj)); return text + j; }
+    if(!t){ const cv = HG_VC[HG_JUNG[v] + j]; return cv ? pre + hgS(c, HG_JUNG.indexOf(cv), 0) : text + j; }
+    const sp = hgSplit(HG_JC, HG_JONG[t]), keep = sp ? HG_JONG.indexOf(sp[0]) : 0, mv = sp ? sp[1] : HG_JONG[t];
+    return pre + hgS(c, v, keep) + hgS(HG_CHO.indexOf(mv), HG_JUNG.indexOf(j), 0); }
+  if(isV && HG_CHO.includes(last) && last) return pre + hgS(HG_CHO.indexOf(last), HG_JUNG.indexOf(j), 0);
+  if(isV && HG_VC[last + j]) return pre + HG_VC[last + j];
+  return text + j; }
+function hgBack(text){ const last = text.slice(-1), pre = text.slice(0, -1), d = last ? hgD(last) : null; if(!d){ const sp = hgSplit(HG_VC, last); return sp ? pre + sp[0] : pre; }
+  const [c, v, t] = d; if(t){ const sp = hgSplit(HG_JC, HG_JONG[t]); return pre + hgS(c, v, sp ? HG_JONG.indexOf(sp[0]) : 0); }
+  const sv = hgSplit(HG_VC, HG_JUNG[v]); return sv ? pre + hgS(c, HG_JUNG.indexOf(sv[0]), 0) : pre + HG_CHO[c]; }
+const CJ_V = { "ㅣ":"ㅣ","ㅣㆍ":"ㅏ","ㅣㆍㆍ":"ㅑ","ㆍㅣ":"ㅓ","ㆍㆍㅣ":"ㅕ","ㆍㅡ":"ㅗ","ㆍㆍㅡ":"ㅛ","ㅡㆍ":"ㅜ","ㅡㆍㆍ":"ㅠ","ㅡ":"ㅡ","ㅡㅣ":"ㅢ","ㅣㆍㅣ":"ㅐ","ㅣㆍㆍㅣ":"ㅒ","ㆍㅣㅣ":"ㅔ","ㆍㆍㅣㅣ":"ㅖ","ㆍㅡㅣ":"ㅚ","ㆍㅡㅣㆍ":"ㅘ","ㆍㅡㅣㆍㅣ":"ㅙ","ㅡㆍㅣ":"ㅟ","ㅡㆍㆍㅣ":"ㅝ","ㅡㆍㆍㅣㅣ":"ㅞ" };
+const CJ_C = [["ㄱ","ㅋ","ㄲ"],["ㄴ","ㄹ"],["ㄷ","ㅌ","ㄸ"],["ㅂ","ㅍ","ㅃ"],["ㅅ","ㅎ","ㅆ"],["ㅈ","ㅊ","ㅉ"],["ㅇ","ㅁ"]];
+const JA_12 = { a:"あいうえおぁぃぅぇぉ", k:"かきくけこ", s:"さしすせそ", t:"たちつてとっ", n:"なにぬねの", h:"はひふへほ", m:"まみむめも", y:"やゆよゃゅょ", r:"らりるれろ", w:"わをんゎー", p:"、。？！…" };
+const JA_MOD = ch => { const h = toHira(ch); const list = [h, KANA_DK[h], KANA_HD[h], KANA_SM[h]].filter(Boolean); const base = Object.entries(KANA_DK).find(([a, z]) => z === h) || Object.entries(KANA_HD).find(([a, z]) => z === h) || Object.entries(KANA_SM).find(([a, z]) => z === h);
+  const L2 = base ? [base[0], KANA_DK[base[0]], KANA_HD[base[0]], KANA_SM[base[0]]].filter(Boolean) : list; const i = L2.indexOf(h); return L2.length > 1 ? L2[(i + 1) % L2.length] : null; };
+const RJ = (() => { const m = { "-":"ー", ",":"、", ".":"。", "n'":"ん", "xtu":"っ", "ltu":"っ", "xya":"ゃ", "xyu":"ゅ", "xyo":"ょ", "lya":"ゃ", "lyu":"ゅ", "lyo":"ょ", "xwa":"ゎ",
+    ya:"や", yu:"ゆ", yo:"よ", wa:"わ", wo:"を", wi:"うぃ", we:"うぇ", shi:"し", si:"し", chi:"ち", ti:"ち", tsu:"つ", tu:"つ", fu:"ふ", hu:"ふ", ji:"じ", zi:"じ", di:"ぢ", du:"づ", fa:"ふぁ", fi:"ふぃ", fe:"ふぇ", fo:"ふぉ", va:"ゔぁ", vu:"ゔ" };
+  const R = { "":"あいうえお", k:"かきくけこ", s:"さしすせそ", t:"たちつてと", n:"なにぬねの", h:"はひふへほ", m:"まみむめも", r:"らりるれろ", g:"がぎぐげご", z:"ざじずぜぞ", d:"だぢづでど", b:"ばびぶべぼ", p:"ぱぴぷぺぽ", x:"ぁぃぅぇぉ", l:"ぁぃぅぇぉ" };
+  Object.entries(R).forEach(([c, ks]) => Array.from("aiueo").forEach((v, i) => { if(!m[c + v]) m[c + v] = ks[i]; }));
+  [["ky","き"],["gy","ぎ"],["sh","し"],["sy","し"],["j","じ"],["jy","じ"],["zy","じ"],["ch","ち"],["cy","ち"],["ty","ち"],["ny","に"],["hy","ひ"],["by","び"],["py","ぴ"],["my","み"],["ry","り"],["dy","ぢ"]].forEach(([c, k]) => { m[c + "a"] = k + "ゃ"; m[c + "u"] = k + "ゅ"; m[c + "o"] = k + "ょ"; if(/^(sh|j|ch)$/.test(c)) m[c + "e"] = k + "ぇ"; });
+  m.ja = "じゃ"; m.ju = "じゅ"; m.jo = "じょ"; return m; })();
+const RJ_KEYS = Object.keys(RJ);
+function rjStep(st){ let out = "", p = st.p; for(let g = 0; g < 8 && p; g++){
+    if(p.startsWith("nn") && p.length >= 3){ out += "ん"; p = p.slice(1); continue; }
+    if(p === "nn") break;
+    if(RJ[p]){ out += RJ[p]; p = ""; break; }
+    if(p.length >= 2 && p[0] === p[1] && !"aiueon".includes(p[0]) && /[a-z]/.test(p[0])){ out += "っ"; p = p.slice(1); continue; }
+    if(p[0] === "n" && p.length >= 2 && !"aiueoy'n".includes(p[1])){ out += "ん"; p = p.slice(1); continue; }
+    if(!RJ_KEYS.some(k => k.startsWith(p))){ out += p[0]; p = p.slice(1); continue; }
+    break; }
+  st.c += out; st.p = p; }
+const vkLayouts = lang => lang === "ja" ? ["ja12", "jaro"] : lang === "ko" ? ["kocj", "koqw"] : ["lat"];
+const VK_NAME = { ja12: "かな", jaro: "ローマ字", kocj: "천지인", koqw: "쿼티", lat: "ABC" };
+function vkHTML(kind, lang, shift){ const k = (v, lab, cls) => `<button type="button" class="vk-k${cls ? " " + cls : ""}" data-v="${esc(v)}">${lab == null ? esc(v) : lab}</button>`;
+  const sw = vkLayouts(lang).length > 1 ? k("@sw", "🌐 " + VK_NAME[vkLayouts(lang).find(x => x !== kind)], "vk-fn vk-sw") : "";
+  if(kind === "ja12"){ const J = (c, lab) => k("@j" + c, `<b>${lab}</b><small>${JA_12[c].slice(1, 5)}</small>`, "vk-j");
+    return `<div class="vk vk-g5">${k("@br", "→", "vk-fn")}${J("a", "あ")}${J("k", "か")}${J("s", "さ")}${k("@bs", "⌫", "vk-fn")}
+      ${k("ー", null, "vk-fn")}${J("t", "た")}${J("n", "な")}${J("h", "は")}${k(" ", "空白", "vk-fn")}
+      ${sw || k("@br", "→", "vk-fn")}${J("m", "ま")}${J("y", "や")}${J("r", "ら")}${k("@ok", "↵", "vk-ok vk-r2")}
+      ${k("@hide", "▾", "vk-fn")}${k("@mod", "<b>゛゜</b><small>小</small>", "vk-fn")}${J("w", "わ")}${J("p", "、。?!")}</div>`; }
+  if(kind === "kocj"){ const C = (i) => k("@c" + i, CJ_C[i].slice(0, 2).join(""), "vk-c");
+    return `<div class="vk vk-g4">${k("@vㅣ", "ㅣ", "vk-c")}${k("@vㆍ", "ㆍ", "vk-c")}${k("@vㅡ", "ㅡ", "vk-c")}${k("@bs", "⌫", "vk-fn")}
+      ${C(0)}${C(1)}${C(2)}${k("@br", "→", "vk-fn")}${C(3)}${C(4)}${C(5)}${k("@pu", ".,?!", "vk-fn")}
+      ${sw}${C(6)}${k(" ", "띄어쓰기", "vk-fn")}${k("@ok", "↵", "vk-ok")}</div>`; }
+  const rows = kind === "koqw" ? (shift ? ["ㅃㅉㄸㄲㅆㅛㅕㅑㅒㅖ", "ㅁㄴㅇㄹㅎㅗㅓㅏㅣ", "ㅋㅌㅊㅍㅠㅜㅡ"] : ["ㅂㅈㄷㄱㅅㅛㅕㅑㅐㅔ", "ㅁㄴㅇㄹㅎㅗㅓㅏㅣ", "ㅋㅌㅊㅍㅠㅜㅡ"])
+    : ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
+  const ext = kind === "lat" ? (L().chars || []).concat(["'", "-"]) : [];
+  return `<div class="vk vk-qw">${ext.length ? `<div class="vk-row vk-ext">${ext.map(c => k(c)).join("")}</div>` : ""}
+    <div class="vk-row">${Array.from(rows[0]).map(c => k(c)).join("")}</div><div class="vk-row vk-in">${Array.from(rows[1]).map(c => k(c)).join("")}</div>
+    <div class="vk-row">${kind === "koqw" ? k("@sh", "⇧", "vk-fn" + (shift ? " on" : "")) : ""}${Array.from(rows[2]).map(c => k(c)).join("")}${kind === "jaro" ? k("-", "ー") : ""}${k("@bs", "⌫", "vk-fn")}</div>
+    <div class="vk-row">${sw}${k("@hide", "▾", "vk-fn")}${k(" ", kind === "jaro" ? "空白" : kind === "koqw" ? "띄어쓰기" : "space", "vk-fn vk-sp")}${k("@ok", "↵", "vk-ok")}</div></div>`; }
+function vkAttach(input, lang){ if(!input || !vkOn()) return null; const box = input.closest(".dock") || input.parentElement; if(!box || box.querySelector(".vk-host")) return null;
+  lang = ["ja", "ko"].includes(lang) ? lang : "lat";
+  const pref = S.meta.vkLay || (S.meta.vkLay = {}); let kind = vkLayouts(lang).includes(pref[lang]) ? pref[lang] : vkLayouts(lang)[0], shift = false;
+  const host = document.createElement("div"); host.className = "vk-host"; const fm = input.form || input; fm.after(host);
+  input.readOnly = true; input.setAttribute("inputmode", "none"); input.classList.add("vk-input"); input.blur();
+  const kk = box.querySelector(".kk-wrap, .kbd"); if(kk) kk.remove();
+  let st = { last: null, n: 0, snap: "", cj: "", rj: null, val: input.value };
+  const reset = () => { st.last = null; st.n = 0; st.cj = ""; if(st.rj && st.rj.p){ rjFlush(); } st.rj = null; };
+  const setV = v => { input.value = v; st.val = v; input.dispatchEvent(new Event("input", { bubbles: true })); input.scrollLeft = input.scrollWidth; };
+  const sync = () => { if(input.value !== st.val){ st = { last: null, n: 0, snap: "", cj: "", rj: null, val: input.value }; } };
+  const rjFlush = () => { if(!st.rj) return; const r = st.rj; if(r.p === "n" || r.p === "nn") r.c += "ん"; else r.c += r.p; r.p = ""; setV(r.c); };
+  const rjShow = () => setV(st.rj.c + (st.rj.p === "n" || st.rj.p === "nn" ? "ん" : st.rj.p));
+  const draw = () => { host.innerHTML = vkHTML(kind, lang, shift); };
+  const press = (v, dir) => { sync(); buzz(5);
+    if(v === "@hide"){ host.innerHTML = `<button type="button" class="vk-k vk-open" data-v="@show">⌨️ ${S.meta.settings.ui === "ja" ? "キーボードを開く" : "자판 열기"}</button>`; return; }
+    if(v === "@show"){ draw(); return; }
+    if(v === "@sw"){ reset(); const ls = vkLayouts(lang); kind = ls[(ls.indexOf(kind) + 1) % ls.length]; pref[lang] = kind; save(); draw(); return; }
+    if(v === "@sh"){ shift = !shift; draw(); return; }
+    if(v === "@ok"){ reset(); const f = input.form; const b = f && (f.querySelector("#chk") || f.querySelector("[type=submit]")); if(b) b.click(); else if(f) f.requestSubmit ? f.requestSubmit() : f.dispatchEvent(new Event("submit", { cancelable: true })); return; }
+    if(v === "@br"){ reset(); return; }
+    if(v === "@bs"){
+      if(kind === "kocj" && st.cj){ st.cj = st.cj.slice(0, -1); if(st.cj) setV(cjVal()); else { setV(st.snap); } return; }
+      if(kind === "jaro" && st.rj && st.rj.p){ st.rj.p = st.rj.p.slice(0, -1); rjShow(); return; }
+      st.last = null; st.cj = ""; st.rj = null; const cur = input.value; setV(lang === "ko" ? hgBack(cur) : Array.from(cur).slice(0, -1).join("")); return; }
+    const cur = input.value;
+    if(kind === "ja12"){
+      if(v === "@mod"){ st.last = null; const ch = Array.from(cur).pop(); const m = ch && JA_MOD(ch); if(m) setV(Array.from(cur).slice(0, -1).join("") + m); return; }
+      if(v.startsWith("@j")){ const row = JA_12[v.slice(2)]; const arr = Array.from(row);
+        if(dir != null){ st.last = null; const ch = arr[dir] || arr[0]; setV(cur + ch); return; }
+        if(st.last === v){ st.n = (st.n + 1) % arr.length; setV(st.snap + arr[st.n]); }
+        else { st.last = v; st.n = 0; st.snap = cur; setV(cur + arr[0]); } return; }
+      st.last = null; setV(cur + v); return; }
+    if(kind === "kocj"){
+      if(v.startsWith("@v")){ st.last = null; const s = st.cj + v.slice(2);
+        const ok = CJ_V[s] || s === "ㆍ" || s === "ㆍㆍ" || Object.keys(CJ_V).some(k => k.startsWith(s));
+        if(st.cj && ok){ st.cj = s; } else { st.snap = cur; st.cj = v.slice(2); }
+        setV(cjVal()); return; }
+      if(v.startsWith("@c")){ st.cj = ""; const arr = CJ_C[+v.slice(2)];
+        if(st.last === v){ st.n = (st.n + 1) % arr.length; setV(hgFeed(st.snap, arr[st.n])); }
+        else { st.last = v; st.n = 0; st.snap = cur; setV(hgFeed(cur, arr[0])); } return; }
+      if(v === "@pu"){ st.cj = ""; const arr = [".", ",", "?", "!"]; if(st.last === v){ st.n = (st.n + 1) % 4; setV(st.snap + arr[st.n]); } else { st.last = v; st.n = 0; st.snap = cur; setV(cur + "."); } return; }
+      st.last = null; st.cj = ""; setV(cur + v); return; }
+    if(kind === "koqw"){ const j = v; if(shift && j.length === 1 && j !== " "){ shift = false; draw(); } setV(j === " " ? cur + " " : hgFeed(cur, j)); return; }
+    if(kind === "jaro"){ if(!st.rj) st.rj = { c: cur, p: "" };
+      if(/^[a-z'\-,.]$/.test(v) && !(v === "-" && !st.rj.p)){ st.rj.p += v; rjStep(st.rj); rjShow(); return; }
+      if(v === "-"){ st.rj.c += "ー"; rjShow(); return; }
+      rjFlush(); st.rj = null; setV(input.value + v); return; }
+    setV(cur + v); };
+  const cjVal = () => { const s = st.cj; return CJ_V[s] ? hgFeed(st.snap, CJ_V[s]) : st.snap + (s === "ㆍ" ? "ㆍ" : "ᆢ"); };
+  let down = null;
+  host.addEventListener("pointerdown", e => { const b = e.target.closest(".vk-k"); if(!b) return; e.preventDefault(); down = { b, x: e.clientX, y: e.clientY }; b.classList.add("dn"); });
+  const up = e => { if(!down) return; const { b, x, y } = down; down = null; b.classList.remove("dn"); if(e.type === "pointercancel") return;
+    const dx = e.clientX - x, dy = e.clientY - y, far = Math.hypot(dx, dy) > 22; let dir = null;
+    if(far && b.classList.contains("vk-j")) dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 3) : (dy < 0 ? 2 : 4);
+    press(b.dataset.v, dir); };
+  host.addEventListener("pointerup", up); host.addEventListener("pointercancel", up);
+  host.addEventListener("click", e => e.preventDefault());
+  input.addEventListener("focus", () => { if(input.readOnly) input.blur(); });
+  input.addEventListener("click", () => { if(host.querySelector(".vk-open")) draw(); });
+  draw(); return host; }
+
 /* 🎤 입력: 답 칸 옆 마이크. 말한 내용을 칸에 채워 줌(자동 제출은 안 함) */
 function micAttach(input, speechLang){ if(!SR || !input || !input.form) return; const x = t(), ko = S.meta.settings.ui !== "ja";
   const b = document.createElement("button"); b.type = "button"; b.className = "btn mic-in"; b.textContent = "🎤"; b.setAttribute("aria-label", ko ? "말로 입력" : "音声入力");
@@ -2200,8 +2338,25 @@ function micAttach(input, speechLang){ if(!SR || !input || !input.form) return; 
     try{ rec = new SR(); rec.lang = speechLang; rec.interimResults = true; rec.maxAlternatives = 1;
       rec.onresult = e => { input.value = Array.from(e.results).map(r => r[0].transcript).join(" ").replace(/[。．.!?！？]+$/u, "").trim(); input.dispatchEvent(new Event("input", { bubbles: true })); };
       rec.onend = () => { rec = null; b.classList.remove("on"); input.focus({ preventScroll: true }); };
-      rec.onerror = ev => { if(ev.error === "not-allowed") toast(x.micDenied); };
-      rec.start(); b.classList.add("on"); track("mic_in"); }catch(e){ rec = null; toast(x.micNo); } }; }
+      rec.onerror = ev => { if(/not-allowed|service-not-allowed/.test(ev.error)) micHelp(); };
+      micReady().then(ok => { if(!ok){ rec = null; return; } try{ rec.start(); b.classList.add("on"); track("mic_in"); }catch(e){ rec = null; toast(x.micNo); } }); }catch(e){ rec = null; toast(x.micNo); } }; }
+/* 마이크 권한: 꺼져 있으면 켜는 방법을 기기·브라우저별로 바로 보여 줌 (웹은 시스템 설정을 직접 열 수 없어서 안내 + 다시 시도) */
+async function micReady(){ try{ if(navigator.permissions && navigator.permissions.query){ const q = await navigator.permissions.query({ name: "microphone" }); if(q.state === "denied"){ micHelp(); return false; } } }catch(_){}
+  try{ if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){ const ms = await navigator.mediaDevices.getUserMedia({ audio: true }); ms.getTracks().forEach(t => t.stop()); } }catch(e){ if(e && /NotAllowed|Security/.test(e.name)){ micHelp(); return false; } }
+  return true; }
+function micHelp(){ track("mic_denied"); const ja = S.meta.settings.ui === "ja", ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const inapp = /KAKAOTALK|Instagram|FBAN|FBAV|Line\/|NAVER|DaumApps/i.test(ua), crios = /CriOS/.test(ua), sam = /SamsungBrowser/.test(ua), and = /Android/.test(ua);
+  const steps = inapp ? (ja ? ["アプリ内ブラウザではマイクが使えないことがあるニャ", "右上「…」→「ブラウザで開く」（Safari / Chrome）", "開いたブラウザでもう一度🎤を押してね"] : ["앱 안 브라우저(카톡·인스타 등)에선 마이크가 막힐 수 있어", "오른쪽 위 「…」 → 「다른 브라우저로 열기」(사파리·크롬)", "열린 브라우저에서 다시 🎤를 눌러 줘"])
+    : ios && crios ? (ja ? ["iPhoneの「設定」アプリを開く", "下へスクロールして「Chrome」", "「マイク」をオン → ここに戻って再試行"] : ["아이폰 「설정」 앱 열기", "아래로 내려 「Chrome」 누르기", "「마이크」 켜기 → 여기로 돌아와 다시 시도"])
+    : ios ? (ja ? ["アドレスバー左の「ぁあ」（ページ設定）を押す", "「Webサイトの設定」→「マイク」→「許可」", "見つからなければ「設定」アプリ →「Safari」→「マイク」→「許可」"] : ["주소창 왼쪽 「가가」(페이지 설정) 누르기", "「웹 사이트 설정」 → 「마이크」 → 「허용」", "안 보이면 「설정」 앱 → 「Safari」 → 「마이크」 → 「허용」"])
+    : sam ? (ja ? ["アドレスバーの🔒を押す", "「権限」→「マイク」→「許可」"] : ["주소창의 🔒 누르기", "「권한」 → 「마이크」 → 「허용」"])
+    : and ? (ja ? ["アドレスバー左の🔒（または ⚙︎）を押す", "「権限」→「マイク」→「許可」", "それでもダメなら 端末の「設定」→「アプリ」→「Chrome」→「権限」→「マイク」"] : ["주소창 왼쪽 🔒(또는 ⚙︎) 누르기", "「권한」 → 「마이크」 → 「허용」", "그래도 안 되면 폰 「설정」 → 「애플리케이션」 → 「Chrome」 → 「권한」 → 「마이크」"])
+    : (ja ? ["アドレスバー左の🔒を押す", "「マイク」→「許可」", "ページを再読み込み"] : ["주소창 왼쪽 🔒 누르기", "「마이크」 → 「허용」", "페이지 새로고침"]);
+  const bg = openSheet(`${say("st_surprised", esc(ja ? "マイクが止められてるニャ。こうすれば使えるようになる！" : "마이크가 막혀 있다냥. 이렇게 하면 켤 수 있어!"), true)}
+    <ol class="mic-steps">${steps.map(s => `<li>${esc(s)}</li>`).join("")}</ol>
+    <div class="row" style="justify-content:center;gap:8px"><button class="btn ghost" type="button" id="micHx">${ja ? "閉じる" : "닫기"}</button><button class="btn primary" type="button" id="micHr">🎤 ${ja ? "もう一度試す" : "다시 시도"}</button></div>`);
+  bg.querySelector("#micHx").onclick = closePop;
+  bg.querySelector("#micHr").onclick = async () => { closePop(); const ok = await micReady(); if(ok) toast(ja ? "マイクOKニャ！もう一度🎤を押してね" : "마이크 켜졌다냥! 🎤를 다시 눌러 줘"); }; }
 /* 入力式の問題（推測・穴埋め・意味から書く）共通：間違えたら答えを見せて書き写させる */
 function askTyped(c, mode, promptHTML, target, isGuess){
   const box = $("#sessionBox"), x = t();
@@ -2209,7 +2364,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
     <form id="ansForm" autocomplete="off" class="ansrow"><input type="text" id="ans" class="answer" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${isGuess ? x.guessType : x.answerPh}" aria-label="${x.answer}" enterkeyhint="go"><button class="btn primary" type="button" id="chk">${isGuess ? x.guessBtn : x.check}</button></form>
     ${kbdHTML()}
     <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${isGuess ? x.guessSkip : x.idk}</button></div></div>`;
-  const input = $("#ans"); bindKbd(box, input); micAttach(input, L().speech); input.focus({ preventScroll: true });
+  const input = $("#ans"); bindKbd(box, input); micAttach(input, L().speech); vkAttach(input, S.meta.settings.lang); if(!vkOn()) input.focus({ preventScroll: true });
   let phase = "answer";
   const blank = box.querySelector(".stage .blank");
   // 答えは問題の空欄にそのまま入れる。フィードバックには「単語・意味」だけ（例文は上に出ているので繰り返さない）
@@ -2246,7 +2401,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
   function submit(){
     if(phase === "answer" && SES.state.answered){ const nb = $("#nx"); if(nb) nb.click(); return; }
     if(!input.value.trim()){ input.focus({ preventScroll: true }); return; }
-    if(phase === "answer"){ if(SES.state.answered) return; let r = check(input.value, target); if(r === "no" && c.reading && norm(target) === norm(c.word) && check(input.value, c.reading) !== "no") r = "ok"; reveal(r); return; }
+    if(phase === "answer"){ if(SES.state.answered) return; let r = check(input.value, target); if(r === "no" && c.reading && !S.meta.settings.strictKanji && norm(target) === norm(c.word) && check(input.value, c.reading) !== "no") r = "ok"; reveal(r); return; }
     if(check(input.value, target) !== "no"){ toast(x.copyOk); finish(false); }
     else { input.value = ""; input.placeholder = x.copyAgain; input.focus(); toast(x.copyAgain); }
   }
@@ -2268,7 +2423,7 @@ function askMeaning(c, promptHTML){
   box.innerHTML = head(c, mode) + `<div class="stage">${promptHTML}<div id="fb"></div></div><div class="dock">
     <form id="ansForm" autocomplete="off" class="ansrow"><input type="text" id="ans" class="answer" spellcheck="false" placeholder="${esc(x.meanPh)}" aria-label="${x.answer}" enterkeyhint="go"><button class="btn primary" type="button" id="chk">${x.check}</button></form>
     <div class="row" id="acts">${listenBtn(c.word)}<span class="grow"></span><button class="btn ghost" type="button" id="idk">${x.idk}</button></div></div>`;
-  const input = $("#ans"); micAttach(input, S.meta.settings.ui === "ja" ? "ja-JP" : "ko-KR"); input.focus({ preventScroll: true }); bindSay(box); speak(c.word);
+  const input = $("#ans"); micAttach(input, S.meta.settings.ui === "ja" ? "ja-JP" : "ko-KR"); vkAttach(input, S.meta.settings.ui === "ja" ? "ja" : "ko"); if(!vkOn()) input.focus({ preventScroll: true }); bindSay(box); speak(c.word);
   const keep = b => b.addEventListener("pointerdown", e => { if(document.activeElement === input) e.preventDefault(); });
   box.querySelectorAll(".dock button").forEach(keep);
   const ansBlock = () => `<span class="fb-answer">${esc(c.meaning)}</span><span class="fb-mean">${esc(c.word)}</span>${c.example ? `<span class="fb-ex">${highlight(c)}</span>${c.exampleKo ? `<span class="fb-mean">${esc(c.exampleKo)}</span>` : ""}` : ""}`;
@@ -2365,7 +2520,7 @@ function renderItem0(c, mode){
       <div class="dock"><textarea id="wr" spellcheck="false" aria-label="${x.myText}" placeholder="${x.myText}"></textarea>
       ${kbdHTML()}
       <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${x.idk}</button><span class="grow"></span><button class="btn primary" type="button" id="chk">${x.wrote}</button></div></div>`;
-    const ta = $("#wr"); bindKbd(box, ta); ta.focus({ preventScroll: true });
+    const ta = $("#wr"); bindKbd(box, ta); vkAttach(ta, S.meta.settings.lang); if(!vkOn()) ta.focus({ preventScroll: true });
     $("#idk").onclick = () => { if(SES.state.answered) return; SES.state.answered = true; ta.disabled = true;
       $("#fb").innerHTML = `<div class="feedback no">${fbh("st_default", x.seeExample)}<span>${highlight(c)}</span><span class="small muted">${esc(c.exampleKo)}</span></div>`;
       $("#acts").innerHTML = `<span class="grow"></span><button class="btn primary" type="button" id="nx">${x.next}</button>`; $("#nx").onclick = () => settleItem(false); };
@@ -2395,8 +2550,8 @@ function renderItem0(c, mode){
           rec = new SR(); rec.lang = L().speech; rec.interimResults = true; rec.maxAlternatives = 1;
           rec.onresult = e => { heard = Array.from(e.results).map(r => r[0].transcript).join(" "); $("#heard").textContent = x.heard + heard; };
           rec.onend = () => { rec = null; mb.classList.remove("on"); mb.textContent = x.micAgain; };
-          rec.onerror = ev => { if(ev.error === "not-allowed") toast(x.micDenied); };
-          rec.start(); mb.classList.add("on"); mb.textContent = x.micStop;
+          rec.onerror = ev => { if(/not-allowed|service-not-allowed/.test(ev.error)) micHelp(); };
+          const r0 = rec; micReady().then(ok => { if(!ok || rec !== r0){ rec = null; return; } try{ r0.start(); mb.classList.add("on"); mb.textContent = x.micStop; }catch(e){ rec = null; toast(x.micNo); } });
         }catch(e){ toast(x.micNo); }
       };
     }
@@ -3164,7 +3319,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v105";
+const APP_VER = "v106";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -4853,7 +5008,7 @@ function askScript(c, mode){
       : `<form id="ansForm" autocomplete="off" class="ansrow"><input type="text" id="ans" class="answer" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${esc(x.scriptPh)}" enterkeyhint="go"><button class="btn primary" type="button" id="chk">${x.check}</button></form><div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${x.idk}</button></div>`}</div>`;
   const play = () => speak(sc.say || c.word); $("#scSay").onclick = play;
   if(isNew){ setTimeout(play, 250); $("#scOk").onclick = () => settleItem(true); return; }
-  const input = $("#ans"); input.focus({ preventScroll: true });
+  const input = $("#ans"); vkAttach(input, "lat"); if(!vkOn()) input.focus({ preventScroll: true });
   const done = ok => { if(SES.state.answered) return; SES.state.answered = true; input.classList.add(ok ? "done" : "miss"); $("#fb").innerHTML = answerHTML(ok); play();
     $("#acts").innerHTML = ""; const nb = $("#chk"); nb.id = "nx"; nb.textContent = x.next; nb.onclick = () => settleItem(ok); input.focus({ preventScroll: true }); };
   box.querySelectorAll(".dock button").forEach(b => b.addEventListener("pointerdown", e => { if(document.activeElement === input) e.preventDefault(); }));
