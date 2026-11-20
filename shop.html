@@ -43,7 +43,7 @@ dialog{border:0;border-radius:18px;max-width:360px;padding:20px} dialog::backdro
 <div class="grid" id="g-skin"></div>
 
 <h2>🎁 후원 패키지</h2>
-<p class="muted">앱 운영을 응원하는 패키지예요. 금액별 보상이 지급돼요.</p>
+<p class="muted">앱 운영을 응원하는 패키지예요. 금액별 보상이 지급돼요. 🐣 얼리 집사 특가 진행 중.</p>
 <div class="grid" id="g-sup"></div>
 
 <h2 id="delivery">📦 제공(배송) 안내</h2>
@@ -72,13 +72,13 @@ dialog{border:0;border-radius:18px;max-width:360px;padding:20px} dialog::backdro
 const P = {
   snack: [["snk_s","🐟","간식 한 줌","간식 10개 · 3일 안에 사용",990],["snk_whale","🐋","고래 한 마리","특별 간식 고래 1마리 · 7일 안에 사용",1500],["snk_m","🛍️","간식 한 봉지","간식 40개 · 7일 안에 사용",2900],["snk_l","🚚","간식 트럭","간식 150개 · 14일 안에 사용",6900]],
   skin: [["mochi_st","#ffdce4","딸기 찹쌀떡","분홍빛 털 스킨",1900],["mochi_mc","#dfeec3","말차 찹쌀떡","연두빛 털 스킨",1900],["cheese","#ffe2a8","치즈 냥","노란 털 스킨",1900],["pudding","#f7e0b5","푸딩 말랑","캐러멜 털 스킨",1900],["sesame","#cfcac4","흑임자 떡","회색 털 스킨",1900],["soda","#bfe6ff","소다 젤리","반투명 하늘색 스킨",2900]],
-  sup: [["s1","🍖","츄르 한 개","냥이의 「고맙다냥」 전용 대사 · 후원 배지",1000],["s2","🛍️","츄르 한 봉지","위 보상 + 한정 스킨 「후원냥 골드」 + 자랑하기 VIP 프레임",3000],["s3","📦","츄르 한 박스","위 보상 + 새 간식 이름 투표권 + 앱 크레딧에 닉네임",10000],["s4","🐋","큰손 집사","위 보상 + 내가 쓴 대사 하나를 냥이 정식 대사로(검토 후)",30000]]
+  sup: [["s1","🍖","츄르 한 개","냥이의 「고맙다냥」 전용 대사 · 후원 배지",500],["s2","🛍️","츄르 한 봉지","위 보상 + 한정 스킨 「후원냥 골드」 + 자랑하기 VIP 프레임",1000],["s3","📦","츄르 한 박스","위 보상 + 새 간식 이름 투표권 + 앱 크레딧에 닉네임",3000],["s4","🐋","큰손 집사","위 보상 + 내가 쓴 대사 하나를 냥이 정식 대사로(검토 후)",10000]]
 };
 const won = n => n.toLocaleString("ko-KR") + "원";
 const esc = s => String(s).replace(/[<>&"]/g, c => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" })[c]);
 for (const [k, list] of Object.entries(P)) {
   const g = document.getElementById("g-" + k);
-  g.innerHTML = list.map(([id, e, name, desc, price]) => `<div class="card">${e.startsWith("#") ? `<div class="sw" style="background:radial-gradient(circle at 35% 30%,#fff,${e})"></div>` : `<div class="e" aria-hidden="true">${e}</div>`}<b>${esc(name)}</b><p>${esc(desc)}</p><div class="price">${won(price)} <small>부가세 포함</small></div><button class="buy" type="button" data-id="${id}" data-name="${esc(name)}" data-price="${price}">구매하기</button></div>`).join("");
+  g.innerHTML = list.map(([id, e, name, desc, price]) => `<div class="card">${e.startsWith("#") ? `<div class="sw" style="background:radial-gradient(circle at 35% 30%,#fff,${e})"></div>` : `<div class="e" aria-hidden="true">${e}</div>`}<b>${esc(name)}</b><p>${esc(desc)}</p><div class="price">${k === "sup" ? `<s style="font-size:.8rem;color:#9a8f82;font-weight:600">${won({s1:1000,s2:3000,s3:10000,s4:30000}[id])}</s> ` : ""}${won(price)} <small>부가세 포함</small></div><button class="buy" type="button" data-id="${id}" data-name="${esc(name)}" data-price="${price}">구매하기</button></div>`).join("");
 }
 document.addEventListener("click", e => { const b = e.target.closest(".buy[data-id]"); if (!b) return;
   location.href = "./?buy=" + encodeURIComponent(b.dataset.id); });
