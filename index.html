@@ -1832,7 +1832,7 @@ function runTour(){
       const below = r.bottom + 150 < innerHeight; tip.style.top = below ? r.bottom + 16 + "px" : ""; tip.style.bottom = below ? "" : innerHeight - r.top + 16 + "px"; }); };
   const next = () => { i++; if(i >= steps.length){ ov.remove(); window.scrollTo({ top: 0, behavior: "smooth" }); return; } show(); };
   ov.onclick = next; show(); }
-const DONATE_KO = "https://qr.kakaopay.com/FONOyL9Fi";   // 카카오페이 송금(한국어 화면만). 사용자 요청으로 사업자 등록 완료 때까지만 유지 → 그때 비우기
+const DONATE_KO = "";   // 후원 종료(11/20): 카카오페이 송금·후원 숍 내림. 이미 후원한 사람의 배지·골드 스킨(S.meta.sup)은 그대로 유지
 const DONATE_JA = "";   // 일본 사용자용 후원 링크(Ko-fi 등) — 비어 있으면 숨김
 function bindCorner(){ const ko = S.meta.settings.ui === "ko", a = $("#tutAgain"), c = $("#trackOn"); if(!a) return;
   a.textContent = ko ? "튜토리얼 다시 보기" : "チュートリアルをもう一度"; $("#trackLbl").textContent = ko ? "사용 기록 보내기(익명·개선용)" : "利用データを送る（匿名・改善用）";
@@ -1920,7 +1920,7 @@ function supShopOpen(){ const ko = S.meta.settings.ui === "ko", m = S.meta.supWa
 /* 상점 페이지(shop)에서 「구매하기」 → 앱으로 와서 해당 상품 창을 연다 (결제 연결은 PG 승인 후) */
 function buyBoot(){ const id = new URLSearchParams(location.search).get("buy"); if(!id) return; history.replaceState(null, "", location.pathname); track("buy_from_shop", { id });
   if(payOn() && PAY_ITEMS[id]){ payOpen(id); return; }
-  if(/^s[1-4]$/.test(id)){ showView("how"); setTimeout(supShopOpen, 300); return; }
+  if(/^s[1-4]$/.test(id)) return;   // 후원 종료
   if(!PET) openPet(); setTimeout(() => { cosOpen(); const it = COS.find(c => c.id === id); const dr = $("#cosDr"); if(!it || !dr) return; const tb = dr.querySelector(`[data-cat="${it.c}"]`); if(tb) tb.click(); const b = dr.querySelector(`.cos-it[data-id="${id}"]`); if(b) b.click(); }, 600); }
 
 /* ════════ 카드 결제 (토스페이먼츠 결제창 v2) ════════
@@ -1930,8 +1930,7 @@ const TOSS_CK = "live_gck_c19zDGGqwk9CbeQw4WjY4DgrvhNHMHkOSD";
 const PAY_FN = SB_URL_PAY();
 function SB_URL_PAY(){ return "https://cgupivfptuzqyadhqhiz.supabase.co/functions/v1/bright-task"; }
 const PAY_ITEMS = { snk_s: [990, "간식 한 줌 (10개 · 3일)"], snk_whale: [1500, "고래 한 마리 (7일)"], snk_m: [2900, "간식 한 봉지 (40개 · 7일)"], snk_l: [6900, "간식 트럭 (150개 · 14일)"],
-  mochi_st: [1900, "딸기 찹쌀떡 스킨"], mochi_mc: [1900, "말차 찹쌀떡 스킨"], cheese: [1900, "치즈 냥 스킨"], pudding: [1900, "푸딩 말랑 스킨"], sesame: [1900, "흑임자 떡 스킨"], soda: [2900, "소다 젤리 스킨"],
-  s1: [500, "후원: 츄르 한 개"], s2: [1000, "후원: 츄르 한 봉지"], s3: [3000, "후원: 츄르 한 박스"], s4: [10000, "후원: 큰손 집사"] };
+  mochi_st: [1900, "딸기 찹쌀떡 스킨"], mochi_mc: [1900, "말차 찹쌀떡 스킨"], cheese: [1900, "치즈 냥 스킨"], pudding: [1900, "푸딩 말랑 스킨"], sesame: [1900, "흑임자 떡 스킨"], soda: [2900, "소다 젤리 스킨"] };   // 후원(s1~s4)은 판매 종료 — 이미 결제된 건의 지급은 payGrant가 계속 처리
 const payOn = () => !!TOSS_CK;
 function loadToss(){ return new Promise((res, rej) => { if(window.TossPayments) return res(window.TossPayments); const sc = document.createElement("script"); sc.src = "https://js.tosspayments.com/v2/standard"; sc.onload = () => res(window.TossPayments); sc.onerror = rej; document.head.appendChild(sc); }); }
 function payOpen(id){ const it = PAY_ITEMS[id]; if(!it) return; const ko = S.meta.settings.ui !== "ja";
@@ -1988,9 +1987,9 @@ async function payConfirm(){ const ko = S.meta.settings.ui !== "ja", pp = S.meta
 }
 function renderSupBox(){ const el = $("#supBox"); if(!el) return; const ko = S.meta.settings.ui === "ko";
   el.innerHTML = `<div class="sup-row">${nm("st_love", 52)}<div><b>${ko ? "MEOWCA! 암기냥이는 무료예요" : "MEOWCA!（ミヤオウカ）は無料です"}</b><p class="small muted" style="margin:.2em 0 0">${ko ? "광고도 없어요. 마음에 들면 친구에게 알려 주세요." : "広告もありません。気に入ったら友達に教えてください。"}</p></div></div>
-    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button><a class="btn" href="shop">🛒 ${ko ? "상점" : "ショップ"}</a><button class="btn primary" type="button" id="supShop">🎁 ${ko ? "후원 숍 · 보상 있음" : "応援ショップ・特典つき"}</button>${ko && DONATE_KO ? `<a class="btn" href="${DONATE_KO}" target="_blank" rel="noopener">🍖 카카오페이로 츄르 사주기</a>` : ""}</div>
+    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button><a class="btn" href="shop">🛒 ${ko ? "상점" : "ショップ"}</a></div>
     <p class="tiny muted" style="margin:0"><a href="privacy.html">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a> · <a href="terms.html">${ko ? "이용약관" : "利用規約"}</a></p><p class="tiny muted" id="bizLine" style="margin:0"></p>`;
-  bizFill(); $("#supShop").onclick = supShopOpen;
+  bizFill();
   $("#supShare").onclick = async () => { const url = "https://meowca.app/?ref=invite", text = ko ? "MEOWCA! 암기냥이 — 가성비로 딱 필요한 만큼만 외우고, 나머진 말랑 냥이 괴롭히기 🐾 무료" : "MEOWCA!（ミヤオウカ）— もう無理やり暗記しなくていい。最小限だけ覚えて、あとはネコと遊ぶ 🐾 無料";
     try{ if(navigator.share){ await navigator.share({ title: "MEOWCA!", text, url }); return; } await navigator.clipboard.writeText(text + " " + url); toast(ko ? "링크를 복사했어요" : "リンクをコピーしました"); }catch(e){} }; }
 function setAddPanel(k){   // 단어 추가: 스크롤 대신 메뉴에서 하나 고르기

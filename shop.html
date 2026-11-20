@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>상점 · MEOWCA! 암기냥이 묘카</title>
-<meta name="description" content="MEOWCA! 암기냥이 묘카 앱 안에서 쓰는 냥이 꾸미기 스킨·간식 묶음·후원 패키지. 학습은 무료입니다.">
+<meta name="description" content="MEOWCA! 암기냥이 묘카 앱 안에서 쓰는 냥이 꾸미기 스킨·간식 묶음. 학습은 무료입니다.">
 <link rel="icon" href="icon-192.png">
 <style>
 body{margin:0;font:16px/1.65 "Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;color:#1E1A16;background:#FDF4EA}
@@ -42,10 +42,6 @@ dialog{border:0;border-radius:18px;max-width:360px;padding:20px} dialog::backdro
 <p class="muted">찹쌀떡 냥이의 털 색을 바꿔요. 한 번 사면 계속 쓸 수 있고 언제든 갈아입힐 수 있어요.</p>
 <div class="grid" id="g-skin"></div>
 
-<h2>🎁 후원 패키지</h2>
-<p class="muted">앱 운영을 응원하는 패키지예요. 금액별 보상이 지급돼요. 🐣 얼리 집사 특가 진행 중.</p>
-<div class="grid" id="g-sup"></div>
-
 <h2 id="delivery">📦 제공(배송) 안내</h2>
 <div class="box"><ul>
 <li>모든 상품은 실물 배송이 없는 <b>디지털 상품</b>이며, 배송비는 없습니다.</li>
@@ -72,7 +68,6 @@ dialog{border:0;border-radius:18px;max-width:360px;padding:20px} dialog::backdro
 const P = {
   snack: [["snk_s","🐟","간식 한 줌","간식 10개 · 3일 안에 사용",990],["snk_whale","🐋","고래 한 마리","특별 간식 고래 1마리 · 7일 안에 사용",1500],["snk_m","🛍️","간식 한 봉지","간식 40개 · 7일 안에 사용",2900],["snk_l","🚚","간식 트럭","간식 150개 · 14일 안에 사용",6900]],
   skin: [["mochi_st","#ffdce4","딸기 찹쌀떡","분홍빛 털 스킨",1900],["mochi_mc","#dfeec3","말차 찹쌀떡","연두빛 털 스킨",1900],["cheese","#ffe2a8","치즈 냥","노란 털 스킨",1900],["pudding","#f7e0b5","푸딩 말랑","캐러멜 털 스킨",1900],["sesame","#cfcac4","흑임자 떡","회색 털 스킨",1900],["soda","#bfe6ff","소다 젤리","반투명 하늘색 스킨",2900]],
-  sup: [["s1","🍖","츄르 한 개","냥이의 「고맙다냥」 전용 대사 · 후원 배지",500],["s2","🛍️","츄르 한 봉지","위 보상 + 한정 스킨 「후원냥 골드」 + 자랑하기 VIP 프레임",1000],["s3","📦","츄르 한 박스","위 보상 + 새 간식 이름 투표권 + 앱 크레딧에 닉네임",3000],["s4","🐋","큰손 집사","위 보상 + 내가 쓴 대사 하나를 냥이 정식 대사로(검토 후)",10000]]
 };
 const won = n => n.toLocaleString("ko-KR") + "원";
 const esc = s => String(s).replace(/[<>&"]/g, c => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" })[c]);
