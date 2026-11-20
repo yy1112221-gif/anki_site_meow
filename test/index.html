@@ -654,6 +654,12 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .gr-no{border-color:var(--bad);color:var(--bad)} .gr-ok{background:var(--accent);border-color:var(--accent);color:var(--on-accent,#fff)}
 #pfCv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;display:none} #pet .pet-top{z-index:4} #pet.pf #pfCv{display:block}
 #pet.pf #petBG{opacity:0} #pet.pf{background:radial-gradient(120% 80% at 50% 45%,#fffdf8,#fbf1f4 60%,#f3e6ef)} #pet.pf #petGL{filter:saturate(1.18) brightness(1.05) drop-shadow(0 0 16px rgba(255,170,210,.75))}
+.sup-ov{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
+.sup-sh{width:min(560px,100%);max-height:88vh;overflow:auto;background:var(--card,#fff);color:var(--ink);border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom))}
+.sup-t{position:relative;border:1.5px solid rgba(127,127,127,.25);border-radius:16px;padding:12px 14px;margin:0 0 10px} .sup-t.hot{border-color:var(--accent);background:rgba(61,196,140,.08)}
+.sup-hot{position:absolute;top:-9px;right:14px;background:var(--accent);color:#fff;font-size:.7rem;font-weight:800;border-radius:99px;padding:2px 9px}
+.sup-h{display:flex;align-items:center;gap:8px} .sup-e{font-size:1.5rem} .sup-h b{flex:1;font-size:1rem} .sup-p{font-weight:900;font-size:1.05rem}
+.sup-t ul{margin:6px 0 10px;padding-left:1.2em;font-size:.85rem;line-height:1.6} .sup-t .btn{width:100%;justify-content:center}
 .brag-cap{width:100%;box-sizing:border-box;margin:8px 0 0;padding:10px 12px;border-radius:12px;border:1.5px solid rgba(127,127,127,.3);font:inherit;font-size:16px;background:rgba(255,255,255,.85);color:#222}
 .pet-study{position:absolute;z-index:5;left:50%;transform:translateX(-50%);bottom:calc(196px + env(safe-area-inset-bottom));border:0;border-radius:999px;padding:12px 22px;font:inherit;font-weight:900;font-size:1rem;background:var(--accent);color:var(--on-accent,#fff);box-shadow:0 8px 22px rgba(0,0,0,.18);cursor:pointer;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis} .pet-study.done{background:rgba(255,255,255,.9);color:#2b6b55} #pet.grabbing .pet-study{opacity:.25} #petClose.study{background:var(--accent);color:var(--on-accent,#fff);border-color:transparent;font-weight:800}
 .pet-brag{position:absolute;z-index:5;right:12px;top:calc(110px + env(safe-area-inset-top));height:38px;padding:0 12px;border-radius:19px;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:.85rem;font-weight:700;cursor:pointer;color:inherit}
@@ -1698,7 +1704,7 @@ function runTour(){
       const below = r.bottom + 150 < innerHeight; tip.style.top = below ? r.bottom + 16 + "px" : ""; tip.style.bottom = below ? "" : innerHeight - r.top + 16 + "px"; }); };
   const next = () => { i++; if(i >= steps.length){ ov.remove(); window.scrollTo({ top: 0, behavior: "smooth" }); return; } show(); };
   ov.onclick = next; show(); }
-const DONATE_KO = "https://qr.kakaopay.com/FONOyL9Fi";   // 카카오페이 송금코드 (한국어 화면만)
+const DONATE_KO = "";   // 개인 송금 링크는 실명이 보여서 내림(2026-11-20). 결제는 사업자·PG 연동 후 후원 숍으로
 const DONATE_JA = "";   // 일본 사용자용 후원 링크(Ko-fi 등) — 비어 있으면 숨김
 function bindCorner(){ const ko = S.meta.settings.ui === "ko", a = $("#tutAgain"), c = $("#trackOn"); if(!a) return;
   a.textContent = ko ? "튜토리얼 다시 보기" : "チュートリアルをもう一度"; $("#trackLbl").textContent = ko ? "사용 기록 보내기(익명·개선용)" : "利用データを送る（匿名・改善用）";
@@ -1713,11 +1719,28 @@ async function bizFill(){ try{ if(!BIZ){ const r = await fetch("biz.json", { cac
   const el = $("#bizLine"); if(!el || !BIZ.regNo) return;
   const ko = S.meta.settings.ui === "ko", b = BIZ, L = ko ? ["상호", "대표", "사업자등록번호", "통신판매업 신고", "주소", "문의"] : ["商号", "代表", "事業者登録番号", "通信販売業申告", "所在地", "お問い合わせ"];
   el.innerHTML = [[L[0], b.name], [L[1], b.owner], [L[2], b.regNo], [L[3], b.mailOrderNo], [L[4], b.address], [L[5], b.email]].filter(x => x[1]).map(x => `${esc(x[0])} ${esc(x[1])}`).join(" · "); }
+/* 후원 숍: 후원 금액별 보상. 결제는 사업자등록·통신판매업 신고 뒤 PG로 연결 — 지금은 「이걸로 후원할래」 의향만 모음 */
+const SUP_TIERS = [
+  { id: "s1", e: "🍖", w: 1000, y: 100, ko: ["츄르 한 개", "냥이의 「고맙다냥」 전용 대사", "🎖 후원 배지 (홈·자랑 사진에 표시)"], ja: ["おやつ1本", "ネコの「ありがとニャ」専用セリフ", "🎖 応援バッジ（ホーム・自慢写真に表示）"] },
+  { id: "s2", e: "🛍️", w: 3000, y: 300, hot: 1, ko: ["츄르 한 봉지", "위 보상 전부", "✨ 한정 스킨 「후원냥 골드」", "👑 자랑하기 VIP 프레임"], ja: ["おやつ1袋", "上の特典ぜんぶ", "✨ 限定スキン「応援ネコ・ゴールド」", "👑 自慢用VIPフレーム"] },
+  { id: "s3", e: "📦", w: 10000, y: 1000, ko: ["츄르 한 박스", "위 보상 전부", "🗳 다음 새 간식 이름 투표권", "📜 앱 크레딧에 내 닉네임"], ja: ["おやつ1箱", "上の特典ぜんぶ", "🗳 次の新おやつ名の投票権", "📜 アプリのクレジットにニックネーム"] },
+  { id: "s4", e: "🐋", w: 30000, y: 3000, ko: ["큰손 집사", "위 보상 전부", "💬 내가 쓴 대사 하나가 냥이 정식 대사로 (검토 후)"], ja: ["太っ腹な飼い主", "上の特典ぜんぶ", "💬 自分で書いたセリフがネコの公式セリフに（審査あり）"] } ];
+function supShopOpen(){ const ko = S.meta.settings.ui === "ko", m = S.meta.supWant || (S.meta.supWant = {}); track("sup_open");
+  const ov = document.createElement("div"); ov.className = "sup-ov"; ov.setAttribute("role", "dialog");
+  const cur = t => ko ? `₩${t.w.toLocaleString()}` : `¥${t.y.toLocaleString()}`;
+  ov.innerHTML = `<div class="sup-sh"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">🎁 ${ko ? "후원 숍" : "応援ショップ"}</h3><button type="button" class="btn sm" id="supX">${ko ? "닫기" : "閉じる"}</button></div>
+    <p class="small muted" style="margin:6px 0 12px">${ko ? "학습은 앞으로도 전부 무료. 후원해 주면 냥이가 이렇게 갚는다냥." : "学習はこれからもぜんぶ無料。応援してくれたらネコがこう恩返しするニャ。"}</p>
+    ${SUP_TIERS.map(t => { const L = ko ? t.ko : t.ja; return `<div class="sup-t${t.hot ? " hot" : ""}">${t.hot ? `<span class="sup-hot">${ko ? "인기" : "人気"}</span>` : ""}<div class="sup-h"><span class="sup-e">${t.e}</span><b>${esc(L[0])}</b><span class="sup-p">${cur(t)}</span></div><ul>${L.slice(1).map(z => `<li>${esc(z)}</li>`).join("")}</ul><button type="button" class="btn${t.hot ? " primary" : ""}" data-sup="${t.id}"${m[t.id] ? " disabled" : ""}>${m[t.id] ? (ko ? "찜했다냥 ♥" : "予約したニャ ♥") : (ko ? "이걸로 후원할래" : "これで応援する")}</button></div>`; }).join("")}
+    <p class="tiny muted" style="margin:10px 2px 0">${ko ? "결제는 사업자 등록이 끝나는 대로 열려요. 지금 누르면 찜만 되고 돈은 나가지 않아요." : "決済は準備中です。いま押しても予約だけで、お金はかかりません。"}</p></div>`;
+  document.body.appendChild(ov);
+  const close = () => ov.remove(); $("#supX").onclick = close; ov.onclick = e => { if(e.target === ov) close(); };
+  ov.querySelectorAll("[data-sup]").forEach(b => b.onclick = () => { const t = SUP_TIERS.find(z => z.id === b.dataset.sup); m[t.id] = Date.now(); save(); track("sup_want", { id: t.id, price: ko ? t.w : t.y, cur: ko ? "KRW" : "JPY" });
+    b.disabled = true; b.textContent = ko ? "찜했다냥 ♥" : "予約したニャ ♥"; toast(ko ? "고맙다냥… 결제가 열리면 제일 먼저 알려 주겠다" : "ありがとニャ…決済が開いたら真っ先に知らせる"); }); }
 function renderSupBox(){ const el = $("#supBox"); if(!el) return; const ko = S.meta.settings.ui === "ko";
   el.innerHTML = `<div class="sup-row">${nm("st_love", 52)}<div><b>${ko ? "MEOWCA! 암기냥이는 무료예요" : "MEOWCA!（ミョウカ）は無料です"}</b><p class="small muted" style="margin:.2em 0 0">${ko ? "광고도 없어요. 마음에 들면 친구에게 알려 주세요." : "広告もありません。気に入ったら友達に教えてください。"}</p></div></div>
-    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button>${(ko ? DONATE_KO : DONATE_JA) ? `<a class="btn primary" href="${ko ? DONATE_KO : DONATE_JA}" target="_blank" rel="noopener">🍖 ${ko ? "냥이에게 츄르 사주기" : "ネコにおやつを"}</a>` : ""}</div>
+    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button><button class="btn primary" type="button" id="supShop">🎁 ${ko ? "후원 숍 · 보상 있음" : "応援ショップ・特典つき"}</button></div>
     <p class="tiny muted" style="margin:0"><a href="privacy.html">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a> · <a href="terms.html">${ko ? "이용약관" : "利用規約"}</a></p><p class="tiny muted" id="bizLine" style="margin:0"></p>`;
-  bizFill();
+  bizFill(); $("#supShop").onclick = supShopOpen;
   $("#supShare").onclick = async () => { const url = "https://meowca.app/?ref=invite", text = ko ? "MEOWCA! 암기냥이 — 가성비로 딱 필요한 만큼만 외우고, 나머진 말랑 냥이 괴롭히기 🐾 무료" : "MEOWCA!（ミョウカ）— もう無理やり暗記しなくていい。最小限だけ覚えて、あとはネコと遊ぶ 🐾 無料";
     try{ if(navigator.share){ await navigator.share({ title: "MEOWCA!", text, url }); return; } await navigator.clipboard.writeText(text + " " + url); toast(ko ? "링크를 복사했어요" : "リンクをコピーしました"); }catch(e){} }; }
 function setAddPanel(k){   // 단어 추가: 스크롤 대신 메뉴에서 하나 고르기
@@ -2921,7 +2944,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v90";
+const APP_VER = "v91";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -4337,24 +4360,27 @@ function askSlangMix(lang, d){   // 얼마나 섞을지 무조건 물어봄 (추
   box.querySelectorAll("[data-mix]").forEach(b => b.onclick = async () => { const mix = +b.dataset.mix; b.disabled = true;
     if(!d){ d = addDeck(x.slTitle); d.preset = lang + "-slang"; }
     d.slangMix = mix; d.on = true; const n = await topUpSlang(d); save(); renderAll(); toast(x.slDone(n, mix)); renderPresets(); renderSlangBox(lang); }); }
-async function topUpSlang(d){ const lang = d.preset.split("-")[0]; let j; try{ const r = await fetch(SLANG_BASE + lang + (lang === "es" ? "_core" : "") + ".json", { cache: "no-cache" }); if(!r.ok) return 0; j = await r.json(); }catch(e){ return 0; }
-  if(lang === "es") return topUpCore(d, j);
+async function topUpSlang(d){ const lang = d.preset.split("-")[0]; let j; try{ const r = await fetch(SLANG_BASE + lang + (CORE_SL.includes(lang) ? "_core" : "") + ".json", { cache: "no-cache" }); if(!r.ok) return 0; j = await r.json(); }catch(e){ return 0; }
+  if(CORE_SL.includes(lang)) return topUpCore(d, j, lang);
   const have = new Set(Object.values(S.cards).filter(c => (c.lang || "es") === lang).map(c => norm(c.word))); let n = 0; const now = Date.now();
   (j.terms || []).filter(x => x.ex && x.ex.length && x.def && x.def.length && (x.cue == null || x.cue >= 1)).slice(0, 40).forEach((x, i) => { if(have.has(norm(x.t))) return;
     const c = newCard({ word: x.t, deck: d.id, lang }); c.slang = 1; c.lazy = 1; c.meaning = ""; c.gloss = (x.def || []).find(d => !/[?？]\s*$|^¿/.test(d)) || ""; const exs = x.ex.filter(e => e.toLowerCase().includes(x.t.toLowerCase())); if(!exs.length) return; c.example = exs[0]; x.ex = exs; c.exAlt = x.ex.slice(1, 3); c.form = findForm(c.example, c.word) || x.t; c.created = now + i;
     S.cards[c.id] = c; have.add(norm(x.t)); n++; });
   d.slangAt = Date.now(); return n; }
 /* 스페인어 유행어: 자동 수집 목록은 영어·포르투갈어가 섞여서, 사람이 고른 slang/es_core.json(뜻·예문 포함)만 쓴다 */
-function topUpCore(d, j){ const lang = "es", ui = S.meta.settings.ui === "ja" ? "ja" : "ko", have = new Set(Object.values(S.cards).filter(c => (c.lang || "es") === lang).map(c => norm(c.word))); let n = 0; const now = Date.now();
+const CORE_SL = ["es", "ko", "ja"];   // 사람이 고른 유행어 목록을 쓰는 언어
+function topUpCore(d, j, lang){ lang = lang || "es"; const ui = S.meta.settings.ui === "ja" ? "ja" : "ko", have = new Set(Object.values(S.cards).filter(c => (c.lang || "es") === lang).map(c => norm(c.word))); let n = 0; const now = Date.now();
   (j.terms || []).forEach((x, i) => { if(have.has(norm(x.t)) || !x.ex || !x.ex.length) return;
     const c = newCard({ word: x.t, deck: d.id, lang }); c.slang = 1; c.meaning = x[ui] || x.ko || ""; c.mOk = 1; c.gloss = (x.def || [])[0] || ""; c.example = x.ex[0]; c.exAlt = x.ex.slice(1, 3); c.form = findForm(c.example, c.word) || x.t; c.created = now + i;
     S.cards[c.id] = c; have.add(norm(x.t)); n++; });
   d.slangAt = Date.now(); return n; }
-async function esSlangClean(){   // 예전 자동 수집에서 들어온 스페인어 유행어 중 아직 한 번도 안 푼 것만 치움(푼 카드는 그대로). 치운 카드는 S.meta.slangTrash에 보관
-  if((S.meta.esSl || 0) >= 1) return; let core; try{ const r = await fetch(SLANG_BASE + "es_core.json", { cache: "no-cache" }); if(!r.ok) return; core = new Set(((await r.json()).terms || []).map(x => norm(x.t))); }catch(e){ return; }
+async function esSlangClean(){ for(const lang of CORE_SL){ try{ await slangCleanLang(lang); }catch(_){} } }
+async function slangCleanLang(lang){   // 예전 자동 수집에서 들어온 유행어 중 아직 한 번도 안 푼 것만 치움(푼 카드는 그대로). 치운 카드는 S.meta.slangTrash에 보관
+  const done = S.meta.slCl || (S.meta.slCl = {}); if(lang === "es" && (S.meta.esSl || 0) >= 1) done.es = 1; if(done[lang]) return;
+  let core; try{ const r = await fetch(SLANG_BASE + lang + "_core.json", { cache: "no-cache" }); if(!r.ok) return; core = new Set(((await r.json()).terms || []).map(x => norm(x.t))); }catch(e){ return; }
   const trash = S.meta.slangTrash || (S.meta.slangTrash = []); let n = 0;
-  Object.values(S.cards).forEach(c => { if(!c.slang || (c.lang || "es") !== "es" || !c.isNew || c.reps || core.has(norm(c.word))) return; trash.push(c); delete S.cards[c.id]; n++; });
-  S.meta.esSl = 1; save(); if(n){ const d = decks().find(x => x.preset === "es-slang"); if(d){ d.slangAt = 0; try{ await topUpSlang(d); save(); }catch(_){} } if(!SES) renderAll(); } }
+  Object.values(S.cards).forEach(c => { if(!c.slang || (c.lang || "es") !== lang || !c.isNew || c.reps || core.has(norm(c.word))) return; trash.push(c); delete S.cards[c.id]; n++; });
+  done[lang] = 1; if(lang === "es") S.meta.esSl = 1; save(); if(n){ const d = decks().find(x => x.preset === lang + "-slang"); if(d){ d.slangAt = 0; try{ await topUpSlang(d); save(); }catch(_){} } if(!SES) renderAll(); } }
 let PRESET_IDX = null; const PRESET_LANGS = ["es", "ja", "ko"];
 async function presetIndex(){ if(PRESET_IDX) return PRESET_IDX; const r = await fetch("../presets/index.json"); if(!r.ok) throw new Error("preset"); PRESET_IDX = await r.json(); return PRESET_IDX; }
 const lvLabel = (lv) => S.meta.settings.ui === "ko" && lv.labelKo ? lv.labelKo : lv.label;
