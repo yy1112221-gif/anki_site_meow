@@ -658,12 +658,13 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .myset h2{margin:0 0 8px} .ms-row{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid rgba(127,127,127,.15)} .ms-row:first-of-type{border-top:0}
 .ms-tg{flex-direction:row;align-items:center;justify-content:space-between;font-weight:600} .ms-tg input[type=checkbox]{width:22px;height:22px} .ms-tg select{font:inherit;padding:6px 10px;border-radius:10px;flex:0 0 auto;width:auto} .ms-tg>span{white-space:nowrap}
 .ms-row>span{font-weight:700} .ms-nick{display:flex;gap:6px} .ms-nick input{flex:1;min-width:0;font:inherit;font-size:16px;padding:9px 12px;border-radius:12px;border:1.5px solid rgba(127,127,127,.3);background:transparent;color:inherit}
+.sup-early{border-radius:16px;padding:12px 14px;margin:0 0 12px;background:linear-gradient(135deg,rgba(255,214,120,.25),rgba(255,160,190,.2));border:1.5px dashed rgba(230,140,80,.5)} .sup-early p{margin:4px 0;font-size:.86rem;line-height:1.55} .sup-early ol{margin:4px 0 0;padding-left:1.3em;font-size:.82rem;line-height:1.6} .sup-was{opacity:.5;font-weight:600;font-size:.8em;margin-right:4px}
 .sup-ov{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
 .sup-sh{width:min(560px,100%);max-height:88vh;overflow:auto;background:var(--card,#fff);color:var(--ink);border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom))}
 .sup-t{position:relative;border:1.5px solid rgba(127,127,127,.25);border-radius:16px;padding:12px 14px;margin:0 0 10px} .sup-t.hot{border-color:var(--accent);background:rgba(61,196,140,.08)}
 .sup-hot{position:absolute;top:-9px;right:14px;background:var(--accent);color:#fff;font-size:.7rem;font-weight:800;border-radius:99px;padding:2px 9px}
 .sup-h{display:flex;align-items:center;gap:8px} .sup-e{font-size:1.5rem} .sup-h b{flex:1;font-size:1rem} .sup-p{font-weight:900;font-size:1.05rem}
-.sup-t ul{margin:6px 0 10px;padding-left:1.2em;font-size:.85rem;line-height:1.6} .sup-t .btn{width:100%;justify-content:center}
+.sup-t ul{margin:6px 0 10px;padding-left:1.2em;font-size:.85rem;line-height:1.6} .sup-t .btn{width:100%;justify-content:center} .sup-t .row .btn{width:auto;text-decoration:none;white-space:nowrap} .sup-t .row a.btn{flex:1 1 auto} .sup-t .row button.btn{flex:0 0 auto}
 .brag-cap{width:100%;box-sizing:border-box;margin:8px 0 0;padding:10px 12px;border-radius:12px;border:1.5px solid rgba(127,127,127,.3);font:inherit;font-size:16px;background:rgba(255,255,255,.85);color:#222}
 .pet-study{position:absolute;z-index:5;left:50%;transform:translateX(-50%);bottom:calc(196px + env(safe-area-inset-bottom));border:0;border-radius:999px;padding:12px 22px;font:inherit;font-weight:900;font-size:1rem;background:var(--accent);color:var(--on-accent,#fff);box-shadow:0 8px 22px rgba(0,0,0,.18);cursor:pointer;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis} .pet-study.done{background:rgba(255,255,255,.9);color:#2b6b55} #pet.grabbing .pet-study{opacity:.25} #petClose.study{background:var(--accent);color:var(--on-accent,#fff);border-color:transparent;font-weight:800}
 .pet-brag{position:absolute;z-index:5;right:12px;top:calc(110px + env(safe-area-inset-top));height:38px;padding:0 12px;border-radius:19px;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:.85rem;font-weight:700;cursor:pointer;color:inherit}
@@ -673,7 +674,13 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .rec-bar{position:absolute;z-index:9;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:rgba(20,20,24,.82);color:#fff;border-radius:999px;padding:8px 8px 8px 14px;font-weight:800;font-size:.9rem}
 .rec-bar i{width:11px;height:11px;border-radius:50%;background:#ff3b5c;animation:recb 1s infinite} @keyframes recb{50%{opacity:.25}}
 .rec-bar button{border:0;border-radius:999px;background:#fff;color:#111;font:inherit;font-weight:800;padding:6px 12px;cursor:pointer}
-#bragDr{max-height:86%} .brag-row{display:flex;gap:6px;overflow-x:auto;margin:0 0 10px;padding-bottom:2px} .brag-row button{flex:0 0 auto;border:2px solid var(--line,#ddd);border-radius:999px;padding:7px 12px;background:transparent;color:inherit;font:inherit;font-weight:800;font-size:.85rem;cursor:pointer} .brag-row button[aria-pressed="true"]{border-color:#f2708f;background:rgba(242,112,143,.12)} .brag-lb{font-size:.74rem;font-weight:800;color:var(--muted);margin:2px 2px 5px}
+#bragDr{max-height:46%;display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
+.bg-hd{display:flex;gap:10px;align-items:flex-start;flex:0 0 auto;padding-bottom:8px;border-bottom:1px solid rgba(127,127,127,.15)} #bragPv{width:63px;height:112px;border-radius:9px;background:#eee;flex:0 0 auto;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.bg-hm{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px} .bg-hm small{font-size:.68rem;line-height:1.35}
+.bg-flt{align-self:flex-start;border:2px solid var(--line,#ddd);border-radius:999px;padding:4px 11px;font:inherit;font-size:.8rem;font-weight:800;background:transparent;color:inherit;cursor:pointer} .bg-flt[aria-pressed="true"]{border-color:#f2708f;background:rgba(242,112,143,.14);color:#e0598b}
+.bg-body{flex:1 1 auto;overflow-y:auto;padding:8px 0 4px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.bg-ft{flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 0 calc(10px + env(safe-area-inset-bottom));border-top:1px solid rgba(127,127,127,.15)} .bg-ft button{border:0;border-radius:999px;padding:7px;font:inherit;font-size:.86rem;font-weight:800;cursor:pointer;background:#f2708f;color:#fff}
+#bragDr .brag-lb{font-size:.74rem;margin:2px 0 4px} #bragDr .brag-row{margin:0 0 8px} #bragDr .brag-row button{padding:5px 10px;font-size:.8rem} #bragDr .brag-cap{margin:2px 0 4px;padding:8px 10px} .brag-row{display:flex;gap:6px;overflow-x:auto;margin:0 0 10px;padding-bottom:2px} .brag-row button{flex:0 0 auto;border:2px solid var(--line,#ddd);border-radius:999px;padding:7px 12px;background:transparent;color:inherit;font:inherit;font-weight:800;font-size:.85rem;cursor:pointer} .brag-row button[aria-pressed="true"]{border-color:#f2708f;background:rgba(242,112,143,.12)} .brag-lb{font-size:.74rem;font-weight:800;color:var(--muted);margin:2px 2px 5px}
 .brag-vid{width:auto;max-width:100%;height:30vh;margin-left:auto;margin-right:auto;border-radius:16px;background:#000;display:block;margin:4px 0 10px}
 .pet-cos{position:absolute;z-index:5;right:12px;top:calc(64px + env(safe-area-inset-top));height:38px;padding:0 12px;border-radius:19px;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:.85rem;font-weight:700;cursor:pointer;color:inherit}
 .cos-dr{position:absolute;z-index:9;left:0;right:0;bottom:0;max-height:62%;overflow:auto;padding:12px 12px calc(12px + env(safe-area-inset-bottom));background:#fff;border-radius:22px 22px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.18);touch-action:pan-y;animation:cosUp .25s ease-out}
@@ -1735,7 +1742,7 @@ async function nickBoot(){ const n = nickState(); if(n.name && n.srv) return; if
 const myNick = () => (S.meta.nick && S.meta.nick.name) || "";
 function bindNick(ko){ const inp = $("#nickIn"); if(!inp) return; const n = nickState(), msg = $("#nickMsg");
   $("#mySetH").textContent = ko ? "내 설정" : "マイ設定"; $("#nickLbl").textContent = ko ? "닉네임" : "ニックネーム"; $("#nickSave").textContent = ko ? "저장" : "保存";
-  inp.value = n.name || ""; inp.placeholder = ko ? "2~12자" : "2〜12文字"; msg.textContent = n.name && !n.srv ? (ko ? "중복 확인 대기 중" : "重複チェック待ち") : (ko ? "다른 사람과 겹칠 수 없어요. 언제든 바꿀 수 있어요." : "他の人と重複不可。いつでも変更できます。");
+  inp.value = n.name || ""; $("#nickLbl").textContent = (ko ? "닉네임" : "ニックネーム") + (supBadge() ? "  🎖 " + (ko ? "후원 집사" : "応援飼い主") : ""); inp.placeholder = ko ? "2~12자" : "2〜12文字"; msg.textContent = n.name && !n.srv ? (ko ? "중복 확인 대기 중" : "重複チェック待ち") : (ko ? "다른 사람과 겹칠 수 없어요. 언제든 바꿀 수 있어요." : "他の人と重複不可。いつでも変更できます。");
   $("#nickDice").onclick = () => { inp.value = nickRand(); };
   $("#nickSave").onclick = async () => { const v = inp.value.trim(); if(v === n.name && n.srv){ msg.textContent = ko ? "지금 쓰는 닉네임이에요" : "いまのニックネームです"; return; }
     if(!nickOk(v)){ msg.textContent = ko ? "2~12자, 한글·일본어·영문·숫자·_만 쓸 수 있어요" : "2〜12文字、かな・漢字・英数字・_のみ"; return; }
@@ -1745,10 +1752,14 @@ function bindNick(ko){ const inp = $("#nickIn"); if(!inp) return; const n = nick
     else if(r === "bad") msg.textContent = ko ? "쓸 수 없는 닉네임이에요" : "使えないニックネームです";
     else { n.name = v; n.srv = 0; n.auto = 0; save(); msg.textContent = ko ? "저장했어요 (중복 확인은 연결되면 자동으로)" : "保存しました（重複チェックは接続後に自動）"; } }; }
 /* 운영자 선물: meowca.app/#gift=비밀값 → 간식 전부 100개 + 꾸미기 전부 보유 (비밀값의 해시만 코드에 있음) */
+const SUP_GIFT_H = { "9af1734d74b93f41b4fea526e61350769e752c99da69be0f8b88dd614a394e7a": 1, "057e2a8b4e5fa5d495274109cf5fae2962bf104e8e622f9d04fb35b8efe5319e": 2, "a4cd820da3b23db6efb69dea0167478d01b5501e46ba37070cae3db87e1da539": 3, "de9b2aa1c84ce41a1b610cca82bb4c03a379d3d4f658a58a2d403e877ec39901": 4 };   // 후원 단계별 선물 링크(비밀값 해시)
 const GIFT_H = ["3f18b5b1cc37906ec92ac474dfa6f9cd6717fb60a9fb8c78f0517aadb7590ce6"];
 async function giftCheck(){ const m = location.hash.match(/gift=([\w-]+)/); if(!m) return; history.replaceState(null, "", location.pathname + location.search);
   let h = ""; try{ const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(m[1])); h = [...new Uint8Array(d)].map(v => v.toString(16).padStart(2, "0")).join(""); }catch(_){ return; }
-  if(!GIFT_H.includes(h)) return; const g = S.meta.giftDone || (S.meta.giftDone = {}); const ko = S.meta.settings.ui !== "ja";
+  const g = S.meta.giftDone || (S.meta.giftDone = {}); const ko = S.meta.settings.ui !== "ja"; const lv = SUP_GIFT_H[h];
+  if(lv){ const cur = S.meta.sup || 0; if(cur >= lv){ toast(ko ? "이미 받은 후원 선물이다냥 ♥" : "もう受け取った応援プレゼントだニャ ♥"); return; } S.meta.sup = lv; supApply(); save(); track("sup_gift", { lv });
+    toast(ko ? "🎖 후원 보상 도착! 고맙다냥… 진심이다" : "🎖 応援特典が届いたニャ！…本気でありがとう"); if(!SES) renderAll(); return; }
+  if(!GIFT_H.includes(h)) return;
   if(g[h]){ toast(ko ? "선물은 이미 받았다냥" : "プレゼントはもう受け取ったニャ"); return; }
   const p = petState(); PET_ITEMS.forEach(it => { p.inv[it.id] = Math.max(p.inv[it.id] || 0, 100); });
   const cm = S.meta.cos || (S.meta.cos = {}); cm.own = cm.own || {}; COS.filter(c => c.c !== "snack").forEach(c => { cm.own[c.id] = 1; });
@@ -1765,15 +1776,27 @@ const SUP_TIERS = [
   { id: "s2", e: "🛍️", w: 3000, y: 300, hot: 1, ko: ["츄르 한 봉지", "위 보상 전부", "✨ 한정 스킨 「후원냥 골드」", "👑 자랑하기 VIP 프레임"], ja: ["おやつ1袋", "上の特典ぜんぶ", "✨ 限定スキン「応援ネコ・ゴールド」", "👑 自慢用VIPフレーム"] },
   { id: "s3", e: "📦", w: 10000, y: 1000, ko: ["츄르 한 박스", "위 보상 전부", "🗳 다음 새 간식 이름 투표권", "📜 앱 크레딧에 내 닉네임"], ja: ["おやつ1箱", "上の特典ぜんぶ", "🗳 次の新おやつ名の投票権", "📜 アプリのクレジットにニックネーム"] },
   { id: "s4", e: "🐋", w: 30000, y: 3000, ko: ["큰손 집사", "위 보상 전부", "💬 내가 쓴 대사 하나가 냥이 정식 대사로 (검토 후)"], ja: ["太っ腹な飼い主", "上の特典ぜんぶ", "💬 自分で書いたセリフがネコの公式セリフに（審査あり）"] } ];
+/* 후원 보상 적용: 1 배지·고맙다냥 대사 / 2 골드 스킨·VIP 프레임 / 3 투표권·크레딧(운영자가 따로) / 4 내 대사(운영자가 따로) */
+function supApply(){ const lv = S.meta.sup || 0; if(lv >= 2){ const cm = S.meta.cos || (S.meta.cos = {}); cm.own = cm.own || {}; cm.own.sup_gold = 1; } }
+const supBadge = () => (S.meta.sup || 0) >= 1 ? "🎖 " : "";
+const SUP_THX = { ko: ["…후원해 준 거, 잊지 않았다.", "너 같은 집사가 있어서 오늘도 버틴다냥.", "고맙다냥. …두 번은 말 안 한다.", "츄르값을 낸 자… 특별 대우다."], ja: ["…応援してくれたこと、忘れてないぞ。", "おまえのおかげで今日もがんばれるニャ。", "ありがとニャ。…二度は言わないぞ。", "おやつ代を払った者…特別扱いだ。"] };
+function supThx(){ if(!(S.meta.sup >= 1) || Math.random() > .35) return; const a = SUP_THX[S.meta.settings.ui === "ja" ? "ja" : "ko"]; setTimeout(() => { if(PET) petMsg(a[Math.floor(Math.random() * a.length)], 3000); }, 1600); }
+const SUP_EARLY = { s1: 500, s2: 1000, s3: 3000, s4: 10000 };   // 얼리 집사 특가(한국어·카카오페이 송금 기간만)
 function supShopOpen(){ const ko = S.meta.settings.ui === "ko", m = S.meta.supWant || (S.meta.supWant = {}); track("sup_open");
   const ov = document.createElement("div"); ov.className = "sup-ov"; ov.setAttribute("role", "dialog");
-  const cur = t => ko ? `₩${t.w.toLocaleString()}` : `¥${t.y.toLocaleString()}`;
+  const early = ko && !!DONATE_KO, cur = t => early ? `<s class="sup-was">₩${t.w.toLocaleString()}</s> ₩${SUP_EARLY[t.id].toLocaleString()}` : ko ? `₩${t.w.toLocaleString()}` : `¥${t.y.toLocaleString()}`;
   ov.innerHTML = `<div class="sup-sh"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">🎁 ${ko ? "후원 숍" : "応援ショップ"}</h3><button type="button" class="btn sm" id="supX">${ko ? "닫기" : "閉じる"}</button></div>
-    <p class="small muted" style="margin:6px 0 12px">${ko ? "학습은 앞으로도 전부 무료. 후원해 주면 냥이가 이렇게 갚는다냥." : "学習はこれからもぜんぶ無料。応援してくれたらネコがこう恩返しするニャ。"}</p>
-    ${SUP_TIERS.map(t => { const L = ko ? t.ko : t.ja; return `<div class="sup-t${t.hot ? " hot" : ""}">${t.hot ? `<span class="sup-hot">${ko ? "인기" : "人気"}</span>` : ""}<div class="sup-h"><span class="sup-e">${t.e}</span><b>${esc(L[0])}</b><span class="sup-p">${cur(t)}</span></div><ul>${L.slice(1).map(z => `<li>${esc(z)}</li>`).join("")}</ul><button type="button" class="btn${t.hot ? " primary" : ""}" data-sup="${t.id}"${m[t.id] ? " disabled" : ""}>${m[t.id] ? (ko ? "찜했다냥 ♥" : "予約したニャ ♥") : (ko ? "이걸로 후원할래" : "これで応援する")}</button></div>`; }).join("")}
-    <p class="tiny muted" style="margin:10px 2px 0">${ko ? "결제는 사업자 등록이 끝나는 대로 열려요. 지금 누르면 찜만 되고 돈은 나가지 않아요." : "決済は準備中です。いま押しても予約だけで、お金はかかりません。"}</p></div>`;
+    <p class="small muted" style="margin:6px 0 10px">${ko ? "학습은 앞으로도 전부 무료. 후원해 주면 냥이가 이렇게 갚는다냥." : "学習はこれからもぜんぶ無料。応援してくれたらネコがこう恩返しするニャ。"}</p>
+    ${early ? `<div class="sup-early"><b>🐣 얼리 집사 특가</b><p>아직 정식 결제 시스템을 준비 중이라… 지금은 카카오페이 송금으로만 받고 있어요 ㅎㅎ; 대신 초반에 함께해 주시는 분들께는 <b>더 싼 가격에, 보상은 그대로 전부</b> 드려요.</p><ol><li>원하는 단계의 「카카오페이로 후원」을 눌러 송금</li><li>돌아와서 「보냈어요」를 누르면 닉네임으로 신청 완료</li><li>보통 하루 안에 「문의」함으로 보상 링크가 도착 (빨간 점)</li></ol></div>` : ""}
+    ${SUP_TIERS.map(t => { const L = ko ? t.ko : t.ja; return `<div class="sup-t${t.hot ? " hot" : ""}">${t.hot ? `<span class="sup-hot">${ko ? "인기" : "人気"}</span>` : ""}<div class="sup-h"><span class="sup-e">${t.e}</span><b>${esc(L[0])}</b><span class="sup-p">${cur(t)}</span></div><ul>${L.slice(1).map(z => `<li>${esc(z)}</li>`).join("")}</ul>${early ? `<div class="row" style="gap:6px;flex-wrap:nowrap"><a class="btn${t.hot ? " primary" : ""}" style="flex:1;justify-content:center" href="${DONATE_KO}" target="_blank" rel="noopener" data-kp="${t.id}">🍖 카카오페이로 후원</a><button type="button" class="btn" data-sent="${t.id}">보냈어요</button></div>` : `<button type="button" class="btn${t.hot ? " primary" : ""}" data-sup="${t.id}"${m[t.id] ? " disabled" : ""}>${m[t.id] ? (ko ? "찜했다냥 ♥" : "予約したニャ ♥") : (ko ? "이걸로 후원할래" : "これで応援する")}</button>`}</div>`; }).join("")}
+    <p class="tiny muted" style="margin:10px 2px 0">${early ? "송금 화면에는 운영자 실명이 표시돼요. 정식 결제가 열리면 그때부터는 정가로 바뀌어요." : ko ? "결제는 사업자 등록이 끝나는 대로 열려요. 지금 누르면 찜만 되고 돈은 나가지 않아요." : "決済は準備中です。いま押しても予約だけで、お金はかかりません。"}</p></div>`;
   document.body.appendChild(ov);
   const close = () => ov.remove(); $("#supX").onclick = close; ov.onclick = e => { if(e.target === ov) close(); };
+  ov.querySelectorAll("[data-kp]").forEach(a => a.onclick = () => track("sup_kp", { id: a.dataset.kp, price: SUP_EARLY[a.dataset.kp] }));
+  ov.querySelectorAll("[data-sent]").forEach(b => b.onclick = () => { const t = SUP_TIERS.find(z => z.id === b.dataset.sent), nick = myNick() || "(닉네임 없음)";
+    const who = prompt(`송금할 때 보이는 이름(또는 송금 메모)을 적어 주세요.\n받은 송금과 맞춰 보는 데만 써요.`, ""); if(who === null) return;
+    const tk = { id: uuid4(), t: Date.now(), kind: "sup", msg: `[후원] ${t.ko[0]} ₩${SUP_EARLY[t.id]} · 닉네임 ${nick} · 송금자 ${String(who).slice(0, 30)}`, diag: fbDiag(), st: "new" }; fbList().push(tk); save(); fbPush(tk);
+    track("sup_sent", { id: t.id, price: SUP_EARLY[t.id] }); b.disabled = true; b.textContent = "신청됨 ✓"; toast("고맙다냥…! 확인되면 「문의」함으로 보상 링크를 보내 주겠다"); });
   ov.querySelectorAll("[data-sup]").forEach(b => b.onclick = () => { const t = SUP_TIERS.find(z => z.id === b.dataset.sup); m[t.id] = Date.now(); save(); track("sup_want", { id: t.id, price: ko ? t.w : t.y, cur: ko ? "KRW" : "JPY" });
     b.disabled = true; b.textContent = ko ? "찜했다냥 ♥" : "予約したニャ ♥"; toast(ko ? "고맙다냥… 결제가 열리면 제일 먼저 알려 주겠다" : "ありがとニャ…決済が開いたら真っ先に知らせる"); }); }
 function renderSupBox(){ const el = $("#supBox"); if(!el) return; const ko = S.meta.settings.ui === "ko";
@@ -2984,7 +3007,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v94";
+const APP_VER = "v95";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3475,7 +3498,7 @@ function openPet(welcome){
     <div class="pet-msg" id="petMsg" aria-live="polite"></div>
     <div class="pet-bottom"><p class="pet-hint">${esc(x.hint)}</p>
       ${isTest ? `<div class="row" style="justify-content:center;gap:6px"><button class="btn sm" type="button" id="petTest">${esc(x.test)}</button><label class="small" style="display:flex;gap:6px;align-items:center">${esc(x.testStreak)}<input id="petTestS" type="number" min="0" max="200" value="${streak()}" style="width:70px"></label></div>` : ""}</div>`;
-  $("#petClose").onclick = closePet; $("#petCos").onclick = cosOpen; $("#petBrag").onclick = bragOpen; petStudyBtn(); if(S.meta.pfOn) el.classList.add("pf");
+  $("#petClose").onclick = closePet; $("#petCos").onclick = cosOpen; $("#petBrag").onclick = bragOpen; petStudyBtn(); supThx(); if(S.meta.pfOn) el.classList.add("pf");
   $("#petSnd").onclick = () => { const nx = { mix: "loud", loud: false, off: true }[sndMode()]; S.meta.settings.petSound = nx; save(); const m = sndMode(); $("#petSnd").textContent = { mix: "🔉", loud: "🔊", off: "🔇" }[m];
     applySndMode(); if(PMASTER) PMASTER.gain.value = petSoundOn() ? 1 : 0; petMsg(pt().sndMode[m], 2600); if(petSoundOn()){ pa(); sfxPoyon(.3); } };
   const tb = $("#petTest"); if(tb){ tb.onclick = () => { const s = streak(), top = petTier(s); for(let i = 0; i < 10; i++){ const c = PET_ITEMS.filter(it => it.t <= top); const it = c[Math.floor(Math.random() * c.length)]; p.inv[it.id] = (p.inv[it.id] || 0) + 1; } save(); petTray(); };
@@ -3806,6 +3829,7 @@ const COS = [
   { id: "glasses",  c: "acc", e: "👓", ko: "공부 안경", ja: "勉強メガネ", w: 990, y: 120 },
   { id: "crown",    c: "acc", e: "👑", ko: "함락 왕관", ja: "陥落の王冠", w: 1500, y: 160 },
   { id: "snd_jelly",c: "snd", e: "🔔", ko: "말랑 효과음 팩", ja: "ぷにぷに効果音", w: 1500, y: 160 },
+  { id: "sup_gold", c: "skin", e: "🎖", ko: "후원냥 골드 (후원 보상)", ja: "応援ネコ・ゴールド（応援特典）", w: 0, y: 0, f: ["#fff6d6", "#f4cf6a", "#c8962e"], sup: 2 },
   { id: "set1",     c: "set", e: "🎁", ko: "젤리 냥이 세트 (스킨 3 + 리본)", ja: "ゼリーねこセット（スキン3＋リボン）", w: 4900, y: 500 } ];
 const COS_T = {
   ko: { title: "냥이 상점", note: "곧 판매 예정 · 스킨은 눌러서 입어 볼 수 있다냥. 찜하면 나올 때 제일 먼저 알려 준다냥", cats: { snack: "간식 🛒", skin: "말랑 스킨", acc: "소품", snd: "소리", set: "세트" }, snackNote: "남들 공부할 때, 나는 냥이 간식비를 낸다 💸 (공부로 받은 간식은 평생 보관 · 산 간식은 기간 안에, 많이 살수록 오래)", want: "사고 싶다냥 ♥", wanted: "찜했다냥 ♥", soon: "준비 중",
@@ -3829,7 +3853,7 @@ function cosOpen(){ const pet = $("#pet"); if(!pet || $("#cosDr")) return; const
       $("#cosWant").disabled = true; $("#cosWant").textContent = x.wanted;
       $("#cosQ").innerHTML = `<p style="margin:2px 0 6px">${esc(x.q(price))}</p><div class="row">${x.opts.map((o, i) => `<button type="button" class="btn sm" data-v="${i}">${esc(o)}</button>`).join("")}</div>`;
       petLift(dr); $("#cosQ").querySelectorAll("[data-v]").forEach(b => b.onclick = () => { track("cos_price", { id: it.id, v: +b.dataset.v, price: ja ? it.y : it.w, cur: ja ? "JPY" : "KRW" }); $("#cosQ").innerHTML = `<p style="margin:2px 0 0">${esc(x.thx)}</p>`; if(PET) petMsg(x.thx, 2400); }); }; };
-  const tab = c => { $("#cosRow").innerHTML = COS.filter(i => i.c === c).map(card).join(""); const nt = dr.querySelector(".cos-note"); if(nt) nt.textContent = c === "snack" ? x.snackNote : x.note; dr.querySelectorAll(".cos-tabs button").forEach(z => z.setAttribute("aria-pressed", String(z.dataset.cat === c)));
+  const tab = c => { $("#cosRow").innerHTML = COS.filter(i => i.c === c && (!i.sup || (cm.own || {})[i.id])).map(card).join(""); const nt = dr.querySelector(".cos-note"); if(nt) nt.textContent = c === "snack" ? x.snackNote : x.note; dr.querySelectorAll(".cos-tabs button").forEach(z => z.setAttribute("aria-pressed", String(z.dataset.cat === c)));
     $("#cosRow").querySelectorAll(".cos-it").forEach(b => b.onclick = () => onIt(b)); };
   dr.querySelectorAll(".cos-tabs button").forEach(b => b.onclick = () => tab(b.dataset.cat));
   const onIt = b => { const it = COS.find(c => c.id === b.dataset.id);
@@ -3844,11 +3868,11 @@ function petLift(dr){ const st = PET; if(!st) return; if(st.by0 == null) st.by0 
 /* ════════ 자랑하기: 내 냥이 사진·영상(직접 녹화)을 꾸민 버전(공주 필터) / 진짜 버전으로 골라 인스타·카톡·LINE 등에 공유 ════════ */
 const BRAG_T = {
   ko: { title: "내 냥이 자랑하기", cute: "✨ 대외용", cuteS: "공주 필터·갓생 각", real: "🫥 진짜 모습", realS: "필터 없음·있는 그대로", photo: "📷 사진 공유", video: "🎥 영상 찍기", save: "저장", share: "공유하기", again: "다시 찍기", close: "닫기", stop: "그만", note: "영상은 최대 15초. 찍는 동안 냥이를 만지고 간식을 주면 그대로 담겨.",
-    top: (lv, d) => `Lv.${lv} 🎀 갓생 D+${d}`, cap: n => n ? `오늘도 딱 ${n}개 외우고 말랑 충전 완료` : "오늘도 냥이랑 갓생 중",
+    top: (lv, d) => `${supBadge()}Lv.${lv} 🎀 갓생 D+${d}`, cap: n => n ? `오늘도 딱 ${n}개 외우고 말랑 충전 완료` : "오늘도 냥이랑 갓생 중",
     realTop: (lv, d, m) => `Lv.${lv} · 공부 ${d}일째 · 함락도: ${m}`, realCap: n => n ? `사실 오늘 ${n}개 외움` : "사실 오늘 0개… 냥이만 만졌다",
     txtCute: (lv, d) => `오늘도 갓생 🎀 Lv.${lv} 말랑냥 키우는 중 (D+${d})`, txtReal: n => n ? `사실 오늘 ${n}개 외웠다…냥` : "사실 오늘은 냥이만 만졌다", saved: "저장했어. 사진첩·파일에서 올리면 돼냥", noRec: "이 브라우저는 영상 녹화를 지원하지 않는다냥. 사진으로 자랑해 줘" },
   ja: { title: "うちのネコを自慢", cute: "✨ 外向け", cuteS: "姫フィルター・キラキラ", real: "🫥 ありのまま", realS: "フィルターなし", photo: "📷 写真をシェア", video: "🎥 動画を撮る", save: "保存", share: "シェア", again: "撮り直す", close: "閉じる", stop: "ストップ", note: "動画は最大15秒。撮影中にネコを触ったりおやつをあげるとそのまま入るよ。",
-    top: (lv, d) => `Lv.${lv} 🎀 キラキラ D+${d}`, cap: n => n ? `今日もちょうど${n}語おぼえて ぷにぷに充電完了` : "今日もネコとキラキラ生活",
+    top: (lv, d) => `${supBadge()}Lv.${lv} 🎀 キラキラ D+${d}`, cap: n => n ? `今日もちょうど${n}語おぼえて ぷにぷに充電完了` : "今日もネコとキラキラ生活",
     realTop: (lv, d, m) => `Lv.${lv} · 勉強${d}日目 · 陥落度: ${m}`, realCap: n => n ? `実は今日${n}語だけ` : "実は今日0語…ネコ触ってただけ",
     txtCute: (lv, d) => `今日もキラキラ🎀 Lv.${lv}のぷにネコ育て中 (D+${d})`, txtReal: n => n ? `実は今日${n}語だけ…ニャ` : "実は今日はネコを触ってただけ", saved: "保存したニャ。写真・ファイルから投稿してね", noRec: "このブラウザは動画撮影に対応してないニャ。写真で自慢してね" } };
 const bt = () => Object.assign({}, BRAG_T[S.meta.settings.ui === "ja" ? "ja" : "ko"]);
@@ -3862,6 +3886,7 @@ const BRAG_TH = {
   cloud: { e: "☁️", ko: "구름", ja: "くも", veil: ["rgba(214,236,255,.95)", "rgba(232,226,255,.93)", "rgba(255,244,224,.94)"], ring2: "#9cc9f5", dots: ["#fff", "#d6ecff"], orn: "cloud", sp: ["☆", "✦"], sc: ["#fff", "#7fb0f0"], pill: "#4a86c5", cap: "#3f78b5" },
   berry: { e: "🍓", ko: "딸기", ja: "いちご", veil: ["rgba(255,225,228,.95)", "rgba(255,243,240,.94)", "rgba(255,230,238,.95)"], ring2: "#ef6b7b", dots: ["#ef6b7b", "#fff"], orn: "berry", sp: ["🍓", "♡"], sc: ["#ef6b7b", "#ff9aa8"], pill: "#d9465c", cap: "#c23a50" },
   heart: { e: "💌", ko: "하트", ja: "ハート", veil: ["rgba(255,222,236,.95)", "rgba(255,236,246,.94)", "rgba(248,220,255,.95)"], ring2: "#ff7eb0", dots: ["#ff7eb0", "#ffd1e3"], orn: "hearts", sp: ["♡", "♥"], sc: ["#ff7eb0", "#fff"], pill: "#e04f8c", cap: "#c23c7a" },
+  vip:   { e: "👑", ko: "VIP", ja: "VIP", sup: 2, veil: ["rgba(255,240,200,.95)", "rgba(255,228,236,.93)", "rgba(250,236,200,.95)"], ring2: "#d9a93a", dots: ["#e8c25a", "#fff"], orn: "hearts", sp: ["👑", "✦"], sc: ["#d9a93a", "#fff"], pill: "#b9862a", cap: "#9a6d1c" },
   polar: { e: "📷", ko: "폴라로이드", ja: "チェキ", veil: ["rgba(240,232,220,.96)", "rgba(250,244,236,.95)", "rgba(236,226,212,.96)"], ring2: "#e6dccd", dots: [], orn: "polar", sp: ["✦"], sc: ["#fff"], pill: "#6b5b4b", cap: "#5a4a3a" } };
 function bragDeco(g, W, H, cx, cy, R, t, ver, k, th, zoom, live){ const st = bragStats(), x = bt(), T = BRAG_TH[th] || BRAG_TH.hime;
   const font = (w, px, fam) => `${w} ${Math.round(px * k)}px ${fam || '"Arial Rounded MT Bold","Hiragino Maru Gothic ProN","Apple SD Gothic Neo","Noto Sans CJK KR",sans-serif'}`;
@@ -3954,40 +3979,43 @@ function bragStickers(g, W, H, t, ver){ const o = bragO(), ja = S.meta.settings.
     g.fillStyle = "rgba(255,255,255,.65)"; g.fillRect(-18 * k, -TH / 2 - 7 * k, 36 * k, 14 * k);
     g.fillStyle = s.fg; g.textAlign = "left"; g.textBaseline = "alphabetic"; g.font = font(800, 12); g.globalAlpha = .75; g.fillText(s.h, -TW / 2 + 14 * k, -TH / 2 + 22 * k); g.globalAlpha = 1;
     g.font = font(900, 24); g.fillText(w, -TW / 2 + 14 * k, -TH / 2 + 52 * k); g.font = font(700, 13); g.globalAlpha = .8; g.fillText(m, -TW / 2 + 14 * k, -TH / 2 + 72 * k); g.restore(); }); }
-let BRAG = null, BRAG_SNAP = null;
+let BRAG = null, BRAG_SNAP = null, BRAG_PV = null;
 function bragFrame(st){ const pet = $("#pet"); if(!pet) return; const t = performance.now() / 1000;
   if(pet.classList.contains("pf")){ const c = $("#pfCv"); if(c){ const dpr = Math.min(2, devicePixelRatio || 1), G = bragGeo(st); if(c.width !== Math.round(G.w * dpr)){ c.width = Math.round(G.w * dpr); c.height = Math.round(G.h * dpr); }
     const g = c.getContext("2d"); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, c.width, c.height); g.globalAlpha = .8; bragDeco(g, c.width, c.height, G.cx * dpr, G.cy * dpr, G.R * dpr, t, "cute", dpr, S.meta.bragTh || "hime", false, true); g.globalAlpha = 1; } }
+  if(BRAG_PV){ const pv = $("#bragPv"); if(pv && (st._pvf = (st._pvf || 0) + 1) % 2 === 0){ try{ bragCompose(st, pv, BRAG_PV.ver, t, BRAG_PV.th, BRAG_PV.zoom); }catch(_){} } }   // 시트 안 미리보기: 결과물 그대로
   if(BRAG_SNAP){ const q = BRAG_SNAP; BRAG_SNAP = null; const out = document.createElement("canvas"); out.width = 1080; out.height = 1920; bragCompose(st, out, q.ver, t, q.th, q.zoom); q.cb(out); }
   if(BRAG && BRAG.rec && BRAG.out){ bragCompose(st, BRAG.out, BRAG.ver, t, BRAG.th, BRAG.zoom); const sec = Math.floor((Date.now() - BRAG.t0) / 1000), el = $("#recT"); if(el) el.textContent = `${sec}s`; if(Date.now() - BRAG.t0 > 15000) bragStop(); } }
 function bragSheet(html){ const pet = $("#pet"); let dr = $("#bragDr"); if(!dr){ dr = document.createElement("div"); dr.className = "cos-dr"; dr.id = "bragDr"; ["pointerdown", "touchstart", "mousedown", "wheel"].forEach(ev => dr.addEventListener(ev, e => e.stopPropagation(), { passive: true })); pet.appendChild(dr); }
   dr.innerHTML = html; petLift(dr); return dr; }
 function bragOpen(){ if(!PET) return; const x = bt(), ja = S.meta.settings.ui === "ja"; let ver = S.meta.pfOn ? "cute" : (S.meta.bragVer || "cute"), th = S.meta.bragTh || "hime", zoom = !!S.meta.bragZoom; track("brag_open");
-  const L = ja ? { frame: "フレーム", comp: "構図", full: "🖼 全体", zoom: "🔍 ネコだけアップ" } : { frame: "프레임", comp: "구도", full: "🖼 전체", zoom: "🔍 냥이만 확대" };
-  const dr = bragSheet(`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><h3>📸 ${esc(x.title)}</h3><button type="button" class="btn sm" id="bragX">${esc(x.close)}</button></div>
-    <div class="brag-v"><button type="button" data-ver="cute">${esc(x.cute)}<small>${esc(x.cuteS)}</small></button><button type="button" data-ver="real">${esc(x.real)}<small>${esc(x.realS)}</small></button></div>
-    <div id="bragThW"><div class="brag-lb">${L.frame}</div><div class="brag-row">${Object.entries(BRAG_TH).map(([id, T]) => `<button type="button" data-th="${id}">${T.e} ${esc(ja ? T.ja : T.ko)}</button>`).join("")}</div></div>
+  const L = ja ? { frame: "フレーム", comp: "構図", full: "🖼 全体", zoom: "🔍 ネコだけ", tex: "質感", put: "のせる", flt: "✨ フィルター", ph: "📷 写真", vd: "🎥 動画", pv: "プレビュー" } : { frame: "프레임", comp: "구도", full: "🖼 전체", zoom: "🔍 냥이만", tex: "질감", put: "얹기", flt: "✨ 필터", ph: "📷 사진", vd: "🎥 영상", pv: "미리보기" };
+  const dr = bragSheet(`<div class="bg-hd"><canvas id="bragPv" width="135" height="240" aria-label="${L.pv}"></canvas><div class="bg-hm"><b>📸 ${esc(x.title)}</b><button type="button" class="bg-flt" id="bragFlt"></button><small class="muted">${esc(x.note)}</small></div><button type="button" class="btn sm" id="bragX">${esc(x.close)}</button></div>
+    <div class="bg-body"><div id="bragThW"><div class="brag-lb">${L.frame}</div><div class="brag-row">${Object.entries(BRAG_TH).filter(([id, T]) => !T.sup || (S.meta.sup || 0) >= T.sup || (S.meta.cos && S.meta.cos.own && S.meta.cos.own.sup_gold)).map(([id, T]) => `<button type="button" data-th="${id}">${T.e} ${esc(ja ? T.ja : T.ko)}</button>`).join("")}</div></div>
     <div class="brag-lb">${L.comp}</div><div class="brag-row"><button type="button" data-zm="0">${L.full}</button><button type="button" data-zm="1">${L.zoom}</button></div>
-    <div class="brag-lb">${ja ? "質感" : "질감"}</div><div class="brag-row">${Object.entries(BRAG_TEX).map(([id, z]) => `<button type="button" data-tx="${id}">${z[0]} ${esc(ja ? z[2] : z[1])}</button>`).join("")}</div>
-    <div class="brag-lb">${ja ? "のせる" : "얹기"}</div><div class="brag-row"><button type="button" data-st="word">📝 ${ja ? "よく間違える単語" : "자꾸 틀리는 단어"}</button><button type="button" data-st="slang">🔥 ${ja ? "スラング" : "유행어"}</button><button type="button" id="bragSlR" title="↻">↻</button></div>
-    <input id="bragCap" class="brag-cap" maxlength="40" placeholder="${ja ? "✏️ 字幕を書く（空欄ならおまかせ）" : "✏️ 자막 쓰기 (비우면 자동 문구)"}">
-    <div class="brag-a"><button type="button" id="bragPh">${esc(x.photo)}</button><button type="button" id="bragVd">${esc(x.video)}</button></div><p class="cos-note" style="margin:8px 2px 0">${esc(x.note)}</p>`);
+    <div class="brag-lb">${L.tex}</div><div class="brag-row">${Object.entries(BRAG_TEX).map(([id, z]) => `<button type="button" data-tx="${id}">${z[0]} ${esc(ja ? z[2] : z[1])}</button>`).join("")}</div>
+    <div class="brag-lb">${L.put}</div><div class="brag-row"><button type="button" data-st="word">📝 ${ja ? "よく間違える単語" : "자꾸 틀리는 단어"}</button><button type="button" data-st="slang">🔥 ${ja ? "スラング" : "유행어"}</button><button type="button" id="bragSlR" title="↻">↻</button></div>
+    <input id="bragCap" class="brag-cap" maxlength="40" placeholder="${ja ? "✏️ 字幕を書く（空欄ならおまかせ）" : "✏️ 자막 쓰기 (비우면 자동 문구)"}"></div>
+    <div class="bg-ft"><button type="button" id="bragPh">${L.ph}</button><button type="button" id="bragVd">${L.vd}</button></div>`);
   const sync = () => { S.meta.bragVer = ver; S.meta.pfOn = ver === "cute"; S.meta.bragTh = th; S.meta.bragZoom = zoom; save(); $("#pet").classList.toggle("pf", ver === "cute");
-    dr.querySelectorAll("[data-ver]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.ver === ver))); dr.querySelectorAll("[data-th]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.th === th)));
-    dr.querySelectorAll("[data-zm]").forEach(b => b.setAttribute("aria-pressed", String((b.dataset.zm === "1") === zoom))); $("#bragThW").style.opacity = ver === "cute" ? 1 : .4;
+    const f = $("#bragFlt"); f.textContent = `${L.flt} ${ver === "cute" ? "ON" : "OFF"}`; f.setAttribute("aria-pressed", String(ver === "cute"));
+    dr.querySelectorAll("[data-th]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.th === th && ver === "cute")));
+    dr.querySelectorAll("[data-zm]").forEach(b => b.setAttribute("aria-pressed", String((b.dataset.zm === "1") === zoom))); $("#bragThW").style.opacity = ver === "cute" ? 1 : .45;
     const O = bragO(); dr.querySelectorAll("[data-tx]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.tx === O.tex))); dr.querySelectorAll("[data-st]").forEach(b => b.setAttribute("aria-pressed", String(!!O[b.dataset.st]))); };
-  sync(); dr.querySelectorAll("[data-ver]").forEach(b => b.onclick = () => { ver = b.dataset.ver; sync(); });
-  dr.querySelectorAll("[data-th]").forEach(b => b.onclick = () => { th = b.dataset.th; if(ver !== "cute") ver = "cute"; sync(); track("brag_theme", { th }); });
+  BRAG_PV = { get ver(){ return ver; }, get th(){ return th; }, get zoom(){ return zoom; } };
+  sync(); $("#bragFlt").onclick = () => { ver = ver === "cute" ? "real" : "cute"; sync(); track("brag_flt", { on: ver === "cute" }); };
+  dr.querySelectorAll("[data-th]").forEach(b => b.onclick = () => { th = b.dataset.th; ver = "cute"; sync(); track("brag_theme", { th }); });
   dr.querySelectorAll("[data-zm]").forEach(b => b.onclick = () => { zoom = b.dataset.zm === "1"; sync(); });
   { const O = bragO(), noW = ja ? "まだ間違えた単語がないニャ。優秀…" : "아직 틀린 단어가 없다냥. 기특하군…", noS = ja ? "スラングはまだないニャ（追加 → スラング）" : "아직 유행어 카드가 없다냥 (추가 → 유행어)";
-    dr.querySelectorAll("[data-tx]").forEach(b => b.onclick = () => { O.tex = b.dataset.tx; sync(); track("brag_tex", { tx: O.tex }); });
-    dr.querySelectorAll("[data-st]").forEach(b => b.onclick = () => { const kd = b.dataset.st; if(!O[kd] && !(kd === "word" ? bragWordCard() : bragSlangCard())){ petMsg(kd === "word" ? noW : noS, 2600); return; } O[kd] = !O[kd]; sync(); track("brag_st", { kd, on: O[kd] }); });
-    $("#bragSlR").onclick = () => { delete O.slId; O.slang = true; if(!bragSlangCard()){ O.slang = false; petMsg(noS, 2600); } sync(); };
+    dr.querySelectorAll("[data-tx]").forEach(b => b.onclick = () => { O.tex = b.dataset.tx; save(); sync(); track("brag_tex", { tx: O.tex }); });
+    dr.querySelectorAll("[data-st]").forEach(b => b.onclick = () => { const kd = b.dataset.st; if(!O[kd] && !(kd === "word" ? bragWordCard() : bragSlangCard())){ petMsg(kd === "word" ? noW : noS, 2600); return; } O[kd] = !O[kd]; save(); sync(); track("brag_st", { kd, on: O[kd] }); });
+    $("#bragSlR").onclick = () => { delete O.slId; O.slang = true; if(!bragSlangCard()){ O.slang = false; petMsg(noS, 2600); } save(); sync(); };
     const ci = $("#bragCap"); ci.value = O.cap || ""; ci.oninput = () => { O.cap = ci.value.slice(0, 40); save(); }; ci.onchange = () => track("brag_cap", { n: ci.value.length }); }
-  $("#bragX").onclick = () => { dr.remove(); petLift(null); };
-  $("#bragPh").onclick = () => { track("brag_photo", { ver, th, zoom }); dr.remove(); petLift(null);   // 창을 닫고 냥이를 제자리로 내린 뒤에 찍기
-    setTimeout(() => { BRAG_SNAP = { ver, th, zoom, cb: out => out.toBlob(b => bragShare(b, "meowca.png", ver), "image/png") }; }, 90); };   // 다음 화면 그리기 직후에 찍어야 냥이(WebGL)가 담김
-  $("#bragVd").onclick = () => { dr.remove(); petLift(null); bragRec(ver, th, zoom); }; }
+  const done = () => { BRAG_PV = null; dr.remove(); petLift(null); };
+  $("#bragX").onclick = done;
+  $("#bragPh").onclick = () => { track("brag_photo", { ver, th, zoom }); done();   // 창을 닫고 냥이를 제자리로 내린 뒤에 찍기
+    setTimeout(() => { BRAG_SNAP = { ver, th, zoom, cb: out => out.toBlob(b => bragShare(b, "meowca.png", ver), "image/png") }; }, 90); };
+  $("#bragVd").onclick = () => { done(); bragRec(ver, th, zoom); }; }
 async function bragShare(blob, name, ver){ const x = bt(), st = bragStats(), text = (ver === "cute" ? x.txtCute(st.lv, st.d) : x.txtReal(st.n)) + "\nhttps://meowca.app/?src=brag"; const file = new File([blob], name, { type: blob.type });
   let cp = false; try{ if(navigator.clipboard){ await navigator.clipboard.writeText(text); cp = true; } }catch(_){}
   try{ if(navigator.canShare && navigator.canShare({ files: [file] })){ if(cp && PET) petMsg(S.meta.settings.ui === "ja" ? "キャプションはコピー済み。投稿画面で貼り付けてニャ" : "문구는 복사해 뒀다냥. 올릴 때 붙여넣기!", 3200);
