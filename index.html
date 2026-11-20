@@ -906,6 +906,8 @@ body.focus .dock:has(.vk-host) .ans-btns .btn{min-height:calc(var(--vkh,44px) + 
 .hv2-cal{display:grid!important;grid-template-columns:repeat(7,1fr);gap:6px;flex-direction:initial!important}
 .hv2-day{display:flex;flex-direction:column;align-items:center;gap:4px} .hv2-day span{font-size:.7rem;color:var(--muted)} .hv2-day i{font-style:normal;width:100%;max-width:40px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;background:rgba(127,127,127,.12);color:var(--muted)}
 .hv2-day.on i{background:var(--accent);color:#fff;font-size:1rem} .hv2-day.td i{box-shadow:inset 0 0 0 2.5px var(--accent);color:var(--accent)} .hv2-day.td span{color:var(--accent);font-weight:800} .hv2-day.fut i{background:transparent;box-shadow:inset 0 0 0 1px rgba(127,127,127,.25)}
+.hv2-say .say{align-items:flex-start!important} .hv2-say .say > img,.hv2-say .say > .nm{flex:0 0 auto;align-self:flex-start}
+.hv2-say .bubble.slam{background:var(--surface);opacity:1}
 </style>
 </head>
 <body>
@@ -1738,7 +1740,7 @@ function renderSide(){
   const box = $("#todaySide"); if(!box) return;
   const x = t(), all = cardsHere();
   if(!all.length){ box.classList.add("hidden"); return; }
-  box.classList.remove("hidden");
+  box.classList.add("hidden"); return;   // 연속·달력은 홈 카드(hv2)로 옮김 — 같은 정보를 두 번 보이지 않게
   // これからの7日の復習量
   const d0 = today(), days = [];
   for(let i = 0; i < 7; i++){ const d = addDays(d0, i); days.push({ d, n: activeCards().filter(c => !c.mastered && !c.isNew && c.due && (i === 0 ? c.due <= d : c.due === d)).length + (i === 0 ? Math.min(newQuota(), newCandidates().length) : 0) }); }
@@ -2023,8 +2025,8 @@ function maybeSetup(){ if(!needSetup() || $("#setupBox")) return; const st = S.m
 let SCI_N = 0;   // 아무도 안 물어봐도 냥이가 갑자기 한마디 (홈에서 한 번 열 때 최대 2번)
 function sciPopLater(){ clearTimeout(sciPopLater._t); if(SCI_N >= 2) return; sciPopLater._t = setTimeout(() => {
   const b = document.querySelector("#sessionStart .say .bubble"); if(!b || !cardsHere().length || document.body.classList.contains("focus") || document.hidden || $("#sessionStart").classList.contains("hidden") || $("#fbBox.show")) return;
-  if(Math.random() < .2){ SCI_N++; if(b.closest(".hv2-say")){ b.classList.remove("slam"); void b.offsetWidth; b.classList.add("slam"); } nerdPop(b); }
-  else if(Math.random() < .55){ SCI_N++; b.textContent = sciLine(); b.classList.remove("pop", "slam"); void b.offsetWidth; b.classList.add(b.closest(".hv2-say") ? "slam" : "pop"); try{ sfxPoyon(.12); }catch(e){} }
+  if(Math.random() < .2){ SCI_N++; if(b.closest(".hv2-say")){ b.classList.remove("slam"); void b.offsetWidth; b.classList.add("slam"); clearTimeout(b._sl); b._sl = setTimeout(() => b.classList.remove("slam"), 7000); } nerdPop(b); }
+  else if(Math.random() < .55){ SCI_N++; b.textContent = sciLine(); b.classList.remove("pop", "slam"); void b.offsetWidth; b.classList.add(b.closest(".hv2-say") ? "slam" : "pop"); if(b.closest(".hv2-say")){ clearTimeout(b._sl); b._sl = setTimeout(() => b.classList.remove("slam"), 5200); } try{ sfxPoyon(.12); }catch(e){} }
   sciPopLater(); }, 9000 + Math.random() * 9000); }
 function meltPoints(){ const ds = Object.keys(S.meta.days || {}).filter(d => S.meta.days[d]).sort(); if(!ds.length) return 0; let p = 0, d = ds[0]; const td = today();
   while(d <= td){ if(S.meta.days[d]) p += 1; else if(d !== td) p = Math.max(0, p - 1.5); d = addDays(d, 1); } return p; }
@@ -3408,7 +3410,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v111";
+const APP_VER = "v112";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
