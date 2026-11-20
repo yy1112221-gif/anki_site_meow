@@ -593,6 +593,14 @@ main, .wrap{padding-bottom:84px}
 .actrow{display:flex;gap:10px;margin:14px 0 4px} .actrow .btn{flex:1 1 0;min-height:56px;font-size:1.02rem;font-weight:800;border-radius:18px;justify-content:center}
 .actrow .btn.big:first-child{flex:1.35 1 0} .actrow .petbtn b{margin-left:6px;padding:1px 8px;border-radius:999px;background:rgba(0,0,0,.12);font-size:.8rem}
 .petline{margin:2px 2px 8px;font-size:.78rem;color:var(--muted)} .petline span{color:var(--accent);font-weight:600}
+.hs{display:grid;grid-template-columns:1fr 1.25fr;gap:8px;margin:10px 0 8px} .hs-t{position:relative;border-radius:18px;padding:10px 12px 10px 52px;background:rgba(127,127,127,.08);min-height:64px;display:flex;flex-direction:column;justify-content:center}
+.hs-t .hs-ic{position:absolute;left:6px;top:50%;transform:translateY(-50%);width:44px} .hs-t .hs-ic .nm{width:44px;height:auto} .hs-t b{font-size:1.55rem;font-weight:900;line-height:1} .hs-t b em{font-style:normal;font-size:.9rem;margin-left:1px}
+.hs-t small{font-size:.72rem;color:var(--muted);font-weight:700;margin-top:3px} .hs-t .meltbar{margin:6px 0 0;height:5px}
+.hs-rw{display:flex;align-items:center;gap:12px;border-radius:20px;padding:12px 14px;margin:0 0 8px;background:linear-gradient(135deg,rgba(255,196,120,.22),rgba(242,112,143,.18));border:1.5px solid rgba(242,140,100,.35)}
+.hs-rw-ic{display:flex;gap:2px;flex:0 0 auto;filter:drop-shadow(0 3px 6px rgba(200,120,60,.3));animation:hsbob 2.4s ease-in-out infinite} @keyframes hsbob{50%{transform:translateY(-3px) rotate(-3deg)}}
+.hs-rw-tx{display:flex;flex-direction:column;min-width:0} .hs-rw-d{font-size:1.25rem;font-weight:900;color:#e2643a;line-height:1.1} .hs-rw-tx b{font-size:.92rem;font-weight:800;margin-top:2px} .hs-rw-tx small{font-size:.72rem;color:var(--muted);margin-top:4px;font-weight:700}
+.hs-dots{display:flex;gap:5px;margin-top:6px} .hs-dots i{width:16px;height:6px;border-radius:3px;background:rgba(127,127,127,.25)} .hs-dots i.on{background:#e2643a} .hs-dots i.now{background:repeating-linear-gradient(90deg,#e2643a 0 3px,transparent 3px 5px);animation:hsblink 1.2s infinite} @keyframes hsblink{50%{opacity:.4}}
+.hs-rw.maxed{justify-content:center}
 .btn.pulse{animation:btnPulse 1.4s ease-in-out 4} @keyframes btnPulse{0%,100%{box-shadow:0 0 0 0 rgba(61,195,143,.6)}50%{box-shadow:0 0 0 10px rgba(61,195,143,0)}}
 .onb .onb-step{display:flex;align-items:center;gap:10px;margin:18px 0 8px;font-size:1.02rem} .onb-n{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-weight:900;font-size:.85rem;flex-shrink:0}
 .onb-langs,.onb-pills{display:flex;flex-wrap:wrap;gap:8px} .onb-diag{width:100%;min-height:52px;font-size:1rem;margin-bottom:10px} .linkbtn{border:0;background:none;color:var(--accent);font-weight:700;padding:0;cursor:pointer;text-decoration:underline}
@@ -647,6 +655,8 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .gr-no{border-color:var(--bad);color:var(--bad)} .gr-ok{background:var(--accent);border-color:var(--accent);color:var(--on-accent,#fff)}
 #pfCv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;display:none} #pet .pet-top{z-index:4} #pet.pf #pfCv{display:block}
 #pet.pf #petBG{opacity:0} #pet.pf{background:radial-gradient(120% 80% at 50% 45%,#fffdf8,#fbf1f4 60%,#f3e6ef)} #pet.pf #petGL{filter:saturate(1.18) brightness(1.05) drop-shadow(0 0 16px rgba(255,170,210,.75))}
+.brag-cap{width:100%;box-sizing:border-box;margin:8px 0 0;padding:10px 12px;border-radius:12px;border:1.5px solid rgba(127,127,127,.3);font:inherit;font-size:16px;background:rgba(255,255,255,.85);color:#222}
+.pet-study{position:absolute;z-index:5;left:50%;transform:translateX(-50%);bottom:calc(196px + env(safe-area-inset-bottom));border:0;border-radius:999px;padding:12px 22px;font:inherit;font-weight:900;font-size:1rem;background:var(--accent);color:var(--on-accent,#fff);box-shadow:0 8px 22px rgba(0,0,0,.18);cursor:pointer;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis} .pet-study.done{background:rgba(255,255,255,.9);color:#2b6b55} #pet.grabbing .pet-study{opacity:.25}
 .pet-brag{position:absolute;z-index:5;right:12px;top:calc(110px + env(safe-area-inset-top));height:38px;padding:0 12px;border-radius:19px;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:.85rem;font-weight:700;cursor:pointer;color:inherit}
 .brag-v{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 10px} .brag-v button{border:2px solid var(--line,#ddd);border-radius:16px;padding:10px 6px;background:transparent;color:inherit;font:inherit;font-weight:800;cursor:pointer;line-height:1.3}
 .brag-v button small{display:block;font-weight:600;font-size:.72rem;color:var(--muted)} .brag-v button[aria-pressed="true"]{border-color:#f2708f;background:rgba(242,112,143,.1)}
@@ -1003,7 +1013,7 @@ h1 .logo{display:flex;flex-direction:column;align-items:flex-start;gap:0;letter-
       <div class="row end"><button class="btn" id="btnImport" type="button" data-i18n="btnImport"></button></div>
     </div>
     <p class="muted tiny" data-i18n-html="credits"></p>
-    <p class="tiny muted setcorner"><button type="button" class="linkbtn" id="tutAgain"></button> · <label><input type="checkbox" id="trackOn"> <span id="trackLbl"></span></label></p>
+    <p class="tiny muted setcorner"><button type="button" class="linkbtn" id="tutAgain"></button> · <label><input type="checkbox" id="trackOn"> <span id="trackLbl"></span></label> · <label><input type="checkbox" id="homePetOn"> <span id="homePetLbl"></span></label> · <label><span id="petSensLbl"></span> <select id="petSensSel"></select></label></p>
     <details class="hshop" id="hshop"><summary aria-label="shop">🐾</summary><div id="shopBody"></div></details>
   </section>
 </div>
@@ -1595,7 +1605,7 @@ function spreadQueue(items, recent){
 function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1); while(S.meta.days[d]){ n++; d = addDays(d, -1); } return n; }
 
 function renderStart(){
-  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); moveIn(); setTimeout(moveBanner, 600); authBoot(); }
+  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); moveIn(); setTimeout(moveBanner, 600); authBoot(); setTimeout(homePetBoot, 450); }
   if(maybeLoginAsk._pending && !SES){ maybeLoginAsk._pending = 0; setTimeout(maybeLoginAsk, 1500); }
   const box = $("#sessionStart"), pos = box.querySelector(".poster");
   box.querySelectorAll(".say .bubble").forEach(b => { b.classList.add("tapme"); b.onclick = () => { if(NERD_ON) return; if(Math.random() < .08 && nerdPop(b)) return; if(Math.random() < .3){ b.textContent = sciLine(); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); try{ sfxPoyon(.15); }catch(e){} return; } const st = meltStage(), L = st ? meltL().home[st] : (t().homeTalk || []); if(!L.length) return; let i; do{ i = Math.floor(Math.random() * L.length); }while(L.length > 1 && i === renderStart.last); renderStart.last = i;
@@ -1634,8 +1644,17 @@ function renderSide(){
 function actRow(mainBtn, petFirst){   // 학습하기와 간식 주기를 같은 층위로 나란히
   const n = petCount(), x = pt(), p = petState(), sk = streak();
   const pet = `<button class="btn big petbtn${petFirst && n ? " primary" : ""}" type="button" data-petopen>🍖 ${esc(x.give)}${n ? `<b>${n}</b>` : ""}</button>`;
-  const mp = meltPct(), ml = meltL();
-  return `<div class="actrow">${mainBtn}${pet}</div><p class="petline">🔥 ${esc(x.streakN(sk))} · <b class="meltb">${esc(ml.label)} ${mp}% · ${esc(ml.names[meltStage()])}</b> · <span>${esc(petNextInfo())}</span></p><div class="meltbar" aria-hidden="true"><i style="width:${mp}%"></i>${MELT_STEPS.slice(1).map(v => `<s style="left:${v / MELT_STEPS[3] * 100}%"></s>`).join("")}</div>`; }
+  return `<div class="actrow">${mainBtn}${pet}</div>${homeStats()}`; }
+/* 홈 상태판: 연속·함락도는 작은 타일(냥이 표정 아이콘 + 큰 숫자), 다음 간식 해금은 큰 보상 카드 */
+function homeStats(){ const x = pt(), sk = streak(), mp = meltPct(), ml = meltL(), stg = meltStage(), ja = S.meta.settings.ui === "ja";
+  const L = ja ? { st: "日 連続", melt: "陥落度", go: "で解禁！", left: d => `あと${d}日`, today: "今日やれば +1日", done: "今日の分クリア ✓", all: "おやつ全部解禁ずみ！" }
+               : { st: "일 연속", melt: "함락도", go: "해금!", left: d => `${d}일만 더`, today: "오늘 하면 +1일", done: "오늘 분량 완료 ✓", all: "간식 전부 해금 완료!" };
+  const face = ["st_default", "st_surprised", "st_love", "st_sleepy"][stg] || "st_default", doneToday = S.meta.days[today()] === true;
+  const k = petTier(sk), maxed = k >= PET_TIERS.length - 1, a = PET_TIERS[k], z = maxed ? a : PET_TIERS[k + 1], its = maxed ? [] : PET_ITEMS.filter(i => i.t === k + 1);
+  const dots = maxed ? "" : Array.from({ length: z - a }, (_, i) => `<i class="${a + i < sk ? "on" : a + i === sk && !doneToday ? "now" : ""}"></i>`).join("");
+  return `<div class="hs"><div class="hs-t"><span class="hs-ic">${nm(sk ? "st_happy" : "st_sleepy", 30)}</span><b>${sk}</b><small>🔥 ${L.st}</small></div>
+    <div class="hs-t"><span class="hs-ic">${nm(face, 30)}</span><b>${mp}<em>%</em></b><small>${esc(L.melt)} · ${esc(ml.names[stg])}</small><div class="meltbar" aria-hidden="true"><i style="width:${mp}%"></i>${MELT_STEPS.slice(1).map(v => `<s style="left:${v / MELT_STEPS[3] * 100}%"></s>`).join("")}</div></div></div>
+    ${maxed ? `<div class="hs-rw maxed"><b>🎉 ${esc(L.all)}</b></div>` : `<div class="hs-rw"><div class="hs-rw-ic">${its.map(i => petIconHTML(i, 40)).join("")}</div><div class="hs-rw-tx"><span class="hs-rw-d">${esc(L.left(z - sk))}</span><b>${esc(its.map(itName).join("·"))} ${esc(L.go)}</b><div class="hs-dots">${dots}</div><small>${esc(doneToday ? L.done : L.today)}</small></div></div>`}`; }
 async function renderOnboard(box){   // 첫 시작: ① 배울 언어 ② 지금 실력 ③ 시작 — 한 화면에서 순서대로
   const x = t(), lang = S.meta.settings.lang;
   box.innerHTML = `<div class="onb">${say("st_default", esc(x.obHi))}
@@ -1684,7 +1703,11 @@ const DONATE_JA = "";   // 일본 사용자용 후원 링크(Ko-fi 등) — 비�
 function bindCorner(){ const ko = S.meta.settings.ui === "ko", a = $("#tutAgain"), c = $("#trackOn"); if(!a) return;
   a.textContent = ko ? "튜토리얼 다시 보기" : "チュートリアルをもう一度"; $("#trackLbl").textContent = ko ? "사용 기록 보내기(익명·개선용)" : "利用データを送る（匿名・改善用）";
   a.onclick = () => { showView("today"); if(cardsHere().length) setTimeout(runTour, 350); else { S.meta.tutWant = 1; save(); } };
-  c.checked = !S.meta.noTrack; c.onchange = () => { S.meta.noTrack = !c.checked; save(); }; }
+  c.checked = !S.meta.noTrack; c.onchange = () => { S.meta.noTrack = !c.checked; save(); };
+  const hp = $("#homePetOn"); if(hp){ $("#homePetLbl").textContent = ko ? "앱 열면 냥이부터" : "起動したらネコから"; hp.checked = S.meta.settings.homePet !== false; hp.onchange = () => { S.meta.settings.homePet = hp.checked; save(); track("home_pet", { on: hp.checked }); }; }
+  const ss = $("#petSensSel"); if(ss){ $("#petSensLbl").textContent = ko ? "냥이 감도" : "ネコの感度"; const o = ko ? ["둔하게", "조금 둔하게", "보통", "말랑하게", "초예민"] : ["にぶめ", "ややにぶめ", "ふつう", "やわらかめ", "超びんかん"], v = [.5, .75, 1, 1.35, 1.8];
+    ss.innerHTML = v.map((z, i) => `<option value="${z}">${o[i]}</option>`).join(""); ss.value = String(petSens()); ss.onchange = () => { S.meta.settings.petSens = +ss.value; save(); track("pet_sens", { v: +ss.value }); }; } }
+function petSens(){ const v = +S.meta.settings.petSens; return v > 0 ? v : 1; }
 let BIZ = null;   // biz.json: 사업자 정보 — 사업자등록번호가 채워지면 설정 화면 맨 아래에 자동 표시
 async function bizFill(){ try{ if(!BIZ){ const r = await fetch("biz.json", { cache: "no-cache" }); BIZ = r.ok ? await r.json() : {}; } }catch(_){ BIZ = {}; }
   const el = $("#bizLine"); if(!el || !BIZ.regNo) return;
@@ -2898,7 +2921,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v88";
+const APP_VER = "v89";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3232,7 +3255,11 @@ const PT = {
 };
 const pt = () => PT[S.meta.settings.ui] || PT.ja;
 const itName = it => it[S.meta.settings.ui] || it.ja;
-function petState(){ const p = S.meta.pet || (S.meta.pet = {}); p.inv = p.inv || {}; p.kcal = p.kcal || 0; p.lv = p.lv || 1; p.granted = p.granted || {}; p.freezes = p.freezes || 0; p.seenTier = p.seenTier ?? 0; p.coins = p.coins || 0; return p; }
+/* 산 간식: 묶음(lot)마다 유통기한. 학습으로 받은 간식은 기한 없음. 쓸 땐 산 것(기한 임박 순)부터 */
+function buyExpire(p){ if(!p.buy || !p.buy.length) return; const now = Date.now(); p.buy = p.buy.filter(l => { if(l.exp > now && l.n > 0) return true; const k = Math.min(l.n, p.inv[l.id] || 0); if(k){ p.inv[l.id] -= k; if(!p.inv[l.id]) delete p.inv[l.id]; } return false; }); }
+function buyUse(p, id){ if(!p.buy) return; const l = p.buy.filter(z => z.id === id && z.n > 0).sort((a, b) => a.exp - b.exp)[0]; if(l) l.n--; }
+function buyGrant(id, n, days){ const p = petState(); p.buy = p.buy || []; p.buy.push({ id, n, exp: Date.now() + days * 864e5 }); p.inv[id] = (p.inv[id] || 0) + n; save(); }
+function petState(){ const p = S.meta.pet || (S.meta.pet = {}); p.inv = p.inv || {}; buyExpire(p); p.kcal = p.kcal || 0; p.lv = p.lv || 1; p.granted = p.granted || {}; p.freezes = p.freezes || 0; p.seenTier = p.seenTier ?? 0; p.coins = p.coins || 0; return p; }
 const petTier = s => { let k = 0; PET_TIERS.forEach((d, i) => { if(s >= d) k = i; }); return k; };
 const petNeed = lv => lv < 1 ? 0 : Math.round(20 * Math.pow(lv, 2.2));
 const petCount = () => Object.values(petState().inv).reduce((a, b) => a + b, 0);
@@ -3373,14 +3400,14 @@ function openPet(welcome){
   if(!$("#pet")){ const el = document.createElement("div"); el.id = "pet"; el.setAttribute("role", "dialog"); document.body.appendChild(el); }
   const el = $("#pet"); el.classList.remove("hidden"); document.body.classList.add("petopen");
   const isTest = /\/test\//.test(location.pathname) || location.protocol === "file:";
-  el.innerHTML = `<canvas id="petBG"></canvas><canvas id="petGL"></canvas><canvas id="petCv"></canvas><button type="button" class="pet-snd" id="petSnd" aria-label="${esc(x.snd)}">${{ mix: "🔉", loud: "🔊", off: "🔇" }[sndMode()]}</button><button type="button" class="pet-cos" id="petCos">🎀 ${S.meta.settings.ui === "ja" ? "着せかえ" : "꾸미기"}</button><button type="button" class="pet-brag" id="petBrag">📸 ${S.meta.settings.ui === "ja" ? "自慢する" : "자랑하기"}</button><canvas id="pfCv"></canvas>
+  el.innerHTML = `<canvas id="petBG"></canvas><canvas id="petGL"></canvas><canvas id="petCv"></canvas><button type="button" class="pet-snd" id="petSnd" aria-label="${esc(x.snd)}">${{ mix: "🔉", loud: "🔊", off: "🔇" }[sndMode()]}</button><button type="button" class="pet-cos" id="petCos">🛒 ${S.meta.settings.ui === "ja" ? "ショップ" : "상점"}</button><button type="button" class="pet-study" id="petStudy"></button><button type="button" class="pet-brag" id="petBrag">📸 ${S.meta.settings.ui === "ja" ? "自慢する" : "자랑하기"}</button><canvas id="pfCv"></canvas>
     <div class="pet-top"><button class="btn sm" type="button" id="petClose">‹ ${esc(x.close)}</button>
       <div class="pet-lv"><canvas id="petFat" width="0" height="0"></canvas><b id="petLv"></b></div>
       <div class="pet-st"><b>🔥 ${streak()}</b><small>${esc(x.ranks[petTier(streak())])}${p.freezes ? ` · 🧊${p.freezes}` : ""}</small></div></div>
     <div class="pet-msg" id="petMsg" aria-live="polite"></div>
     <div class="pet-bottom"><p class="pet-hint">${esc(x.hint)}</p>
       ${isTest ? `<div class="row" style="justify-content:center;gap:6px"><button class="btn sm" type="button" id="petTest">${esc(x.test)}</button><label class="small" style="display:flex;gap:6px;align-items:center">${esc(x.testStreak)}<input id="petTestS" type="number" min="0" max="200" value="${streak()}" style="width:70px"></label></div>` : ""}</div>`;
-  $("#petClose").onclick = closePet; $("#petCos").onclick = cosOpen; $("#petBrag").onclick = bragOpen; if(S.meta.pfOn) el.classList.add("pf");
+  $("#petClose").onclick = closePet; $("#petCos").onclick = cosOpen; $("#petBrag").onclick = bragOpen; petStudyBtn(); if(S.meta.pfOn) el.classList.add("pf");
   $("#petSnd").onclick = () => { const nx = { mix: "loud", loud: false, off: true }[sndMode()]; S.meta.settings.petSound = nx; save(); const m = sndMode(); $("#petSnd").textContent = { mix: "🔉", loud: "🔊", off: "🔇" }[m];
     applySndMode(); if(PMASTER) PMASTER.gain.value = petSoundOn() ? 1 : 0; petMsg(pt().sndMode[m], 2600); if(petSoundOn()){ pa(); sfxPoyon(.3); } };
   const tb = $("#petTest"); if(tb){ tb.onclick = () => { const s = streak(), top = petTier(s); for(let i = 0; i < 10; i++){ const c = PET_ITEMS.filter(it => it.t <= top); const it = c[Math.floor(Math.random() * c.length)]; p.inv[it.id] = (p.inv[it.id] || 0) + 1; } save(); petTray(); };
@@ -3511,7 +3538,7 @@ function jellyRelease(st, k){   // むぎゅっと押していた手を離す: �
 }
 
 function jellyStep(st, h){
-  const N = st.N, dx = st.dx, dy = st.dy, vx = st.vx, vy = st.vy, sn = st.snap > 0, KA = sn ? 380 : 55, KS = 1300, C = sn ? 2 : 2.8;
+  const SEN = petSens(), N = st.N, dx = st.dx, dy = st.dy, vx = st.vx, vy = st.vy, sn = st.snap > 0, KA = (sn ? 380 : 55) / Math.sqrt(SEN), KS = 1300, C = (sn ? 2 : 2.8) / Math.sqrt(SEN);
   const sq = st.holding ? st.squeeze : 0, br = Math.sin(st.t * 2.1) * .9, sw = Math.sin(st.t * 1.35) * 1.1 + Math.sin(st.t * 3.1) * .35 + (st.bliss || 0) * 3 * Math.sin(st.t * .9);   // 呼吸＋ゆらゆら
   for(let j = 0; j < JNY; j++) for(let i = 0; i < JNX; i++){ const k = j * JNX + i;
     let lx = 0, ly = 0, n = 0;
@@ -3523,12 +3550,12 @@ function jellyStep(st, h){
     let freeK = 0;
     for(const pl of st.pulls){ if(!pl.on) continue; const ddx = rx - pl.x0, ddy = ry - pl.y0, d2 = ddx * ddx + ddy * ddy, L = Math.hypot(pl.ox, pl.oy) || 1, ux = pl.ox / L, uy = pl.oy / L, al = ddx * ux + ddy * uy, pe = ddx * uy - ddy * ux;
       if(pl.belly){ const sg = pl.mid ? 21 : 12, fb = Math.exp(-pe * pe / (2 * sg * sg)) * (al > 0 ? 1 : Math.exp(-al * al / (2 * 14 * 14))) * Math.exp(-(Math.max(0, pl.y0 - 6 - ry) ** 2) / (2 * 12 * 12));
-        tx += pl.ox * fb; ty += pl.oy * fb; ka += 900 * fb * Math.exp(-d2 / (2 * 10 * 10)) + 200 * fb; if(fb > .08) freeK = Math.max(freeK, fb); continue; }
+        tx += pl.ox * fb * SEN; ty += pl.oy * fb * SEN; ka += 900 * fb * Math.exp(-d2 / (2 * 10 * 10)) + 200 * fb; if(fb > .08) freeK = Math.max(freeK, fb); continue; }
       // 外へ引っぱる: 向きの先は丸ごとついてくる（折れ返らない）/ 内へ寄せる: その場だけ寄って顔がむにゅっ
       const inward = pl.ox * pl.side < 0, f = Math.exp(-pe * pe / (2 * 13 * 13)) * (al > 0 ? (inward ? Math.exp(-al * al / (2 * 20 * 20)) : 1) : Math.exp(-al * al / (2 * 16 * 16)));
-      tx += pl.ox * f; ty += pl.oy * f; ka += 900 * f * Math.exp(-d2 / (2 * 10 * 10)) + 200 * f; }
+      tx += pl.ox * f * SEN; ty += pl.oy * f * SEN; ka += 900 * f * Math.exp(-d2 / (2 * 10 * 10)) + 200 * f; }
     if(st.dent > 0 && st.hx != null){ const ddx = rx - st.hx, ddy = ry - st.hy, f = Math.exp(-(ddx * ddx + ddy * ddy) / (2 * 11 * 11)) * st.dent;
-      ty += 7.5 * f + Math.max(-4, Math.min(4, st.rvy * .05)) * f; tx += .32 * f * ddx + Math.max(-6, Math.min(6, st.rvx * .06)) * f; }
+      ty += 7.5 * f * SEN + Math.max(-4, Math.min(4, st.rvy * .05)) * f; tx += .32 * f * ddx + Math.max(-6, Math.min(6, st.rvx * .06)) * f; }
     if(sq){ const f = Math.exp(-((rx - st.hx) ** 2 + (ry - st.hy) ** 2) / (2 * 16 * 16)); ty += sq * (16 * f + 13 * top); tx += sq * (.35 * f * (rx - st.hx) + 9 * Math.sign(rx - 64) * Math.exp(-((ry - 106) ** 2) / 242)); }
     st.free[k] = freeK > 0 ? 1 : 0;
     if(st.pin[k] && !freeK){ vx[k] += (-KA * 4 * (dx[k] - tx * .3) + KS * (lx - n * dx[k]) * .5 - C * 2 * vx[k]) * h; vy[k] = 0; dy[k] = 0; continue; }
@@ -3696,6 +3723,10 @@ function drawCatFace0(st, g){
 /* ════════ 냥이 꾸미기 상점 (출시 전: 입어 보기 + 「사고 싶다냥」 찜·가격 반응 측정. 실제 결제는 사업자·통신판매업 신고 뒤 연결) ════════ */
 const COS_FUR0 = ["#fffdf8", "#f8f0e3", "#ecdfcb"];
 const COS = [
+  { id: "snk_s", c: "snack", e: "🐟", ko: "간식 한 줌 10개 · 3일", ja: "おやつひとつかみ 10個・3日", w: 990, y: 120 },
+  { id: "snk_m", c: "snack", e: "🛍️", ko: "간식 한 봉지 40개 · 7일", ja: "おやつ一袋 40個・7日", w: 2900, y: 300 },
+  { id: "snk_l", c: "snack", e: "🚚", ko: "간식 트럭 150개 · 14일", ja: "おやつトラック 150個・14日", w: 6900, y: 700 },
+  { id: "snk_whale", c: "snack", e: "🐋", ko: "고래 한 마리 · 7일", ja: "クジラ一頭・7日", w: 1500, y: 160 },
   { id: "mochi_st", c: "skin", f: ["#fff6f8", "#ffdce4", "#f4b8c6"], e: "🍓", ko: "딸기 찹쌀떡", ja: "いちご大福", w: 1900, y: 200 },
   { id: "mochi_mc", c: "skin", f: ["#f7fbec", "#dfeec3", "#bed597"], e: "🍵", ko: "말차 찹쌀떡", ja: "抹茶もち", w: 1900, y: 200 },
   { id: "cheese",   c: "skin", f: ["#fff6e6", "#ffdcaa", "#f3b872"], e: "🧀", ko: "치즈 냥", ja: "チーズねこ", w: 1900, y: 200 },
@@ -3709,9 +3740,9 @@ const COS = [
   { id: "snd_jelly",c: "snd", e: "🔔", ko: "말랑 효과음 팩", ja: "ぷにぷに効果音", w: 1500, y: 160 },
   { id: "set1",     c: "set", e: "🎁", ko: "젤리 냥이 세트 (스킨 3 + 리본)", ja: "ゼリーねこセット（スキン3＋リボン）", w: 4900, y: 500 } ];
 const COS_T = {
-  ko: { title: "냥이 꾸미기", note: "곧 판매 예정 · 스킨은 눌러서 입어 볼 수 있다냥. 찜하면 나올 때 제일 먼저 알려 준다냥", cats: { skin: "말랑 스킨", acc: "소품", snd: "소리", set: "세트" }, want: "사고 싶다냥 ♥", wanted: "찜했다냥 ♥", soon: "준비 중",
+  ko: { title: "냥이 상점", note: "곧 판매 예정 · 스킨은 눌러서 입어 볼 수 있다냥. 찜하면 나올 때 제일 먼저 알려 준다냥", cats: { snack: "간식 🛒", skin: "말랑 스킨", acc: "소품", snd: "소리", set: "세트" }, snackNote: "남들 공부할 때, 나는 냥이 간식비를 낸다 💸 (공부로 받은 간식은 평생 보관 · 산 간식은 기간 안에, 많이 살수록 오래)", want: "사고 싶다냥 ♥", wanted: "찜했다냥 ♥", soon: "준비 중",
     q: p => `${p}이면?`, opts: ["더 싸면 살래", "이 가격이면 산다", "더 비싸도 산다", "안 살래"], thx: "고맙다냥! 나오면 제일 먼저 알려 주겠다냥", close: "닫기", cur: n => `₩${n.toLocaleString()}` },
-  ja: { title: "ネコの着せかえ", note: "近日発売予定 · スキンはタップで試着できるニャ。お気に入りすると発売時に真っ先に知らせるニャ", cats: { skin: "スキン", acc: "小物", snd: "サウンド", set: "セット" }, want: "欲しいニャ ♥", wanted: "お気に入り済み ♥", soon: "準備中",
+  ja: { title: "ネコのショップ", note: "近日発売予定 · スキンはタップで試着できるニャ。お気に入りすると発売時に真っ先に知らせるニャ", cats: { snack: "おやつ 🛒", skin: "スキン", acc: "小物", snd: "サウンド", set: "セット" }, snackNote: "みんなが勉強してる間、わたしはネコのおやつ代を払う 💸（勉強でもらったおやつは永久保存・買ったおやつは期限内に、たくさん買うほど長持ち）", want: "欲しいニャ ♥", wanted: "お気に入り済み ♥", soon: "準備中",
     q: p => `${p}なら？`, opts: ["もっと安ければ", "この値段なら買う", "もっと高くても買う", "買わない"], thx: "ありがとニャ！ 発売したら真っ先に知らせるニャ", close: "閉じる", cur: n => `¥${n.toLocaleString()}` } };
 function cosFur(st){ const id = (st && st.tryOn) || (S.meta.cos && S.meta.cos.on); const it = id && COS.find(c => c.id === id && c.f); return it ? it.f : COS_FUR0; }
 function cosOpen(){ const pet = $("#pet"); if(!pet || $("#cosDr")) return; const ja = S.meta.settings.ui === "ja", x = COS_T[ja ? "ja" : "ko"];
@@ -3719,7 +3750,7 @@ function cosOpen(){ const pet = $("#pet"); if(!pet || $("#cosDr")) return; const
   const card = it => `<button type="button" class="cos-it" data-id="${it.id}" aria-pressed="${PET && PET.tryOn === it.id}"><div class="cos-sw" style="background:${it.f ? `radial-gradient(circle at 35% 30%,${it.f[0]},${it.f[1]} 55%,${it.f[2]})` : "rgba(0,0,0,.04)"}">${it.f ? "" : it.e}</div><b>${it.f ? it.e + " " : ""}${esc(ja ? it.ja : it.ko)}</b><small>${esc(x.cur(ja ? it.y : it.w))}${cm.want[it.id] ? " · ♥" : ""}${it.f ? "" : " · " + esc(x.soon)}</small></button>`;
   const dr = document.createElement("div"); dr.className = "cos-dr"; dr.id = "cosDr";
   dr.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><h3>🎀 ${esc(x.title)}</h3><button type="button" class="btn sm" id="cosX">${esc(x.close)}</button></div><p class="cos-note">${esc(x.note)}</p>
-    <div class="cos-tabs">${["skin", "acc", "snd", "set"].map((c, i) => `<button type="button" data-cat="${c}" aria-pressed="${!i}">${esc(x.cats[c])}</button>`).join("")}</div><div class="cos-row" id="cosRow"></div><div id="cosPick"></div>`;
+    <div class="cos-tabs">${["snack", "skin", "acc", "snd", "set"].map((c, i) => `<button type="button" data-cat="${c}" aria-pressed="${!i}">${esc(x.cats[c])}</button>`).join("")}</div><div class="cos-row" id="cosRow"></div><div id="cosPick"></div>`;
   ["pointerdown", "touchstart", "mousedown", "wheel"].forEach(ev => dr.addEventListener(ev, e => e.stopPropagation(), { passive: true }));
   pet.appendChild(dr);
   const pick = it => { const box = $("#cosPick"), price = x.cur(ja ? it.y : it.w), done = cm.want[it.id];
@@ -3728,13 +3759,13 @@ function cosOpen(){ const pet = $("#pet"); if(!pet || $("#cosDr")) return; const
       $("#cosWant").disabled = true; $("#cosWant").textContent = x.wanted;
       $("#cosQ").innerHTML = `<p style="margin:2px 0 6px">${esc(x.q(price))}</p><div class="row">${x.opts.map((o, i) => `<button type="button" class="btn sm" data-v="${i}">${esc(o)}</button>`).join("")}</div>`;
       petLift(dr); $("#cosQ").querySelectorAll("[data-v]").forEach(b => b.onclick = () => { track("cos_price", { id: it.id, v: +b.dataset.v, price: ja ? it.y : it.w, cur: ja ? "JPY" : "KRW" }); $("#cosQ").innerHTML = `<p style="margin:2px 0 0">${esc(x.thx)}</p>`; if(PET) petMsg(x.thx, 2400); }); }; };
-  const tab = c => { $("#cosRow").innerHTML = COS.filter(i => i.c === c).map(card).join(""); dr.querySelectorAll(".cos-tabs button").forEach(z => z.setAttribute("aria-pressed", String(z.dataset.cat === c)));
+  const tab = c => { $("#cosRow").innerHTML = COS.filter(i => i.c === c).map(card).join(""); const nt = dr.querySelector(".cos-note"); if(nt) nt.textContent = c === "snack" ? x.snackNote : x.note; dr.querySelectorAll(".cos-tabs button").forEach(z => z.setAttribute("aria-pressed", String(z.dataset.cat === c)));
     $("#cosRow").querySelectorAll(".cos-it").forEach(b => b.onclick = () => onIt(b)); };
   dr.querySelectorAll(".cos-tabs button").forEach(b => b.onclick = () => tab(b.dataset.cat));
   const onIt = b => { const it = COS.find(c => c.id === b.dataset.id);
     if(it.f && PET){ PET.tryOn = PET.tryOn === it.id ? null : it.id; dr.querySelectorAll(".cos-it").forEach(z => z.setAttribute("aria-pressed", String(PET.tryOn === z.dataset.id))); if(PET.tryOn){ try{ sfxPoyon(.25); }catch(_){} } }
     track("cos_try", { id: it.id }); pick(it); };
-  tab("skin");
+  tab("snack");
   $("#cosPick").innerHTML = `<div class="cos-pick"><p class="muted">${ja ? "👆 アイテムをタップ" : "👆 아이템을 눌러 봐"}</p></div>`; petLift(dr);
   $("#cosX").onclick = () => { if(PET) PET.tryOn = null; dr.remove(); petLift(null); }; }
 /* 아래 창이 열리면 냥이를 그 위로 올려서 가리지 않게, 닫으면 제자리 */
@@ -3750,7 +3781,7 @@ const BRAG_T = {
     top: (lv, d) => `Lv.${lv} 🎀 キラキラ D+${d}`, cap: n => n ? `今日もちょうど${n}語おぼえて ぷにぷに充電完了` : "今日もネコとキラキラ生活",
     realTop: (lv, d, m) => `Lv.${lv} · 勉強${d}日目 · 陥落度: ${m}`, realCap: n => n ? `実は今日${n}語だけ` : "実は今日0語…ネコ触ってただけ",
     txtCute: (lv, d) => `今日もキラキラ🎀 Lv.${lv}のぷにネコ育て中 (D+${d})`, txtReal: n => n ? `実は今日${n}語だけ…ニャ` : "実は今日はネコを触ってただけ", saved: "保存したニャ。写真・ファイルから投稿してね", noRec: "このブラウザは動画撮影に対応してないニャ。写真で自慢してね" } };
-const bt = () => BRAG_T[S.meta.settings.ui === "ja" ? "ja" : "ko"];
+const bt = () => Object.assign({}, BRAG_T[S.meta.settings.ui === "ja" ? "ja" : "ko"]);
 function bragStats(){ const p = petState(), d = Object.values(S.meta.days || {}).filter(v => v === true).length, td = today();
   const n = Object.values(S.cards).filter(c => !c.isNew && c.last === td).length, lang = S.meta.settings.ui === "ja" ? "ja" : "ko";
   let m = ""; try{ m = MELT[lang].names[meltStage()]; }catch(_){}
@@ -3765,6 +3796,7 @@ const BRAG_TH = {
 function bragDeco(g, W, H, cx, cy, R, t, ver, k, th, zoom, live){ const st = bragStats(), x = bt(), T = BRAG_TH[th] || BRAG_TH.hime;
   const font = (w, px, fam) => `${w} ${Math.round(px * k)}px ${fam || '"Arial Rounded MT Bold","Hiragino Maru Gothic ProN","Apple SD Gothic Neo","Noto Sans CJK KR",sans-serif'}`;
   const pill = (txt, y, px, bg, fg) => { g.font = font(800, px); const w = g.measureText(txt).width + 34 * k, h = px * k * 1.7; g.fillStyle = bg; g.beginPath(); g.roundRect(W / 2 - w / 2, y - h / 2, w, h, h / 2); g.fill(); g.fillStyle = fg; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(txt, W / 2, y + 1); };
+  const O = bragO(), myCap = (O.cap || "").trim(); if(myCap){ x.cap = () => myCap; x.realCap = () => myCap; }
   if(ver === "real"){ g.font = font(700, 15); g.textAlign = "left"; g.textBaseline = "alphabetic"; g.fillStyle = "rgba(30,30,30,.72)";
     g.fillText(x.realTop(st.lv, st.d, st.m), 16 * k, H - 44 * k); g.font = font(800, 17); g.fillText(x.realCap(st.n), 16 * k, H - 20 * k);
     g.font = font(700, 13); g.textAlign = "right"; g.fillStyle = "rgba(30,30,30,.5)"; g.fillText("meowca.app", W - 14 * k, H - 20 * k); return; }
@@ -3816,7 +3848,42 @@ function bragCompose(st, out, ver, t, th, zoom){ const g = out.getContext("2d"),
     try{ g.filter = "blur(14px) brightness(1.25) saturate(1.3)"; g.globalAlpha = .5; draw(gl); g.globalAlpha = 1; g.filter = "saturate(1.18) brightness(1.05) contrast(.96)"; }catch(_){} }
   else { g.fillStyle = "#f8f0e3"; g.fillRect(0, 0, W, H); draw(bg); }
   draw(gl); draw(fx); g.filter = "none"; g.restore();
-  bragDeco(g, W, H, ox + G.cx * k, oy + G.cy * k, G.R * k, t, ver, zoom ? W / 390 : k, th, zoom); }
+  bragDeco(g, W, H, ox + G.cx * k, oy + G.cy * k, G.R * k, t, ver, zoom ? W / 390 : k, th, zoom); bragStickers(g, W, H, t, ver); bragTex(g, W, H, t, ver); }
+/* 자랑 옵션: 질감 필터 · 내 자막 · 자꾸 틀리는 단어 · 유행어 스티커 */
+function bragO(){ const o = S.meta.bragOpt || (S.meta.bragOpt = {}); o.tex = o.tex || "none"; return o; }
+const BRAG_TEX = { none: ["✕", "없음", "なし"], grain: ["🎞", "필름 입자", "フィルム粒子"], soft: ["🌫", "뽀샤시", "ふんわり"], film: ["📼", "레트로", "レトロ"], vhs: ["📺", "VHS", "VHS"], glit: ["✨", "반짝 가루", "キラキラ粉"] };
+let BRAG_NZ = null;
+function bragNoise(t){ if(!BRAG_NZ){ BRAG_NZ = document.createElement("canvas"); BRAG_NZ.width = BRAG_NZ.height = 160; BRAG_NZ._t = -1; }
+  const f = Math.floor(t * 12); if(BRAG_NZ._t !== f){ BRAG_NZ._t = f; const g = BRAG_NZ.getContext("2d"), im = g.createImageData(160, 160), d = im.data; for(let i = 0; i < d.length; i += 4){ const v = Math.random() * 255 | 0; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; } g.putImageData(im, 0, 0); }
+  return BRAG_NZ; }
+function bragTex(g, W, H, t, ver){ const tx = bragO().tex; if(!tx || tx === "none") return; const k = W / 390;
+  const grain = (a, sc) => { const nz = bragNoise(t); g.save(); g.globalAlpha = a; g.globalCompositeOperation = "overlay"; const pat = g.createPattern(nz, "repeat"); g.translate((t * 97 % 160), (t * 61 % 160)); g.scale(sc, sc); g.fillStyle = pat; g.fillRect(-160, -160, W / sc + 320, H / sc + 320); g.restore(); };
+  const vign = (a, col) => { const v = g.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .35, W / 2, H / 2, Math.max(W, H) * .75); v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, col || `rgba(40,20,10,${a})`); g.fillStyle = v; g.fillRect(0, 0, W, H); };
+  if(tx === "grain"){ grain(.32, k * 1.1); vign(.18); }
+  else if(tx === "soft"){ try{ const c = document.createElement("canvas"); c.width = W / 4 | 0; c.height = H / 4 | 0; const cg = c.getContext("2d"); cg.filter = "blur(4px) brightness(1.15)"; cg.drawImage(g.canvas, 0, 0, c.width, c.height);
+      g.save(); g.globalCompositeOperation = "screen"; g.globalAlpha = .45; g.drawImage(c, 0, 0, W, H); g.restore(); }catch(_){} g.fillStyle = "rgba(255,235,245,.12)"; g.fillRect(0, 0, W, H); }
+  else if(tx === "film"){ g.save(); g.globalCompositeOperation = "soft-light"; g.fillStyle = "rgba(255,170,90,.45)"; g.fillRect(0, 0, W, H); g.globalCompositeOperation = "multiply"; g.fillStyle = "rgba(255,240,215,.5)"; g.fillRect(0, 0, W, H); g.restore(); grain(.22, k); vign(.32);
+    g.save(); g.font = `700 ${Math.round(16 * k)}px "Courier New",monospace`; g.fillStyle = "rgba(255,150,40,.9)"; g.textAlign = "right"; g.textBaseline = "alphabetic"; const d = new Date(); g.fillText(`'${String(d.getFullYear()).slice(2)} ${d.getMonth() + 1} ${d.getDate()}`, W - 20 * k, H - 18 * k); g.restore(); }
+  else if(tx === "vhs"){ g.save(); g.globalAlpha = .9; g.fillStyle = "rgba(0,0,0,.13)"; for(let y = (t * 40 % 4) * k; y < H; y += 4 * k) g.fillRect(0, y, W, 1.6 * k); g.restore();
+    const by = (t * 0.35 % 1) * H; g.fillStyle = "rgba(255,255,255,.07)"; g.fillRect(0, by, W, 26 * k); grain(.18, k * .8); vign(.25);
+    g.save(); g.font = `700 ${Math.round(18 * k)}px "Courier New",monospace`; g.fillStyle = "#fff"; g.shadowColor = "rgba(255,0,80,.8)"; g.shadowOffsetX = 2 * k; g.textAlign = "left"; g.textBaseline = "top"; g.fillText(Math.floor(t * 2) % 2 ? "● PLAY" : "  PLAY", 22 * k, 88 * k); g.restore(); }
+  else if(tx === "glit"){ for(let i = 0; i < 40; i++){ const px = ((i * 97.3 + t * 23 * (i % 3 + 1)) % W), py = ((i * 53.7 + t * 31 * (i % 2 + 1)) % H), r = (1 + i % 3) * k, a = .4 + .6 * Math.abs(Math.sin(t * 4 + i));
+      g.fillStyle = `rgba(255,255,255,${a})`; g.beginPath(); g.arc(px, py, r, 0, Math.PI * 2); g.fill(); if(i % 5 === 0){ g.fillStyle = `rgba(255,190,220,${a})`; g.font = `${Math.round(12 * k)}px sans-serif`; g.fillText("✦", px + 6 * k, py); } } } }
+function bragWordCard(){ const cs = cardsHere().filter(c => !c.isNew && (c.lapses || 0) > 0 && c.word); cs.sort((a, b) => (b.lapses || 0) - (a.lapses || 0) || (b.last || "").localeCompare(a.last || "")); return cs[0] || null; }
+function bragSlangCard(){ const cs = cardsHere().filter(c => c.slang && c.word && !c.isNew); const pool = cs.length ? cs : cardsHere().filter(c => c.slang && c.word); if(!pool.length) return null;
+  const o = bragO(); let c = pool.find(z => z.id === o.slId); if(!c){ c = pool[Math.floor(Math.random() * pool.length)]; o.slId = c.id; } return c; }
+function bragStickers(g, W, H, t, ver){ const o = bragO(), ja = S.meta.settings.ui === "ja", k = W / 390, L = [];
+  if(o.word){ const c = bragWordCard(); if(c) L.push({ h: ja ? `📝 また間違えた ×${c.lapses}` : `📝 또 틀린 단어 ×${c.lapses}`, w: c.word, m: c.meaning || "", bg: "#fff6b8", fg: "#5a4400", r: -.07 }); }
+  if(o.slang){ const c = bragSlangCard(); if(c) L.push({ h: ja ? "🔥 今日のスラング" : "🔥 오늘의 유행어", w: c.word, m: c.meaning || "", bg: "#ffe0ec", fg: "#8a1f4c", r: .06 }); }
+  L.forEach((s, i) => { const font = (w, px) => `${w} ${Math.round(px * k)}px "Arial Rounded MT Bold","Hiragino Maru Gothic ProN","Apple SD Gothic Neo","Noto Sans CJK KR",sans-serif`;
+    const cut = (z, n) => z.length > n ? z.slice(0, n - 1) + "…" : z, w = cut(s.w, 16), m = cut(String(s.m).split(/[;；,、]/)[0], 14), maxW = (L.length > 1 ? (W - 54 * k) / 2 : W * .6);
+    g.save(); g.font = font(900, 24); const raw = Math.max(g.measureText(w).width, (g.font = font(700, 13), g.measureText(m).width), (g.font = font(800, 12), g.measureText(s.h).width)) + 28 * k, sc = Math.min(1, maxW / raw), tw = raw * sc, th = 84 * k * sc;
+    const x0 = L.length > 1 ? (i % 2 ? W - tw - 18 * k : 18 * k) : 18 * k, y0 = 34 * k + (i % 2) * 16 * k;
+    g.translate(x0 + tw / 2, y0 + th / 2); g.scale(sc, sc); const TW = tw / sc, TH = th / sc; g.rotate(s.r + Math.sin(t * 1.6 + i) * .015); g.shadowColor = "rgba(0,0,0,.16)"; g.shadowBlur = 10 * k; g.shadowOffsetY = 4 * k;
+    g.fillStyle = s.bg; g.beginPath(); g.roundRect(-TW / 2, -TH / 2, TW, TH, 12 * k); g.fill(); g.shadowColor = "transparent";
+    g.fillStyle = "rgba(255,255,255,.65)"; g.fillRect(-18 * k, -TH / 2 - 7 * k, 36 * k, 14 * k);
+    g.fillStyle = s.fg; g.textAlign = "left"; g.textBaseline = "alphabetic"; g.font = font(800, 12); g.globalAlpha = .75; g.fillText(s.h, -TW / 2 + 14 * k, -TH / 2 + 22 * k); g.globalAlpha = 1;
+    g.font = font(900, 24); g.fillText(w, -TW / 2 + 14 * k, -TH / 2 + 52 * k); g.font = font(700, 13); g.globalAlpha = .8; g.fillText(m, -TW / 2 + 14 * k, -TH / 2 + 72 * k); g.restore(); }); }
 let BRAG = null, BRAG_SNAP = null;
 function bragFrame(st){ const pet = $("#pet"); if(!pet) return; const t = performance.now() / 1000;
   if(pet.classList.contains("pf")){ const c = $("#pfCv"); if(c){ const dpr = Math.min(2, devicePixelRatio || 1), G = bragGeo(st); if(c.width !== Math.round(G.w * dpr)){ c.width = Math.round(G.w * dpr); c.height = Math.round(G.h * dpr); }
@@ -3831,18 +3898,30 @@ function bragOpen(){ if(!PET) return; const x = bt(), ja = S.meta.settings.ui ==
     <div class="brag-v"><button type="button" data-ver="cute">${esc(x.cute)}<small>${esc(x.cuteS)}</small></button><button type="button" data-ver="real">${esc(x.real)}<small>${esc(x.realS)}</small></button></div>
     <div id="bragThW"><div class="brag-lb">${L.frame}</div><div class="brag-row">${Object.entries(BRAG_TH).map(([id, T]) => `<button type="button" data-th="${id}">${T.e} ${esc(ja ? T.ja : T.ko)}</button>`).join("")}</div></div>
     <div class="brag-lb">${L.comp}</div><div class="brag-row"><button type="button" data-zm="0">${L.full}</button><button type="button" data-zm="1">${L.zoom}</button></div>
+    <div class="brag-lb">${ja ? "質感" : "질감"}</div><div class="brag-row">${Object.entries(BRAG_TEX).map(([id, z]) => `<button type="button" data-tx="${id}">${z[0]} ${esc(ja ? z[2] : z[1])}</button>`).join("")}</div>
+    <div class="brag-lb">${ja ? "のせる" : "얹기"}</div><div class="brag-row"><button type="button" data-st="word">📝 ${ja ? "よく間違える単語" : "자꾸 틀리는 단어"}</button><button type="button" data-st="slang">🔥 ${ja ? "スラング" : "유행어"}</button><button type="button" id="bragSlR" title="↻">↻</button></div>
+    <input id="bragCap" class="brag-cap" maxlength="40" placeholder="${ja ? "✏️ 字幕を書く（空欄ならおまかせ）" : "✏️ 자막 쓰기 (비우면 자동 문구)"}">
     <div class="brag-a"><button type="button" id="bragPh">${esc(x.photo)}</button><button type="button" id="bragVd">${esc(x.video)}</button></div><p class="cos-note" style="margin:8px 2px 0">${esc(x.note)}</p>`);
   const sync = () => { S.meta.bragVer = ver; S.meta.pfOn = ver === "cute"; S.meta.bragTh = th; S.meta.bragZoom = zoom; save(); $("#pet").classList.toggle("pf", ver === "cute");
     dr.querySelectorAll("[data-ver]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.ver === ver))); dr.querySelectorAll("[data-th]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.th === th)));
-    dr.querySelectorAll("[data-zm]").forEach(b => b.setAttribute("aria-pressed", String((b.dataset.zm === "1") === zoom))); $("#bragThW").style.opacity = ver === "cute" ? 1 : .4; };
+    dr.querySelectorAll("[data-zm]").forEach(b => b.setAttribute("aria-pressed", String((b.dataset.zm === "1") === zoom))); $("#bragThW").style.opacity = ver === "cute" ? 1 : .4;
+    const O = bragO(); dr.querySelectorAll("[data-tx]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.tx === O.tex))); dr.querySelectorAll("[data-st]").forEach(b => b.setAttribute("aria-pressed", String(!!O[b.dataset.st]))); };
   sync(); dr.querySelectorAll("[data-ver]").forEach(b => b.onclick = () => { ver = b.dataset.ver; sync(); });
   dr.querySelectorAll("[data-th]").forEach(b => b.onclick = () => { th = b.dataset.th; if(ver !== "cute") ver = "cute"; sync(); track("brag_theme", { th }); });
   dr.querySelectorAll("[data-zm]").forEach(b => b.onclick = () => { zoom = b.dataset.zm === "1"; sync(); });
+  { const O = bragO(), noW = ja ? "まだ間違えた単語がないニャ。優秀…" : "아직 틀린 단어가 없다냥. 기특하군…", noS = ja ? "スラングはまだないニャ（追加 → スラング）" : "아직 유행어 카드가 없다냥 (추가 → 유행어)";
+    dr.querySelectorAll("[data-tx]").forEach(b => b.onclick = () => { O.tex = b.dataset.tx; sync(); track("brag_tex", { tx: O.tex }); });
+    dr.querySelectorAll("[data-st]").forEach(b => b.onclick = () => { const kd = b.dataset.st; if(!O[kd] && !(kd === "word" ? bragWordCard() : bragSlangCard())){ petMsg(kd === "word" ? noW : noS, 2600); return; } O[kd] = !O[kd]; sync(); track("brag_st", { kd, on: O[kd] }); });
+    $("#bragSlR").onclick = () => { delete O.slId; O.slang = true; if(!bragSlangCard()){ O.slang = false; petMsg(noS, 2600); } sync(); };
+    const ci = $("#bragCap"); ci.value = O.cap || ""; ci.oninput = () => { O.cap = ci.value.slice(0, 40); save(); }; ci.onchange = () => track("brag_cap", { n: ci.value.length }); }
   $("#bragX").onclick = () => { dr.remove(); petLift(null); };
-  $("#bragPh").onclick = () => { track("brag_photo", { ver, th, zoom }); BRAG_SNAP = { ver, th, zoom, cb: out => out.toBlob(b => bragShare(b, "meowca.png", ver), "image/png") }; };   // 다음 화면 그리기 직후에 찍어야 냥이(WebGL)가 담김
+  $("#bragPh").onclick = () => { track("brag_photo", { ver, th, zoom }); dr.remove(); petLift(null);   // 창을 닫고 냥이를 제자리로 내린 뒤에 찍기
+    setTimeout(() => { BRAG_SNAP = { ver, th, zoom, cb: out => out.toBlob(b => bragShare(b, "meowca.png", ver), "image/png") }; }, 90); };   // 다음 화면 그리기 직후에 찍어야 냥이(WebGL)가 담김
   $("#bragVd").onclick = () => { dr.remove(); petLift(null); bragRec(ver, th, zoom); }; }
 async function bragShare(blob, name, ver){ const x = bt(), st = bragStats(), text = (ver === "cute" ? x.txtCute(st.lv, st.d) : x.txtReal(st.n)) + "\nhttps://meowca.app/?src=brag"; const file = new File([blob], name, { type: blob.type });
-  try{ if(navigator.canShare && navigator.canShare({ files: [file] })){ await navigator.share({ files: [file], text }); track("brag_share", { kind: name.split(".").pop(), ver }); return; } }catch(e){ if(e && e.name === "AbortError") return; }
+  let cp = false; try{ if(navigator.clipboard){ await navigator.clipboard.writeText(text); cp = true; } }catch(_){}
+  try{ if(navigator.canShare && navigator.canShare({ files: [file] })){ if(cp && PET) petMsg(S.meta.settings.ui === "ja" ? "キャプションはコピー済み。投稿画面で貼り付けてニャ" : "문구는 복사해 뒀다냥. 올릴 때 붙여넣기!", 3200);
+      await navigator.share({ files: [file] }); track("brag_share", { kind: name.split(".").pop(), ver }); return; } }catch(e){ if(e && e.name === "AbortError") return; }
   bragSave(blob, name); }
 function bragSave(blob, name){ const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000); if(PET) petMsg(bt().saved, 2600); track("brag_save", { kind: name.split(".").pop() }); }
 function bragRec(ver, th, zoom){ const x = bt(); if(!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream){ petMsg(x.noRec, 3000); return; }
@@ -3863,6 +3942,14 @@ function bragDone(blob, name, ver, th, zoom){ if(!PET) return; const x = bt(), u
     <div style="text-align:center;margin-top:8px"><button type="button" class="btn sm" id="bragRe">${esc(x.again)}</button></div>`);
   $("#bragX").onclick = () => { dr.remove(); petLift(null); URL.revokeObjectURL(url); }; $("#bragSh").onclick = () => bragShare(blob, name, ver); $("#bragSv").onclick = () => bragSave(blob, name);
   $("#bragRe").onclick = () => { dr.remove(); petLift(null); URL.revokeObjectURL(url); bragRec(ver, th, zoom); }; }
+/* 앱을 열면 냥이부터(설정에서 끌 수 있음). 처음 온 사람·첫 설정·튜토리얼·이사 중에는 홈 그대로 */
+function homePetBoot(){ if(S.meta.settings.homePet === false || PET || needSetup() || !cardsHere().length || !Object.keys(S.meta.days || {}).length || $("#setupBox") || $(".tour") || /move=/.test(location.hash) || SES) return;
+  if(document.querySelector("#sessionBox:not(.hidden)")) return; openPet(); track("home_pet_open"); }
+function petStudyBtn(){ const b = $("#petStudy"); if(!b) return; const ja = S.meta.settings.ui === "ja", due = dueCards().length, nq = Math.min(newQuota(), newCandidates().length) + scriptNewToday(), z = savedSession();
+  if(z){ b.textContent = ja ? `📚 つづきから · 残り${z.queue.length}` : `📚 이어서 학습 · ${z.queue.length}개 남음`; b.classList.remove("done"); }
+  else if(due + nq > 0){ b.textContent = (ja ? "📚 今日の学習 · " : "📚 오늘의 학습 · ") + [due ? (ja ? `復習${due}` : `복습 ${due}`) : "", nq ? (ja ? `新${nq}` : `새 단어 ${nq}`) : ""].filter(Boolean).join(" · "); b.classList.remove("done"); }
+  else { b.textContent = ja ? "✓ 今日の分は完了 · ホームへ" : "✓ 오늘 분량 완료 · 홈으로"; b.classList.add("done"); }
+  b.onclick = () => { track("pet_study", { due, nq }); closePet(); showView("today"); if(z) resumeSession(); else if(due + nq > 0) startSession(); }; }
 function petDraw(){
   const st = PET, { ctx } = st, dpr = st.dpr, s = st.s;
   drawCatTex(st);
@@ -3910,7 +3997,7 @@ function petDraw(){
 /* ── 体の中の波: 2次元の波動方程式（体の形の外は固定＝縁で反射） ── */
 function petThrow(id, fromEl){
   const p = petState(); if(!PET || !(p.inv[id] > 0)) return false; const st = PET, it = PET_IT[id];
-  p.inv[id]--; if(!p.inv[id]) delete p.inv[id];
+  buyUse(p, id); p.inv[id]--; if(!p.inv[id]) delete p.inv[id];
   const r = fromEl.getBoundingClientRect(), cr = st.cv.getBoundingClientRect();
   const hx = 64 + (Math.random() - .5) * 44, hy = 96 + (Math.random() - .5) * 14, tgt = st.toScr(hx, hy);
   st.flies.push({ it, x0: r.left + r.width / 2 - cr.left, y0: r.top - cr.top, x1: tgt.x, y1: tgt.y, hx, hy, t: 0, dur: .36 + Math.random() * .08, rot: (Math.random() - .5) * 14 });
@@ -4161,7 +4248,7 @@ function petDragMove(cx, cy){ const st = PET, g = st && st.grab; if(!g) return; 
 function petRelease(){ const st = PET, g = st && st.grab; if(!g) return; st.grab = null; sfxChargeEnd(); const now = performance.now();
   const recent = g.pts.filter(q => now - q.t <= 70), a = recent[0] || g.pts[Math.max(0, g.pts.length - 2)], b = g.pts[g.pts.length - 1]; if(!a || !b) return;
   const dt = Math.max(.016, (b.t - a.t) / 1000), vx = (b.x - a.x) / dt, vy = (b.y - a.y) / dt; st.lastThrow = { vx, vy }; if(vy > -350) return;   // 上に投げていない → 手元に戻る
-  const p = petState(); if(!(p.inv[g.id] > 0)) return; p.inv[g.id]--; if(!p.inv[g.id]) delete p.inv[g.id];
+  const p = petState(); if(!(p.inv[g.id] > 0)) return; buyUse(p, g.id); p.inv[g.id]--; if(!p.inv[g.id]) delete p.inv[g.id];
   // 奥に向かって投げる: 強さ → 当たる高さ、左右の向き＋回転 → 当たる左右
   const sp = -vy, lx = 64 + Math.max(-1, Math.min(1, vx / sp)) * 55 + g.spin * 16, ly = 98 + (1700 - sp) * .016;
   const hit = ly > 62 && ly < 121 && st.mctx.isPointInPath(st.upath, lx, ly);
