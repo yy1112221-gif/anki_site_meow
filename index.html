@@ -898,6 +898,14 @@ body.focus .dock:has(.vk-host){gap:8px;padding-top:10px} body.focus .dock:has(.v
 .vk-k{min-height:0!important;height:var(--vkh,44px)} .vk-ext .vk-k{height:calc(var(--vkh,44px) * .78)} .vk-r2{height:auto}
 .dock-bar{flex-shrink:0} .dock-bar .aud{margin:0!important;min-height:0;padding:2px 4px;font-size:.78rem} .dock-bar .aud-b{padding:4px 6px;min-height:30px} .dock-bar .aud-i .ic-cat{height:1.25em} .dock-bar .aud-fw .nm{display:none}
 body.focus .dock:has(.vk-host) .ans-btns .btn{min-height:calc(var(--vkh,44px) + 4px)} .ans-field input{min-height:calc(var(--vkh,44px) + 8px)}
+.hv2-grid{margin-top:4px!important;grid-template-columns:1.45fr 1fr!important}
+.hv2-feed{overflow:hidden;justify-content:flex-end;padding:0 0 10px!important;min-height:190px}
+.hv2-side{position:absolute;right:-2px;top:6px;height:calc(100% - 52px);width:auto;max-width:none!important}
+.hv2-fgo{position:relative;z-index:1;display:flex;align-items:center;gap:6px;margin:0 8px;padding:9px 12px;border-radius:999px;background:var(--bg2,rgba(255,255,255,.9));box-shadow:inset 0 0 0 2px var(--accent);color:var(--accent);font-weight:900;font-size:.98rem;white-space:nowrap} .hv2-fgo em{font-style:normal;background:var(--accent);color:#fff;border-radius:999px;padding:1px 8px;font-size:.8rem}
+@media (prefers-color-scheme:dark){.hv2-fgo{background:#1f2128}}
+.hv2-cal{display:grid!important;grid-template-columns:repeat(7,1fr);gap:6px;flex-direction:initial!important}
+.hv2-day{display:flex;flex-direction:column;align-items:center;gap:4px} .hv2-day span{font-size:.7rem;color:var(--muted)} .hv2-day i{font-style:normal;width:100%;max-width:40px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;background:rgba(127,127,127,.12);color:var(--muted)}
+.hv2-day.on i{background:var(--accent);color:#fff;font-size:1rem} .hv2-day.td i{box-shadow:inset 0 0 0 2.5px var(--accent);color:var(--accent)} .hv2-day.td span{color:var(--accent);font-weight:800} .hv2-day.fut i{background:transparent;box-shadow:inset 0 0 0 1px rgba(127,127,127,.25)}
 </style>
 </head>
 <body>
@@ -2451,10 +2459,10 @@ function askTyped(c, mode, promptHTML, target, isGuess){
   function submit(){
     if(phase === "answer" && SES.state.answered){ const nb = $("#nx"); if(nb) nb.click(); return; }
     if(!input.value.trim()){ input.focus({ preventScroll: true }); return; }
-    if(phase === "answer"){ if(SES.state.answered) return; let r = check(input.value, target); if(r === "no" && c.reading && !S.meta.settings.strictKanji && norm(target) === norm(c.word) && check(input.value, c.reading) !== "no") r = "ok";
+    if(phase === "answer"){ if(SES.state.answered) return; let r = ansOk(c, input.value, target);
       if(r === "no" && (SES.state.near || 0) < 2){ const nk = nearSyn(c, input.value); if(nk){ SES.state.near = (SES.state.near || 0) + 1; const fb = $("#fb"); if(fb) fb.innerHTML = `<div class="feedback meh">${say("st_surprised", esc(nearMsg(nk)))}</div>`; buzz(12); track("near_syn", { k: nk }); return; } }
       reveal(r); return; }
-    if(check(input.value, target) !== "no"){ toast(x.copyOk); finish(false); }
+    if(ansOk(c, input.value, target) !== "no"){ toast(x.copyOk); finish(false); }
     else { input.value = ""; input.placeholder = x.copyAgain; input.focus(); toast(x.copyAgain); }
   }
   $("#ansForm").onsubmit = e => { e.preventDefault(); submit(); };
@@ -2764,14 +2772,14 @@ function homeV2(o){ const ja = S.meta.settings.ui === "ja", n = petCount(), sk =
     : `<div class="hv2-chip hv2-rw"><span class="hv2-rwi">${its.slice(0, 2).map(i => petIconHTML(i, 26)).join("")}</span><span class="hv2-rwt"><b>${ja ? `あと${z - sk}日` : `${z - sk}일만 더`}</b><small>${esc(its.map(itName).join("·"))}</small><span class="hs-dots">${dots}</span></span></div>`;
   return `<div class="hv2">
     <div class="hv2-bar">${catBarHTML(pct, "home")}<div class="hv2-ruler" style="--pf:${Math.max(4, pct) / 100}"><i></i><span>${o.done}<small>cm</small></span></div><div class="hv2-goal"><b>${o.remain}</b><small>${ja ? "残り" : "남음"}</small></div></div>
-    <div class="hv2-grid"><button type="button" class="hv2-shelf" id="${o.id}"><img class="hv2-books" src="${NM_BASE}ic/shelf.svg" alt=""><img class="hv2-peek" src="${NM_BASE}ic/peek.svg" alt=""><span class="hv2-go">▶ ${esc(o.label)}</span></button>
-      <button type="button" class="hv2-feed" data-petopen><img src="${NM_BASE}ic/feed.svg" alt=""><b>${esc(pt().give)}</b>${n ? `<span class="hv2-n">${n}</span>` : ""}</button></div>
     <div class="hv2-chips"><div class="hv2-chip hv2-sk">${nm(sk ? "st_happy" : "st_sleepy", 26)}<b>${sk}</b><small>${ja ? "日連続" : "일 연속"} 🔥</small></div>${rw}</div>
+    <div class="hv2-grid"><button type="button" class="hv2-shelf" id="${o.id}"><img class="hv2-books" src="${NM_BASE}ic/shelf.svg" alt=""><span class="hv2-go">▶ ${esc(o.label)}</span></button>
+      <button type="button" class="hv2-feed" data-petopen><img class="hv2-side" src="${NM_BASE}ic/peekside.svg" alt=""><span class="hv2-fgo">🍖 ${esc(pt().give)}${n ? ` <em>${n}</em>` : ""}</span></button></div>
     <div class="hv2-say">${say("cat_jpop", esc(o.line || ""))}</div>
     ${miniCal()}${o.re ? `<button class="linkbtn hv2-re" id="restartBtn" type="button">↺ ${esc(o.re)}</button>` : ""}</div>`; }
-function miniCal(){ const td = today(), ja = S.meta.settings.ui === "ja", D = S.meta.days || {}; let d = addDays(td, -27); const dow = (new Date(d + "T00:00:00").getDay() + 6) % 7; d = addDays(d, -dow);
-  const cells = []; while(d <= td || cells.length % 7){ cells.push(d > td ? `<i class="fut"></i>` : `<i class="${D[d] ? "on" : ""}${d === td ? " td" : ""}" title="${d}"></i>`); d = addDays(d, 1); }
-  return `<div class="hv2-cal"><div class="hv2-calh">${(ja ? "月火水木金土日" : "월화수목금토일").split("").map(w => `<span>${w}</span>`).join("")}</div><div class="hv2-calg">${cells.join("")}</div></div>`; }
+function miniCal(){ const td = today(), ja = S.meta.settings.ui === "ja", D = S.meta.days || {}, W = (ja ? "月火水木金土日" : "월화수목금토일").split(""); const dow = (new Date(td + "T00:00:00").getDay() + 6) % 7; let d = addDays(td, -dow);
+  const cells = W.map((w, i) => { const dd = addDays(d, i), fut = dd > td, on = !!D[dd]; return `<div class="hv2-day${on ? " on" : ""}${dd === td ? " td" : ""}${fut ? " fut" : ""}"><span>${w}</span><i>${on ? "🐾" : +dd.slice(8)}</i></div>`; });
+  return `<div class="hv2-cal">${cells.join("")}</div>`; }
 function heroHTML(title, sub, pct){
   const d = new Date(); const day = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
   return `<div class="poster"><b class="ptitle">${esc(title)}</b>${sub ? `<span class="psub">${esc(sub)}</span>` : ""}
@@ -3400,7 +3408,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v109";
+const APP_VER = "v110";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -4929,6 +4937,8 @@ function fixCutExamples(){ if((S.meta.cfix || 0) >= 1) return; let n = 0;
   S.meta.cfix = 1; if(n){ save(); track("cut_ex_fix", { n }); } }
 /* 유의어·외래어로 답했을 때: 틀림 처리 대신 냥이가 다른 말로 유도 */
 const meanToks = m => String(m || "").replace(/^[^·]*·\s*/, "").replace(/[（(][^）)]*[）)]/g, "").split(/[,、;；/·]|\s+또는\s+/).map(x => x.trim().replace(/\s+/g, "")).filter(x => x.length >= 1);
+function readingOf(c){ if(c.reading) return c.reading; const m = String(c.meaning || "").match(/^\s*([ぁ-ゖァ-ヺー]+)\s*[·・]/); return m ? m[1] : ""; }
+function ansOk(c, v, target){ let r = check(v, target); if(r === "no" && !S.meta.settings.strictKanji && norm(target) === norm(c.word)){ const rd = readingOf(c); if(rd && check(v, rd) !== "no") r = "ok"; } return r; }
 function nearSyn(c, typed){ const t = norm(typed), th = toHira(t); if(!t || !c.meaning) return null; const mine = new Set(meanToks(c.meaning)); if(!mine.size) return null; const lang = c.lang || S.meta.settings.lang;
   const hit = (w, rd, m) => (norm(w) === t || (rd && toHira(norm(rd)) === th) || toHira(norm(w)) === th) && meanToks(m).some(x => mine.has(x));
   let ok = Object.values(S.cards).some(o => o.id !== c.id && (o.lang || "es") === lang && hit(o.word, o.reading, o.meaning));
