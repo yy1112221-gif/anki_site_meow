@@ -841,6 +841,13 @@ h1 .logo{display:flex;flex-direction:column;align-items:flex-start;gap:0;letter-
 .logo .lo2{width:.98em;height:.98em;margin:0 .02em;transform:translateY(-.07em);color:#FFFDF8} .logo .lx{width:.5em;height:.92em;margin-left:-.02em;color:#FFFDF8;transform:translateY(-.02em)} .logo .lo2 path[fill="#fffdf8"], .logo .lo2 ellipse[fill="#fffdf8"], .logo .lx g{fill:#FFFDF8}
 .catbar{position:relative;height:44px;min-width:120px;margin:-7px 0} .catbar .cb-cv{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
 .poster .catbar{margin-top:14px}
+.mic-in{min-width:46px;padding:0 10px;font-size:1.15rem} .mic-in.on{background:var(--accent);color:#fff;animation:micp 1s infinite} @keyframes micp{50%{opacity:.55}}
+.hf-big{width:100%;justify-content:center;margin-top:10px;min-height:52px;font-size:1.05rem;font-weight:800;border:2px solid var(--accent);color:var(--accent);background:transparent} .hf-big small{font-weight:500;font-size:.78rem;opacity:.8} .hf-big.on{border-style:dashed}
+.pay-what{background:rgba(217,74,126,.07);border-radius:14px;padding:10px 12px;margin:10px 0} .pay-what div{display:flex;flex-wrap:wrap;gap:6px 12px;margin:6px 0;font-size:.95rem}
+.kk-wrap{margin-top:8px} .kk-tg.on{background:var(--accent);color:#fff;border-color:var(--accent)} .kk{margin-top:8px;display:flex;flex-direction:column;gap:5px;user-select:none;-webkit-user-select:none}
+.kk-r{display:grid;grid-template-columns:repeat(5,1fr);gap:5px} .kk-r i{display:block} .kk button{min-height:36px;border-radius:10px;border:1px solid rgba(0,0,0,.12);background:#fff;color:#1d2b27;font-size:1.15rem;font-family:inherit;touch-action:manipulation} .kk button:active{background:rgba(217,74,126,.18)}
+.kk-fn{grid-template-columns:repeat(6,1fr)} .kk-fn button{font-size:1rem;background:#f3eee8} .kk-fn button.on{background:var(--accent);color:#fff}
+@media (prefers-color-scheme:dark){.kk button{background:#2a2d35;color:#eef0ee;border-color:rgba(255,255,255,.12)} .kk-fn button{background:#22252c}}
 h1 .logo .testtag{font-size:.55rem;letter-spacing:.1em;background:var(--accent);color:#fff;border-radius:999px;padding:2px 7px;margin-left:6px}
 </style>
 </head>
@@ -1485,6 +1492,7 @@ function check(input, target){
   const a = norm(input), b = norm(target);
   if(!a) return "no"; if(a === b) return "ok";
   if(stripAcc(a) === stripAcc(b)) return S.meta.settings.strictAccent ? "no" : "accent";
+  if(/[ぁ-ヶ]/.test(a) && toHira(a) === toHira(b)) return "ok";
   return "no";
 }
 
@@ -1701,12 +1709,13 @@ async function renderOnboard(box){   // 첫 시작: ① 배울 언어 ② 지금
   $("#goAdd").onclick = () => { showView("add"); setAddPanel("one"); }; const sd = $("#seed"); if(sd) sd.onclick = seedExamples;
   const lv = $("#onbLv"); let idx = null; try{ idx = await presetIndex(); }catch(e){}
   const set = idx && idx.sets[lang];
-  if(!set){ lv.innerHTML = SCRIPT_SETS[lang] ? `<button class="btn primary" id="goScript" type="button">🔤 ${esc(x.scriptTitle)}</button>` : `<button class="btn primary" type="button" id="goAddB">${esc(x.goAdd.replace(/<[^>]+>/g, ""))}</button>`;
+  if(!set){ const lb = lv.previousElementSibling && lv.previousElementSibling.querySelector("b"); if(lb) lb.textContent = S.meta.settings.ui === "ja" ? "この言語は単語を入れて始めよう" : "이 언어는 단어를 넣어서 시작해요";
+    lv.innerHTML = SCRIPT_SETS[lang] ? `<button class="btn primary" id="goScript" type="button">🔤 ${esc(x.scriptTitle)}</button>` : `<button class="btn primary" type="button" id="goAddB">${esc(x.goAdd.replace(/<[^>]+>/g, ""))}</button>`;
     const gs = $("#goScript"); if(gs) gs.onclick = () => scr7Open();
     const gb = $("#goAddB"); if(gb) gb.onclick = () => showView("add"); return; }
   lv.innerHTML = `<button class="btn primary onb-diag" type="button" id="obDiag">🧪 ${esc(x.obDiag)}</button><div class="onb-pills">${set.levels.map(l => `<button class="btn" type="button" data-oblv="${l.id}">${esc(lvLabel(l))}</button>`).join("")}</div>
     ${SCRIPT_SETS[lang] ? `<button class="btn ghost sm" type="button" id="goScript">🔤 ${esc(x.scriptTitle)}</button>` : ""}`;
-  $("#obDiag").onclick = () => { $("#obDiag").classList.add("hidden"); startDiag(lang); setTimeout(() => { const d = $("#diagBox"); if(d) d.scrollIntoView({ behavior: "smooth", block: "center" }); }, 60); };
+  $("#obDiag").onclick = () => { $("#obDiag").classList.add("hidden"); startDiag(lang, lv.parentElement.querySelector("#diagBox")); };
   lv.querySelectorAll("[data-oblv]").forEach(b => b.onclick = () => addPreset(lang, b.dataset.oblv, b));
   const gs = $("#goScript"); if(gs) gs.onclick = () => scr7Open();
 }
@@ -1839,6 +1848,7 @@ function payOpen(id){ const it = PAY_ITEMS[id]; if(!it) return; const ko = S.met
   const ov = document.createElement("div"); ov.className = "sup-ov"; ov.setAttribute("role", "dialog");
   ov.innerHTML = `<div class="sup-sh"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">🛒 ${ko ? "구매하기" : "購入"}</h3><button type="button" class="btn sm" id="payX">${ko ? "닫기" : "閉じる"}</button></div>
     <p style="font-size:1.05rem;margin:14px 0 4px"><b>${esc(it[1])}</b></p><p style="font-size:1.6rem;font-weight:900;margin:0">${it[0].toLocaleString()}원 <small style="font-size:.8rem;color:var(--muted)">부가세 포함</small></p>
+    ${payWhat(id)}
     <p class="small muted" style="margin:10px 0">결제 즉시 이 기기(계정)에 지급돼요. 7일 안에 쓰지 않은 아이템은 전액 환불, 이미 쓴 아이템은 청약철회가 제한돼요. <a href="terms#refund" target="_blank">환불 안내</a></p>
     <label style="display:flex;gap:8px;align-items:flex-start;margin:6px 0 14px"><input type="checkbox" id="payAgree" style="width:20px;height:20px;margin-top:2px"><span class="small">위 내용(디지털 아이템은 사용 후 청약철회가 제한됨)을 확인했고 동의해요.</span></label>
     <div id="payMeth" style="margin:0 -8px"></div><div id="payTerms" style="margin:0 -8px 8px"></div>
@@ -1857,8 +1867,12 @@ function payOpen(id){ const it = PAY_ITEMS[id]; if(!it) return; const ko = S.met
       await wg.requestPayment({ orderId: o.orderId, orderName: o.orderName,
         successUrl: location.origin + location.pathname + "?pay=ok", failUrl: location.origin + location.pathname + "?pay=fail" });
     }catch(e){ b.disabled = false; b.textContent = `${it[0].toLocaleString()}원 결제하기`; if(e && e.code === "USER_CANCEL") return; toast(ko ? "결제를 시작하지 못했다냥. 잠시 뒤 다시 해 줘" : "決済を開始できなかったニャ"); } }; }
+function payPool(){ return PET_ITEMS.filter(i => i.t <= petTier(streak()) && i.id !== "whale"); }
+function payWhat(id){ const n = { snk_s: 10, snk_m: 40, snk_l: 150 }[id]; if(!n) return ""; const pool = payPool(), per = {};
+  for(let k = 0; k < n; k++){ const it = pool[k % pool.length]; per[it.id] = (per[it.id] || 0) + 1; }
+  return `<div class="pay-what"><b>들어 있는 간식</b><div>${pool.filter(i => per[i.id]).map(i => `<span>${i.e || "🍪"} ${esc(i.ko)} ×${per[i.id]}</span>`).join("")}</div><p class="tiny muted">지금 열려 있는 간식이 골고루 들어가요. 연속 학습일이 늘면 더 좋은 간식이 열려요. 산 간식은 ${({ snk_s: 3, snk_m: 7, snk_l: 14 })[id]}일 안에 줘야 해요.</p></div>`; }
 function payGrant(id, orderId){ const p = petState(), g = S.meta.paid || (S.meta.paid = {}); if(g[orderId]) return false; g[orderId] = { id, at: Date.now() };
-  const snack = (n, days) => { const pool = PET_ITEMS.filter(i => i.t <= petTier(streak()) && i.id !== "whale"); const per = {}; for(let k = 0; k < n; k++){ const it = pool[k % pool.length]; per[it.id] = (per[it.id] || 0) + 1; } Object.entries(per).forEach(([iid, c]) => buyGrant(iid, c, days)); };
+  const snack = (n, days) => { const pool = payPool(); const per = {}; for(let k = 0; k < n; k++){ const it = pool[k % pool.length]; per[it.id] = (per[it.id] || 0) + 1; } Object.entries(per).forEach(([iid, c]) => buyGrant(iid, c, days)); };
   if(id === "snk_s") snack(10, 3); else if(id === "snk_m") snack(40, 7); else if(id === "snk_l") snack(150, 14); else if(id === "snk_whale") buyGrant("whale", 1, 7);
   else if(/^s[1-4]$/.test(id)){ S.meta.sup = Math.max(S.meta.sup || 0, +id[1]); supApply(); }
   else { const cm = S.meta.cos || (S.meta.cos = {}); cm.own = cm.own || {}; cm.own[id] = 1; cm.on = id; }
@@ -2068,8 +2082,29 @@ function finishSession(){
   $("#backHome").onclick = () => { SES = null; document.body.classList.remove("focus"); box.classList.add("hidden"); $("#sessionStart").classList.remove("hidden"); renderAll(); setTimeout(maybeRiskPrompt, 600); };
 }
 
-const kbdHTML = () => L().chars.length ? '<div class="kbd">' + L().chars.map(ch => `<button type="button" data-ch="${ch}">${ch}</button>`).join("") + "</div>" : "";
-function bindKbd(box, input){ box.querySelectorAll(".kbd button").forEach(b => b.onclick = () => { const s = input.selectionStart ?? input.value.length, e = input.selectionEnd ?? s; input.value = input.value.slice(0,s) + b.dataset.ch + input.value.slice(e); input.focus(); try{ input.setSelectionRange(s+1, s+1); }catch(_){} }); }
+/* 자체 일본어 자판: 폰에 일본어 키보드가 없어도 히라가나·가타카나 입력 */
+const KANA_ROWS = ["あいうえお","かきくけこ","さしすせそ","たちつてと","なにぬねの","はひふへほ","まみむめも","や゙ゆ゙よ","らりるれろ","わ゙を゙ん"];
+const KANA_DK = { "か":"が","き":"ぎ","く":"ぐ","け":"げ","こ":"ご","さ":"ざ","し":"じ","す":"ず","せ":"ぜ","そ":"ぞ","た":"だ","ち":"ぢ","つ":"づ","て":"で","と":"ど","は":"ば","ひ":"び","ふ":"ぶ","へ":"べ","ほ":"ぼ","う":"ゔ" },
+  KANA_HD = { "は":"ぱ","ひ":"ぴ","ふ":"ぷ","へ":"ぺ","ほ":"ぽ","ば":"ぱ","び":"ぴ","ぶ":"ぷ","べ":"ぺ","ぼ":"ぽ" },
+  KANA_SM = { "あ":"ぁ","い":"ぃ","う":"ぅ","え":"ぇ","お":"ぉ","つ":"っ","や":"ゃ","ゆ":"ゅ","よ":"ょ","わ":"ゎ" };
+const toHira = v => v.replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 96));
+const kanaKbdHTML = () => { const ko = S.meta.settings.ui !== "ja"; return `<div class="kk-wrap"><button type="button" class="btn sm ghost kk-tg">⌨️ ${ko ? "일본어 자판" : "かなキーボード"}</button><div class="kk hidden">${KANA_ROWS.map(r => `<div class="kk-r">${Array.from(r.replace(/゙/g, " ")).map(ch => ch === " " ? "<i></i>" : `<button type="button" data-kk="${ch}">${ch}</button>`).join("")}</div>`).join("")}
+  <div class="kk-r kk-fn"><button type="button" data-kf="dk">゛</button><button type="button" data-kf="hd">゜</button><button type="button" data-kf="sm">小</button><button type="button" data-kk="ー">ー</button><button type="button" data-kf="kata">カナ</button><button type="button" data-kf="bs">⌫</button></div></div></div>`; };
+const kbdHTML = () => L().speech === "ja-JP" ? kanaKbdHTML() : L().chars.length ? '<div class="kbd">' + L().chars.map(ch => `<button type="button" data-ch="${ch}">${ch}</button>`).join("") + "</div>" : "";
+function bindKana(box, input){ const tg = box.querySelector(".kk-tg"), kk = box.querySelector(".kk"); if(!tg || !kk) return; let kata = false;
+  const put = (v, del) => { const s0 = input.selectionStart ?? input.value.length, e0 = input.selectionEnd ?? s0, st = Math.max(0, s0 - (del || 0)); input.value = input.value.slice(0, st) + v + input.value.slice(e0); const p = st + v.length; try{ input.setSelectionRange(p, p); }catch(_){} input.dispatchEvent(new Event("input", { bubbles: true })); };
+  const open = on => { kk.classList.toggle("hidden", !on); tg.classList.toggle("on", on); input.inputMode = on ? "none" : ""; S.meta.kanaKbd = on ? 1 : 0; save(); if(on){ input.blur(); setTimeout(() => input.focus({ preventScroll: true }), 30); } };
+  tg.onclick = () => open(kk.classList.contains("hidden"));
+  kk.querySelectorAll("button").forEach(b => b.addEventListener("pointerdown", e => e.preventDefault()));
+  kk.querySelectorAll("[data-kk]").forEach(b => b.onclick = () => { buzz && buzz(4); put(kata ? toKata(b.dataset.kk) : b.dataset.kk); });
+  kk.querySelectorAll("[data-kf]").forEach(b => b.onclick = () => { const f = b.dataset.kf, pos = input.selectionStart ?? input.value.length, last = input.value.slice(pos - 1, pos), h = toHira(last);
+    if(f === "bs"){ if(input.selectionStart !== input.selectionEnd) put(""); else if(pos) put("", 1); return; }
+    if(f === "kata"){ kata = !kata; b.classList.toggle("on", kata); kk.querySelectorAll("[data-kk]").forEach(k => { if(k.dataset.kk !== "ー") k.textContent = kata ? toKata(k.dataset.kk) : k.dataset.kk; }); return; }
+    const m = f === "dk" ? KANA_DK : f === "hd" ? KANA_HD : KANA_SM; let v = m[h];
+    if(!v){ const back = Object.entries(m).find(([a, z]) => z === h); if(back) v = back[0]; }   // 한 번 더 누르면 원래대로
+    if(v && last) put(/[ァ-ヶ]/.test(last) ? toKata(v) : v, 1); });
+  if(S.meta.kanaKbd) open(true); }
+function bindKbd(box, input){ bindKana(box, input); box.querySelectorAll(".kbd button").forEach(b => b.onclick = () => { const s = input.selectionStart ?? input.value.length, e = input.selectionEnd ?? s; input.value = input.value.slice(0,s) + b.dataset.ch + input.value.slice(e); input.focus(); try{ input.setSelectionRange(s+1, s+1); }catch(_){} }); }
 /* 오늘의 진척도: 위에서 본 냥이가 츄르를 먹어 나갈수록 몸통이 주욱 늘어남 */
 function catBarHTML(pct, cls){ const P = Math.max(0, Math.min(100, pct));   // 위에서 본 암기냥이(얼굴을 왼쪽으로 90° 돌린 모습)가 오른쪽으로 츄르를 먹어 나가며 젤리 몸이 늘어남. 몸은 위아래로 잡아당길 수 있음
   setTimeout(catBarsStart, 0); return `<div class="catbar ${cls || "grow"}" role="progressbar" aria-valuenow="${P}" aria-valuemin="0" aria-valuemax="100" data-p="${P}"><canvas class="cb-cv"></canvas></div>`; }
@@ -2132,8 +2167,9 @@ document.addEventListener("click", e => {
   renderAll(); window.scrollTo({ top: 0 }); toast(t().pausedToast);
 });
 document.addEventListener("click", e => {
-  if(!e.target.closest("#hfToggle") || !SES || SES.state.answered) return;
-  S.meta.settings.handsFree = !S.meta.settings.handsFree; save();
+  if(!e.target.closest("#hfToggle, .hf-big") || !SES) return;
+  S.meta.settings.handsFree = !S.meta.settings.handsFree; save(); track("hf_toggle", { on: S.meta.settings.handsFree });
+  if(SES.state.answered){ toast(S.meta.settings.handsFree ? (S.meta.settings.ui === "ja" ? "次の問題から入力なしニャ" : "다음 문제부터 입력 없이 간다냥") : (S.meta.settings.ui === "ja" ? "次の問題から入力ありニャ" : "다음 문제부터 직접 입력이다냥")); const hb = document.querySelector(".hf-big"); if(hb) hb.remove(); return; }
   const it = SES.queue[0]; const c = it && S.cards[it.id]; if(c) renderItem(c, it.mode);
 });
 const fastOn = () => { const st = S.meta.settings; return st.fast == null ? ["ko", "en"].includes(st.lang) : !!st.fast; };
@@ -2149,6 +2185,18 @@ function bindSay(box){ box.querySelectorAll("[data-say]").forEach(b => b.onclick
     if(on) speak(b.dataset.fast); }); }
 const srcLine = c => c.src ? `<a class="tiny" href="https://tatoeba.org/sentences/show/${encodeURIComponent(c.src)}" target="_blank" rel="noopener">${esc(t().source(c.src))}</a>` : "";
 
+
+/* 🎤 입력: 답 칸 옆 마이크. 말한 내용을 칸에 채워 줌(자동 제출은 안 함) */
+function micAttach(input, speechLang){ if(!SR || !input || !input.form) return; const x = t(), ko = S.meta.settings.ui !== "ja";
+  const b = document.createElement("button"); b.type = "button"; b.className = "btn mic-in"; b.textContent = "🎤"; b.setAttribute("aria-label", ko ? "말로 입력" : "音声入力");
+  input.after(b); let rec = null;
+  b.addEventListener("pointerdown", e => e.preventDefault());
+  b.onclick = () => { if(rec){ try{ rec.stop(); }catch(e){} return; }
+    try{ rec = new SR(); rec.lang = speechLang; rec.interimResults = true; rec.maxAlternatives = 1;
+      rec.onresult = e => { input.value = Array.from(e.results).map(r => r[0].transcript).join(" ").replace(/[。．.!?！？]+$/u, "").trim(); input.dispatchEvent(new Event("input", { bubbles: true })); };
+      rec.onend = () => { rec = null; b.classList.remove("on"); input.focus({ preventScroll: true }); };
+      rec.onerror = ev => { if(ev.error === "not-allowed") toast(x.micDenied); };
+      rec.start(); b.classList.add("on"); track("mic_in"); }catch(e){ rec = null; toast(x.micNo); } }; }
 /* 入力式の問題（推測・穴埋め・意味から書く）共通：間違えたら答えを見せて書き写させる */
 function askTyped(c, mode, promptHTML, target, isGuess){
   const box = $("#sessionBox"), x = t();
@@ -2156,7 +2204,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
     <form id="ansForm" autocomplete="off" class="ansrow"><input type="text" id="ans" class="answer" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${isGuess ? x.guessType : x.answerPh}" aria-label="${x.answer}" enterkeyhint="go"><button class="btn primary" type="button" id="chk">${isGuess ? x.guessBtn : x.check}</button></form>
     ${kbdHTML()}
     <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${isGuess ? x.guessSkip : x.idk}</button></div></div>`;
-  const input = $("#ans"); bindKbd(box, input); input.focus({ preventScroll: true });
+  const input = $("#ans"); bindKbd(box, input); micAttach(input, L().speech); input.focus({ preventScroll: true });
   let phase = "answer";
   const blank = box.querySelector(".stage .blank");
   // 答えは問題の空欄にそのまま入れる。フィードバックには「単語・意味」だけ（例文は上に出ているので繰り返さない）
@@ -2193,7 +2241,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
   function submit(){
     if(phase === "answer" && SES.state.answered){ const nb = $("#nx"); if(nb) nb.click(); return; }
     if(!input.value.trim()){ input.focus({ preventScroll: true }); return; }
-    if(phase === "answer"){ if(SES.state.answered) return; reveal(check(input.value, target)); return; }
+    if(phase === "answer"){ if(SES.state.answered) return; let r = check(input.value, target); if(r === "no" && c.reading && norm(target) === norm(c.word) && check(input.value, c.reading) !== "no") r = "ok"; reveal(r); return; }
     if(check(input.value, target) !== "no"){ toast(x.copyOk); finish(false); }
     else { input.value = ""; input.placeholder = x.copyAgain; input.focus(); toast(x.copyAgain); }
   }
@@ -2215,7 +2263,7 @@ function askMeaning(c, promptHTML){
   box.innerHTML = head(c, mode) + `<div class="stage">${promptHTML}<div id="fb"></div></div><div class="dock">
     <form id="ansForm" autocomplete="off" class="ansrow"><input type="text" id="ans" class="answer" spellcheck="false" placeholder="${esc(x.meanPh)}" aria-label="${x.answer}" enterkeyhint="go"><button class="btn primary" type="button" id="chk">${x.check}</button></form>
     <div class="row" id="acts">${listenBtn(c.word)}<span class="grow"></span><button class="btn ghost" type="button" id="idk">${x.idk}</button></div></div>`;
-  const input = $("#ans"); input.focus({ preventScroll: true }); bindSay(box); speak(c.word);
+  const input = $("#ans"); micAttach(input, S.meta.settings.ui === "ja" ? "ja-JP" : "ko-KR"); input.focus({ preventScroll: true }); bindSay(box); speak(c.word);
   const keep = b => b.addEventListener("pointerdown", e => { if(document.activeElement === input) e.preventDefault(); });
   box.querySelectorAll(".dock button").forEach(keep);
   const ansBlock = () => `<span class="fb-answer">${esc(c.meaning)}</span><span class="fb-mean">${esc(c.word)}</span>${c.example ? `<span class="fb-ex">${highlight(c)}</span>${c.exampleKo ? `<span class="fb-mean">${esc(c.exampleKo)}</span>` : ""}` : ""}`;
@@ -2272,7 +2320,13 @@ function askOrder(c){ const box = $("#sessionBox"), x = t(), ko = S.meta.setting
     try{ speak(c.example); }catch(_){} track("order", { ok }); const nb = $("#chk"); nb.disabled = false; nb.textContent = x.next; nb.onclick = () => settleItem(ok); $("#idk").remove(); };
   const check = () => done(picked.map(p2 => p2.w).join(sep).replace(/\s+/g, "") === toks.join(sep).replace(/\s+/g, ""));
   $("#chk").onclick = check; $("#idk").onclick = () => done(false); draw(); }
-function renderItem(c, mode){
+function hfBig(){ if(!SES) return; const box = $("#sessionBox"), dock = box && box.querySelector(".dock"); if(!dock || dock.querySelector(".hf-big")) return;
+  if(!box.querySelector("#ans, #wr, #rv")) return; const ja = S.meta.settings.ui === "ja", hf = !!S.meta.settings.handsFree;
+  const b = document.createElement("button"); b.type = "button"; b.className = "btn hf-big" + (hf ? " on" : "");
+  b.innerHTML = hf ? (ja ? "⌨️ 自分で入力する" : "⌨️ 직접 입력하기로 바꾸기") : (ja ? "👆 入力なしで解く <small>（タイピングなし・見て答える）</small>" : "👆 입력 없이 풀기 <small>(타자 없이 보고 맞히기)</small>");
+  b.addEventListener("pointerdown", e => e.preventDefault()); dock.appendChild(b); }
+function renderItem(c, mode){ const r = renderItem0(c, mode); try{ hfBig(); }catch(_){} return r; }
+function renderItem0(c, mode){
   if(c.script) return askScript(c, mode);
   if(mode === "order") return askOrder(c);
   const box = $("#sessionBox"), x = t();
@@ -3105,7 +3159,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v102";
+const APP_VER = "v103";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -4586,7 +4640,7 @@ async function renderPresets(){
     <p class="tiny muted">${esc(x.presetSrc)}: <a href="${set.url}" target="_blank" rel="noopener">${esc(set.src)}</a></p><p class="small" id="presetNote" aria-live="polite"></p>${scriptSectionHTML(lang)}`;
   box.querySelectorAll("[data-scr]").forEach(b => b.onclick = () => addScriptSet(lang, b.dataset.scr));
   box.querySelectorAll("[data-pre]").forEach(b => b.onclick = () => addPreset(lang, b.dataset.pre, b));
-  $("#diagBtn").onclick = () => startDiag(lang);
+  $("#diagBtn").onclick = () => startDiag(lang, box.querySelector("#diagBox"));
 }
 /* セットは全部をカードにしない: 60語ずつ「補充」する（保存容量・速さのため）。デッキに出典と読み進めた位置だけ持つ */
 const PRESET_CHUNK = 60, PRESET_LOW = 25, PRESET_DATA = {};
@@ -4664,14 +4718,14 @@ function fillLazy(c){
 }
 async function prefetchLazy(ids){ for(const id of ids){ const c = S.cards[id]; if(c && c.lazy){ await fillLazy(c); await sleep(300); } } }
 /* レベル診断: 各レベルから数語＋存在しない単語。わかる率を「うそ○」で補正（yes/no 語彙テスト） */
-async function startDiag(lang){
+async function startDiag(lang, host){
   const x = t(), idx = await presetIndex(), dg = idx.diag[lang], set = idx.sets[lang]; if(!dg) return;
   const per = set.levels.length >= 5 ? 8 : 12, pick = (a, n) => a.slice().sort(() => Math.random() - .5).slice(0, n);
   const items = [];
   set.levels.forEach(lv => pick(dg.levels[lv.id], per).forEach(w => items.push({ w: Array.isArray(w) ? w[0] : w, r: Array.isArray(w) ? w[1] : "", lv: lv.id })));
   pick(dg.fake, 8).forEach(w => items.push({ w: Array.isArray(w) ? w[0] : w, r: "", fake: 1 }));
   items.sort(() => Math.random() - .5);
-  const box = $("#diagBox"); const known = new Set();
+  const box = host || $("#diagBox"); const known = new Set(); if(!box) return; box.scrollIntoView({ behavior: "smooth", block: "center" });
   box.innerHTML = `<div class="diag"><b>${esc(x.diagTitle)}</b><p class="small muted">${esc(x.diagHelp)}</p><div class="chips">${items.map((it, i) => `<button type="button" class="chiptog" data-di="${i}" aria-pressed="false">${esc(it.w)}${it.r && lang === "ja" ? `<span class="tiny muted"> ${esc(it.r)}</span>` : ""}</button>`).join("")}</div>
     <div class="row" style="gap:8px"><button class="btn ghost" type="button" id="diagX">${esc(x.diagCancel)}</button><span class="grow"></span><button class="btn primary" type="button" id="diagGo">${esc(x.diagJudge)}</button></div></div>`;
   box.querySelectorAll("[data-di]").forEach(b => b.onclick = () => { const i = +b.dataset.di; if(known.has(i)) known.delete(i); else known.add(i); b.setAttribute("aria-pressed", known.has(i)); });
@@ -4816,13 +4870,14 @@ function dataRisk(){
 function riskUI(){ const b = $("#riskBtn"); if(!b) return; const r = dataRisk(), lv = Math.max(0, ...r.map(v => v.lv));
   b.classList.toggle("hidden", !r.length); b.classList.toggle("lv2", lv >= 2); b.title = r.map(v => v.msg).join("\n"); }
 function openRisk(){
-  const x = t(), r = dataRisk(), sy = S.meta.sync || {};
+  if(!AUTH_PROV && !KID()){ authProviders().then(openRisk); return; }
+  const x = t(), r = dataRisk(), sy = S.meta.sync || {}, ja = S.meta.settings.ui === "ja", login = !sy.code && !AUTH_USER && AUTH_PROV && AUTH_PROV.length;
   let el = $("#riskPop"); if(!el){ el = document.createElement("div"); el.id = "riskPop"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); document.body.appendChild(el); }
   const close = () => { el.remove(); riskUI(); };
   el.innerHTML = `<div class="rp-card">${say("st_surprised", esc(x.riskTitle))}
     <ul class="rp-list">${(r.length ? r : [{ lv: 0, msg: x.riskSafe }]).map(v => `<li class="lv${v.lv}">${esc(v.msg)}</li>`).join("")}</ul>
-    ${!sy.code ? `<p class="small">${esc(x.riskWhy)}</p>` : ""}${!sy.code && !AUTH_USER && AUTH_PROV && AUTH_PROV.length ? `<div class="provs">${provButtons(AUTH_PROV)}</div>` : ""}
-    <div class="rp-btns">${!sy.code ? `<button class="btn primary" type="button" id="rpMake">🔑 ${esc(x.riskMake)}</button>` : `<button class="btn primary" type="button" id="rpOpen">${esc(x.riskOpen)}</button>`}
+    ${login ? `<p class="small"><b>${ja ? "GoogleやLINEでログインすると、記録がアカウントに保存されるニャ。機種変更しても、アプリを消しても、ログインするだけでそのまま続きから。" : "구글·카카오로 로그인하면 기록이 계정에 저장된다냥. 폰을 바꾸거나 앱을 지워도 로그인만 하면 그대로 이어서 할 수 있어."}</b></p><div class="provs">${provButtons(AUTH_PROV)}</div>` : !sy.code ? `<p class="small">${esc(x.riskWhy)}</p>` : ""}
+    <div class="rp-btns">${login ? `<button class="btn ghost sm" type="button" id="rpMake">${ja ? "ログインなしで識別コードを使う" : "로그인 없이 식별 코드 쓰기"}</button>` : !sy.code ? `<button class="btn primary" type="button" id="rpMake">🔑 ${esc(x.riskMake)}</button>` : `<button class="btn primary" type="button" id="rpOpen">${esc(x.riskOpen)}</button>`}
       <button class="btn ghost" type="button" id="rpLater">${esc(r.length ? x.riskLater : x.riskOk)}</button></div></div>`;
   el.onclick = e => { if(e.target === el) $("#rpLater").click(); };
   $("#rpLater").onclick = () => { S.meta.riskSnooze = Date.now() + 2 * 864e5; save(); close(); };
