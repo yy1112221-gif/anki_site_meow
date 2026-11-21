@@ -1,32 +1,53 @@
 {
- "updated": "2026-11-20T22:06:45.233563Z",
+ "updated": "2026-11-21T21:58:07.188591Z",
  "lang": "es",
  "terms": [
   {
    "t": "mogging",
-   "n": 6,
+   "n": 8,
    "src": [
     "google_news"
    ],
-   "s": 8,
+   "s": 10,
    "first": "2026-11-18",
    "def": [],
    "ex": [],
-   "at": "2026-11-20T22:06:45.233563Z",
-   "cue": 8
+   "at": "2026-11-21T21:58:07.188591Z",
+   "cue": 9
   },
   {
    "t": "maxxing",
+   "n": 5,
+   "src": [
+    "google_news"
+   ],
+   "s": 7,
+   "first": "2026-11-18",
+   "def": [],
+   "ex": [],
+   "at": "2026-11-21T21:58:07.188591Z",
+   "cue": 5
+  },
+  {
+   "t": "golf",
    "n": 3,
    "src": [
     "google_news"
    ],
    "s": 5,
    "first": "2026-11-18",
-   "def": [],
-   "ex": [],
-   "at": "2026-11-20T22:06:45.233563Z",
-   "cue": 5
+   "def": [
+    "No significa que si no hubiese venido aquí, hubiera dejado el golf, no.",
+    "golf"
+   ],
+   "ex": [
+    "Para mí el golf es importante porque adoro jugar, pero lo más importante es mi familia.",
+    "P: ¿El golf puede sobrevivir cada uno por su lado?",
+    "P: Ahora está en el LIV Golf, un campeonato que tiene menos días de competición.",
+    "También fue el primer Golf en ofrecer la transmisión de doble embrague DSG."
+   ],
+   "at": "2026-11-21T21:58:07.188591Z",
+   "cue": 4
   },
   {
    "t": "farmear aura",
@@ -37,9 +58,9 @@
    "s": 5,
    "first": "2026-11-18",
    "def": [
+    "to aura farm",
     "\"Farmear aura\" combina un término propio de los videojuegos con una tendencia que se volvió viral en TikTok.",
-    "Farmear aura: la expresión nació de la combinación entre un término gamer y el concepto de \"aura\", utilizado para describir la presencia de una persona.",
-    "to aura farm"
+    "Farmear aura: la expresión nació de la combinación entre un término gamer y el concepto de \"aura\", utilizado para describir la presencia de una persona."
    ],
    "ex": [
     "- Farmear aura (ganar popularidad o mejorar la reputación dentro del grupo).",
@@ -47,29 +68,8 @@
     "\"Farmear aura\": la nueva tendencia de redes transforma las situaciones cotidianas en un juego imaginario donde cada gesto puede sumar o restar puntos de popularidad.",
     "De hecho, hay quienes consideran que algunas personas irradian aura de manera natural, inclusive que algunas celebridades han nacido para farmear aura."
    ],
-   "at": "2026-11-20T22:06:45.233563Z",
-   "cue": 4
-  },
-  {
-   "t": "golf",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "No significa que si no hubiese venido aquí, hubiera dejado el golf, no.",
-    "golf"
-   ],
-   "ex": [
-    "También fue el primer Golf en ofrecer la transmisión de doble embrague DSG.",
-    "El Golf VII redujo peso y consumo de combustible, e introdujo sistemas de asistencia avanzada.",
-    "El nombre “Golf” no tiene nada que ver con el deporte.",
-    "Para mí el golf es importante porque adoro jugar, pero lo más importante es mi familia."
-   ],
-   "at": "2026-11-20T22:06:45.233563Z",
-   "cue": 2
+   "at": "2026-11-21T21:58:07.188591Z",
+   "cue": 3
   },
   {
    "t": "a la",
@@ -84,8 +84,39 @@
     "to the"
    ],
    "ex": [],
-   "at": "2026-11-20T22:06:45.233563Z",
+   "at": "2026-11-21T21:58:07.188591Z",
    "cue": 12
+  },
+  {
+   "t": "extraordinary",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-21",
+   "def": [],
+   "ex": [],
+   "at": "2026-11-21T21:58:07.188591Z",
+   "cue": 2
+  },
+  {
+   "t": "blocus",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "Blocus toma su nombre del vocablo francés 'bloquer', que significa bloquear o parar."
+   ],
+   "ex": [
+    "La etiqueta #BlocusBCN identificaba mensajes que anunciaban la concentración en la capital catalana.",
+    "El caso de Blocus muestra cómo las convocatorias juveniles pueden difundirse mediante diferentes plataformas digitales, desde perfiles públicos hasta grupos privados de mensajería."
+   ],
+   "at": "2026-11-21T21:58:07.188591Z",
+   "cue": 3
   },
   {
    "t": "polyester",
@@ -104,7 +135,7 @@
     "No tanto, porque 'polyester' no apareció de la nada.",
     "La red no tardó en etiquetar este vídeo diseñado por y para el algoritmo, que aspira a ser modelo de vida, como 'polyester' o 'Polyester lifestyle'."
    ],
-   "at": "2026-11-20T22:06:45.233563Z",
+   "at": "2026-11-21T21:58:07.188591Z",
    "cue": 2
   },
   {
@@ -125,8 +156,8 @@
     "Alguna cosa similar ha ocurrido con ‘ALV’ .",
     "Las siglas 'ALV' son un ejemplo."
    ],
-   "at": "2026-11-20T22:06:45.233563Z",
-   "cue": 5
+   "at": "2026-11-21T21:58:07.188591Z",
+   "cue": 6
   },
   {
    "t": "cringe",
@@ -147,7 +178,7 @@
     "Sentir cringe es normal, ya que muchas personas deben afrontar y observar situaciones vergonzosas.",
     "En resumen, evita cualquier acción que podría generarles cringe o vergüenza ajena a otros."
    ],
-   "at": "2026-11-20T22:06:45.233563Z",
+   "at": "2026-11-21T21:58:07.188591Z",
    "cue": 1
   },
   {
@@ -167,7 +198,7 @@
     "Sobre el registro: NPC es coloquial-juvenil y funciona bien en redes, chats y conversaciones informales.",
     "¿ Por qué se dice que NPC es un insulto ?"
    ],
-   "at": "2026-11-20T22:06:45.233563Z",
+   "at": "2026-11-21T21:58:07.188591Z",
    "cue": 5
   },
   {
@@ -189,7 +220,7 @@
     "Es parte del ritual de shippear.",
     "- Shippear (querer que dos personas sean pareja)."
    ],
-   "at": "2026-11-20T22:06:45.233563Z",
+   "at": "2026-11-21T21:58:07.188591Z",
    "cue": 3
   },
   {
@@ -210,7 +241,7 @@
     "Segundo os relatos nas redes sociais, a mentalidade \"delulu\" envolve o uso de afirmações, otimismo e pensamento positivo 👍 .",
     "- Delulu (persona que vive demasiado en su propia fantasía)."
    ],
-   "at": "2026-11-20T22:06:45.233563Z",
+   "at": "2026-11-21T21:58:07.188591Z",
    "cue": 5
   },
   {
@@ -227,11 +258,11 @@
    ],
    "ex": [
     "\"Metroid Prime 3 : Corruption\" es un videojuego de Nintendo vendido exclusivamente para Wii.",
+    "De esta manera, el peak puede coincidir durante el prime , aunque no necesariamente.",
     "“Llevo todo el curso sacando sobresalientes, estoy en mi prime”.",
-    "\"Mi padre no deja de decir que desde que se ha comprado ropa nueva está en su prime\".",
-    "Prime: se utiliza para referirse a una persona que está en su mejor momento, ya sea a nivel general o en algún aspecto concreto."
+    "Para ver los comentarios de nuestros socias y socios, primero tienes que iniciar sesión o registrarte ."
    ],
-   "at": "2026-11-20T22:06:45.233563Z",
+   "at": "2026-11-21T21:58:07.188591Z",
    "cue": 3
   },
   {
@@ -249,11 +280,11 @@
    ],
    "ex": [
     "Ghostear puede causar daños emocionales en la persona que ha sido “ghosteada” .",
-    "Por supuesto que estamos hablando de ghostear sin motivo aparente.",
     "Esta acción tiene un nombre y se llama ghostear.",
-    "Ghostear a una persona origina un dolor emocional y a veces es peor que una simple ruptura."
+    "Ghostear a una persona origina un dolor emocional y a veces es peor que una simple ruptura.",
+    "Por supuesto que estamos hablando de ghostear sin motivo aparente."
    ],
-   "at": "2026-11-20T22:06:45.233563Z",
+   "at": "2026-11-21T21:58:07.188591Z",
    "cue": 5
   },
   {
@@ -270,11 +301,11 @@
    "ex": [
     "Los trolls se dedican a sembrar cizaña por chats, foros, blogs y páginas web colaborativas.",
     "Los trolls se dedican a sembrar cizaña en chats, foros, blogs y páginas web colaborativas.",
-    "El punto verde ayuda a localizar los mensajes o chats pendientes por leer.",
-    "En los chats de WhatsApp hay varios códigos secretos para comunicar ideas o emociones."
+    "En los chats de WhatsApp hay varios códigos secretos para comunicar ideas o emociones.",
+    "Se manda en chats cuando quieres avisar que estás en tránsito hacia algún lugar sin entrar en detalles ni dar una hora exacta de llegada."
    ],
-   "at": "2026-11-20T22:06:45.233563Z",
-   "cue": 5
+   "at": "2026-11-21T21:58:07.188591Z",
+   "cue": 2
   },
   {
    "t": "no puedo más",
@@ -288,40 +319,7 @@
    "ex": [
     "No puedo más con ello."
    ],
-   "at": "2026-11-20T22:06:45.233563Z",
-   "cue": 1
-  },
-  {
-   "t": "fomo",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-20",
-   "def": [
-    "¿Qué significa FOMO y cómo usar la palabra?",
-    "FOMO"
-   ],
-   "ex": [
-    "La forma corta —FOMO— fue McGinnis quien la consolidó y puso en circulación.",
-    "Si el FOMO es la ansiedad, el JOMO es la cura voluntaria.",
-    "El uso constante del móvil es un síntoma de tener FOMO."
-   ],
-   "at": "2026-11-20T22:06:45.233563Z",
-   "cue": 5
-  },
-  {
-   "t": "side quest",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-20",
-   "def": [],
-   "ex": [],
-   "at": "2026-11-20T22:06:45.233563Z",
+   "at": "2026-11-21T21:58:07.188591Z",
    "cue": 1
   },
   {
@@ -338,8 +336,24 @@
     "Aquí va una guía básica con el argot que ya salpica las conversaciones de un grueso de boomers y da un nuevo nervio al habla.",
     "Existe la idea -y se bromea sobre ello- de que los boomers no acaban de encajar en un mundo 100% tecnológico."
    ],
-   "at": "2026-11-20T22:06:45.233563Z",
+   "at": "2026-11-21T21:58:07.188591Z",
    "cue": 2
+  },
+  {
+   "t": "fomo",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "side quest",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
   },
   {
    "t": "farmeando aura",
@@ -385,22 +399,6 @@
    ],
    "at": "2026-11-19T22:08:43.787833Z",
    "cue": 14
-  },
-  {
-   "t": "blocus",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [],
-   "ex": [
-    "La etiqueta #BlocusBCN identificaba mensajes que anunciaban la concentración en la capital catalana.",
-    "El caso de Blocus muestra cómo las convocatorias juveniles pueden difundirse mediante diferentes plataformas digitales, desde perfiles públicos hasta grupos privados de mensajería."
-   ],
-   "at": "2026-11-19T22:08:43.787833Z",
-   "cue": 2
   },
   {
    "t": "padrear",
