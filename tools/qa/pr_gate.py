@@ -8,7 +8,7 @@
 검수 기록은 PR 댓글 속 표식 <!--qa-ok:SHA--> / <!--qa-hold:SHA--> 로 남긴다(새 커밋이 오면 다시 검수)."""
 import json, re, subprocess, sys, xml.dom.minidom as X
 R = "yy1112221-gif/anki_site_meow"
-ALLOW = re.compile(r"^(presets/[\w.-]+\.json|slang/[\w.-]+\.json|cat/[\w./-]+\.svg|icon[\w.-]*\.(png|svg))$")
+ALLOW = re.compile(r"^(presets/[\w.-]+\.json|slang/[\w.-]+\.json|cat/[\w./-]+\.svg|icon[\w.-]*\.(png|svg)|tools/(?!qa/)[\w.-]+\.(py|json|md|txt|csv))$")   # tools/ 아래 데이터 제작 스크립트·자료는 허용, tools/qa/(검사 도구)는 절대 불가
 def sh(*a): return subprocess.run(a, capture_output=True, text=True, check=True).stdout
 def skip(msg): print("SKIP: " + msg); sys.exit(2)
 n = sys.argv[1]
