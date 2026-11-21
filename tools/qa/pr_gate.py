@@ -2,7 +2,8 @@
 """자동 배포 관문: PR 하나가 「단어장·그림만 바뀐 안전한 PR」인지 기계적으로 판정한다.
 사용: python3 tools/qa/pr_gate.py <PR번호>   (저장소 루트에서, gh 로그인 필요)
 결과(첫 줄):
-  OK: …      (exit 0) 합쳐도 됨 — 그림만 바뀌었거나, 단어장 변경이 이 버전(head sha) 그대로 검수 통과됨
+  OK: …      (exit 0) 합쳐도 됨 — 그림만 바뀌었거나, 단어장 변경이 이 버전(head sha) 그대로 검수 통과됨,
+             또는 ① 개발 채팅이 이 버전에 <!--dev-ok:SHA--> 를 남김(코드 PR)
   REVIEW: …  (exit 3) 단어장·유행어 내용이 바뀜 → 검토자가 /tmp/pr_<N>_review.json 을 보고 판정해야 함
   SKIP: …    (exit 2) 합치면 안 됨
 검수 기록은 PR 댓글 속 표식 <!--qa-ok:SHA--> / <!--qa-hold:SHA--> 로 남긴다(새 커밋이 오면 다시 검수)."""
@@ -15,6 +16,8 @@ n = sys.argv[1]
 pr = json.loads(sh("gh", "api", f"repos/{R}/pulls/{n}"))
 if pr["base"]["ref"] != "main": skip("main 대상 PR이 아님")
 files = json.loads(sh("gh", "api", "--paginate", f"repos/{R}/pulls/{n}/files?per_page=100"))
+_notes = "\n".join(c.get("body") or "" for c in json.loads(sh("gh", "api", "--paginate", f"repos/{R}/issues/{n}/comments?per_page=100")))
+DEV_OK = f"<!--dev-ok:{pr['head']['sha']}-->" in _notes   # ① 개발 채팅이 run.sh 통과 후 남긴 표식(이 버전 한정)
 if not files: skip("바뀐 파일 없음")
 sh("git", "fetch", "-q", "origin", f"pull/{n}/head:gate{n}", "main")
 def show(ref, path):
@@ -23,8 +26,9 @@ def show(ref, path):
 probs = []
 for f in files:
     p, st = f["filename"], f["status"]
-    if not ALLOW.match(p): probs.append(f"{p}: 자동 배포 허용 밖 파일"); continue
-    if st in ("removed", "renamed"): probs.append(f"{p}: 삭제·이름 변경은 자동 배포 안 함"); continue
+    if not ALLOW.match(p) and not DEV_OK: probs.append(f"{p}: 자동 배포 허용 밖 파일(코드는 ① 개발 채팅의 dev-ok 표식 필요)"); continue
+    if st in ("removed", "renamed") and not DEV_OK: probs.append(f"{p}: 삭제·이름 변경은 자동 배포 안 함"); continue
+    if st == "removed": continue
     new = show(f"gate{n}", p); old = show("origin/main", p)
     if new is None: probs.append(f"{p}: 내용을 읽을 수 없음"); continue
     if p.endswith(".svg"):
@@ -51,7 +55,7 @@ for f in files:
 if probs: skip("; ".join(probs[:5]))
 # 내용 검수: 단어장·유행어가 바뀌었으면 이 버전이 검수됐는지 본다
 content = [f for f in files if f["filename"].startswith(("presets/", "slang/"))]
-if content:
+if content and not DEV_OK:
     sha = pr["head"]["sha"]
     notes = "\n".join(c.get("body") or "" for c in json.loads(sh("gh", "api", "--paginate", f"repos/{R}/issues/{n}/comments?per_page=100")))
     if f"<!--qa-hold:{sha}-->" in notes: skip("검수 보류된 버전 — 새 커밋이 올라오면 다시 검수")
@@ -59,7 +63,9 @@ if content:
         out = []
         for f in content:
             p = f["filename"]; new = json.loads(show(f"gate{n}", p)); old_t = show("origin/main", p); old = json.loads(old_t) if old_t else {}
-            if p.startswith("presets/"):
+            if p.startswith("presets/") and "items" not in new:   # 형식이 다른 새 자료 파일 → 앞부분 샘플로 검수
+                out.append({"file": p, "new_file": old_t is None, "sample": json.dumps(new, ensure_ascii=False)[:4000]})
+            elif p.startswith("presets/"):
                 oi, ni = old.get("items", []), new.get("items", [])
                 for i in range(len(ni)):
                     a = oi[i] if i < len(oi) else None

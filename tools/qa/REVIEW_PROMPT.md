@@ -21,3 +21,8 @@
 
 ## 답 (JSON 하나만, 다른 말 없이)
 {"pass": true|false, "problems": [{"file": "...", "i": 번호, "why": "한 줄 이유"}], "note": "한 줄 요약"}
+
+## 고칠 값도 함께 (불합격일 때)
+problems 마다 확실히 고칠 수 있으면 fixes 에 넣는다. presets 의 뜻·읽기·예문 칸만(단어 칸 0번은 절대 아님). old 는 지금 값 그대로 복사.
+{"pass": false, "problems": [...], "fixes": [{"file": "...", "i": 번호, "col": 칸번호, "old": "지금 값", "new": "고친 값", "why": "한 줄"}], "note": "..."}
+고칠 값이 확실하지 않으면 fixes 에 넣지 않는다(사람이 본다).
