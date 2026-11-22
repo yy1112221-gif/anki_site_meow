@@ -3470,7 +3470,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v128";
+const APP_VER = "v129";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3763,10 +3763,11 @@ document.addEventListener("visibilitychange", () => {
 
 function syncViewport(){ const el = document.activeElement, typing = el && /^(INPUT|TEXTAREA)$/.test(el.tagName);
   const w = window.innerWidth; if(typing && w === syncViewport.w) return;   // 入力中のリサイズ（＝キーボード）は無視
-  syncViewport.w = w; const de = document.documentElement; de.style.setProperty("--sh", window.innerHeight + "px"); de.classList.toggle("short", window.innerHeight <= 760 || w <= 360); }
+  syncViewport.w = w; syncViewport.h = window.innerHeight; const de = document.documentElement; de.style.setProperty("--sh", window.innerHeight + "px"); de.classList.toggle("short", window.innerHeight <= 760 || w <= 360); }
 /* 키보드가 올라오면 화면을 키보드 위로 맞춰 줄이고(확인·듣기 버튼이 안 가려지게), 내려가면 원래대로 */
 function syncKb(){ const vv = window.visualViewport; if(!vv) return; const ae = document.activeElement, osKb = ae && /^(INPUT|TEXTAREA)$/.test(ae.tagName) && !ae.readOnly;
-  const kb = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop)), on = osKb && kb > 120 && document.body.classList.contains("focus");
+  const base = Math.max(window.innerHeight, syncViewport.h || 0);   // 키보드가 뜨면 창 자체를 줄이는 브라우저(일부 iOS 앱 안 브라우저)도 있어, 키보드 뜨기 전 전체 높이를 기준으로 잰다
+  const kb = Math.max(0, Math.round(base - vv.height - vv.offsetTop)), on = osKb && kb > 120 && document.body.classList.contains("focus");
   const de = document.documentElement; de.style.setProperty("--kb", (on ? kb : 0) + "px"); de.classList.toggle("kb", on); if(on && window.scrollY) window.scrollTo(0, 0); }
 if(window.visualViewport){ visualViewport.addEventListener("resize", syncKb); visualViewport.addEventListener("scroll", syncKb); }
 ["pageshow", "focus", "resize", "orientationchange"].forEach(ev => window.addEventListener(ev, () => { setTimeout(syncKb, 60); setTimeout(syncKb, 600); setTimeout(fitDock, 80); setTimeout(fitDock, 650); }));
