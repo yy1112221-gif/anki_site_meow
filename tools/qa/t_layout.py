@@ -42,6 +42,18 @@ async def main():
         const p=document.querySelector('#pet'); return {bad, inner:p.scrollHeight-p.clientHeight, hb:h&&Math.round(h.bottom), ih:innerHeight}; }""")
       ok(f"냥이 화면 {W}×{H}: 안내 줄이 버튼과 안 겹침", not r["bad"], r)
       ok(f"냥이 화면 {W}×{H}: 스크롤 없음", r["inner"]<=2, r)
+      # 판 끝 화면(백로그 N): 작은 화면에서도 냥이 한마디가 보이고, 문제 화면에선 그대로 빠짐 · 스크롤 없음
+      cs={f"d{i}":dict(id=f"d{i}",lang="es",word=f"pal{i}",meaning=f"뜻{i}",example="",level=2,due="2026-01-01",isNew=False,lapses=0,reps=3,created=i,introduced="2025-12-01",mastered=False,relearn=False,log=[],deck="default",step=2+(i%3),S=5+i%7,D=5,last="2025-12-20") for i in range(80)}
+      await pg.evaluate("s=>localStorage.setItem('focus-vocab-v1', s)", json.dumps({"cards":cs,"meta":{"setup":1,"tutAsked":1,"loginAsked":1,"days":{},"settings":{"ui":"ko","lang":"es"},"stepv":1}})); await pg.reload(); await pg.wait_for_timeout(1500)
+      r=await pg.evaluate("""async()=>{ const t=window.__t, out=[]; const close=()=>{const p=document.querySelector('#pet'); if(p&&!p.classList.contains('hidden')) document.querySelector('#petClose').click();};
+        for(let k=0;k<2;k++){ close(); t.setSES(null); t.startSession(); const s=t.getSES(); const sq=document.querySelector('#sessionBox > .say'); const qs=sq?sq.offsetHeight:0;
+          let g=0; while(s.queue.length && g++<40) t.settleItem(true); await new Promise(r=>setTimeout(r,8500)); close(); await new Promise(r=>setTimeout(r,800));
+          const b=document.querySelector('#sessionBox > .say .bubble'); out.push({q:qs, ce:b?b.offsetHeight:0, over:document.scrollingElement.scrollHeight-innerHeight}); }
+        return out; }""")
+      short=H<=760
+      ok(f"판 끝 {W}×{H}: 첫 판·둘째 판 끝에 냥이 한마디 보임", all(x["ce"]>0 for x in r), r)
+      ok(f"판 끝 {W}×{H}: 스크롤 없음", all(x["over"]<=2 for x in r), r)
+      if short: ok(f"문제 화면 {W}×{H}: 냥이 말풍선은 그대로 빠짐", all(x["q"]==0 for x in r), r)
       await ctx.close()
     ok("페이지 오류 없음", not errs, errs[:3])
     await b.close()
