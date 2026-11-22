@@ -1604,32 +1604,53 @@ function schedule(c, correct, asked){
 }
 /* 단어 경계: 긴 단어의 일부를 잘라 정답으로 쓰지 않게 (예: ホームシック 안의 シック, 先生 안의 生) */
 const RX_KATA = /[ァ-ヺー・]/, RX_KAN = /[一-龯々]/, RX_HG = /[가-힣]/, RX_LAT = /\p{L}/u;
-function formBoundOk(ex, i, len, w){ const L = ex[i - 1] || "", R = ex[i + len] || "";
+function formBoundOk(ex, i, len, w, strictR){ const L = ex[i - 1] || "", R = ex[i + len] || "";
   if(/^[ァ-ヺー・]+$/.test(w)) return !RX_KATA.test(L) && !RX_KATA.test(R);
   if(RX_KAN.test(w[0]) && RX_KAN.test(L)) return false;
   if(RX_KAN.test(w[w.length - 1]) && RX_KAN.test(R)) return false;
-  if(RX_HG.test(w[0])) return !RX_HG.test(L);
+  if(RX_HG.test(w[0]) && RX_HG.test(L)) return false;
+  if(strictR && RX_HG.test(w[w.length - 1]) && RX_HG.test(R)) return hgTailOk(ex.slice(i + len));
+  if(RX_HG.test(w[0])) return true;
   if(/^[\p{Script=Latin}]/u.test(w)) return !RX_LAT.test(L) && (!RX_LAT.test(R) || w.length >= 5);
   return true; }
-function findAt(low, lw, ex, w){ let i = low.indexOf(lw); while(i >= 0){ if(formBoundOk(ex, i, lw.length, w)) return i; i = low.indexOf(lw, i + 1); } return -1; }
+/* 검수단 R1-8-2: 한국어 낱말 바로 뒤가 한글이면 조사·어미(·하다/되다/이다 활용)일 때만 그 낱말로 본다 (금→금광, 책→책꽂이 제외) */
+const HG_PT = ["에게서","으로서","으로써","에서","에게","께서","으로","로서","로써","이랑","하고","보다","처럼","같이","까지","부터","마다","조차","마저","밖에","만큼","대로","이나","이며","이고","이요","이야","이여","이란","이라","라고","은","는","이","가","을","를","의","에","께","와","과","도","만","로","랑","나","요","야","여","며","고","란","라","뿐","들","씩","쯤"];
+const HG_VB = /^(하|해|했|한|할|함|합|되|돼|됐|된|될|됨|됩|시키|시켜|시켰|이다|이에|이었|이라|이니|이지|이면|이므|인데|인|입니|입|였|예요|예)/;
+function hgTailOk(rest){ const t = (String(rest).match(/^[가-힣]+/) || [""])[0]; if(!t) return true;
+  const go = k => { if(k === t.length) return true; if(k > 0 && HG_VB.test(t.slice(k))) return true; for(const m of HG_PT) if(t.startsWith(m, k) && go(k + m.length)) return true; return false; };
+  return HG_VB.test(t) || go(0); }
+function findAt(low, lw, ex, w, strictR){ let i = low.indexOf(lw); while(i >= 0){ if(formBoundOk(ex, i, lw.length, w, strictR)) return i; i = low.indexOf(lw, i + 1); } return -1; }
 function findForm(text, word){
   const ex = text || ""; const w = searchTerm(word);
   if(!ex || !w) return "";
   const low = stripAcc(ex.toLowerCase()), lw = stripAcc(w.toLowerCase());
-  const i = findAt(low, lw, ex, w); if(i >= 0){ let e = i + w.length; if(/^[\p{Script=Latin}]/u.test(w)) while(e < ex.length && RX_LAT.test(ex[e])) e++; return ex.slice(i, e); }
+  const i = findAt(low, lw, ex, w, true); if(i >= 0){ let e = i + w.length; if(/^[\p{Script=Latin}]/u.test(w)) while(e < ex.length && RX_LAT.test(ex[e])) e++; return ex.slice(i, e); }
   if(/\s/.test(w) || /[぀-ヿ一-龯가-힣]/.test(w)) return "";
+  if(lw.length <= 3) return "";   // 검수단 R1-7-2: 짧은 단어(ir·ver·mes)는 앞 글자 대체 검색 안 함 (ir→Irene, mes→mesa)
+  const vb = /(ar|er|ir)(se)?$/.test(lw) && (S.meta.settings.lang || "es") === "es";
   const base = lw.replace(/se$/,"").replace(/(ar|er|ir|re|en)$/,""); const stem = base.length >= 3 ? base : lw.slice(0, 3);
   const re = /[\p{L}]+/gu; let m;
-  while((m = re.exec(ex))){ if(stripAcc(m[0].toLowerCase()).startsWith(stem)) return m[0]; }
+  while((m = re.exec(ex))){ const t = stripAcc(m[0].toLowerCase()); if(!t.startsWith(stem) || t === stem && vb) continue;
+    if(/^\p{Lu}/u.test(m[0]) && !/^[\s"'“‘«¿¡(]*$/.test(ex.slice(0, m.index).replace(/^.*[.!?…]/s, ""))) continue;   // 문장 중간 대문자 = 고유명사(Irene)
+    if(vb && !ES_END.test(t.slice(stem.length))) continue;   // 동사: 어간 + 활용 어미일 때만 (tener→tenis 제외)
+    return m[0]; }
   return "";
 }
-function clozeParts(c){
+const ES_END = /^(o|as|a|amos|ais|an|e|es|emos|eis|en|aste|asteis|aron|aba|abas|abamos|abais|aban|ar|ara|aras|aramos|aran|ase|ado|ada|ados|adas|ando|are|aras|ara|aremos|areis|aran|aria|arias|ariamos|arian|i|iste|io|imos|isteis|ieron|ia|ias|iamos|iais|ian|er|ir|ido|ida|idos|idas|iendo|yendo|ere|era|eran|eria|erian|ire|ira|iran|iria|irian|iera|ieras|ieran|iese|go|ga|gas|gamos|gan|zco|zca|zcas|zcan|e)(me|te|se|lo|la|le|los|las|les|nos)?$/;
+function clozeParts(c, loose){
   const ex = c.example || ""; if(!ex) return null;
-  const low = stripAcc(ex.toLowerCase()); let f = c.form && findAt(low, stripAcc(c.form.toLowerCase()), ex, c.form) >= 0 ? c.form : findForm(ex, c.word);
+  const low = stripAcc(ex.toLowerCase());
+  // 고른 형태가 낱말 그 자체(활용형 아님)면 한글 오른쪽 경계도 본다 — 옛 findForm이 '금광'의 '금'을 form으로 저장했을 수 있음
+  const sr = !loose && !!c.form && stripAcc(c.form.toLowerCase()) === stripAcc(searchTerm(c.word).toLowerCase());
+  let f = c.form && findAt(low, stripAcc(c.form.toLowerCase()), ex, c.form, sr) >= 0 ? c.form : findForm(ex, c.word);
   if(!f) return null;
-  const i = findAt(low, stripAcc(f.toLowerCase()), ex, f); if(i < 0) return null;
+  const lf = stripAcc(f.toLowerCase()), i = findAt(low, lf, ex, f, sr || (!loose && !c.form)); if(i < 0) return null;
+  if(!loose && clozeLeak(low, lf, i)) return null;   // 검수단 R1-8-1: 정답이 예문에 또 나오면 빈칸 문제로 안 냄
   return { before: ex.slice(0, i), answer: ex.slice(i, i + f.length), after: ex.slice(i + f.length) };
 }
+function clozeLeak(low, lf, i){ if(!lf) return false; const lat = /^[\p{Script=Latin}]/u.test(lf);
+  for(let j = low.indexOf(lf); j >= 0; j = low.indexOf(lf, j + 1)){ if(j === i) continue; if(!lat || !RX_LAT.test(low[j - 1] || "")) return true; }
+  return false; }
 function tokHTML(text, hlFrom, hlTo){
   const out = []; const re = /[\p{L}\p{M}][\p{L}\p{M}'’\-]*/gu; let last = 0, m;
   text = String(text || "");
@@ -3722,7 +3743,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v157";
+const APP_VER = "v158";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5373,7 +5394,7 @@ const nativeOk = c => { const u = S.meta.settings.ui, m = String(c.meaning || ""
 const JA_REN = { "終る":"終わる", "落る":"落ちる", "楽む":"楽しむ", "曲る":"曲がる", "落す":"落とす", "いくらても":"いくらでも" };
 /* 예문이 단어를 다른 단어의 일부로만 담고 있으면(ホームシック→シック) 예문을 버리고 새로 받기 — 한 번만 */
 function fixCutExamples(){ if((S.meta.cfix || 0) >= 1) return; let n = 0;
-  try{ Object.values(S.cards || {}).forEach(c => { if(!c || !c.example || !/[぀-ヿ一-龯가-힣]/.test(c.word || "")) return; if(clozeParts(c)) return;
+  try{ Object.values(S.cards || {}).forEach(c => { if(!c || !c.example || !/[぀-ヿ一-龯가-힣]/.test(c.word || "")) return; if(clozeParts(c, true)) return;
       delete c.example; delete c.exampleKo; delete c.form; delete c.src; delete c.audio; if(c.mOk || c.meaning) c.mOk = 1; c.lazy = 1; n++; }); }catch(_){}
   S.meta.cfix = 1; if(n){ save(); track("cut_ex_fix", { n }); } }
 /* 유의어·외래어로 답했을 때: 틀림 처리 대신 냥이가 다른 말로 유도 */
@@ -5703,7 +5724,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 load(); PET_SIG = petSig(); migrateSteps(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
