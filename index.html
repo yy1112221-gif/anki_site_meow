@@ -840,7 +840,7 @@ h1 .logo{display:flex;flex-direction:column;align-items:flex-start;gap:0;letter-
 .logo .logo-s{font-size:.66rem;font-weight:700;letter-spacing:.04em;color:var(--muted);text-transform:none;margin:0 0 2px 2px}
 .logo .logo-b{display:inline-flex;align-items:center;font-size:2.15rem;font-weight:900;letter-spacing:.01em;line-height:1;color:#FFFDF8;background:#1E1A16;border-radius:.34em;padding:.16em .36em .14em;font-family:"Arial Rounded MT Bold","SF Pro Rounded",ui-rounded,var(--display)}
 .logo .lo2{width:.98em;height:.98em;margin:0 .02em;transform:translateY(-.07em);color:#FFFDF8} .logo .lx{width:.5em;height:.92em;margin-left:-.02em;color:#FFFDF8;transform:translateY(-.02em)} .logo .lo2 path[fill="#fffdf8"], .logo .lo2 ellipse[fill="#fffdf8"], .logo .lx g{fill:#FFFDF8}
-.catbar{position:relative;height:44px;min-width:120px;margin:-7px 0} .catbar .cb-cv{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.catbar{position:relative;height:44px;min-width:120px;margin:-7px 0} .catbar .cb-cv{position:absolute;left:0;right:0;top:-12px;bottom:-12px;width:100%;height:calc(100% + 24px);display:block;pointer-events:none} .catbar{touch-action:none;cursor:grab}
 .poster .catbar{margin-top:14px}
 .mic-in{min-width:46px;padding:0 10px;font-size:1.15rem} .mic-in.on{background:var(--accent);color:#fff;animation:micp 1s infinite} @keyframes micp{50%{opacity:.55}}
 .hf-big{width:100%;justify-content:center;margin-top:10px;min-height:52px;font-size:1.05rem;font-weight:800;border:2px solid var(--accent);color:var(--accent);background:transparent} .hf-big small{font-weight:500;font-size:.78rem;opacity:.8} .hf-big.on{border-style:dashed}
@@ -2205,7 +2205,8 @@ function bindKbd(box, input){ bindKana(box, input); box.querySelectorAll(".kbd b
 /* 오늘의 진척도: 위에서 본 냥이가 츄르를 먹어 나갈수록 몸통이 주욱 늘어남 */
 function catBarHTML(pct, cls){ const P = Math.max(0, Math.min(100, pct));   // 위에서 본 암기냥이(얼굴을 왼쪽으로 90° 돌린 모습)가 오른쪽으로 츄르를 먹어 나가며 젤리 몸이 늘어남. 몸은 위아래로 잡아당길 수 있음
   setTimeout(catBarsStart, 0); return `<div class="catbar ${cls || "grow"}" role="progressbar" aria-valuenow="${P}" aria-valuemin="0" aria-valuemax="100" data-p="${P}"><canvas class="cb-cv"></canvas></div>`; }
-let CB_RAF = 0;
+let CB_RAF = 0, CB_IMG = null;
+function catBarImgs(){ if(!CB_IMG){ const mk = n => { const im = new Image(); im.src = "cat/bar/" + n + ".svg"; return im; }; CB_IMG = { cat: mk("cat3d_top45"), ears: mk("cat3d_top45_ears") }; } return CB_IMG; }
 function catBarsStart(){ if(!CB_RAF) CB_RAF = requestAnimationFrame(catBarsTick); }
 function catBarsTick(t){ const bars = document.querySelectorAll(".catbar[data-p]"); if(!bars.length){ CB_RAF = 0; return; } bars.forEach(el => catBarDraw(el, t / 1000)); CB_RAF = requestAnimationFrame(catBarsTick); }
 function catBarDraw(el, t){ const cv = el.firstElementChild; if(!cv || !el.offsetWidth) return; const N = 28;
@@ -2213,9 +2214,9 @@ function catBarDraw(el, t){ const cv = el.firstElementChild; if(!cv || !el.offse
     const down = e => { e.preventDefault(); e.stopPropagation(); const r = cv.getBoundingClientRect(), x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left; const k = Math.round((x - st.x0) / Math.max(1, st.x1 - st.x0) * (N - 1)); if(k < -1 || k > N) return; st.drag = { k: Math.max(0, Math.min(N - 1, k)), y0: e.touches ? e.touches[0].clientY : e.clientY, dy: 0 }; try{ buzz(6); }catch(_){} };
     const move = e => { if(!st.drag) return; e.preventDefault(); const y = e.touches ? e.touches[0].clientY : e.clientY; st.drag.dy = Math.max(-16, Math.min(16, (y - st.drag.y0) * .8)); };
     const up = () => { if(st.drag){ st.drag = null; try{ sfxPoyon(.25); }catch(_){} } };
-    cv.addEventListener("touchstart", down, { passive: false }); cv.addEventListener("touchmove", move, { passive: false }); cv.addEventListener("touchend", up); cv.addEventListener("touchcancel", up);
-    cv.addEventListener("mousedown", down); window.addEventListener("mousemove", move); window.addEventListener("mouseup", up); }
-  const W = el.offsetWidth, H = el.offsetHeight, dpr = Math.min(3, devicePixelRatio || 1); if(cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)){ cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+    el.addEventListener("touchstart", down, { passive: false }); el.addEventListener("touchmove", move, { passive: false }); el.addEventListener("touchend", up); el.addEventListener("touchcancel", up);
+    el.addEventListener("mousedown", down); window.addEventListener("mousemove", move); window.addEventListener("mouseup", up); }
+  const W = el.offsetWidth, H = el.offsetHeight + 24, dpr = Math.min(3, devicePixelRatio || 1); if(cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)){ cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
   const dt = Math.min(.05, Math.max(0, t - st.last)); st.last = t; st.cur += (+el.dataset.p - st.cur) * Math.min(1, dt * 4);
   // 젤리 몸: 줄줄이 이어진 용수철 (잡아당긴 곳 주변이 따라오고, 놓으면 출렁)
   const off = st.off, v = st.v, steps = 6, h = dt / steps;
@@ -2223,23 +2224,51 @@ function catBarDraw(el, t){ const cv = el.firstElementChild; if(!cv || !el.offse
     if(st.drag){ const g = Math.exp(-((i - st.drag.k) ** 2) / 40); tgt = st.drag.dy * g; k = 80 + 700 * g; }
     v[i] += (-k * (off[i] - tgt) + 1400 * (l + r - 2 * off[i]) - 9 * v[i]) * h; off[i] += v[i] * h; }
   const g = cv.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
-  const cy = H / 2 + 1, th = 15, x0 = 3, hr = 14, hx = x0 + hr + 6 + (W - x0 - hr * 2 - 40) * st.cur / 100; st.x0 = x0; st.x1 = hx;
-  const Y = i => cy + off[i], X = i => x0 + (hx - x0) * i / (N - 1), chew = Math.sin(t * 11) * .5 + .5;
-  if(st.cur < 99.5){ const cx0 = hx + hr * .7, cw = W - 2 - cx0; if(cw > 4){ g.fillStyle = "#fff"; g.strokeStyle = "#e46b8a"; g.lineWidth = 1.4; g.beginPath(); g.roundRect(cx0, cy - 4.5, cw, 9, [0, 5, 5, 0]); g.fill(); g.stroke(); g.fillStyle = "#f2b98f"; g.fillRect(cx0, cy - 3.8, 5, 7.6); g.fillStyle = "#f6b7c8"; for(let x = cx0 + 9; x < cx0 + cw - 6; x += 9) g.fillRect(x, cy - 1, 6, 2); } }
-  // 몸통(위·아래 테두리가 노드를 따라 휨)
-  g.beginPath(); g.moveTo(X(0), Y(0) - th / 2); for(let i = 1; i < N; i++) g.lineTo(X(i), Y(i) - th / 2); g.lineTo(hx, Y(N - 1) + th / 2); for(let i = N - 1; i >= 0; i--) g.lineTo(X(i), Y(i) + th / 2);
-  g.quadraticCurveTo(X(0) - th * .7, Y(0), X(0), Y(0) - th / 2); g.closePath(); const bg = g.createLinearGradient(0, cy - th, 0, cy + th); bg.addColorStop(0, "#fffaf1"); bg.addColorStop(1, "#ecdfca"); g.fillStyle = bg; g.fill(); g.strokeStyle = "#2a221c"; g.lineWidth = 1.6; g.lineJoin = "round"; g.stroke();
-  g.strokeStyle = "rgba(255,255,255,.7)"; g.lineWidth = 2; g.beginPath(); for(let i = 1; i < N - 2; i++) g[i === 1 ? "moveTo" : "lineTo"](X(i), Y(i) - th * .22); g.stroke();
-  // 머리: 앞에서 본 얼굴을 왼쪽으로 90° 돌린 모습(귀가 뒤쪽=왼쪽, 입이 앞쪽=오른쪽)
-  g.save(); g.translate(hx, Y(N - 1)); g.rotate(-Math.PI / 2); const sc = 1 + chew * .03; g.scale(sc, 1 / sc);
-  const ear = (d) => { g.beginPath(); g.moveTo(d * 4, -hr * .7); g.lineTo(d * 11, -hr - 4); g.lineTo(d * 12.5, -hr * .2); g.closePath(); g.fillStyle = "#fbf6ec"; g.fill(); g.strokeStyle = "#2a221c"; g.lineWidth = 1.5; g.stroke(); g.fillStyle = "#f2a1b4"; g.beginPath(); g.moveTo(d * 6.5, -hr * .62); g.lineTo(d * 10.5, -hr - 1); g.lineTo(d * 11.3, -hr * .35); g.closePath(); g.fill(); };
-  ear(-1); ear(1); g.beginPath(); g.ellipse(0, 0, hr, hr * .92, 0, 0, Math.PI * 2); g.fillStyle = "#fbf6ec"; g.fill(); g.strokeStyle = "#2a221c"; g.lineWidth = 1.6; g.stroke();
-  g.fillStyle = "#2a221c"; [-5, 5].forEach(d => { g.beginPath(); g.arc(d, -1.5, 1.8, 0, Math.PI * 2); g.fill(); }); g.fillStyle = "#fff"; [-5, 5].forEach(d => { g.beginPath(); g.arc(d - .6, -2.2, .6, 0, Math.PI * 2); g.fill(); });
-  g.fillStyle = "rgba(242,161,180,.7)"; [-8, 8].forEach(d => { g.beginPath(); g.ellipse(d, 3, 2.6, 1.5, 0, 0, Math.PI * 2); g.fill(); });
-  g.fillStyle = "#f2a1b4"; g.beginPath(); g.ellipse(0, 1.4, 1.2, .9, 0, 0, Math.PI * 2); g.fill();
-  const my = 3.6, mw = 2.8, sq = .7 + chew * .5; g.strokeStyle = "#2a221c"; g.lineWidth = 1.2; g.lineCap = "round"; g.beginPath(); g.moveTo(-mw - 1.3, my - 1.2 * sq); g.quadraticCurveTo(-mw - .8, my + .6 * sq, -mw / 2, my + 1.6 * sq); g.quadraticCurveTo(-.3, my + 2.2 * sq, 0, my); g.quadraticCurveTo(.3, my + 2.2 * sq, mw / 2, my + 1.6 * sq); g.quadraticCurveTo(mw + .8, my + .6 * sq, mw + 1.3, my - 1.2 * sq); g.stroke();
-  g.strokeStyle = "rgba(90,80,70,.55)"; g.lineWidth = .7; [-1, 1].forEach(d => { g.beginPath(); g.moveTo(d * 9, 1); g.lineTo(d * 17, -.5); g.moveTo(d * 9, 3); g.lineTo(d * 16.5, 4); g.stroke(); });
-  g.restore(); }
+  // 위에서 본 냥이(몸 전체를 45° 들어 얼굴이 보임, 3D 모델과 같은 모양) + 늘어난 뱃살(=진행도). 뱃살 두께 = 냥이 몸 두께
+  const IM = catBarImgs(), ok = IM.cat.complete && IM.cat.naturalWidth, chew = Math.sin(t * 9) * .5 + .5;
+  const VBX = -1.9136, VBY = -2.2055, VBW = 2.9055, VBH = 4.4109, XW = -0.2366, THU = 4.2902, FRONT = 0.9319, MX = 0.0345;
+  const ARC = [-0.396,2.128,-0.617,2.057,-0.764,1.974,-0.904,1.864,-1.033,1.725,-1.151,1.563,-1.325,1.213,-1.497,1.030,-1.598,0.892,-1.749,0.588,-1.827,0.312,-1.851,0.106,-1.842,-0.210,-1.806,-0.410,-1.806,-0.410,-1.749,-0.589,-1.646,-0.806,-1.521,-1.000,-1.325,-1.213,-1.151,-1.563,-0.932,-1.835,-0.764,-1.974,-0.617,-2.057,-0.397,-2.128,-0.397,-2.128];   // 냥이 몸 뒤쪽 외곽선(단위) — 뱃살 안에서 지워 이음선 없앰
+  const cy = H / 2, hh = 37, ppu = hh / VBH, hw = VBW * ppu, TH = THU * ppu, LW = Math.max(.7, .09 * ppu), x0 = 3, INKC = "#1e1a16";
+  const hx = x0 + TH / 2 + 4 + (W - x0 - TH / 2 - 4 - (FRONT - XW) * ppu - 34) * st.cur / 100;   // 냥이 몸 가장 넓은 곳(=뱃살 이음)
+  st.x0 = x0; st.x1 = hx;
+  const AN = i => 1 - Math.pow(i / (N - 1), 6), Y = i => cy + off[i] * AN(i), X = i => x0 + TH / 2 + (hx - x0 - TH / 2) * i / (N - 1);
+  const UX = u => hx + (u - XW) * ppu, UY = v => cy - v * ppu, mx = UX(MX);
+  // 1) 뱃살(=진행도): 두께 = 냥이 몸통 넓이(가장 넓은 곳), 3D 냥이와 같은 흰 피부·가는 선
+  const top = i => Y(i) - TH / 2, bot = i => Y(i) + TH / 2;
+  const belly = () => { g.beginPath(); g.moveTo(X(N - 1), top(N - 1)); for(let i = N - 2; i >= 0; i--) g.lineTo(X(i), top(i));
+    g.bezierCurveTo(X(0) - TH * .68, top(0), X(0) - TH * .68, bot(0), X(0), bot(0)); for(let i = 1; i < N; i++) g.lineTo(X(i), bot(i)); };
+  const fur = g.createLinearGradient(0, cy - TH / 2, 0, cy + TH / 2); fur.addColorStop(0, "#f1ede6"); fur.addColorStop(.18, "#fdfcf9"); fur.addColorStop(.55, "#ffffff"); fur.addColorStop(.85, "#f4f1ec"); fur.addColorStop(1, "#e4dfd7");
+  belly(); g.fillStyle = fur; g.fill(); g.strokeStyle = INKC; g.lineWidth = LW; g.lineJoin = "round"; g.stroke();
+  if(ok){ const sx = UX(VBX), sy = cy + VBY * ppu;
+    // 2) 3D 냥이 통째로
+    g.drawImage(IM.cat, sx, sy, hw, hh);
+    // 3) 뱃살 안쪽에 걸친 냥이 뒤쪽 외곽선·그늘을 뱃살 피부로 덮어 한 몸처럼
+    g.save(); belly(); g.clip(); g.beginPath(); g.rect(0, 0, UX(XW) - .2, H); g.clip();
+    g.strokeStyle = fur; g.lineWidth = 4.2; g.lineCap = "round"; g.lineJoin = "round"; g.beginPath();
+    for(let k = 0; k < ARC.length; k += 2) g[k ? "lineTo" : "moveTo"](UX(ARC[k]), UY(ARC[k + 1])); g.stroke(); g.restore();
+    // 4) 귀는 다시 위로
+    if(IM.ears.complete && IM.ears.naturalWidth) g.drawImage(IM.ears, sx, sy, hw, hh); }
+  // 5) 츄르: 몸통 위로 올라와 입에 앙 물림(길이 = 남은 양)
+  if(st.cur < 99.5){ const ex = W - 3, sx = mx + 1.5, ch = 10, y0 = cy - ch / 2;
+    if(ex - sx > 8){
+      g.save(); g.beginPath(); g.moveTo(sx + 5, y0); g.lineTo(ex - 6, y0);
+      for(let k = 0; k <= 6; k++) g.lineTo(ex - 6 + (k % 2 ? 6 : 3), y0 + ch * k / 6);          // 톱니 봉합
+      g.lineTo(sx + 5, y0 + ch); g.quadraticCurveTo(sx, y0 + ch - 1.5, sx, cy); g.quadraticCurveTo(sx, y0 + 1.5, sx + 5, y0); g.closePath();   // 입 쪽은 눌려 좁아짐
+      const pg = g.createLinearGradient(0, y0, 0, y0 + ch); pg.addColorStop(0, "#ff6f5e"); pg.addColorStop(.45, "#e8392f"); pg.addColorStop(1, "#b8231f");
+      g.shadowColor = "rgba(60,20,10,.25)"; g.shadowBlur = 2; g.shadowOffsetY = 1; g.fillStyle = pg; g.fill(); g.shadowColor = "transparent";
+      g.strokeStyle = "#8f1d1a"; g.lineWidth = .8; g.lineJoin = "round"; g.stroke(); g.clip();
+      g.fillStyle = "rgba(255,255,255,.55)"; g.fillRect(sx, y0 + 1.5, ex - sx, 1.3);                        // 광택
+      g.fillStyle = "#f6c64a"; g.fillRect(ex - 15, y0, 2.4, ch); g.fillStyle = "#c51f1c"; g.fillRect(ex - 12, y0, 6, ch);   // 금띠 + 봉합부
+      const lx = Math.min(ex - 32, sx + Math.max(16, (ex - sx) * .5));
+      if(lx > sx + 14){ g.fillStyle = "#fff4ec"; g.beginPath(); g.ellipse(lx, cy + .5, 9, 3.4, 0, 0, Math.PI * 2); g.fill();
+        g.fillStyle = "#f08aa3"; g.beginPath(); g.arc(lx, cy + 1, 1.5, 0, 7); g.fill(); [-2.4, 0, 2.4].forEach(d => { g.beginPath(); g.arc(lx + d, cy - 1.5, .8, 0, 7); g.fill(); }); }
+      g.restore();
+      // 6) 앙: 입술(ω)이 츄르 끝을 위아래에서 물고, 씹을 때 오물오물
+      const bite = 1.4 - chew * .7; g.fillStyle = "#fffdf9"; g.strokeStyle = INKC; g.lineWidth = .75; g.lineCap = "round";
+      [-1, 1].forEach(d => { g.beginPath(); g.ellipse(sx + 1.2, cy + d * (ch / 2 - bite), 2.6, 2.2, 0, 0, Math.PI * 2); g.fill();
+        g.beginPath(); g.arc(sx + 1.2, cy + d * (ch / 2 - bite), 2.2, d > 0 ? -Math.PI * .1 : -Math.PI * .9, d > 0 ? Math.PI * .9 : Math.PI * .1, d < 0); g.stroke(); });
+      g.fillStyle = "rgba(242,135,159,.9)"; g.beginPath(); g.ellipse(sx - .4, cy, 1.1, 1.5 + chew * .6, 0, 0, Math.PI * 2); g.fill(); } }
+}
 function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="row" style="flex-wrap:nowrap;gap:10px"><button class="btn sm ghost" type="button" id="homeBtn">‹ ${esc(t().home)}</button>${catBarHTML(pct)}<button class="btn sm ghost" type="button" id="gradBtn" title="${esc(t().gradTitle)}">${icCat("grad")} ${esc(t().grad)}</button></div><div class="modehead"><span class="muted small">${t().modes[mode]}${c.slang ? `<span class="sl-tag">${esc(t().slTag)}</span>` : ""} · ${t().left(SES.queue.length)}</span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}" title="${esc(t().hfHelp)}">${hf ? t().hfOn : t().hfOff}</button>${levelChip(c)}</span></div>${say(MODE_NM[mode] || "st_default", esc(t().nmAsk[mode](langName())))}`; }
 document.addEventListener("click", e => {
   if(!e.target.closest("#gradBtn") || !SES) return;
