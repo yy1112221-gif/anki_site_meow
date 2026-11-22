@@ -27,6 +27,11 @@ async def main():
           return {sh:document.scrollingElement.scrollHeight, ih:innerHeight, cb:Math.round(card.getBoundingClientRect().bottom), nt:Math.round(nt)}; }""")
         ok(f"홈 {W}×{H} {name}: 스크롤 없음", r["sh"]<=r["ih"]+2, r)
         ok(f"홈 {W}×{H} {name}: 카드가 아래 메뉴에 안 가림", r["cb"]<=r["nt"]+2, r)
+        r=await pg.evaluate("""()=>{ const g=document.querySelector('#sessionStart .hv2-fgo'), f=g&&g.closest('.hv2-feed'), b=document.querySelector('#sessionStart .hv2-say .bubble');
+          const o={}; if(g&&f){ const a=g.getBoundingClientRect(), c=f.getBoundingClientRect(); o.fit=a.left>=c.left-1&&a.right<=c.right+1&&g.scrollWidth<=g.clientWidth+1; }
+          if(b&&!b.classList.contains('slam')) o.clip=getComputedStyle(b).overflowX; return o; }""")
+        if "fit" in r: ok(f"홈 {W}×{H} {name}: 간식 카드 이름이 카드 안에", r["fit"], r)
+        if "clip" in r: ok(f"홈 {W}×{H} {name}: 말풍선 셋째 줄 안 비침(clip)", r["clip"]=="clip", r)
       # 냥이 화면(백로그 L): 겹침 없음 · 스크롤 없음
       st=state("due"); st["meta"]["pet"]={"inv":{"kari":3,"nibo":2,"sasa":1,"can":1}}
       await pg.evaluate("s=>localStorage.setItem('focus-vocab-v1', s)", json.dumps(st)); await pg.reload(); await pg.wait_for_timeout(1800)
