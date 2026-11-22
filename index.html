@@ -2617,6 +2617,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
     if(phase === "answer" && SES.state.answered){ const nb = $("#nx"); if(nb) nb.click(); return; }
     if(!input.value.trim()){ input.focus({ preventScroll: true }); return; }
     if(phase === "answer"){ if(SES.state.answered) return; let r = ansOk(c, input.value, target);
+      if(r === "no" && !SES.state.dictNudge && dictFormHit(c, input.value, target)){ SES.state.dictNudge = 1; const fb = $("#fb"), ja = S.meta.settings.ui === "ja"; if(fb) fb.innerHTML = `<div class="feedback meh">${say("st_surprised", esc(ja ? "意味は合ってる！ 文の形にしてみて" : "뜻은 맞았어! 문장 모양으로 바꿔 봐"))}</div>`; buzz(12); track("dict_form", { l: c.lang || "" }); return; }
       if(r === "no" && (SES.state.near || 0) < 2){ const nk = nearSyn(c, input.value); if(nk){ SES.state.near = (SES.state.near || 0) + 1; const fb = $("#fb"); if(fb) fb.innerHTML = `<div class="feedback meh">${say("st_surprised", esc(nearMsg(nk)))}</div>`; buzz(12); track("near_syn", { k: nk }); return; } }
       reveal(r); return; }
     if(ansOk(c, input.value, target) !== "no"){ toast(x.copyOk); finish(false); }
@@ -3637,7 +3638,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v141";
+const APP_VER = "v142";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5291,6 +5292,9 @@ function readingOf(c){ const jx = jaxOf(c); if(jx && jx.r) return jx.r; if(c.rea
 function ansOk(c, v, target){ let r = check(v, target);
   if(r === "no" && S.meta.settings.strictKanji && isKanaWord(c) && norm(target) === norm(c.word)){ const rd = readingOf(c); if(rd && check(v, rd) !== "no") r = "ok"; }   // 보통 가나로 쓰는 단어: 「한자까지 정확히」여도 가나 답 정답
   if(r === "no" && !S.meta.settings.strictKanji){ const rd = norm(target) === norm(c.word) ? readingOf(c) : (c.formR && c.form && norm(target) === norm(c.form) ? c.formR : ""); if(rd && check(v, rd) !== "no") r = "ok"; } return r; }
+/* C4: 빈칸 정답이 활용형(예: 예쁜)인데 사전형(예쁘다)을 쓰면 오답 대신 한 번 유도 */
+function dictFormHit(c, typed, target){ const v = norm(typed), w = norm(c.word || ""); if(!v || !w || !target || norm(target) === w) return false;
+  if(v === w) return true; if((c.lang || "") === "ja"){ const rd = readingOf(c); if(rd && toHira(v) === toHira(norm(rd))) return true; } return false; }
 function nearSyn(c, typed){ const t = norm(typed), th = toHira(t); if(!t || !c.meaning) return null; const mine = new Set(meanToks(c.meaning)); if(!mine.size) return null; const lang = c.lang || S.meta.settings.lang;
   const hit = (w, rd, m) => (norm(w) === t || (rd && toHira(norm(rd)) === th) || toHira(norm(w)) === th) && meanToks(m).some(x => mine.has(x));
   let ok = Object.values(S.cards).some(o => o.id !== c.id && (o.lang || "es") === lang && hit(o.word, o.reading, o.meaning));
@@ -5609,7 +5613,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 load(); PET_SIG = petSig(); migrateSteps(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);

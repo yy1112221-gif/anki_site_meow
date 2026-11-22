@@ -126,6 +126,15 @@ async def main():
     r=await pg4.evaluate("""()=>{ const t=window.__t; t.setSES({queue:[{id:'r4',mode:'pick',st:1}],done:0,failed:{},remaining:{r4:1},finished:[],state:null}); t.nextItem(); const bs=[...document.querySelectorAll('#sessionBox .pk-b')]; if(!bs.length) return 'nogrid'; const w=bs.find(b=>!b.classList.contains('x')&&b.textContent!=='がくせい'); w.click(); return !!document.querySelector('#fb .kj-sib'); }""")
     ok("C9 틀린 문제 피드백에 형제 줄", r==True, r)
     r=await pg4.evaluate("()=>document.body.innerHTML.includes('EDRDG') || (window.__t.S().meta.settings.ui==='ko')")
+    # ── F: 사전형 유도 ──
+    r=await pg4.evaluate("""()=>{ const t=window.__t; const k={lang:'ko',word:'예쁘다',form:'예쁜'}, j={lang:'ja',word:'働く',reading:'はたらく',form:'働いて'};
+      return [t.dictFormHit(k,'예쁘다','예쁜'), t.dictFormHit(k,'예쁜','예쁜'), t.dictFormHit(k,'예쁘다','예쁘다'), t.dictFormHit(j,'はたらく','働いて'), t.dictFormHit(j,'働く','働いて'), t.dictFormHit(k,'귀엽다','예쁜')]; }""")
+    ok("C4 사전형 답 → 유도(활용형 정답일 때만)", r==[True,False,False,True,True,False], r)
+    r=await pg4.evaluate("""async()=>{ const t=window.__t, S=t.S(); S.meta.settings.lang='ko'; S.meta.settings.ui='ja'; S.cards.k1={id:'k1',lang:'ko',word:'예쁘다',meaning:'きれいだ',example:'길가에 예쁜 꽃들이 피었어요.',exampleKo:'道端にきれいな花が咲いた。',form:'예쁜',isNew:false,level:3,reps:3,lapses:0,log:[],step:3,due:'2026-01-01'};
+      t.setSES({queue:[{id:'k1',mode:'cloze',st:3}],done:0,failed:{},remaining:{k1:1},finished:[],state:null}); t.nextItem(); await new Promise(r=>setTimeout(r,300));
+      const i=document.querySelector('#ans'); if(!i) return 'noinput'; i.value='예쁘다'; document.querySelector('#chk').click(); await new Promise(r=>setTimeout(r,200));
+      const a=[t.getSES().state.answered, (document.querySelector('#fb')||{}).textContent||'']; i.value='예쁘다'; document.querySelector('#chk').click(); await new Promise(r=>setTimeout(r,200)); a.push(t.getSES().state.answered); S.meta.settings.lang='ja'; S.meta.settings.ui='ko'; return a; }""")
+    ok("C4 빈칸 화면: 첫 사전형 답은 유도(채점 안 함), 두 번째는 채점", r!="noinput" and r[0]==False and "文の形" in r[1] and r[2]==True, r)
     ok("B3 페이지 오류 없음", not e4, e4[:3])
     await pg4.close()
     await pg.wait_for_timeout(300)
