@@ -1685,7 +1685,7 @@ function loadVoices(){ try{ VOICES = speechSynthesis.getVoices() || []; }catch(e
 function voicesFor(langCode){ const pre = langCode.slice(0,2).toLowerCase(); return VOICES.filter(v => v.lang && v.lang.toLowerCase().replace("_","-").startsWith(pre)); }
 function voiceScore(v, want){
   let sc = 0; const n = (v.name || "").toLowerCase(); const l = (v.lang || "").toLowerCase().replace("_","-");
-  if(l === want.toLowerCase()) sc += 3;
+  if(l === want.toLowerCase()) sc += 12;   // 검수단 R1-4-4: 정확한 언어(es-ES)가 다른 지역 premium·google(합 10)보다 먼저
   if(/premium|enhanced|neural|natural|拡張|プレミアム|향상|프리미엄/.test(n)) sc += 6;
   if(/google/.test(n)) sc += 4;
   if(/siri/.test(n)) sc += 5;
@@ -1721,8 +1721,14 @@ const UI_SPEECH = { ja:"ja-JP", ko:"ko-KR" };
 const SPEED_K = { ko: 1.2, en: 1.2 };   // 한국어·영어 음성은 기본으로 1.2배 빠르게(설정 속도에 곱함)
 const spK = lang => SPEED_K[String(lang || "").slice(0, 2)] || 1;
 function ttsGo(u){ if(speechSynthesis.speaking || speechSynthesis.pending){ speechSynthesis.cancel(); setTimeout(() => speechSynthesis.speak(u), 140); } else speechSynthesis.speak(u); }
+/* 검수단 R1-4-2: 그 언어 음성이 기기에 하나도 없으면 다른 언어 음성으로 읽지 않는다 (음성 목록을 아직 못 받았으면 판단 안 함) */
+const canSpeakLang = code => canSpeak() && !(VOICES.length && !voicesFor(code || L().speech).length);
+function voiceMissToast(){ const k = today() + "|" + S.meta.settings.lang; if(S.meta.nvt === k) return; S.meta.nvt = k; save();
+  toast(S.meta.settings.ui === "ja" ? `この端末には${langName()}の音声がないニャ` : `이 기기에 ${langName()} 음성이 없다냥`); }
 function ttsSpeak(text, slow, uiLang){
   if(!canSpeak()) return false;
+  if(uiLang){ if(!canSpeakLang(UI_SPEECH[uiLang] || "ja-JP")) return false; }
+  else if(!canSpeakLang()){ voiceMissToast(); return true; }
   const u = new SpeechSynthesisUtterance(text); u.lang = L().speech;
   if(uiLang){ const want = UI_SPEECH[uiLang] || "ja-JP"; u.lang = want; const vv = voicesFor(want).sort((a,b) => voiceScore(b, want) - voiceScore(a, want))[0]; if(vv) u.voice = vv; u.rate = Math.min(2, (Number(S.meta.settings.rate) || 0.8) * spK(want)); ttsGo(u); return true; }
   const base = Number(S.meta.settings.rate) || 0.8;
@@ -1741,15 +1747,6 @@ function speak(text, opts){
     if(opts.lang) return ttsSpeak(text, false, opts.lang);
     const url = opts.audio === undefined ? audioFor(text) : opts.audio;
     if(url){ try{ if(canSpeak()) speechSynthesis.cancel(); }catch(e){} plainAudio(fixAudioUrl(url), text, opts); return true; }
-    if(url){
-      const a = new Audio(url); AUDIO_EL = a;
-      const base = Number(S.meta.settings.rate) || 0.8;
-      a.playbackRate = opts.slow ? 0.7 : Math.min(1, base + 0.15);
-      try{ a.preservesPitch = true; a.webkitPreservesPitch = true; }catch(e){}
-      a.play().catch(() => ttsSpeak(text, opts.slow));
-      a.onerror = () => ttsSpeak(text, opts.slow);
-      return true;
-    }
     return ttsSpeak(text, opts.slow);
   }catch(e){ return false; }
 }
@@ -3743,7 +3740,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v159";
+const APP_VER = "v160";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5724,7 +5721,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { canSpeakLang, pickVoice, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 load(); PET_SIG = petSig(); migrateSteps(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
