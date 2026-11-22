@@ -3497,7 +3497,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v132";
+const APP_VER = "v133";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3595,9 +3595,21 @@ function track(n, p){ try{ if(S.meta.noTrack || EV_OFF) return; EV_Q.push({ n, p
 function evFlush(keep){ if(!EV_Q.length || !syncReady() || S.meta.noTrack) return; const batch = EV_Q.splice(0, 50);
   sbRpc("ev_put", { p_dev: devId(), p_events: batch }, keep).catch(() => { if(!keep) EV_Q.unshift(...batch.slice(-100)); }); }
 addEventListener("visibilitychange", () => { if(document.hidden){ track("hide", { view: document.body.dataset.view || "today" }); evFlush(true); } });
-function evBoot(){ const q = new URLSearchParams(location.search), s = S.meta.settings;
+/* 유입 경로: 링크 꼬리표(utm_*)·페북 클릭 표시(fbclid)·앱 안 브라우저를 읽고, 처음 들어온 경로는 S.meta.attr 에 한 번만 저장(이후 재방문·홈 화면 앱도 같은 경로로 집계) */
+function attrRead(){ const q = new URLSearchParams(location.search), ua = navigator.userAgent || "", g = k => (q.get(k) || "").slice(0, 80);
+  const ref = (document.referrer.match(/^https?:\/\/([^/]+)/) || [])[1] || "";
+  const iab = /Instagram/i.test(ua) ? "ig" : /FBAN|FBAV|FB_IAB|FBIOS|FB4A/i.test(ua) ? "fb" : /KAKAOTALK/i.test(ua) ? "kakao" : /Line\//i.test(ua) ? "line" : "";
+  return { src: g("utm_source") || g("src"), med: g("utm_medium"), cmp: g("utm_campaign"), cnt: g("utm_content"), term: g("utm_term"), fb: q.has("fbclid") ? 1 : 0, iab, ref: ref === location.host ? "" : ref }; }
+function attrBoot(){ try{ const a = attrRead(), ext = a.src || a.fb || a.iab || a.ref;
+  if(ext && !S.meta.attr){ S.meta.attr = Object.assign({ at: new Date().toISOString().slice(0, 10), v: APP_VER }, a); save(); }
+  const q = new URLSearchParams(location.search); let dirty = false;   // 공유될 때 꼬리표가 따라가지 않게 주소창에서 지움(결제 복귀 등 다른 값은 그대로)
+  [...q.keys()].forEach(k => { if(/^utm_/.test(k) || k === "fbclid" || k === "src"){ q.delete(k); dirty = true; } });
+  if(dirty) history.replaceState(history.state, "", location.pathname + (q.toString() ? "?" + q : "") + location.hash);
+  return a; }catch(_){ return {}; } }
+function evBoot(){ const s = S.meta.settings, A = attrBoot(), F = S.meta.attr || {};
   track("open", { ui: s.ui, lang: s.lang, cards: Object.keys(S.cards).length, days: Object.keys(S.meta.days || {}).length, by: S.meta.by || null, melt: (() => { try{ return meltPct(); }catch(_){ return null; } })(),
-    pwa: matchMedia("(display-mode: standalone)").matches, ref: (document.referrer.match(/^https?:\/\/([^/]+)/) || [])[1] || "", src: q.get("utm_source") || q.get("src") || "", w: innerWidth, h: innerHeight, sync: syncOn() }); }
+    pwa: matchMedia("(display-mode: standalone)").matches, ref: A.ref || "", src: A.src || "", med: A.med || "", cmp: A.cmp || "", cnt: A.cnt || "", term: A.term || "", fb: A.fb || 0, iab: A.iab || "",
+    first: F.src || F.iab || F.ref || "", first_cmp: F.cmp || "", first_cnt: F.cnt || "", first_at: F.at || "", w: innerWidth, h: innerHeight, sync: syncOn() }); }
 // 기존 함수에 기록만 덧붙임(동작은 그대로)
 { const _sv = showView; showView = function(v){ track("view", { v }); return _sv.apply(this, arguments); };
   const _st = settleItem; settleItem = function(ok){ try{ const it = SES && SES.queue[0]; track("ans", { m: it && it.mode, ok: !!ok }); }catch(_){} return _st.apply(this, arguments); };
