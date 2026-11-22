@@ -102,6 +102,26 @@ async def main():
     ok("ja-extra 실패(오프라인) → trap 대신 meaning, 오류 없음", r[0] is None and r[1]==0 and r[2] and not e3, [r,e3[:2]])
     await pg3.close()
     ok("B2 페이지 오류 없음", not e2, e2[:3])
+    # ── B3: 고친 읽기·가나 ──
+    pg4=await b.new_page(); e4=[]; pg4.on("pageerror",lambda e:e4.append(str(e)))
+    await pg4.goto("http://localhost:8765/index.html")
+    cs={"r1":dict(id="r1",lang="ja",word="世話",reading="せわする",meaning="せわする · 돌봄, 신세",isNew=False,level=2,reps=3,lapses=0,log=[],u=77,due="2026-12-01"),
+        "r2":dict(id="r2",lang="ja",word="退院",reading="내가 쓴 읽기",meaning="내가 쓴 읽기 · 퇴원",isNew=True,level=0,reps=0,lapses=0,log=[],u=78),
+        "r3":dict(id="r3",lang="ja",word="椅子",reading="いす",meaning="いす · 의자",isNew=False,level=3,reps=3,lapses=0,log=[],u=79,due="2026-12-01"),
+        "r4":dict(id="r4",lang="ja",word="学生",reading="がくせい",meaning="がくせい · 학생",isNew=False,level=3,reps=3,lapses=0,log=[],u=80,due="2026-12-01")}
+    await pg4.evaluate("s=>localStorage.setItem('focus-vocab-v1', s)", json.dumps({"cards":cs,"meta":{"setup":1,"tutAsked":1,"loginAsked":1,"days":{},"settings":{"ui":"ko","lang":"ja"},"stepv":1}}))
+    await pg4.reload(); await pg4.wait_for_timeout(3500)
+    r=await pg4.evaluate("""()=>{ const t=window.__t, S=t.S(), a=S.cards.r1, b=S.cards.r2; const sv=JSON.parse(localStorage.getItem('focus-vocab-v1'));
+      return {a:[a.reading,a.meaning,a.u,a.due], b:[b.reading,b.meaning], rfix:S.meta.rfix, saved:sv.cards.r1.reading, rd:t.readingOf(a)}; }""")
+    ok("C7 고친 읽기: せわする → せわ (뜻 앞 읽기도) · u·due 그대로", r["a"]==["せわ","せわ · 돌봄, 신세",77,"2026-12-01"] and r["saved"]=="せわ" and r["rfix"]==1, r)
+    ok("C7 사용자가 바꾼 읽기는 그대로", r["b"]==["내가 쓴 읽기","내가 쓴 읽기 · 퇴원"], r)
+    r=await pg4.evaluate("""()=>{ const t=window.__t, S=t.S(); S.meta.settings.strictKanji=true; const a=t.ansOk(S.cards.r3,'いす','椅子'), b=t.ansOk(S.cards.r4,'がくせい','学生'); S.meta.settings.strictKanji=false; return [t.isKanaWord(S.cards.r3), t.isKanaWord(S.cards.r4), a, b]; }""")
+    ok("C8 가나 단어: 「한자까지 정확히」여도 가나 답 정답(다른 단어는 오답)", r[0] and (not r[1]) and r[2]!="no" and r[3]=="no", r)
+    r=await pg4.evaluate("""()=>{ const t=window.__t; t.setSES({queue:[{id:'r3',mode:'meaning',st:2}],done:0,failed:{},remaining:{r3:1},finished:[],state:null});
+      document.querySelector('#sessionStart').classList.add('hidden'); document.querySelector('#sessionBox').classList.remove('hidden'); t.nextItem(); return document.querySelector('#sessionBox .word').textContent; }""")
+    ok("C8 가나 단어는 가나를 크게 표시", r=="いす", r)
+    ok("B3 페이지 오류 없음", not e4, e4[:3])
+    await pg4.close()
     await pg.wait_for_timeout(300)
     ok("페이지 오류 없음", not errs, errs[:3])
     await b.close()

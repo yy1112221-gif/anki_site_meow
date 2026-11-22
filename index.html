@@ -2682,8 +2682,15 @@ function dockTidy(){ const box = $("#sessionBox"), dock = box && box.querySelect
 /* ── 레벨 디자인 v2 새 문제: 뜻 고르기(pick) · 읽기 함정(trap) · ★ 소개(juku). 데이터 presets/ja-extra.json은 처음 쓸 때 한 번 받아 메모리에 둠(실패하면 meaning) ── */
 let JAX = null, JAX_P = null, JAX_FAIL = 0;
 function jaxLoad(){ if(JAX) return Promise.resolve(JAX); if(JAX_P) return JAX_P; if(Date.now() - JAX_FAIL < 6e4) return Promise.resolve(null);
-  JAX_P = fetch("presets/ja-extra.json").then(r => { if(!r.ok) throw new Error("jax"); return r.json(); }).then(d => { JAX = (d && d.words) || {}; JAX_P = null; return JAX; }).catch(() => { JAX_FAIL = Date.now(); JAX_P = null; return null; }); return JAX_P; }
+  JAX_P = fetch("presets/ja-extra.json").then(r => { if(!r.ok) throw new Error("jax"); return r.json(); }).then(d => { JAX = (d && d.words) || {}; JAX_P = null; try{ fixReadings(); }catch(_){} return JAX; }).catch(() => { JAX_FAIL = Date.now(); JAX_P = null; return null; }); return JAX_P; }
 const jaxOf = c => (JAX && (c.lang || "es") === "ja" && c.word) ? (JAX[c.word] || null) : null;
+const isKanaWord = c => { const jx = jaxOf(c); return !!(jx && jx.kana && readingOf(c)); };
+const kanaFace = c => isKanaWord(c) ? `<div class="word" lang="ja">${esc(readingOf(c))}</div><p class="q-sub" lang="ja">${esc(c.word)}</p>` : `<div class="word">${esc(c.word)}</div>`;   // 가나 단어는 가나 크게, 한자 작게
+/* 고친 읽기(C7): ja-extra의 r로 카드 읽기와 뜻 앞 읽기를 한 번만 교체(S.meta.rfix). 사용자가 직접 바꾼 읽기는 그대로(옛 읽기가 고친 읽기를 품을 때만) */
+function fixReadings(){ if(LOAD_BAD || (S.meta.rfix || 0) >= 1 || !JAX) return 0; let n = 0;
+  try{ Object.values(S.cards || {}).forEach(c => { if(!c || (c.lang || "es") !== "ja") return; const jx = JAX[c.word]; if(!jx || !jx.r) return; const old = String(c.reading || ""), r = jx.r; if(old === r) return;
+      if(old && !old.includes(r)) return; c.reading = r; const m = String(c.meaning || ""); if(old && m.startsWith(old + " · ")) c.meaning = r + " · " + m.slice(old.length + 3); else if(!old && /^\s*[ぁ-ゖァ-ヺー;；\s]+\s*·\s*/.test(m)) c.meaning = m.replace(/^\s*[ぁ-ゖァ-ヺー;；\s]+\s*·\s*/, r + " · "); n++; }); }catch(_){}
+  S.meta.rfix = 1; persist(); if(n) track("reading_fix", { n }); return n; }
 const meanOnly = m => String(m || "").replace(/^\s*[ぁ-ゖァ-ヺー]+\s*[·・]\s*/, "").trim();
 function shuffle(a){ for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function trapOpts(c){ const jx = jaxOf(c), rd = readingOf(c); if(!jx || !rd || !Array.isArray(jx.trap) || !jx.trap.length) return null;
@@ -2699,7 +2706,7 @@ function diffKind(a, b){ const ja = S.meta.settings.ui === "ja", L = ja ? { l: "
   if(a.replace(/っ/g, "") === b.replace(/っ/g, "")) return L.s; if(dk(a) === dk(b)) return L.d;
   const lg = s => s.replace(/([おこそとのほもよろごぞどぼぽょゅ])う/g, "$1").replace(/([えけせてねへめれげぜでべぺ])い/g, "$1").replace(/ー/g, ""); if(lg(a) === lg(b) || a.replace(/[うい]/g, "") === b.replace(/[うい]/g, "")) return L.l; return ""; }
 function askChoice(c, kind, o){ const box = $("#sessionBox"), x = t(), ja = S.meta.settings.ui === "ja"; SES.state = { answered: false };
-  box.innerHTML = head(c, kind) + `<div class="stage"><div><div class="word" lang="${esc(c.lang || "")}">${esc(o.q)}</div>${o.sub ? `<p class="q-sub">${esc(o.sub)}</p>` : ""}</div><div id="fb"></div></div>
+  box.innerHTML = head(c, kind) + `<div class="stage"><div>${kind === "pick" ? kanaFace(c) : `<div class="word" lang="${esc(c.lang || "")}">${esc(o.q)}</div>`}${o.sub ? `<p class="q-sub">${esc(o.sub)}</p>` : ""}</div><div id="fb"></div></div>
     <div class="dock"><div class="pk-grid" id="pkG">${o.opts.map((v, i) => `<button type="button" class="pk-b" data-i="${i}"${kind === "trap" ? ` lang="ja"` : ""}>${esc(v)}</button>`).join("")}</div>
     <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${x.idk}</button><span class="grow"></span><button class="btn primary" type="button" id="chk" disabled>${x.next}</button></div></div>`;
   const t0 = Date.now(), btns = [...box.querySelectorAll(".pk-b")];
@@ -2736,7 +2743,7 @@ function renderItem0(c, mode){
   }
   if(mode === "meaning"){
     if(!c.meaning) return renderItem(c, "recall");
-    const promptHTML = `<div><div class="word">${esc(c.word)}</div>${canSpeak() ? `<p class="q-hint">🔊</p>` : ""}</div>`;
+    const promptHTML = `<div>${kanaFace(c)}${canSpeak() ? `<p class="q-hint">🔊</p>` : ""}</div>`;
     if(hf) return askHandsFree(c, mode, promptHTML, c.meaning, false);
     return askMeaning(c, promptHTML);
   }
@@ -3566,7 +3573,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v137";
+const APP_VER = "v138";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5216,8 +5223,10 @@ function fixCutExamples(){ if((S.meta.cfix || 0) >= 1) return; let n = 0;
   S.meta.cfix = 1; if(n){ save(); track("cut_ex_fix", { n }); } }
 /* 유의어·외래어로 답했을 때: 틀림 처리 대신 냥이가 다른 말로 유도 */
 const meanToks = m => String(m || "").replace(/^[^·]*·\s*/, "").replace(/[（(][^）)]*[）)]/g, "").split(/[,、;；/·]|\s+또는\s+/).map(x => x.trim().replace(/\s+/g, "")).filter(x => x.length >= 1);
-function readingOf(c){ if(c.reading) return c.reading; const m = String(c.meaning || "").match(/^\s*([ぁ-ゖァ-ヺー]+)\s*[·・]/); return m ? m[1] : ""; }
-function ansOk(c, v, target){ let r = check(v, target); if(r === "no" && !S.meta.settings.strictKanji){ const rd = norm(target) === norm(c.word) ? readingOf(c) : (c.formR && c.form && norm(target) === norm(c.form) ? c.formR : ""); if(rd && check(v, rd) !== "no") r = "ok"; } return r; }
+function readingOf(c){ const jx = jaxOf(c); if(jx && jx.r) return jx.r; if(c.reading) return c.reading; const m = String(c.meaning || "").match(/^\s*([ぁ-ゖァ-ヺー]+)\s*[·・]/); return m ? m[1] : ""; }
+function ansOk(c, v, target){ let r = check(v, target);
+  if(r === "no" && S.meta.settings.strictKanji && isKanaWord(c) && norm(target) === norm(c.word)){ const rd = readingOf(c); if(rd && check(v, rd) !== "no") r = "ok"; }   // 보통 가나로 쓰는 단어: 「한자까지 정확히」여도 가나 답 정답
+  if(r === "no" && !S.meta.settings.strictKanji){ const rd = norm(target) === norm(c.word) ? readingOf(c) : (c.formR && c.form && norm(target) === norm(c.form) ? c.formR : ""); if(rd && check(v, rd) !== "no") r = "ok"; } return r; }
 function nearSyn(c, typed){ const t = norm(typed), th = toHira(t); if(!t || !c.meaning) return null; const mine = new Set(meanToks(c.meaning)); if(!mine.size) return null; const lang = c.lang || S.meta.settings.lang;
   const hit = (w, rd, m) => (norm(w) === t || (rd && toHira(norm(rd)) === th) || toHira(norm(w)) === th) && meanToks(m).some(x => mine.has(x));
   let ok = Object.values(S.cards).some(o => o.id !== c.id && (o.lang || "es") === lang && hit(o.word, o.reading, o.meaning));
@@ -5536,8 +5545,8 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, trapOpts, pickOpts, diffKind, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
-load(); PET_SIG = petSig(); migrateSteps(); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, trapOpts, pickOpts, diffKind, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+load(); PET_SIG = petSig(); migrateSteps(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 addEventListener("storage", e => { if(e.key !== LS_KEY || !e.newValue || LOAD_BAD) return;   // 다른 탭에서 저장됨 → 이 탭 메모리에 합침(옛 탭이 새 기록을 덮지 않게)
   try{ const d = JSON.parse(e.newValue); const keepSes = S.meta.session, st = S.meta.settings; mergeData(d); S.meta.settings = st; if(keepSes !== undefined) S.meta.session = keepSes; if(!SES) renderAll(); }catch(_){} });
