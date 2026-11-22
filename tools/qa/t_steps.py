@@ -135,6 +135,11 @@ async def main():
       const i=document.querySelector('#ans'); if(!i) return 'noinput'; i.value='예쁘다'; document.querySelector('#chk').click(); await new Promise(r=>setTimeout(r,200));
       const a=[t.getSES().state.answered, (document.querySelector('#fb')||{}).textContent||'']; i.value='예쁘다'; document.querySelector('#chk').click(); await new Promise(r=>setTimeout(r,200)); a.push(t.getSES().state.answered); S.meta.settings.lang='ja'; S.meta.settings.ui='ko'; return a; }""")
     ok("C4 빈칸 화면: 첫 사전형 답은 유도(채점 안 함), 두 번째는 채점", r!="noinput" and r[0]==False and "文の形" in r[1] and r[2]==True, r)
+    # ── I: 3칸인데 빈칸 문장이 없으면 쓰기 + 첫 글자 힌트 ──
+    r=await pg4.evaluate("""async()=>{ const t=window.__t, S=t.S(); S.meta.settings.lang='es'; S.cards.h1={id:'h1',lang:'es',word:'ventana',meaning:'창문',example:'',isNew:false,level:3,reps:3,lapses:0,log:[],step:3,due:'2026-01-01'};
+      const run=async(st)=>{ t.setSES({queue:[{id:'h1',mode:'recall',st}],done:0,failed:{},remaining:{h1:1},finished:[],state:null}); t.nextItem(); await new Promise(r=>setTimeout(r,200)); const q=document.querySelector('#sessionBox .q-hint'); return q ? q.textContent : ''; };
+      const a=await run(3), b=await run(4); S.meta.settings.lang='ja'; return [t.stepMode(S.cards.h1,3), a, b]; }""")
+    ok("I 3칸·빈칸 없음 → recall + 첫 글자 힌트(4칸은 힌트 없음)", r[0]=="recall" and "v…" in r[1] and "7" in r[1] and r[2]=="", r)
     ok("B3 페이지 오류 없음", not e4, e4[:3])
     await pg4.close()
     await pg.wait_for_timeout(300)
