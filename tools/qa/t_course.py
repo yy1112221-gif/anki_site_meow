@@ -53,6 +53,27 @@ async def main():
       t.setSES(null); return 1; }""")
     r=await pg.evaluate("""()=>{ const t=window.__t, S=t.S(); const z=S.meta.session; t.setSES({queue:z.queue,done:z.done,failed:{},remaining:z.remaining,finished:[],state:null}); t.settleItem(true); t.settleItem(true); return [t.getSES().queue.length, !t.getSES().course, S.cards.d1.reps]; }""")
     ok("옛 세션(course 없음) 옛 방식으로 끝까지", r==[0,True,4], r)
+    # ── D: 자동 조절 · 복귀 판 · 녹아내림 ──
+    await seed(pg, mk(60,30))
+    r=await pg.evaluate("""()=>{ const t=window.__t, S=t.S(); const z=t.ddaState(); const a=[z.n];
+      const run=(ok,g)=>{ t.setSES({queue:[],done:12,failed:{},remaining:{},finished:[],state:null}); return t.courseEnd({n:12,ok,g}); };
+      run(12,12); a.push(t.ddaState().n); run(12,12); a.push(t.ddaState().n); run(12,12); a.push(t.ddaState().n);
+      run(5,12); a.push(t.ddaState().n, t.ddaState().lo); run(10,12); a.push(t.ddaState().n, t.ddaState().lo);
+      for(let k=0;k<6;k++) run(2,12); a.push(t.ddaState().n); return a; }""")
+    ok("85% 조절: >92% +1(최대 4) · <75% −1(최소 1)+쉬운 문제 · 사이면 그대로", r==[3,4,4,4,3,1,3,0,1], r)
+    r=await pg.evaluate("""()=>{ const t=window.__t, S=t.S(); S.meta.dda={n:1,h:[]}; const a=t.buildCourse().course.newK; S.meta.dda={n:4,h:[]}; const b=t.buildCourse().course.newK; S.meta.dda={n:3,h:[]}; return [a,b]; }""")
+    ok("판당 새 단어 수 = dda.n", r==[1,4], r)
+    r=await pg.evaluate("""()=>{ const t=window.__t, S=t.S(); S.meta.days={}; S.meta.days[t.addDays(t.today(),-4)]=true; S.meta.days[t.addDays(t.today(),-5)]=true;
+      for(let k=1;k<=20;k++){ const c=S.cards['d'+k]; c.S=2; c.last=t.addDays(t.today(),-5); }
+      const s=t.buildCourse(); const Rs=s.queue.map(i=>t.Rof(S.cards[i.id])); const low=Rs.filter(r=>r<.4).length; return [t.isReturnDay(), s.course.ret, s.course.newK, s.queue.some(i=>i.mode==='study'), low]; }""")
+    ok("복귀 판(3일+): 새 단어 0 · R<0.4는 뒤 판으로", r[:4]==[True,1,0,False] and r[4]==0, r)
+    r=await pg.evaluate("""()=>{ const t=window.__t, S=t.S(); S.meta.days={}; S.meta.days[t.addDays(t.today(),-3)]=true; S.meta.days[t.addDays(t.today(),-4)]=true; S.meta.days[t.addDays(t.today(),-5)]=true;
+      document.querySelector('#petClose') && document.querySelector('#petClose').click(); return 1; }""")
+    r=await pg.evaluate("""async()=>{ const t=window.__t, S=t.S(); const inv0=JSON.stringify((S.meta.pet||{}).inv||{}); t.startSession(); const s=t.getSES(); let g=0; while(s.queue.length && g++<40) t.settleItem(true); await new Promise(r=>setTimeout(r,600));
+      const tot=o=>Object.values(o||{}).reduce((a,b)=>a+b,0); return [s.course.ret, document.querySelector('#sessionBox .say .bubble').textContent, tot(S.meta.pet.inv)-tot(JSON.parse(inv0))]; }""")
+    ok("복귀 판 끝: 「기다렸다냥」 + 간식 +2 (하루 간식 위에)", r[0]==1 and "기다렸다냥" in r[1] and r[2]>=2, r)
+    r=await pg.evaluate("""()=>{ const t=window.__t, S=t.S(); S.meta.days={}; [6,5,4,2].forEach(k=>S.meta.days[t.addDays(t.today(),-k)]=true); return t.meltPoints(); }""")
+    ok("녹아내림: 빠진 날 −1 (3일 → 빠짐 → 1일 → 빠짐 = 2, 예전 −1.5면 1)", r==2, r)
     ok("페이지 오류 없음", not errs, errs[:3])
     await b.close()
   print("결과:", "통과" if all(R) else "실패"); sys.exit(0 if all(R) else 1)
