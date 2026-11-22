@@ -1491,7 +1491,7 @@ async function lookup(word){
 }
 async function trOf(cand){
   if(cand.tr) return cand.tr;
-  try{ return await translate(cand.text, L().mm); }catch(e){ return cand.en ? t().enPrefix + cand.en : ""; }
+  try{ return await translate(cand.text, L().mm); }catch(e){ return ""; }   // 번역이 안 되면 비워 둠(영어로 대신하지 않음 — 나중에 다시 받음)
 }
 
 /* ───────── カード ───────── */
@@ -1698,7 +1698,7 @@ function reviewModes(c){
   if(c.level === 2) return [r % 3 === 0 ? "meaning" : (r % 3 === 1 && canOrder(c)) ? "order" : "recall"];
   const pool = ["meaning", "recall"]; if(hasCloze) pool.push("cloze", "recall"); if(canOrder(c)) pool.push("order");
   if(st.writing) pool.push("write");
-  if(st.speaking && c.example && c.exampleKo) pool.push("speak");
+  if(st.speaking && c.example && trShow(c)) pool.push("speak");
   return [pool[r % pool.length]];
 }
 function slangDeck(){ return decks().find(d => d.preset === S.meta.settings.lang + "-slang" && deckOn(d)); }
@@ -2100,6 +2100,7 @@ function nextItem(){
   if(!c){ SES.queue.shift(); return nextItem(); }
   if(c.lazy && !it.waited){ it.waited = 1; document.body.classList.add("focus"); $("#sessionBox").innerHTML = `<div class="stage">${say("load_run", esc(t().prepping))}</div>`;
     Promise.race([fillLazy(c), sleep(3000)]).then(() => { if(SES && SES.queue[0] === it) nextItem(); }); return; }
+  if(c.example && !c.exampleKo && !it.trWait && (c.lang || "es") !== S.meta.settings.ui && Date.now() >= TR_OFF){ it.trWait = 1; Promise.race([fillTr(c), sleep(2500)]).then(() => { if(SES && SES.queue[0] === it) nextItem(); }); return; }
   if(it.mode === "recall" && !c.script && !nativeOk(c)) it.mode = "meaning";
   SES.state = { answered: false }; document.body.classList.add("focus"); renderItem(c, it.mode);
   { const bx = $("#sessionBox"), sy = bx.querySelector(":scope > .say"), st = bx.querySelector(".stage"); if(sy && st){ st.prepend(sy); sy.classList.add("qc"); bindQcat(sy); } }   // 문제 내는 냥이: 작게, 만질 수 있게
@@ -2540,6 +2541,18 @@ function meaningMatch(input, meaning){ const nn = v => norm(v).replace(/[~〜…
   const stem = v => v.replace(/(하다|되다|하기|한|하는|이다|다|する|すること|な|の|い)$/, "");
   return alts.some(m => m === a || stem(m) === stem(a) || (a.length >= 2 && (m.includes(a) && a.length >= m.length * .6 || a.includes(m) && m.length >= 2)) || (m.length >= 4 && lev(m, a) <= 1)); }
 function lev(a, b){ const d = Array.from({ length: a.length + 1 }, (_, i) => [i]); for(let j = 1; j <= b.length; j++) d[0][j] = j; for(let i = 1; i <= a.length; i++) for(let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return d[a.length][b.length]; }
+/* 외래어 뜻: シック ↔ 시크 처럼 같은 말을 자기 글자로 옮겨 쓴 답은 정답 (자음 뼈대 비교) */
+const KANA_CK = (() => { const m = {}, put = (cs, k) => [...cs].forEach(ch => m[ch] = k);
+  put("カキクケコガギグゲゴヵヶ", "K"); put("サシスセソザジズゼゾチツヂヅ", "S"); put("タテトダデド", "T"); put("ナニヌネノン", "N"); put("ハヒフヘホバビブベボパピプペポヴ", "P"); put("マミムメモ", "M"); put("ラリルレロ", "R"); return m; })();
+function loanSk(w){ const out = []; for(const ch0 of String(w || "")){ const ch = /[ぁ-ゖ]/.test(ch0) ? String.fromCharCode(ch0.charCodeAt(0) + 0x60) : ch0, cd = ch.charCodeAt(0);
+    if(cd >= 0xac00 && cd <= 0xd7a3){ const k = cd - 0xac00, ini = Math.floor(k / 588), fin = k % 28;
+      const I = "KKNTTRMPPSSxSSSKTPP"[ini]; if(I !== "x") out.push(I);   // ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ
+      const F = { 1: "K", 2: "K", 4: "N", 7: "T", 8: "R", 16: "M", 17: "P", 19: "T", 21: "N", 24: "K" }[fin]; if(F) out.push(F); }
+    else if(KANA_CK[ch]) out.push(KANA_CK[ch]); }
+  return out.join(""); }
+function loanMatch(ans, word){ const a = String(ans || "").trim(), w = String(word || "").trim(); if(!a || !w) return false;
+  const kataW = /^[ァ-ヺー・]+$/.test(w), hanW = /^[가-힣]+$/.test(w), kataA = /^[ァ-ヺーぁ-ゖ]+$/.test(a), hanA = /^[가-힣]+$/.test(a);
+  if(!((kataW && hanA) || (hanW && kataA))) return false; const x = loanSk(a), y = loanSk(w); return x.length >= 2 && x === y; }
 function askMeaning(c, promptHTML){
   const box = $("#sessionBox"), x = t(), mode = "meaning";
   box.innerHTML = head(c, mode) + `<div class="stage">${promptHTML}<div id="fb"></div></div><div class="dock">
@@ -2548,7 +2561,7 @@ function askMeaning(c, promptHTML){
   const input = $("#ans"); micAttach(input, S.meta.settings.ui === "ja" ? "ja-JP" : "ko-KR"); vkAttach(input, S.meta.settings.ui === "ja" ? "ja" : "ko"); if(!vkOn()) input.focus({ preventScroll: true }); bindSay(box); speak(c.word);
   const keep = b => b.addEventListener("pointerdown", e => { if(document.activeElement === input) e.preventDefault(); });
   box.querySelectorAll(".dock button").forEach(keep);
-  const ansBlock = () => `<span class="fb-answer">${esc(c.meaning)}</span><span class="fb-mean">${esc(c.word)}</span>${c.example ? `<span class="fb-ex">${highlight(c)}</span>${c.exampleKo ? `<span class="fb-mean">${esc(c.exampleKo)}</span>` : ""}` : ""}`;
+  const ansBlock = () => `<span class="fb-answer">${esc(c.meaning)}</span><span class="fb-mean">${esc(c.word)}</span>${c.example ? `<span class="fb-ex">${highlight(c)}</span>${trShow(c) ? `<span class="fb-mean">${esc(trShow(c))}</span>` : ""}` : ""}`;
   const show = () => { const fb = $("#fb"); if(fb) requestAnimationFrame(() => fb.scrollIntoView({ block: "nearest", behavior: "smooth" })); };
   let done = false;
   const reveal = res => { if(done) return; done = true; SES.state.answered = true;
@@ -2558,14 +2571,14 @@ function askMeaning(c, promptHTML){
     $("#ansForm").style.display = "none";
     $("#acts").innerHTML = `${listenBtn(c.example || c.word)}<span class="grow"></span>${typed ? `<button class="btn bad" type="button" id="mNo">${esc(x.meanDiff)}</button><button class="btn good" type="button" id="mOk">${esc(x.meanSame)}</button>` : `<button class="btn primary" type="button" id="mNo">${x.next}</button>`}`;
     bindSay(box); $("#mNo").onclick = () => settleItem(false); const ok = $("#mOk"); if(ok) ok.onclick = () => settleItem(true); input.blur(); speak(c.example || c.word); };
-  const submit = () => { if(done) return; const v = input.value.trim(); if(!v){ input.focus({ preventScroll: true }); return; } reveal(meaningMatch(v, c.meaning) ? "ok" : "check"); };
+  const submit = () => { if(done) return; const v = input.value.trim(); if(!v){ input.focus({ preventScroll: true }); return; } reveal(meaningMatch(v, c.meaning) || loanMatch(v, c.word) ? "ok" : "check"); };
   $("#ansForm").onsubmit = e => { e.preventDefault(); submit(); }; $("#chk").onclick = submit; $("#idk").onclick = () => reveal("no");
 }
 function askHandsFree(c, mode, promptHTML, target, isGuess){
   const box = $("#sessionBox"), x = t();
   box.innerHTML = head(c, mode) + `<div class="stage">${promptHTML}<div id="fb"></div></div><div class="dock">
     <div class="row" id="acts"><span class="grow"></span><button class="btn primary" type="button" id="rv">${x.reveal}</button></div></div>`;
-  if(mode !== "recall" && c.exampleKo) speak(c.exampleKo, { lang: S.meta.settings.ui, audio: null });
+  if(mode !== "recall" && trShow(c)) speak(trShow(c), { lang: S.meta.settings.ui, audio: null });
   $("#rv").onclick = () => {
     const bl = box.querySelector(".stage .blank"); if(bl){ bl.textContent = target; bl.classList.add("filled", "ok"); }
     $("#fb").innerHTML = `<div class="feedback meh">${fbh("st_listening", x.answer)}<span class="fb-answer">${esc(target)}</span>${c.meaning ? `<span class="fb-mean">${esc(c.meaning)}</span>` : ""}${!bl && c.example ? `<span class="fb-ex">${highlight(c)}</span>` : ""}</div>`;
@@ -2587,11 +2600,11 @@ function orderTiles(text, lang){ text = String(text || "").trim(); if(!text) ret
     while(toks.length > 7){ let k = 0, best = 1e9; for(let i = 0; i < toks.length - 1; i++){ const l = toks[i].length + toks[i + 1].length; if(l < best){ best = l; k = i; } } toks.splice(k, 2, toks[k] + toks[k + 1]); } }
   else toks = text.split(/\s+/).filter(Boolean);
   if(toks.length < 3 || toks.length > 8) return null; return toks; }
-function canOrder(c){ return !!(c.example && c.exampleKo && orderTiles(c.example, c.lang)); }
+function canOrder(c){ return !!(c.example && trShow(c) && orderTiles(c.example, c.lang)); }
 function askOrder(c){ const box = $("#sessionBox"), x = t(), ko = S.meta.settings.ui === "ko", toks = orderTiles(c.example, c.lang); if(!toks) return renderItem(c, "recall");
   SES.state = { answered: false }; const sep = (c.lang === "ja" || c.lang === "zh") ? "" : " ";
   let pool = toks.map((w, i) => ({ w, i })); for(let k = 0; k < 6; k++){ pool.sort(() => Math.random() - .5); if(pool.some((p2, j) => p2.i !== j)) break; } const picked = [];
-  box.innerHTML = head(c, "order") + `<div class="stage"><p class="q-sub" style="font-size:1.05rem">${esc(c.exampleKo)}</p><div class="ord-ans" id="ordA" lang="${esc(c.lang)}"></div><div class="ord-pool" id="ordP" lang="${esc(c.lang)}"></div><div id="fb"></div></div>
+  box.innerHTML = head(c, "order") + `<div class="stage"><p class="q-sub" style="font-size:1.05rem">${esc(trShow(c))}</p><div class="ord-ans" id="ordA" lang="${esc(c.lang)}"></div><div class="ord-pool" id="ordP" lang="${esc(c.lang)}"></div><div id="fb"></div></div>
     <div class="dock"><div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${x.idk}</button><span class="grow"></span><button class="btn primary" type="button" id="chk" disabled>${x.check}</button></div></div>`;
   const draw = () => { $("#ordA").innerHTML = picked.map((p2, j) => `<button type="button" class="ord-t" data-a="${j}">${esc(p2.w)}</button>`).join("") || `<span class="muted small">${ko ? "아래 조각을 순서대로 눌러 봐" : "下のピースを順番にタップ"}</span>`;
     $("#ordP").innerHTML = pool.map((p2, j) => `<button type="button" class="ord-t" data-p="${j}">${esc(p2.w)}</button>`).join(""); $("#chk").disabled = !!pool.length;
@@ -2627,14 +2640,14 @@ function renderItem0(c, mode){
   if(mode === "order") return askOrder(c);
   const box = $("#sessionBox"), x = t();
   const hf = !!S.meta.settings.handsFree;
-  if(hf && mode === "write") mode = (c.example && c.exampleKo) ? "speak" : "recall";
+  if(hf && mode === "write") mode = (c.example && trShow(c)) ? "speak" : "recall";
   if(mode === "study" || mode === "cloze"){
     const p = clozeParts(c);
     if(mode === "cloze" && !p) return renderItem(c, "recall");
     const isGuess = mode === "study";
     const target = p ? p.answer : c.word;
     const promptHTML = p
-      ? `<p class="sentence">${tokHTML(p.before)}<span class="blank">____</span>${tokHTML(p.after)}</p><p class="q-sub">${esc(c.exampleKo)}</p><p class="q-hint">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p>`
+      ? `<p class="sentence">${tokHTML(p.before)}<span class="blank">____</span>${tokHTML(p.after)}</p><p class="q-sub">${esc(trShow(c))}</p><p class="q-hint">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p>`
       : `<div><div class="word" style="font-size:1.6rem">${esc((c.reading ? String(c.meaning || "").replace(/^[^·]*·\s*/, "") : c.meaning) || x.noMeaning)}</div><p class="q-hint">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p></div>`;
     return (hf ? askHandsFree : askTyped)(c, mode, promptHTML, target, isGuess);
   }
@@ -2658,13 +2671,13 @@ function renderItem0(c, mode){
       <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${x.idk}</button><span class="grow"></span><button class="btn primary" type="button" id="chk">${x.wrote}</button></div></div>`;
     const ta = $("#wr"); bindKbd(box, ta); vkAttach(ta, S.meta.settings.lang); if(!vkOn()) ta.focus({ preventScroll: true });
     $("#idk").onclick = () => { if(SES.state.answered) return; SES.state.answered = true; ta.disabled = true;
-      $("#fb").innerHTML = `<div class="feedback no">${fbh("st_default", x.seeExample)}<span>${highlight(c)}</span><span class="small muted">${esc(c.exampleKo)}</span></div>`;
+      $("#fb").innerHTML = `<div class="feedback no">${fbh("st_default", x.seeExample)}<span>${highlight(c)}</span><span class="small muted">${esc(trShow(c))}</span></div>`;
       $("#acts").innerHTML = `<span class="grow"></span><button class="btn primary" type="button" id="nx">${x.next}</button>`; $("#nx").onclick = () => settleItem(false); };
     $("#chk").onclick = () => {
       if(SES.state.answered) return; const txt = ta.value.trim(); if(!txt){ ta.focus(); return; }
       SES.state.answered = true; ta.disabled = true;
       const used = !!findForm(txt, c.word);
-      $("#fb").innerHTML = `<div class="feedback ${used ? "meh" : "no"}">${fbh(used ? "st_happy" : "st_surprised", used ? x.writeUsed : x.writeMissing)}<span class="small">${x.refEx}${highlight(c)}</span><span class="small muted">${esc(c.exampleKo)}</span></div>`;
+      $("#fb").innerHTML = `<div class="feedback ${used ? "meh" : "no"}">${fbh(used ? "st_happy" : "st_surprised", used ? x.writeUsed : x.writeMissing)}<span class="small">${x.refEx}${highlight(c)}</span><span class="small muted">${esc(trShow(c))}</span></div>`;
       $("#acts").innerHTML = `${listenBtn(txt, x.listenMine)}<span class="grow"></span><button class="btn bad" type="button" id="sNo">${x.selfNo}</button><button class="btn good" type="button" id="sOk">${x.selfOk}</button>`;
       bindSay(box); $("#sNo").onclick = () => settleItem(false); $("#sOk").onclick = () => settleItem(true);
     };
@@ -2674,7 +2687,7 @@ function renderItem0(c, mode){
     const p = clozeParts(c); const key = p ? p.answer : c.word;
     box.innerHTML = head(c, mode) + `<div class="stage">
       <p class="q-hint">${x.speakPrompt(esc(langName()), esc(c.word))}</p>
-      <p class="sentence">${esc(c.exampleKo)}</p>
+      <p class="sentence">${esc(trShow(c))}</p>
       <p class="q-hint" id="heard" aria-live="polite"></p><div id="fb"></div></div>
       <div class="dock"><div class="row" id="acts">${SR ? `<button class="btn mic" type="button" id="micBtn">${icCat("mic")} <span>${x.micStart}</span></button>` : ""}<span class="grow"></span><button class="btn primary" type="button" id="rv">${x.reveal}</button></div></div>`;
     let heard = "";
@@ -2707,7 +2720,7 @@ function renderItem0(c, mode){
 /* ───────── 単語の追加 ───────── */
 const findDup = word => cardsHere().find(c => norm(c.word) === norm(word));
 let PICK = null;
-function candList(cands){ return `<div class="cands">` + cands.map((cd, i) => `<button type="button" class="cand" aria-pressed="false" data-i="${i}"><span>${hlText(cd.text, cd.form)}</span><span class="tr" data-tr="${i}">${esc(cd.tr || (cd.en ? t().enPrefix + cd.en : ""))}</span></button>`).join("") + `</div>`; }
+function candList(cands){ return `<div class="cands">` + cands.map((cd, i) => `<button type="button" class="cand" aria-pressed="false" data-i="${i}"><span>${hlText(cd.text, cd.form)}</span><span class="tr" data-tr="${i}">${esc(cd.tr || "")}</span></button>`).join("") + `</div>`; }
 async function runFind(){
   const x = t(), word = $("#fWord").value.trim(); if(!word){ $("#fWord").focus(); return; }
   const b = $("#btnFind"); b.disabled = true; b.textContent = x.finding; $("#findNote").textContent = "";
@@ -3265,7 +3278,7 @@ async function openPop(word, context){
     };
     render(own, true);
     let more = [];
-    try{ more = (await tatoeba(word)).map(cd => ({ text: cd.text, tr: cd.tr || (cd.en ? x.enPrefix + cd.en : ""), audio: cd.audio })); }catch(e){}
+    try{ more = (await tatoeba(word)).map(cd => ({ text: cd.text, tr: cd.tr || "", audio: cd.audio })); }catch(e){}
     if(POP !== bg) return;
     const seen = new Set(own.map(e => e.text));
     render(own.concat(more.filter(e => !seen.has(e.text))), false);
@@ -3470,7 +3483,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v129";
+const APP_VER = "v130";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5074,6 +5087,11 @@ function nearMsg(k){ const ja = S.meta.settings.ui === "ja";
   return k === "loan" ? (ja ? "おしい！意味は合ってる。似た外来語で言ってみるニャ" : "아깝다! 뜻은 맞아. 비슷한 외래어로 말해 보라냥")
     : k === "native" ? (ja ? "おしい！外来語じゃない、別の言い方があるニャ" : "아깝다! 외래어 말고 또 다른 말이 있다냥")
     : (ja ? "おしい！似た言葉があるニャ。別の言い方で！" : "아깝다! 비슷한 말이 있어! 다른 말로 써 보라냥"); }
+async function fixKoJaMeanings(){ if(S.meta.settings.ui !== "ja" || S.meta.kjfix) return; let n = 0;
+  try{ for(const d of decks()){ if(!/^ko-(beg|mid|adv)$/.test(d.preset || "")) continue; const data = await presetData(d.preset), map = {};
+      data.items.forEach(it => { if(it[1] && it[2]) map[it[0]] = it; });
+      Object.values(S.cards).forEach(c => { if(c.deck !== d.id) return; const it = map[c.word]; if(it && c.meaning === it[2]){ c.meaning = it[1]; n++; } }); }
+    S.meta.kjfix = 1; save(); if(n){ track("kj_mean_fix", { n }); if(!SES) renderAll(); } }catch(e){} }
 async function fixPresetMeanings(){   // 일본어 단어장: 영어 뜻 → 한국어 사전 뜻 (한 번만, 사용자가 고친 뜻은 건드리지 않음)
   const ui = S.meta.settings.ui; if((ui !== "ko" && ui !== "ja") || (S.meta.mfix || 0) >= 6) return; let n = 0;
   try{ for(const d of decks()){ if(!d.preset || !(ui === "ko" && /^ja-n\d$/.test(d.preset) || /^es-[abc]\d$/.test(d.preset))) continue; const data = await presetData(d.preset), map = {}, es = d.preset.startsWith("es-");
@@ -5102,6 +5120,16 @@ async function addPreset(lang, lvId, btn, skip){
 }
 /* 勉強するときに、意味（表示言語）と例文を取りに行く */
 const LAZY = new Map();
+/* 예문 번역은 사용자 화면 언어로만. 예전 버전이 번역 실패 때 넣은 「(영어) …」·영어 문장은 보여 주지 않고 다시 받는다 */
+const EN_TR = /^\s*[（(]\s*(영어|英語)\s*[)）]/;
+const trBad = (s, ui) => { s = String(s || ""); if(!s) return false; if(EN_TR.test(s)) return true; ui = ui || S.meta.settings.ui;
+  if(ui === "ko") return !/[\uac00-\ud7af]/.test(s) && /[A-Za-z]{2,}/.test(s); if(ui === "ja") return !/[\u3040-\u30ff\u4e00-\u9fff]/.test(s) && /[A-Za-z]{2,}/.test(s); return false; };
+const trShow = c => trBad(c.exampleKo) ? "" : (c.exampleKo || "");
+function fixEnTr(){ let n = 0; Object.values(S.cards).forEach(c => { if(c.exampleKo && (c.lang || "es") !== (S.meta.settings.ui || "ko") && trBad(c.exampleKo)){ c.exampleKo = ""; n++; } }); if(n){ save(); track("en_tr_fix", { n }); } return n; }
+let TR_OFF = 0;   // 번역 한도에 걸리면 1시간 쉼
+async function fillTr(c){ const cur = c && S.cards[c.id]; if(!cur || !cur.example || cur.exampleKo || (cur.lang || "es") === S.meta.settings.ui || Date.now() < TR_OFF) return;
+  try{ const tr = await translate(cur.example, L().mm); if(tr && !trBad(tr) && S.cards[cur.id] && !S.cards[cur.id].exampleKo){ S.cards[cur.id].exampleKo = tr; saveCard(S.cards[cur.id]); } }
+  catch(e){ if(/quota/.test(String(e && e.message))) TR_OFF = Date.now() + 3600e3; } }
 function fillLazy(c){
   if(!c || !c.lazy) return Promise.resolve(); if(LAZY.has(c.id)) return LAZY.get(c.id);
   const p = (async () => { try{
@@ -5116,7 +5144,7 @@ function fillLazy(c){
   }catch(e){} finally { LAZY.delete(c.id); } })();
   LAZY.set(c.id, p); return p;
 }
-async function prefetchLazy(ids){ for(const id of ids){ const c = S.cards[id]; if(c && c.lazy){ await fillLazy(c); await sleep(300); } } }
+async function prefetchLazy(ids){ for(const id of ids){ const c = S.cards[id]; if(c && c.lazy){ await fillLazy(c); await sleep(300); } else if(c && c.example && !c.exampleKo){ await fillTr(c); await sleep(300); } } }
 /* レベル診断: 各レベルから数語＋存在しない単語。わかる率を「うそ○」で補正（yes/no 語彙テスト） */
 async function startDiag(lang, host){
   const x = t(), idx = await presetIndex(), dg = idx.diag[lang], set = idx.sets[lang]; if(!dg) return;
@@ -5365,7 +5393,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
 }
 
 if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
-load(); PET_SIG = petSig(); slimPresets(); setTimeout(fixPresetMeanings, 1500); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
+load(); PET_SIG = petSig(); slimPresets(); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 addEventListener("storage", e => { if(e.key !== LS_KEY || !e.newValue || LOAD_BAD) return;   // 다른 탭에서 저장됨 → 이 탭 메모리에 합침(옛 탭이 새 기록을 덮지 않게)
   try{ const d = JSON.parse(e.newValue); const keepSes = S.meta.session, st = S.meta.settings; mergeData(d); S.meta.settings = st; if(keepSes !== undefined) S.meta.session = keepSes; if(!SES) renderAll(); }catch(_){} });
