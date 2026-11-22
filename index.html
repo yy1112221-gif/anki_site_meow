@@ -1818,13 +1818,21 @@ const isReturnDay = () => lastStudyGap() >= 3 && !(S.meta.days[today()] === true
 function Rof(c){ const d = today(); if(c.S && c.last){ const tt = Math.max(0, diffDays(c.last, d)); return Math.pow(1 + tt / (9 * c.S), -1); } const od = c.due ? Math.max(0, diffDays(c.due, d)) : 0; return Math.max(.05, .8 - od * .03 - (c.lapses || 0) * .05); }
 function courseItem(c, k, R){ let s = Math.max(1, stepOf(c)); if(R != null && R < .6 && S.meta.dda && S.meta.dda.lo && k !== "b") s = Math.max(1, s - 1);   // 지난 판이 어려웠으면 잊어 가는 단어는 한 칸 아래 문제로(칸 자체는 안 내림)
   return { id: c.id, mode: stepMode(c, s), st: s, k }; }
+/* 하루 판 기록(새 키 S.meta.cday = { d, c: 오늘 시작한 판 수, n: { 카드 id: 그 단어가 든 판 수 } }) · carry는 단어마다 하루 1번(S.meta.carry.u) */
+const COURSE_DAY_MAX = 2, COURSE_MIN = 4;
+function cdayState(){ const d = today(); let z = S.meta.cday; if(!z || typeof z !== "object" || z.d !== d) z = S.meta.cday = { d, c: 0, n: {} }; if(!z.n || typeof z.n !== "object") z.n = {}; if(!(z.c >= 0)) z.c = 0; return z; }
+function courseMark(ses){ if(!ses || !ses.course) return; const z = cdayState(); z.c++; new Set(ses.queue.map(it => it.id)).forEach(id => z.n[id] = (z.n[id] || 0) + 1);
+  const cr = S.meta.carry; if(cr && cr.d === today() && Array.isArray(cr.ids)){ const inQ = new Set(ses.queue.map(it => it.id)), u = Array.isArray(cr.u) ? cr.u : (cr.u = []); cr.ids = cr.ids.filter(id => { if(inQ.has(id)){ if(!u.includes(id)) u.push(id); return false; } return true; }); }
+  save(); }
 function buildCourse(){
   if(S.meta.settings.lang === "ja"){ jaxLoad(); kjxLoad(); }
   if(activeCards().some(c => c.script && (c.isNew || (!c.mastered && c.due && c.due <= today())))) return buildSession();
   const N = COURSE_N, used = new Set(), take = c => { used.add(c.id); return c; };
   const ret = isReturnDay(); let pool = dueAll().filter(c => !c.script).map(c => ({ c, R: Rof(c) }));
   if(ret){ const mid = pool.filter(z => z.R >= .4 && z.R <= .8); if(mid.length) pool = mid.concat(pool.filter(z => z.R > .8)); }   // 복귀 판: 살릴 수 있는 것(R 0.4~0.8)부터, R<0.4는 다음 판으로(순서만)
-  const carry = (S.meta.carry && S.meta.carry.d === today() ? S.meta.carry.ids : []).map(id => S.cards[id]).filter(c => c && !c.mastered && !c.isNew && !c.script);
+  const cd = cdayState(), capped = id => (cd.n[id] || 0) >= COURSE_DAY_MAX;   // 같은 단어는 하루 2판까지(검수단 R1-10-1: 끈질긴 단어가 「한 판 더」마다 반복되던 것)
+  pool = pool.filter(z => !capped(z.c.id));
+  const carry = (S.meta.carry && S.meta.carry.d === today() ? S.meta.carry.ids : []).map(id => S.cards[id]).filter(c => c && !c.mastered && !c.isNew && !c.script && !capped(c.id));
   const free = () => pool.filter(z => !used.has(z.c.id));
   const warm = free().filter(z => stepOf(z.c) >= 2).sort((a, b) => b.R - a.R).slice(0, 2).map(z => courseItem(take(z.c), "w", z.R));
   let boss = free().filter(z => isLeech(z.c)).sort((a, b) => a.R - b.R)[0]; if(!boss) boss = free().sort((a, b) => stepOf(b.c) - stepOf(a.c) || a.R - b.R)[0]; boss = boss ? [courseItem(take(boss.c), "b")] : [];
@@ -1838,10 +1846,11 @@ function buildCourse(){
   if(items.length < N){   // 모자라면 새 단어 → 미리 복습으로 채움 (새 단어는 2칸이라 2개 이상 남을 때만)
     const more = []; let left = N - items.length; const q = ret ? 0 : Math.max(0, newQuota() - nw.length);
     if(q && left >= 2) pickNewWithSlang(q + nw.length).filter(c => !used.has(c.id)).slice(0, Math.min(q, Math.floor(left / 2))).forEach(c => { take(c); more.push({ id: c.id, mode: "study", st: 0, k: "n" }, { id: c.id, mode: stepMode(c, 1), st: 1, k: "n" }); });
-    left = N - items.length - more.length; if(left > 0 && !items.length && !more.length) aheadCards().filter(c => !used.has(c.id) && !c.script).slice(0, left).forEach(c => more.push(courseItem(take(c), "a")));
+    left = N - items.length - more.length; if(left > 0 && !items.length && !more.length) aheadCards().filter(c => !used.has(c.id) && !c.script && !capped(c.id)).slice(0, left).forEach(c => more.push(courseItem(take(c), "a")));
     if(more.length) items = items.slice(0, Math.max(0, items.length - fin.length - boss.length)).concat(spreadQueue(more, []), boss, fin);
   }
   items = items.slice(0, N);
+  if(items.length < COURSE_MIN && cd.c > 0) items = [];   // 오늘 이미 한 판 했으면 4문제 아래 판은 만들지 않음 → 「오늘 끝! 내일 다시」
   const remaining = {}; items.forEach(it => remaining[it.id] = (remaining[it.id] || 0) + 1);
   return { queue: items, done: 0, failed: {}, remaining, finished: [], state: null, course: { n: items.length, newK: nw.length, ret: ret ? 1 : 0 } };
 }
@@ -2203,7 +2212,7 @@ function renderStartInner(){
 function startSession(){
   { const ta = $("#tutAsk"); if(ta) ta.remove(); }
   if(S.meta.hfTip === 1 && S.meta.settings.handsFree){ S.meta.hfTip = 2; save(); setTimeout(() => toast(S.meta.settings.ui === "ko" ? "지금은 '입력 없이' 모드예요. 일본어 키보드가 있으면 위 버튼을 눌러 직접 써 보세요" : "いまは「入力なし」モード。キーボードがあれば上のボタンで書く練習もできます"), 900); }
-  SES = buildCourse(); if(!SES.queue.length){ SES = null; renderStart(); return; } nearPreload();
+  SES = buildCourse(); if(!SES.queue.length){ SES = null; renderStart(); if(S.meta.cday && S.meta.cday.d === today() && S.meta.cday.c > 0) toast(S.meta.settings.ui === "ja" ? "今日はここまで！また明日ニャ" : "오늘은 여기까지! 내일 다시 하자냥"); return; } courseMark(SES); nearPreload();
   prefetchLazy([...new Set(SES.queue.map(it => it.id))]);
   saveSession();
   $("#sessionStart").classList.add("hidden"); $("#sessionBox").classList.remove("hidden"); nextItem();
@@ -2277,7 +2286,7 @@ function ceCompact(box, r, main){ r.classList.add("ce-row"); main.classList.add(
 function courseRetry(it){ const Q = SES.queue; let j = -1;
   for(let k = Q.length - 1; k >= 1; k--){ const q = Q[k]; if((q.k === "m" || q.k === "a") && q.id !== it.id && SES.remaining[q.id] === 1){ j = k; break; } }
   if(j >= 0){ const out = Q[j]; delete SES.remaining[out.id]; Q[j] = Object.assign({}, it, { k: "r" }); SES.remaining[it.id]++; SES.queue = spreadQueue(Q, [it.id]); return; }
-  const cr = S.meta.carry && S.meta.carry.d === today() ? S.meta.carry : (S.meta.carry = { d: today(), ids: [] }); if(!cr.ids.includes(it.id)) cr.ids.push(it.id); }
+  const cr = S.meta.carry && S.meta.carry.d === today() ? S.meta.carry : (S.meta.carry = { d: today(), ids: [] }); if(!Array.isArray(cr.ids)) cr.ids = []; if(!cr.ids.includes(it.id) && !(Array.isArray(cr.u) && cr.u.includes(it.id))) cr.ids.push(it.id); }
 /* 칸 오르내리기: 그날 낸 가장 높은 칸(asked) 기준. 전부 맞으면 한 칸 위(같은 날 두 번은 안 오름), 틀리면 한 칸 아래(최소 1) */
 function stepSettle(c, ok, asked){ const d = today(); asked = Math.max(0, Math.min(5, asked));
   if(ok){ if(c.stepAt !== d){ c.step = Math.min(5, Math.max(stepOf(c), asked + 1)); c.stepAt = d; } else if(c.step == null) c.step = stepOf(c); }
@@ -3707,7 +3716,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v153";
+const APP_VER = "v154";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5688,7 +5697,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 load(); PET_SIG = petSig(); migrateSteps(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
