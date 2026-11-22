@@ -4718,7 +4718,9 @@ function sfxSplat(){ if(!pa()) return; const t0 = PA.currentTime; pNoise("lowpas
 function sfxCrunch(){ if(!pa()) return; const t0 = PA.currentTime; for(let i = 0; i < 4; i++) pNoise("highpass", 2500, 1800, .7, t0 + i * .045, .05, .3); }
 function sfxPinch(){ if(!pa()) return; const t0 = PA.currentTime; pOsc("square", 1300, 1700, t0, .07, .12); pOsc("square", 1300, 1700, t0 + .1, .07, .12); }
 function sfxRub(){ if(!pa()) return; const t0 = PA.currentTime; pNoise("bandpass", 1800 + Math.random() * 600, 900, 2, t0, .09, .22); }
-/* 푸데푸데: 1등신 미니냥의 뱃살이 점점 불어나다 한계에서 펑! 하고 원래대로 */
+/* 푸데푸데: 3D 정면 냥이의 뱃살이 양옆으로 반쯤 굳은 치즈·마그마처럼 늘어나다 한계에서 펑! 하고 원래대로 */
+let FAT_IMG = null;
+function fatImgs(){ if(!FAT_IMG){ const mk = n => { const im = new Image(); im.src = "cat/fat/" + n + ".svg"; return im; }; FAT_IMG = { n: mk("fude_cat"), s: mk("fude_cat_strain") }; } return FAT_IMG; }
 function fatStep(st, dt){ const c = $("#petFat"); if(!c) return; const dpr = st.dpr || 2, W = st.W, H = 130; if(c.width !== Math.round(W * dpr)){ c.width = Math.round(W * dpr); c.height = H * dpr; }
   const g = c.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
   st.fatV = st.fatV == null ? (st.fatT || 0) : st.fatV + ((st.fatT || 0) - st.fatV) * Math.min(1, dt * 3); st.fatKick = Math.max(0, (st.fatKick || 0) - dt * 2.2);
@@ -4727,23 +4729,50 @@ function fatStep(st, dt){ const c = $("#petFat"); if(!c) return; const dpr = st.
   const wob = Math.sin(t * (6 + f * 8)) * (.02 + f * .04 + st.fatKick * .08) + (f > .85 ? Math.sin(t * 38) * .015 : 0);
   const cx = W / 2, base = 46, rh = 12 + f * 3, pw = (15 + (W * .45 - 15) * Math.pow(f, 2.3)) * (1 + wob), ph = 8 + f * 9 * (1 - wob * .5);
   if(!burst){
-    const shapes = [];
-    const head = new Path2D(); const ht = base - ph * .6 - rh * 1.7; head.moveTo(cx - rh * .95, base - ph * .4); head.lineTo(cx - rh * .9, ht + rh * .4); head.lineTo(cx - rh * .75, ht - 5.5); head.lineTo(cx - rh * .3, ht + rh * .05);
-    head.quadraticCurveTo(cx, ht - rh * .08, cx + rh * .3, ht + rh * .05); head.lineTo(cx + rh * .75, ht - 5.5); head.lineTo(cx + rh * .9, ht + rh * .4); head.lineTo(cx + rh * .95, base - ph * .4); head.closePath(); shapes.push(head);
-    const pud = new Path2D(), top = base - ph * 1.25, r = Math.min(ph * .62, pw * .5);   // 일자로 부푸는 몸통(윗면 꺾임 없음, 아주 살짝만 볼록)
-    pud.moveTo(cx - pw + r, base); pud.lineTo(cx + pw - r, base); pud.quadraticCurveTo(cx + pw + r * .2, base, cx + pw + r * .2, base - r); pud.quadraticCurveTo(cx + pw + r * .1, top, cx + pw - r * .6, top);
-    pud.quadraticCurveTo(cx, top - ph * .12, cx - pw + r * .6, top); pud.quadraticCurveTo(cx - pw - r * .1, top, cx - pw - r * .2, base - r); pud.quadraticCurveTo(cx - pw - r * .2, base, cx - pw + r, base); pud.closePath(); shapes.push(pud);
-    if(f > .5){ const k = Math.min(1, (f - .5) / .5); [[-.45, 0], [.45, 1.4]].forEach(([xi, ph2]) => {   // 뱃살이 아래로 살짝 삐져나옴
-      const x = cx + pw * xi, w = pw * .34, d = k * 6.5 + Math.sin(t * 2.4 + ph2) * .8 * k, P = new Path2D(); P.moveTo(x - w, base - 1.5); P.bezierCurveTo(x - w * .6, base + d * 1.1, x + w * .6, base + d * 1.1, x + w, base - 1.5); P.closePath(); shapes.push(P); }); }
-    g.fillStyle = "rgba(0,0,0,.16)"; g.beginPath(); g.ellipse(cx, base + 2, pw + 4, 2.6, 0, 0, Math.PI * 2); g.fill();
-    g.lineJoin = "round"; g.strokeStyle = "#2a221c"; g.lineWidth = 2.6; shapes.forEach(P => g.stroke(P));
-    const fur = g.createLinearGradient(0, base - ph * 2 - rh * 2, 0, base + 60); fur.addColorStop(0, "#fffdf8"); fur.addColorStop(.45, "#f6eee0"); fur.addColorStop(1, "#e8d9c2"); g.fillStyle = fur; shapes.forEach(P => g.fill(P));
-    g.fillStyle = "rgba(242,161,180,.7)"; [-1, 1].forEach(d => { g.beginPath(); g.moveTo(cx + d * rh * .72, ht - 2.5); g.lineTo(cx + d * rh * .82, ht + rh * .35); g.lineTo(cx + d * rh * .45, ht + rh * .12); g.closePath(); g.fill(); });
-    const fy = ht + rh * .95, strain = f > .85; g.strokeStyle = "#2a221c"; g.lineWidth = 1.2; g.lineCap = "round";
-    [-1, 1].forEach(d => { g.beginPath(); if(strain){ g.moveTo(cx + d * 5 - d * 1.8, fy - 1.6); g.lineTo(cx + d * 5 + d * 1.2, fy); g.lineTo(cx + d * 5 - d * 1.8, fy + 1.6); } else { g.arc(cx + d * 5, fy, 1.5, 0, Math.PI * 2); g.fillStyle = "#2a221c"; g.fill(); } g.stroke(); });
-    g.beginPath(); g.moveTo(cx - 2.4, fy + 2.8); g.quadraticCurveTo(cx - 1.2, fy + 4.4, cx, fy + 3); g.quadraticCurveTo(cx + 1.2, fy + 4.4, cx + 2.4, fy + 2.8); g.stroke();
-    g.fillStyle = "rgba(242,130,155,.55)"; [-1, 1].forEach(d => { g.beginPath(); g.ellipse(cx + d * 8.5, fy + 2.4, 2.2, 1.3, 0, 0, Math.PI * 2); g.fill(); });
-    if(strain){ g.fillStyle = "rgba(160,215,255,.9)"; g.beginPath(); g.ellipse(cx + rh * .95, ht + 3 + Math.sin(t * 4) * 1, 1.3, 2, 0, 0, Math.PI * 2); g.fill(); } }   // 땀 삐질
+    // 3D 정면 냥이(cat/fat/*.svg) 가운데는 그대로, 양옆 엉덩이 살만 바깥으로 밀려나고 그 사이를 반쯤 굳은 치즈·마그마처럼 늘어난 뱃살이 메움
+    const IM = fatImgs(), strain = f > .85, im = strain && IM.s.complete && IM.s.naturalWidth ? IM.s : IM.n;
+    if(im.complete && im.naturalWidth){
+      const Q = .25, SW = 258 * Q, SH = 160 * Q, CL = 21.99 * Q, CR = 235.83 * Q, BT = 93.57 * Q, BB = 148.32 * Q;
+      const X0 = cx - SW / 2, Y0 = base + 1 - SH, h0 = BB - BT, maxD = Math.max(0, W * .41 - SW / 2), d = maxD * Math.pow(f, 1.5) * (1 + wob * .6);
+      const fur = g.createLinearGradient(0, Y0 + BT - (BB - BT) * .45, 0, Y0 + BB); fur.addColorStop(0, "#fffffd"); fur.addColorStop(.48, "#fffff7"); fur.addColorStop(.56, "#f3efe7"); fur.addColorStop(.92, "#ebe6dd"); fur.addColorStop(1, "#dcd6cc");
+      // 몸에서 뻗어나오는 살: 머리 옆선(정수리 아래)에서 시작해 어깨처럼 흘러내려 두툼한 살로 이어짐. 냥이 그림은 통째로 그대로 두고 그 위에 덮어 그려 이음매가 없음
+      const fade = Math.min(1, d / 3), L = 4.5, LIT = "#fffef7", SHD = "#f3efe7";
+      const yB0 = Y0 + BB + .6 * f, kF = Math.min(1, Math.max(0, f / .8)) * fade, sagNow = (Y0 + 157 * Q - yB0) * (1 - .85 * kF * kF * (3 - 2 * kF)),
+        xl0 = X0 - d, xr0 = X0 + SW + d, botY = x => yB0 + sagNow * Math.pow(Math.sin(Math.PI * Math.min(1, Math.max(0, (x - xl0) / (xr0 - xl0)))), 2);   // 양 끝에서 가운데까지 한 줄로 이어진 완만한 배 밑선
+      const band = (sgn) => {
+        const mx = v => sgn < 0 ? X0 + v * Q : X0 + SW - v * Q, my = v => Y0 + v * Q;
+        const xs = mx(48), ys = my(60), xe = sgn < 0 ? X0 - d + 1 : X0 + SW + d - 1, yB = yB0,
+          bt = my(79), len = Math.abs(xe - xs), neck = (.1 * Math.pow(f, 1.3) + st.fatKick * .05) * h0, bob = Math.sin(t * 2 + sgn) * .3 * f;
+        const top = s => bt + (ys - bt) * Math.exp(-s / L) + (neck + bob) * Math.pow(Math.sin(Math.PI * Math.min(1, s / Math.max(1, len))), 2);
+        const term = s => my(118) + (neck + bob) * .5 * Math.pow(Math.sin(Math.PI * Math.min(1, s / Math.max(1, len))), 2);
+        const yE = top(len), r = (botY(xs + sgn * (len - Math.min((yB - yE) / 2 * .95, len * .5))) - yE) / 2, rx = Math.min(r * .95, len * .5), sc = len - rx, N = 30, P = [], T = [];
+        for(let i = 0; i <= N; i++){ const k = i / N * sc; P.push([xs + sgn * k, top(k)]); }
+        for(let i = 0; i <= N; i++){ const k = i / N * (len + 2); T.push([xs + sgn * k, term(Math.min(k, sc))]); }
+        const xc = xs + sgn * sc;
+        const path = () => { g.beginPath(); P.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y));
+          g.ellipse(xc, yE + r, rx, r, 0, -Math.PI / 2, Math.PI / 2, sgn < 0); for(let i = N; i >= 0; i--){ const x = xs + sgn * (i / N * sc); g.lineTo(x, botY(x)); } };
+        g.save(); path(); const xi = xs - sgn * 3; g.lineTo(xi, botY(xi)); g.lineTo(xi, my(116)); g.lineTo(xs, my(116)); g.lineTo(xs, ys); g.closePath(); g.clip();
+        g.fillStyle = SHD; g.fillRect(Math.min(xs, xe) - 5, ys - 2, len + 10, yB - ys + sagNow + 4);   // 그림자 톤을 먼저 깔고
+        g.fillStyle = LIT; g.beginPath(); T.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.lineTo(T[N][0], ys - 3); g.lineTo(xs - sgn * 4, ys - 3); g.lineTo(xs - sgn * 4, T[0][1]); g.closePath(); g.fill();   // 위쪽만 밝게(몸통과 같은 두 톤)   // 툰 그림자(몸 옆구리 명암과 같은 두 톤)
+        g.restore();
+        g.strokeStyle = "#1e1a16"; g.lineWidth = .9; g.lineJoin = "round"; g.lineCap = "round"; path(); g.stroke();
+        g.lineWidth = .65; [[28, 72.5, 52, 76.5], [27, 83.5, 52, 84]].forEach(([x1, y1, x2, y2]) => { g.beginPath(); g.moveTo(mx(x1), my(y1)); g.lineTo(mx(x2), my(y2)); g.stroke(); });   // 덮인 수염 다시
+      };
+      g.drawImage(im, X0, Y0, SW, SH);
+      if(d > .3){ g.globalAlpha = fade; band(-1); band(1); g.globalAlpha = 1;
+        // 배 아래 연결부: 늘어날수록 볼록한 배 밑선이 옆 뱃살 밑선과 한 줄로 단계적으로 평평해짐
+        const xL = X0 + 20 * Q, xR = X0 + SW - 20 * Q, yB = yB0, sag = sagNow, M = 40, U = [];
+        for(let i = 0; i <= M; i++){ const u = i / M; const x = xL + (xR - xL) * u; U.push([x, botY(x)]); }
+        g.save(); g.globalCompositeOperation = "destination-out"; g.beginPath(); U.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y));
+        g.lineTo(xR, Y0 + SH + 3); g.lineTo(xL, Y0 + SH + 3); g.closePath(); g.fill(); g.restore();   // 원래 배 밑 볼록 부분(연결부 옆 끝 선 조각까지) 지우고
+        g.save(); g.beginPath(); U.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.lineTo(xR, yB - 3); g.lineTo(xL, yB - 3); g.closePath(); g.clip();
+        g.fillStyle = SHD; g.fillRect(xL - 1, yB - 3, xR - xL + 2, sag + 4); g.restore();   // 남은 틈은 그림자 톤으로
+        g.strokeStyle = "#1e1a16"; g.lineWidth = .9; g.lineCap = "round"; g.beginPath(); U.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.stroke();   // 한 줄로 이어진 밑선
+      }
+      g.save(); g.globalCompositeOperation = "destination-over"; g.fillStyle = "rgba(0,0,0,.14)"; g.beginPath(); g.ellipse(cx, base + 1.5, SW / 2 + d + 2, 2.4, 0, 0, Math.PI * 2); g.fill(); g.restore();   // 바닥 그림자는 맨 뒤에
+      if(strain){ g.fillStyle = "rgba(160,215,255,.95)"; g.strokeStyle = "rgba(90,150,200,.8)"; g.lineWidth = .6; const sx2 = X0 + SW * .78, sy2 = Y0 + SH * .3 + Math.sin(t * 4) * 1;
+        g.beginPath(); g.moveTo(sx2, sy2 - 3.2); g.quadraticCurveTo(sx2 + 2, sy2, sx2, sy2 + 1.6); g.quadraticCurveTo(sx2 - 2, sy2, sx2, sy2 - 3.2); g.fill(); g.stroke(); }   // 땀 삐질
+    } }
   else { const k = 1 - pop / .7; g.strokeStyle = `rgba(255,255,255,${1 - k})`; g.lineWidth = 3; for(let i = 0; i < 12; i++){ const a = i / 12 * Math.PI * 2, r0 = 10 + k * 70, r1 = r0 + 12; g.beginPath(); g.moveTo(cx + Math.cos(a) * r0, base - 12 + Math.sin(a) * r0 * .6); g.lineTo(cx + Math.cos(a) * r1, base - 12 + Math.sin(a) * r1 * .6); g.stroke(); }
     g.fillStyle = `rgba(255,255,255,${.85 * (1 - k)})`; g.beginPath(); g.ellipse(cx, base - 12, 10 + k * 90, 6 + k * 40, 0, 0, Math.PI * 2); g.fill(); }
 }
