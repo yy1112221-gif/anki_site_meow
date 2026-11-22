@@ -1,14 +1,49 @@
 {
- "updated": "2026-11-21T21:58:07.188591Z",
+ "updated": "2026-11-22T21:59:47.180877Z",
  "lang": "en",
  "terms": [
   {
-   "t": "clock it",
-   "n": 3,
+   "t": "mogging",
+   "n": 36,
    "src": [
-    "bing_news"
+    "google_news"
    ],
-   "s": 5,
+   "s": 38,
+   "first": "2026-11-18",
+   "def": [
+    "The act or habit of being significantly more attractive than someone or something; a domination in appearance",
+    "The act or habit of being superior to someone or something"
+   ],
+   "ex": [
+    "Are you mogging or maxxing?",
+    "#WordOfTheDay: \"mogging\" Curious about the definition and etymology of our WOTD?"
+   ],
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 42
+  },
+  {
+   "t": "maxxing",
+   "n": 8,
+   "src": [
+    "google_news"
+   ],
+   "s": 10,
+   "first": "2026-11-18",
+   "def": [],
+   "ex": [
+    "Are you mogging or maxxing?"
+   ],
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 9
+  },
+  {
+   "t": "clock it",
+   "n": 4,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 8,
    "first": "2026-11-18",
    "def": [
     "A congratulation of success",
@@ -18,8 +53,132 @@
    "ex": [
     "BJP MP Bansuri Swaraj used the phrase \"clock it\" while supporting the Bill and praising the government's approach to tackling examination-related irregularities."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 4
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 6
+  },
+  {
+   "t": "unc",
+   "n": 2,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 6,
+   "first": "2026-11-21",
+   "def": [
+    "Old; old-fashioned; out-of-touch; no longer versed in or relevant to current youth culture; or acting older than their age",
+    "Clipping of uncle",
+    "Curious about the meaning behind the TikTok slang term “unc” ?"
+   ],
+   "ex": [
+    "The use of “unc” on TikTok often conveys both humor and lighthearted criticism.",
+    "If you're wondering this, you probably are \\\"unc\\\"—but that may not be a bad thing.",
+    "“Unc” also has roots in broader cultural contexts, particularly within AAVE, where it traditionally referred to actual family members."
+   ],
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 8
+  },
+  {
+   "t": "skibidi",
+   "n": 2,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 6,
+   "first": "2026-11-19",
+   "def": [
+    "Not every new entry comes with a clear-cut meaning, and skibidi is no exception.",
+    "Skibidi word has various different meaning in some cases it can mean \"bad\" or \"cool,\" or it can be used in a meaningless way, according to the dictionary.",
+    "A nonsense word , sometimes used to form noun adjuncts for humorous effect"
+   ],
+   "ex": [
+    "Skibidi we put the rhythm to the 'tism!",
+    "Definition: There is no one definition for skibidi, it is more of an expression.",
+    "Oh, and if you're sick of skibidi toilet, you might have skibidi toilet syndrome .",
+    "Skibidi toilet, gyatt, Ohio, rizz — what are the kids going on about these days?"
+   ],
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 12
+  },
+  {
+   "t": "delulu",
+   "n": 2,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 6,
+   "first": "2026-11-18",
+   "def": [
+    "Delusional",
+    "Delusion ; delusional attitudes or thoughts",
+    "If someone calls you \"delulu,\" what does that mean?"
+   ],
+   "ex": [
+    "Meanwhile, words like Delulu are shortened versions of existing words.",
+    "\"If being delulu is wrong, I don't want to be right.\"",
+    "Originating from the K-pop fandom and subsequently taking over Gen Z vocabulary, \"delulu\" is shorthand for “delusional”.",
+    "Within online spaces, using \"delulu\" to describe someone means they have unrealistic ideas about their interest."
+   ],
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 3
+  },
+  {
+   "t": "huss",
+   "n": 2,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 6,
+   "first": "2026-11-20",
+   "def": [
+    "But what exactly does \"huss\" mean, and where did it come from?",
+    "In memes, the term \"huss\" is used to refer to the act of sprinting or exerting yourself in some other way.",
+    "A dogfish"
+   ],
+   "ex": [
+    "While telling the story, he's seen \"hussing\" while dribbling a basketball.",
+    "While telling the story, he is occasionally shown dribbling the ball while saying, \"Huss, huss, huss.\"",
+    "Throughout the video, while telling the story, we see him dribbling a basketball and yelling, \"Huss, huss, huss!\"",
+    "This meme might have been the final push that the term \"huss\" needed to go mainstream."
+   ],
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 18
+  },
+  {
+   "t": "ratioed",
+   "n": 2,
+   "src": [
+    "google_news"
+   ],
+   "s": 4,
+   "first": "2026-11-18",
+   "def": [
+    "Modified or multiplied by a ratio",
+    "Having significantly more replies than retweets or likes , indicating a general dislike by the public",
+    "Modified or multiplied by a ratio ."
+   ],
+   "ex": [],
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 2
+  },
+  {
+   "t": "code rot",
+   "n": 2,
+   "src": [
+    "google_news"
+   ],
+   "s": 4,
+   "first": "2026-11-18",
+   "def": [
+    "Synonym of bit rot : the development of bugs and incompatibilities of software due to changes in its environment , etc",
+    "Synonym of bit rot : the development of bugs and incompatibilities of software due to changes in its environment , etc."
+   ],
+   "ex": [],
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 2
   },
   {
    "t": "crashing out",
@@ -38,92 +197,90 @@
     "For some, “crashing out” can be a liberating release of pent-up emotions.",
     "In 2025, if you're not locking in, you might be crashing out."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
+   "at": "2026-11-22T21:59:47.180877Z",
    "cue": 2
   },
   {
-   "t": "huzz",
-   "n": 2,
-   "src": [
-    "bing_news"
-   ],
-   "s": 4,
-   "first": "2026-11-21",
-   "def": [
-    "The word huzz, she said, is \"deeply rooted in a highly misogynistic concept\" – yet the children using it might not know what misogyny means.",
-    "To buzz ; to murmur",
-    "Women ; hoes , whores"
-   ],
-   "ex": [
-    "This week we're taking a closer look at another eyebrow-raising term: huzz.",
-    "Offering a definition, Mr Lindsay said: \"Basically, huzz is a replacement for hoes.\"",
-    "If your child has been called 'huzz' and feels targeted, the therapist said parents should intervene."
-   ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 4
-  },
-  {
-   "t": "unc",
-   "n": 2,
-   "src": [
-    "bing_news"
-   ],
-   "s": 4,
-   "first": "2026-11-21",
-   "def": [
-    "Curious about the meaning behind the TikTok slang term “unc” ?",
-    "So, what exactly does unc mean, and why has it taken TikTok by storm?",
-    "Old; old-fashioned; out-of-touch; no longer versed in or relevant to current youth culture; or acting older than their age"
-   ],
-   "ex": [
-    "The use of “unc” on TikTok often conveys both humor and lighthearted criticism.",
-    "If you're wondering this, you probably are \\\"unc\\\"—but that may not be a bad thing.",
-    "“Unc” also has roots in broader cultural contexts, particularly within AAVE, where it traditionally referred to actual family members."
-   ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 12
-  },
-  {
-   "t": "fomo",
-   "n": 2,
-   "src": [
-    "bing_news"
-   ],
-   "s": 4,
-   "first": "2026-11-21",
-   "def": [
-    "FoMO is an acronym used to refer to the fear of missing out.",
-    "FOMO means 'fear of missing out'—the anxiety to join rising crypto markets."
-   ],
-   "ex": [
-    "This guide explains the FOMO definition, its impact, and how it shapes trading.",
-    "Sharp corrections often follow FOMO-driven surges, leading to significant losses for late buyers.",
-    "The rise of meme coins and sudden market rallies are often linked to FOMO."
-   ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 8
-  },
-  {
-   "t": "huss",
+   "t": "because they can",
    "n": 1,
    "src": [
-    "bing_news"
+    "google_news"
    ],
    "s": 3,
-   "first": "2026-11-20",
+   "first": "2026-11-22",
+   "def": [],
+   "ex": [
+    "They want to adopt a child because they can't have a baby.",
+    "People are sickeningly jealous of all Capricorns because they can't be them."
+   ],
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 1
+  },
+  {
+   "t": "firewave",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-22",
    "def": [
-    "But what exactly does \"huss\" mean, and where did it come from?",
-    "In memes, the term \"huss\" is used to refer to the act of sprinting or exerting yourself in some other way.",
-    "A dogfish"
+    "The occurrence of multiple urban wildfires as a result of prolonged hot and dry weather"
    ],
    "ex": [
-    "While telling the story, he's seen \"hussing\" while dribbling a basketball.",
-    "While telling the story, he is occasionally shown dribbling the ball while saying, \"Huss, huss, huss.\"",
-    "Throughout the video, while telling the story, we see him dribbling a basketball and yelling, \"Huss, huss, huss!\"",
-    "This meme might have been the final push that the term \"huss\" needed to go mainstream."
+    "Other shortlisted words included “firewave”, “ghost jobs” and “carspreading”."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 17
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 2
+  },
+  {
+   "t": "calling me unc",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-22",
+   "def": [],
+   "ex": [],
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 2
+  },
+  {
+   "t": "human",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "Of or belonging to the species Homo sapiens or its closest relatives",
+    "Having the nature or attributes of a human being"
+   ],
+   "ex": [
+    "To err is human ; to forgive, divine.",
+    "She's only human , so give her a break !",
+    "Their fresh and accessible translations remind us that love is both ever-changing and eternally essential to human life.",
+    "Dogs, scientists tell us, domesticated themselves, choosing to live among the reliable treat-delivering humans rather than risk starving alongside their fellow wolves."
+   ],
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 2
+  },
+  {
+   "t": "tante-tante code",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "What Does the 'Tante-Tante Code' Mean?"
+   ],
+   "ex": [],
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 1
   },
   {
    "t": "shrek",
@@ -143,95 +300,8 @@
     "Overall, the students seemed to agree that while \"Shrek'n\" is currently popular, it may not have lasting power in everyday language.",
     "The conversation also touched on the concept of \\\"getting Shrek'n,\\\" which refers to attempting to date down but still facing rejection."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
+   "at": "2026-11-22T21:59:47.180877Z",
    "cue": 2
-  },
-  {
-   "t": "sus",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "This article originally appeared on USA TODAY: 'Sus' meaning: Definition and usage of the online slang term.",
-    "Depending on the context, the word sus can mean either of those two words interchangeably or just mean both of them at the same time.",
-    "ISO 639-2 & ISO 639-3 language code for Susu"
-   ],
-   "ex": [
-    "yeah, the account posting offensive stuff got sussed .",
-    "Here is what \"sus\" stands for and how to use it in conversation.",
-    "Used in texting and everyday speech, sus can be either a noun or an adjective.",
-    "But \"sus\" as we know it wasn't imported by English tourists."
-   ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 13
-  },
-  {
-   "t": "mid",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "According to Urban Dictionary , the slang \"mid\" is used to describe something or someone as below average or low quality.",
-    "The slang more so describes something that is just OK or mid-tier and is not used for things that are truly bad or awful.",
-    "ISO 639-3 language code for Mandaic"
-   ],
-   "ex": [
-    "We need to retake mid .",
-    "\"Have you watched the new season of 'YOU' on Netflix?\" \"I did, but it was mid.\"",
-    "Here is a rundown of the slang term \"mid.\"",
-    "According to Malik, \"mid\" was used by people in cannabis culture."
-   ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 9
-  },
-  {
-   "t": "rizz",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "To “rizz” someone means to charm or seduce them.",
-    "In contrast, unspoken rizz refers to the ability to exude charm without saying a word.",
-    "A person 's ability to attract a love interest , usually female ; attractiveness , charm"
-   ],
-   "ex": [
-    "My rizz is silent but deadly.",
-    "There is more than a fine line between unspoken rizz and surreptitious sexual harassment.",
-    "You got her number ? W rizz !",
-    "Merriam-Webster defines rizz as “romantic appeal or charm” when used as a noun."
-   ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 21
-  },
-  {
-   "t": "ijbol",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-21",
-   "def": [
-    "Find out IJBOL's meaning—and how to use the term like you know what you're doing.",
-    "Alternative letter-case form of IJBOL",
-    "To burst out laughing"
-   ],
-   "ex": [
-    "Dictionary.com IJBOL is just another acronym to express humor or laughter online.",
-    "Instead, the slang-savvy generation has coined a more complicated term in lieu of laugh out loud: IJBOL.",
-    "Another reason IJBOL is often misidentified as a Korean word has to do with how it was popularized."
-   ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 10
   },
   {
    "t": "demure",
@@ -252,118 +322,11 @@
     "She is a demure young lady.",
     "Wright, what is occurring with \"demure\" and her cousins is not particularly special."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
+   "at": "2026-11-22T21:59:47.180877Z",
    "cue": 5
   },
   {
-   "t": "bruh",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-21",
-   "def": [
-    "The Meaning of 'Bruh': How Gen Z Uses This Popular Slang Term Key takeaways Powered by Yahoo Scout.",
-    "If you've ever heard your child use it and thought to yourself, \"What does 'bruh' mean?\" you're not alone.",
-    "Expressing amazement or shock"
-   ],
-   "ex": [
-    "It was such a bruh moment.",
-    "You're moving to Greenland ? Bruh !",
-    "Person 1 : I think the word partisan derives from how they parted their hair. Person 2 : Bruh .",
-    "Cohen says young watchers of TikTok are taking \"bruh\" and running with it."
-   ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 10
-  },
-  {
-   "t": "skibidi",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-19",
-   "def": [
-    "Not every new entry comes with a clear-cut meaning, and skibidi is no exception.",
-    "Skibidi word has various different meaning in some cases it can mean \"bad\" or \"cool,\" or it can be used in a meaningless way, according to the dictionary.",
-    "A nonsense word , sometimes used to form noun adjuncts for humorous effect"
-   ],
-   "ex": [
-    "Skibidi we put the rhythm to the 'tism!",
-    "Definition: There is no one definition for skibidi, it is more of an expression.",
-    "Oh, and if you're sick of skibidi toilet, you might have skibidi toilet syndrome .",
-    "Skibidi toilet, gyatt, Ohio, rizz — what are the kids going on about these days?"
-   ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 11
-  },
-  {
-   "t": "wyd",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-21",
-   "def": [
-    "Here is what \\\"wyd\\\" means.\",\"headline\":\"What does 'wyd' mean?",
-    "Here is what \"wyd\" means and how to use it correctly in your conversations.",
-    "Alternative letter-case form of WYD"
-   ],
-   "ex": [
-    "Second, \"wyd\" can be used when someone is responding rhetorically to another's opinions or actions.",
-    "\"I was thinking about going to the movies, wyd?\"",
-    "\"Wyd\" is an abbreviation for \" what (are) you doing ,\" according to Dictionary.com."
-   ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 4
-  },
-  {
-   "t": "or",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-21",
-   "def": [
-    "Or the euphemistic phrase \"grippy sock,\" which refers to mental health.",
-    "It can also be used to describe doing something modestly or moderately.",
-    "ISO 639-1 language code for Odia"
-   ],
-   "ex": [
-    "He might get cancer, or be hit by a bus, or God knows what.",
-    "Do you want tea or coffee ?",
-    "This leads to an assumption on the creator's part and, thus, potential censorship, including self-censorship.",
-    "Wright reminds us that our current usage doesn't represent new linguistic forms but a lexical change."
-   ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 44
-  },
-  {
-   "t": "six-seven",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-21",
-   "def": [
-    "Here's what to know about the six-seven expression, how it originated and the meaning of brain rot .",
-    "The question that has sparked the uproar: what, exactly, does it mean when an otherwise upstanding young person blurts out the phrase “six-seven”?"
-   ],
-   "ex": [
-    "Teachers: how are you coping with the ‘six-seven’ craze?",
-    "Before the video ends, they spend a lot of time repeating “six-seven” and “forty-one,” which is so accurate it hurts.",
-    "“Six-seven is everywhere but especially in the maths classrooms, and classroom teachers are getting it the most,” a spokesperson for Teacher Tapp said."
-   ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 5
-  },
-  {
-   "t": "delulu",
+   "t": "sus",
    "n": 1,
    "src": [
     "bing_news"
@@ -371,18 +334,82 @@
    "s": 3,
    "first": "2026-11-18",
    "def": [
-    "If someone calls you \"delulu,\" what does that mean?",
-    "Here is what \\\"delulu\\\" means.\",\"headline\":\"What does 'delulu' mean?",
-    "Delusional"
+    "This article originally appeared on USA TODAY: 'Sus' meaning: Definition and usage of the online slang term.",
+    "\"Sus\" as a noun also means \"suspect\" and is \"usually used to define someone or something that looks suspicious or untrustworthy,\" says the website.",
+    "ISO 639-2 & ISO 639-3 language code for Susu"
    ],
    "ex": [
-    "Meanwhile, words like Delulu are shortened versions of existing words.",
-    "\"If being delulu is wrong, I don't want to be right.\"",
-    "Originating from the K-pop fandom and subsequently taking over Gen Z vocabulary, \"delulu\" is shorthand for “delusional”.",
-    "Within online spaces, using \"delulu\" to describe someone means they have unrealistic ideas about their interest."
+    "yeah, the account posting offensive stuff got sussed .",
+    "Here is what \"sus\" stands for and how to use it in conversation.",
+    "Although Cooper wasn't aware of \"sus\" at the time, he was struck by its familiarity to students.",
+    "Players often use \"sus\" to describe others who are acting strange and could potentially be the imposter."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 16
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 12
+  },
+  {
+   "t": "mid",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "rizz",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "ijbol",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "bruh",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "wyd",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "huzz",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "or",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "fomo",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
   },
   {
    "t": "waste-guna-huiya",
@@ -409,54 +436,32 @@
    "s": 3
   },
   {
-   "t": "mogging",
-   "n": 28,
+   "t": "the city",
+   "n": 1,
    "src": [
-    "google_news"
+    "bing_news"
    ],
-   "s": 30,
-   "first": "2026-11-18",
-   "def": [
-    "The act or habit of being significantly more attractive than someone or something; a domination in appearance",
-    "The act or habit of being superior to someone or something"
-   ],
-   "ex": [
-    "Are you mogging or maxxing?",
-    "#WordOfTheDay: \"mogging\" Curious about the definition and etymology of our WOTD?"
-   ],
-   "at": "2026-11-20T22:06:45.233563Z",
-   "cue": 34
+   "s": 3
   },
   {
-   "t": "maxxing",
-   "n": 5,
+   "t": "six-seven",
+   "n": 1,
    "src": [
-    "google_news"
+    "bing_news"
    ],
-   "s": 7,
-   "first": "2026-11-18",
-   "def": [],
-   "ex": [
-    "Are you mogging or maxxing?"
-   ],
-   "at": "2026-11-20T22:06:45.233563Z",
-   "cue": 6
-  },
-  {
-   "t": "code rot",
-   "n": 2,
-   "src": [
-    "google_news"
-   ],
-   "s": 4,
-   "first": "2026-11-18",
+   "s": 3,
+   "first": "2026-11-21",
    "def": [
-    "Synonym of bit rot : the development of bugs and incompatibilities of software due to changes in its environment , etc",
-    "Synonym of bit rot : the development of bugs and incompatibilities of software due to changes in its environment , etc."
+    "Here's what to know about the six-seven expression, how it originated and the meaning of brain rot .",
+    "The question that has sparked the uproar: what, exactly, does it mean when an otherwise upstanding young person blurts out the phrase “six-seven”?"
    ],
-   "ex": [],
-   "at": "2026-11-20T22:06:45.233563Z",
-   "cue": 2
+   "ex": [
+    "Teachers: how are you coping with the ‘six-seven’ craze?",
+    "Before the video ends, they spend a lot of time repeating “six-seven” and “forty-one,” which is so accurate it hurts.",
+    "“Six-seven is everywhere but especially in the maths classrooms, and classroom teachers are getting it the most,” a spokesperson for Teacher Tapp said."
+   ],
+   "at": "2026-11-21T21:58:07.188591Z",
+   "cue": 5
   },
   {
    "t": "menty b",
@@ -515,57 +520,6 @@
     "Youngsters in the country are affectionately referring to the current economic backdrop as the \"cozzie livs.\"",
     "But as conversations move from online to in-person, it's going to be impossible to subtly search the definition of cozzie Livs when talking to younger staff members."
    ],
-   "at": "2026-11-20T22:06:45.233563Z",
-   "cue": 1
-  },
-  {
-   "t": "ratioed",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Modified or multiplied by a ratio",
-    "Having significantly more replies than retweets or likes , indicating a general dislike by the public",
-    "Modified or multiplied by a ratio ."
-   ],
-   "ex": [],
-   "at": "2026-11-20T22:06:45.233563Z",
-   "cue": 1
-  },
-  {
-   "t": "human",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Of or belonging to the species Homo sapiens or its closest relatives",
-    "Having the nature or attributes of a human being"
-   ],
-   "ex": [
-    "To err is human ; to forgive, divine.",
-    "She's only human , so give her a break !"
-   ],
-   "at": "2026-11-20T22:06:45.233563Z",
-   "cue": 2
-  },
-  {
-   "t": "tante-tante code",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "What Does the 'Tante-Tante Code' Mean?"
-   ],
-   "ex": [],
    "at": "2026-11-20T22:06:45.233563Z",
    "cue": 1
   },

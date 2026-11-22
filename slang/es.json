@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-21T21:58:07.188591Z",
+ "updated": "2026-11-22T21:59:47.180877Z",
  "lang": "es",
  "terms": [
   {
@@ -12,7 +12,7 @@
    "first": "2026-11-18",
    "def": [],
    "ex": [],
-   "at": "2026-11-21T21:58:07.188591Z",
+   "at": "2026-11-22T21:59:47.180877Z",
    "cue": 9
   },
   {
@@ -25,7 +25,7 @@
    "first": "2026-11-18",
    "def": [],
    "ex": [],
-   "at": "2026-11-21T21:58:07.188591Z",
+   "at": "2026-11-22T21:59:47.180877Z",
    "cue": 5
   },
   {
@@ -46,7 +46,7 @@
     "P: Ahora está en el LIV Golf, un campeonato que tiene menos días de competición.",
     "También fue el primer Golf en ofrecer la transmisión de doble embrague DSG."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
+   "at": "2026-11-22T21:59:47.180877Z",
    "cue": 4
   },
   {
@@ -58,18 +58,40 @@
    "s": 5,
    "first": "2026-11-18",
    "def": [
-    "to aura farm",
-    "\"Farmear aura\" combina un término propio de los videojuegos con una tendencia que se volvió viral en TikTok.",
-    "Farmear aura: la expresión nació de la combinación entre un término gamer y el concepto de \"aura\", utilizado para describir la presencia de una persona."
+    "Así que, llevado al lenguaje de internet, “farmear aura” significa hacer cosas que “te dan puntos de aura”.",
+    "Agosto 21, 2026 • Gabriela Velasco Ceja Twitter Pinterest Tumblr Email ¿Qué significa farmear aura y por qué es una tendencia?",
+    "to aura farm"
    ],
    "ex": [
+    "Hablemos sobre una de las tendencias más populares del momento: farmear aura .",
+    "“Farmear aura” es una de las expresiones que más aparecen en redes sociales últimamente.",
     "- Farmear aura (ganar popularidad o mejorar la reputación dentro del grupo).",
-    "Al unir ambos conceptos aparece “farmear aura”, es decir, hacer algo que aumenta la percepción de carisma o actitud de una persona .",
-    "\"Farmear aura\": la nueva tendencia de redes transforma las situaciones cotidianas en un juego imaginario donde cada gesto puede sumar o restar puntos de popularidad.",
-    "De hecho, hay quienes consideran que algunas personas irradian aura de manera natural, inclusive que algunas celebridades han nacido para farmear aura."
+    "Al unir ambos conceptos aparece “farmear aura”, es decir, hacer algo que aumenta la percepción de carisma o actitud de una persona ."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 3
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 5
+  },
+  {
+   "t": "demure",
+   "n": 2,
+   "src": [
+    "bing_news"
+   ],
+   "s": 4,
+   "first": "2026-11-18",
+   "def": [
+    "Su uso se ha popularizo en redes sociales y su significado parece que ha adquirido nuevas acepciones Demure, la palabra de moda...",
+    "La traducción literal de la palabra 'demure' es 'recatada'. 'Very mindful, very demure' significaría algo así como ' muy consciente, muy recatada '.",
+    "Pero, ¿qué significa 'demure' exactamente?"
+   ],
+   "ex": [
+    "En la cultura pop, \"demure\" ha adquirido un nuevo sentido tras volverse un meme este año.",
+    "Ahora el turno es para 'demure'.",
+    "La mejor traducción para \"demure\" al español podría ser 'recatado', 'modesto' o incluso 'discreto'.",
+    "“Very demure, very mindful”, dice, con tono sottomesso e molto calmo."
+   ],
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 7
   },
   {
    "t": "a la",
@@ -84,39 +106,21 @@
     "to the"
    ],
    "ex": [],
-   "at": "2026-11-21T21:58:07.188591Z",
+   "at": "2026-11-22T21:59:47.180877Z",
    "cue": 12
   },
   {
-   "t": "extraordinary",
+   "t": "bad gyal",
    "n": 1,
    "src": [
     "google_news"
    ],
    "s": 3,
-   "first": "2026-11-21",
+   "first": "2026-11-22",
    "def": [],
    "ex": [],
-   "at": "2026-11-21T21:58:07.188591Z",
+   "at": "2026-11-22T21:59:47.180877Z",
    "cue": 2
-  },
-  {
-   "t": "blocus",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Blocus toma su nombre del vocablo francés 'bloquer', que significa bloquear o parar."
-   ],
-   "ex": [
-    "La etiqueta #BlocusBCN identificaba mensajes que anunciaban la concentración en la capital catalana.",
-    "El caso de Blocus muestra cómo las convocatorias juveniles pueden difundirse mediante diferentes plataformas digitales, desde perfiles públicos hasta grupos privados de mensajería."
-   ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 3
   },
   {
    "t": "polyester",
@@ -135,7 +139,7 @@
     "No tanto, porque 'polyester' no apareció de la nada.",
     "La red no tardó en etiquetar este vídeo diseñado por y para el algoritmo, que aspira a ser modelo de vida, como 'polyester' o 'Polyester lifestyle'."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
+   "at": "2026-11-22T21:59:47.180877Z",
    "cue": 2
   },
   {
@@ -156,7 +160,7 @@
     "Alguna cosa similar ha ocurrido con ‘ALV’ .",
     "Las siglas 'ALV' son un ejemplo."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
+   "at": "2026-11-22T21:59:47.180877Z",
    "cue": 6
   },
   {
@@ -168,18 +172,18 @@
    "s": 3,
    "first": "2026-11-18",
    "def": [
-    "cringe",
     "Un ejemplo de ello es el caso del término ‘cringe’.",
-    "Entre los nuevos modismos, está el término “cringe” ."
+    "Entre los nuevos modismos, está el término “cringe” .",
+    "cringe"
    ],
    "ex": [
-    "- Cringe (algo que da vergüenza ajena).",
     "La RAE recomienda sustituir cringe por vergüenza ajena, grima o dentera según el contexto.",
     "Sentir cringe es normal, ya que muchas personas deben afrontar y observar situaciones vergonzosas.",
-    "En resumen, evita cualquier acción que podría generarles cringe o vergüenza ajena a otros."
+    "En resumen, evita cualquier acción que podría generarles cringe o vergüenza ajena a otros.",
+    "- Cringe (algo que da vergüenza ajena)."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 1
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 6
   },
   {
    "t": "npc",
@@ -198,7 +202,7 @@
     "Sobre el registro: NPC es coloquial-juvenil y funciona bien en redes, chats y conversaciones informales.",
     "¿ Por qué se dice que NPC es un insulto ?"
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
+   "at": "2026-11-22T21:59:47.180877Z",
    "cue": 5
   },
   {
@@ -216,12 +220,12 @@
    ],
    "ex": [
     "Shippear es desear que dos personas estén en una relación de pareja.",
-    "“Shippear” viene del inglés shipping , que a su vez es abreviatura de relationship .",
-    "Es parte del ritual de shippear.",
-    "- Shippear (querer que dos personas sean pareja)."
+    "En los últimos años, la palabra \"shippear\" se ha vuelto muy popular en redes sociales.",
+    "En pocas palabras, shippear es unir a dos personas en un romance aunque no sea real.",
+    "“Shippear” viene del inglés shipping , que a su vez es abreviatura de relationship ."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 3
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 4
   },
   {
    "t": "delulu",
@@ -241,7 +245,7 @@
     "Segundo os relatos nas redes sociais, a mentalidade \"delulu\" envolve o uso de afirmações, otimismo e pensamento positivo 👍 .",
     "- Delulu (persona que vive demasiado en su propia fantasía)."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
+   "at": "2026-11-22T21:59:47.180877Z",
    "cue": 5
   },
   {
@@ -260,9 +264,9 @@
     "\"Metroid Prime 3 : Corruption\" es un videojuego de Nintendo vendido exclusivamente para Wii.",
     "De esta manera, el peak puede coincidir durante el prime , aunque no necesariamente.",
     "“Llevo todo el curso sacando sobresalientes, estoy en mi prime”.",
-    "Para ver los comentarios de nuestros socias y socios, primero tienes que iniciar sesión o registrarte ."
+    "No es la primera vez que sucede algo así."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
+   "at": "2026-11-22T21:59:47.180877Z",
    "cue": 3
   },
   {
@@ -280,11 +284,11 @@
    ],
    "ex": [
     "Ghostear puede causar daños emocionales en la persona que ha sido “ghosteada” .",
+    "Por supuesto que estamos hablando de ghostear sin motivo aparente.",
     "Esta acción tiene un nombre y se llama ghostear.",
-    "Ghostear a una persona origina un dolor emocional y a veces es peor que una simple ruptura.",
-    "Por supuesto que estamos hablando de ghostear sin motivo aparente."
+    "Ghostear a una persona origina un dolor emocional y a veces es peor que una simple ruptura."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
+   "at": "2026-11-22T21:59:47.180877Z",
    "cue": 5
   },
   {
@@ -301,11 +305,11 @@
    "ex": [
     "Los trolls se dedican a sembrar cizaña por chats, foros, blogs y páginas web colaborativas.",
     "Los trolls se dedican a sembrar cizaña en chats, foros, blogs y páginas web colaborativas.",
-    "En los chats de WhatsApp hay varios códigos secretos para comunicar ideas o emociones.",
-    "Se manda en chats cuando quieres avisar que estás en tránsito hacia algún lugar sin entrar en detalles ni dar una hora exacta de llegada."
+    "El punto verde ayuda a localizar los mensajes o chats pendientes por leer.",
+    "En los chats de WhatsApp hay varios códigos secretos para comunicar ideas o emociones."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 2
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 5
   },
   {
    "t": "no puedo más",
@@ -319,25 +323,8 @@
    "ex": [
     "No puedo más con ello."
    ],
-   "at": "2026-11-21T21:58:07.188591Z",
+   "at": "2026-11-22T21:59:47.180877Z",
    "cue": 1
-  },
-  {
-   "t": "boomers",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-20",
-   "def": [],
-   "ex": [
-    "Cuidarse es clave, y los boomers lo hacen.",
-    "Aquí va una guía básica con el argot que ya salpica las conversaciones de un grueso de boomers y da un nuevo nervio al habla.",
-    "Existe la idea -y se bromea sobre ello- de que los boomers no acaban de encajar en un mundo 100% tecnológico."
-   ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 2
   },
   {
    "t": "fomo",
@@ -345,7 +332,19 @@
    "src": [
     "bing_news"
    ],
-   "s": 3
+   "s": 3,
+   "first": "2026-11-22",
+   "def": [
+    "¿Qué significa FOMO y cómo usar la palabra?",
+    "FOMO"
+   ],
+   "ex": [
+    "La forma corta —FOMO— fue McGinnis quien la consolidó y puso en circulación.",
+    "Si el FOMO es la ansiedad, el JOMO es la cura voluntaria.",
+    "El uso constante del móvil es un síntoma de tener FOMO."
+   ],
+   "at": "2026-11-22T21:59:47.180877Z",
+   "cue": 5
   },
   {
    "t": "side quest",
@@ -356,7 +355,7 @@
    "s": 3
   },
   {
-   "t": "farmeando aura",
+   "t": "boomers",
    "n": 1,
    "src": [
     "bing_news"
@@ -372,6 +371,14 @@
    "s": 3
   },
   {
+   "t": "farmeando aura",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
    "t": "al",
    "n": 1,
    "src": [
@@ -380,25 +387,22 @@
    "s": 3
   },
   {
-   "t": "demure",
-   "n": 2,
+   "t": "blocus",
+   "n": 1,
    "src": [
-    "bing_news"
+    "google_news"
    ],
-   "s": 4,
+   "s": 3,
    "first": "2026-11-18",
    "def": [
-    "Su uso se ha popularizo en redes sociales y su significado parece que ha adquirido nuevas acepciones Demure, la palabra de moda...",
-    "La traducción literal de la palabra 'demure' es 'recatada'. 'Very mindful, very demure' significaría algo así como ' muy consciente, muy recatada '.",
-    "Pero, ¿qué significa 'demure' exactamente?"
+    "Blocus toma su nombre del vocablo francés 'bloquer', que significa bloquear o parar."
    ],
    "ex": [
-    "“Very demure, very mindful”, dice, con tono sottomesso e molto calmo.",
-    "Inizialmente demure descrive una persona, generalmente una donna, caratterizzata da riservatezza, modestia, pudore e discrezione.",
-    "En la cultura pop, \"demure\" ha adquirido un nuevo sentido tras volverse un meme este año."
+    "La etiqueta #BlocusBCN identificaba mensajes que anunciaban la concentración en la capital catalana.",
+    "El caso de Blocus muestra cómo las convocatorias juveniles pueden difundirse mediante diferentes plataformas digitales, desde perfiles públicos hasta grupos privados de mensajería."
    ],
-   "at": "2026-11-19T22:08:43.787833Z",
-   "cue": 14
+   "at": "2026-11-21T21:58:07.188591Z",
+   "cue": 3
   },
   {
    "t": "padrear",
