@@ -611,7 +611,7 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .poster{padding-bottom:4px!important;margin-bottom:0!important} .poster .ptitle{margin:2px 0!important} .poster .catbar{margin-top:8px!important}
 .poster{gap:4px!important} .poster .ptitle{font-size:clamp(1.45rem,6.4vw,1.9rem)!important;line-height:1.1!important} .poster .pweek{font-size:.66rem!important;letter-spacing:.18em!important} .poster .psub{font-size:.8rem!important;letter-spacing:.02em!important} .poster .catbar{margin-top:4px!important}
 #sessionStart .after-poster{border-top:0!important;padding-top:0!important;gap:8px!important} #sessionStart.card{gap:8px!important;padding-top:16px!important;padding-bottom:14px!important}
-#sessionStart .actrow{margin:6px 0 0} #sessionStart .actrow .btn{min-height:48px;font-size:.98rem;border-radius:15px} #sessionStart .petline{margin:0 2px 2px;font-size:.74rem} #sessionStart .row.tight{margin:-4px 0 0}
+#sessionStart .actrow{margin:6px 0 0} #sessionStart .actrow .btn{min-height:44px;font-size:.98rem;border-radius:15px} #sessionStart .petline{margin:0 2px 2px;font-size:.74rem} #sessionStart .row.tight{margin:-4px 0 0}
 #sessionStart .say .bubble{font-size:.86rem;padding:8px 12px} #sessionStart .say img.nm{width:52px;height:52px}
 #todaySide .streak{gap:5px} #todaySide .streak span{width:14px;height:14px} .sidebig{margin-bottom:6px}
 .pet-snd{position:absolute;z-index:5;left:12px;top:calc(64px + env(safe-area-inset-top));width:38px;height:38px;border-radius:50%;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:1.05rem;display:grid;place-items:center;cursor:pointer}
@@ -934,6 +934,53 @@ body.focus .dock:has(.vk-host) .ans-btns .btn{min-height:calc(var(--vkh,44px) + 
 .dpg-w{display:grid;grid-template-columns:1fr;gap:8px} .dpg-w .chiptog{min-height:48px;font-size:1.1rem;justify-content:center;width:100%}
 .dpg-a{display:grid;grid-template-columns:1fr 1fr;gap:8px} .dpg-a .btn{min-height:50px;justify-content:center;font-weight:800;white-space:nowrap;font-size:.95rem} .dpg-a .btn.ghost{box-shadow:inset 0 0 0 2px var(--line)} .dpg-a .dim{opacity:.45}
 .dpg-f{display:flex;justify-content:space-between;font-size:.85rem}
+/* 홈 작은 높이(360×640 등) 한 화면 — 간격·카드만 줄임(백로그 K) */
+@media (max-height:720px){
+ .wrap{padding-bottom:calc(62px + env(safe-area-inset-bottom))}
+ #sessionStart{padding-top:8px;padding-bottom:8px;gap:8px}
+ #sessionStart .hv2{gap:6px}
+ #sessionStart .hv2-bar{padding-top:14px}
+ #sessionStart .hv2-grid{margin-top:0!important}
+ #sessionStart .hv2-feed{min-height:132px}
+ #sessionStart .hv2-shelf{padding:8px 10px 44px}
+ #sessionStart .hv2-books{max-height:62px}
+ #sessionStart .hv2-chip{padding:4px 10px}
+ #sessionStart .hv2-say{height:44px}
+ #sessionStart .hv2-say .nm{width:48px}
+ #sessionStart .hv2-say .bubble{font-size:.84rem}
+ #sessionStart .hv2-cal{gap:4px}
+ #sessionStart .hv2-day{gap:2px}
+ #sessionStart .hv2-day i{height:24px;border-radius:9px}
+ #sessionStart .s7c{padding:6px 10px;margin:0 0 4px;gap:8px}
+ #sessionStart .s7c-ch{font-size:1.1rem}
+ #sessionStart .s7c-tx b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ #sessionStart .s7c-tx small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ #sessionStart .poster{gap:4px}
+ #sessionStart .poster .ptitle{font-size:1.4rem}
+ #sessionStart .after-poster{gap:6px;padding-top:8px;margin-top:4px}
+ #sessionStart .actrow{margin:0}
+ #sessionStart .actrow .btn{min-height:44px;padding-top:6px;padding-bottom:6px;white-space:nowrap}
+ #sessionStart .hs{margin:0}
+ #sessionStart .hs-t{min-height:50px;padding-top:6px;padding-bottom:6px}
+ #sessionStart .hs-rw{padding:8px 12px;margin:0;gap:10px}
+ #sessionStart .hs-rw-ic{zoom:.62}
+ #sessionStart .hs-t{padding-top:4px;padding-bottom:4px}
+ #sessionStart .hs-t .hs-ic,#sessionStart .hs-t .hs-ic .nm{width:38px}
+ #sessionStart .poster .psub{font-size:.82rem}
+ #sessionStart .hs-t b{font-size:1.2rem}
+ #sessionStart .hs-t{min-height:0}
+ #sessionStart .after-poster > .say .bubble{-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;font-size:.8rem;line-height:1.35;padding:6px 10px}
+ #sessionStart .hs-rw-d{font-size:1.05rem}
+ #sessionStart .hs-rw-tx b,#sessionStart .hs-rw-tx small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ #sessionStart .hs-rw-tx{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:6px;align-items:baseline}
+ #sessionStart .hs-rw-tx > :not(.hs-rw-d):not(b){grid-column:1 / -1}
+ #sessionStart .hs-rw-tx{line-height:1.2}
+ #sessionStart .hs-rw-tx .hs-dots{margin-top:3px}
+ #sessionStart .hs-rw-tx small{margin-top:2px}
+ #sessionStart .after-poster .s7c{margin-bottom:0}
+ #sessionStart .poster .catbar.home{margin-top:0}
+ #sessionStart .after-poster > .say .nm{width:44px}
+}
 </style>
 </head>
 <body>
@@ -3649,7 +3696,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v146";
+const APP_VER = "v147";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
