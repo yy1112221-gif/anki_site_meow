@@ -3503,7 +3503,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v134";
+const APP_VER = "v135";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5107,10 +5107,32 @@ function materialize(d, data, want){
     else if(lang === "es" || lang === "en"){ const nat = ui === "ko" ? it[1] : ui === "ja" ? it[2] : ""; if(nat){ o.meaning = nat; o.mOk = 1; } o.lazy = 1; }
     else o.lazy = 1;
     const c = newCard(o); c.created = now + i; c.reading = o.reading || ""; if(o.lazy) c.lazy = 1; if(o.mOk) c.mOk = 1; if(c.example) c.form = findForm(c.example, c.word);
+    curApply(c, curOf(it), true);
     S.cards[c.id] = c; have.add(norm(w)); n++;
   }
   d.cursor = i; d.total = data.items.length; return n;
 }
+/* ⑥ 큐레이션 객체: 단어장 항목 맨 끝의 {e 예문, f 예문 속 빈칸 모양, r 그 모양의 읽기, t:{ko,ja} 검수한 예문 번역} — 옛 위치(it[0]~it[3])는 그대로 */
+const curOf = it => (Array.isArray(it) && it.find(v => v && typeof v === "object" && !Array.isArray(v))) || null;
+const curSig = X => { const j = JSON.stringify(X); let h = 0; for(let k = 0; k < j.length; k++) h = (h * 31 + j.charCodeAt(k)) | 0; return (h >>> 0).toString(36); };
+/* fresh = 아직 한 번도 안 푼 카드 → 큐레이션 값으로 바꿈. 푼 카드는 비어 있는 칸만 채움(사용자가 쓴 예문은 절대 안 건드림) */
+function curApply(c, X, fresh){ if(!X || !c) return false; const ui = S.meta.settings.ui, tr = X.t && X.t[ui], sig = curSig(X); let ch = false;
+  if(fresh){ if(c.curv === sig) return false;
+    if(X.e){ c.example = X.e; c.src = null; c.audio = null; c.exampleKo = ""; ch = true; }
+    if(X.f && (c.example || "").includes(X.f)){ c.form = X.f; ch = true; } else if(X.e) c.form = findForm(c.example, c.word);
+    if(X.r) { c.formR = X.r; ch = true; }
+    if(tr && (c.lang || "es") !== ui){ c.exampleKo = tr; ch = true; }
+    if(c.example && c.mOk && c.lazy && X.e) delete c.lazy;   // 예문·뜻이 다 있으면 Tatoeba 조회 생략
+    c.curv = sig; return ch; }
+  if(!c.example && X.e){ c.example = X.e; c.form = X.f && X.e.includes(X.f) ? X.f : findForm(X.e, c.word); if(X.r) c.formR = X.r; if(tr && (c.lang || "es") !== ui) c.exampleKo = tr; ch = true; }
+  else if(c.example && X.e && c.example === X.e){ if(!c.exampleKo && tr && (c.lang || "es") !== ui){ c.exampleKo = tr; ch = true; } if(X.r && !c.formR){ c.formR = X.r; ch = true; } }
+  return ch; }
+/* 이미 만들어진 카드에 큐레이션 반영 — ⑥이 데이터를 더할 때마다 자동으로(하루 한 번) */
+async function applyCuration(force){ if(!force && S.meta.exfix && Date.now() - S.meta.exfix < 20 * 3600e3) return 0; let n = 0;
+  try{ for(const d of decks()){ if(!d.preset || d.preset.startsWith("script-") || d.preset.endsWith("-slang")) continue; const data = await presetData(d.preset), map = {};
+      (data.items || []).forEach(it => { const X = curOf(it); if(X) map[it[0]] = X; }); if(!Object.keys(map).length) continue;
+      Object.values(S.cards).forEach(c => { if(c.deck !== d.id) return; const X = map[c.word]; if(!X) return; if(curApply(c, X, c.isNew && !c.reps)){ c.u = Date.now(); n++; } }); }
+    S.meta.exfix = Date.now(); save(); if(n){ track("cur_apply", { n }); if(!SES) renderAll(); } }catch(e){} return n; }
 let TOPUP_BUSY = false;
 async function topUpPresets(){
   if(TOPUP_BUSY) return; TOPUP_BUSY = true; let added = 0;
@@ -5132,7 +5154,7 @@ function fixCutExamples(){ if((S.meta.cfix || 0) >= 1) return; let n = 0;
 /* 유의어·외래어로 답했을 때: 틀림 처리 대신 냥이가 다른 말로 유도 */
 const meanToks = m => String(m || "").replace(/^[^·]*·\s*/, "").replace(/[（(][^）)]*[）)]/g, "").split(/[,、;；/·]|\s+또는\s+/).map(x => x.trim().replace(/\s+/g, "")).filter(x => x.length >= 1);
 function readingOf(c){ if(c.reading) return c.reading; const m = String(c.meaning || "").match(/^\s*([ぁ-ゖァ-ヺー]+)\s*[·・]/); return m ? m[1] : ""; }
-function ansOk(c, v, target){ let r = check(v, target); if(r === "no" && !S.meta.settings.strictKanji && norm(target) === norm(c.word)){ const rd = readingOf(c); if(rd && check(v, rd) !== "no") r = "ok"; } return r; }
+function ansOk(c, v, target){ let r = check(v, target); if(r === "no" && !S.meta.settings.strictKanji){ const rd = norm(target) === norm(c.word) ? readingOf(c) : (c.formR && c.form && norm(target) === norm(c.form) ? c.formR : ""); if(rd && check(v, rd) !== "no") r = "ok"; } return r; }
 function nearSyn(c, typed){ const t = norm(typed), th = toHira(t); if(!t || !c.meaning) return null; const mine = new Set(meanToks(c.meaning)); if(!mine.size) return null; const lang = c.lang || S.meta.settings.lang;
   const hit = (w, rd, m) => (norm(w) === t || (rd && toHira(norm(rd)) === th) || toHira(norm(w)) === th) && meanToks(m).some(x => mine.has(x));
   let ok = Object.values(S.cards).some(o => o.id !== c.id && (o.lang || "es") === lang && hit(o.word, o.reading, o.meaning));
@@ -5199,6 +5221,7 @@ function fillLazy(c){
     if(r.meaning && !cur.mOk) cur.meaning = (cur.reading ? cur.reading + " · " : "") + r.meaning;
     if(!cur.example && r.cands && r.cands.length){ const cd = r.cands[0]; cur.example = cd.text; cur.form = cd.form; cur.src = cd.id; cur.audio = cd.audio || null; try{ cur.exampleKo = await trOf(cd); }catch(e){} }
     if(r.meaning || cur.meaning) delete cur.lazy; saveCard(cur);
+    if(cur.example && !cur.exampleKo) await fillTr(cur);   // C3: 단어장 예문은 있는데 번역이 비면 학습 시작 때 채움
   }catch(e){} finally { LAZY.delete(c.id); } })();
   LAZY.set(c.id, p); return p;
 }
@@ -5450,8 +5473,8 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
-load(); PET_SIG = petSig(); slimPresets(); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+load(); PET_SIG = petSig(); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 addEventListener("storage", e => { if(e.key !== LS_KEY || !e.newValue || LOAD_BAD) return;   // 다른 탭에서 저장됨 → 이 탭 메모리에 합침(옛 탭이 새 기록을 덮지 않게)
   try{ const d = JSON.parse(e.newValue); const keepSes = S.meta.session, st = S.meta.settings; mergeData(d); S.meta.settings = st; if(keepSes !== undefined) S.meta.session = keepSes; if(!SES) renderAll(); }catch(_){} });
