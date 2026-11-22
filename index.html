@@ -2255,14 +2255,14 @@ function catBarDraw(el, t){ const cv = el.firstElementChild; if(!cv || !el.offse
     g.strokeStyle = fur; g.lineWidth = 4.2; g.lineCap = "round"; g.lineJoin = "round"; g.beginPath();
     for(let k = 0; k < ARC.length; k += 2) g[k ? "lineTo" : "moveTo"](UX(ARC[k]), UY(ARC[k + 1])); g.stroke(); g.restore();
     // 3-1) 이음부 다듬기: 뱃살의 위·아래 선과 피부를 냥이 몸 쪽으로 몇 단계에 걸쳐 서서히 녹여 계단·턱을 없앤다
-    { const jx = UX(XW) - .5, L = Math.max(10, (XW - VBX) * ppu), R = 0, ya = top(N - 1), yb = bot(N - 1);   // 냥이 몸 뒤쪽(가장 넓은 곳 왼쪽)에서만, 얼굴은 안 덮음
+    { const jx = UX(XW) - .5, L = Math.max(10, (XW - VBX) * ppu), R = 0, yAt = x => { const f = Math.max(0, Math.min(N - 1, (x - X(0)) / Math.max(1, X(N - 1) - X(0)) * (N - 1))), i = Math.min(N - 2, Math.floor(f)), w = f - i; return Y(i) * (1 - w) + Y(i + 1) * w; }, ya = x => yAt(x) - TH / 2, yb = x => yAt(x) + TH / 2;   // 잡아당긴 뱃살을 따라 움직이는 이음 조각   // 냥이 몸 뒤쪽(가장 넓은 곳 왼쪽)에서만, 얼굴은 안 덮음
       const oc = st.oc || (st.oc = document.createElement("canvas")); if(oc.width !== cv.width || oc.height !== cv.height){ oc.width = cv.width; oc.height = cv.height; }
       const o2 = oc.getContext("2d"); o2.setTransform(dpr, 0, 0, dpr, 0, 0); o2.clearRect(0, 0, W, H);
-      const ease = u => u * u * (3 - 2 * u), steps = 8, path = sgn => { for(let k = 0; k <= steps; k++){ const u = k / steps, x = jx - L + (L + R) * u, ins = 0; o2.lineTo(x, sgn < 0 ? ya + ins : yb - ins); } };
-      o2.beginPath(); o2.moveTo(jx - L, ya); path(-1); o2.lineTo(jx + R, yb); for(let k = steps; k >= 0; k--){ const u = k / steps, x = jx - L + (L + R) * u, ins = 0; o2.lineTo(x, yb - ins); } o2.closePath();
+      const ease = u => u * u * (3 - 2 * u), steps = 16, path = sgn => { for(let k = 0; k <= steps; k++){ const u = k / steps, x = jx - L + (L + R) * u, ins = 0; o2.lineTo(x, sgn < 0 ? ya(x) + ins : yb(x) - ins); } };
+      o2.beginPath(); o2.moveTo(jx - L, ya(jx - L)); path(-1); o2.lineTo(jx + R, yb(jx + R)); for(let k = steps; k >= 0; k--){ const u = k / steps, x = jx - L + (L + R) * u, ins = 0; o2.lineTo(x, yb(x) - ins); } o2.closePath();
       o2.fillStyle = fur; o2.fill();
       o2.strokeStyle = INKC; o2.lineWidth = LW; o2.lineCap = "round"; o2.lineJoin = "round";
-      o2.beginPath(); o2.moveTo(jx - L, ya); path(-1); o2.stroke(); o2.beginPath(); o2.moveTo(jx - L, yb); path(1); o2.stroke();
+      o2.beginPath(); o2.moveTo(jx - L, ya(jx - L)); path(-1); o2.stroke(); o2.beginPath(); o2.moveTo(jx - L, yb(jx - L)); path(1); o2.stroke();
       o2.globalCompositeOperation = "destination-in"; const m = o2.createLinearGradient(jx - L, 0, jx + R, 0);
       m.addColorStop(0, "rgba(0,0,0,1)"); m.addColorStop(.45, "rgba(0,0,0,1)"); m.addColorStop(.65, "rgba(0,0,0,.75)"); m.addColorStop(.82, "rgba(0,0,0,.4)"); m.addColorStop(.94, "rgba(0,0,0,.12)"); m.addColorStop(1, "rgba(0,0,0,0)");
       o2.fillStyle = m; o2.fillRect(jx - L - 2, 0, L + R + 4, H); o2.globalCompositeOperation = "source-over";
