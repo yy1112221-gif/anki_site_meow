@@ -88,6 +88,17 @@ async def main():
     ok("복귀 판 끝: 「기다렸다냥」 + 간식 +2 (하루 간식 위에)", r[0]==1 and "기다렸다냥" in r[1] and r[2]>=2, r)
     r=await pg.evaluate("""()=>{ const t=window.__t, S=t.S(); S.meta.days={}; [6,5,4,2].forEach(k=>S.meta.days[t.addDays(t.today(),-k)]=true); return t.meltPoints(); }""")
     ok("녹아내림: 빠진 날 −1 (3일 → 빠짐 → 1일 → 빠짐 = 2, 예전 −1.5면 1)", r==2, r)
+    # H: 같은 날 둘째 판부터 간식 1~2개 · 하루 5판 상한 · granted 그대로
+    await seed(pg, mk(80,0))
+    r=await pg.evaluate("""async()=>{ const t=window.__t, S=t.S(), d=t.today(); document.querySelector('#petClose') && document.querySelector('#petClose').click();
+      const tot=()=>Object.values((S.meta.pet||{}).inv||{}).reduce((a,b)=>a+b,0);
+      const run=async(okAll)=>{ t.setSES(null); t.startSession(); const s=t.getSES(); let g=0; while(s.queue.length && g++<40) t.settleItem(okAll); await new Promise(r=>setTimeout(r,600)); const p=document.querySelector('#pet'); if(p && !p.classList.contains('hidden')) document.querySelector('#petClose').click(); };
+      await run(true); const g1=S.meta.pet.granted[d], a=tot();
+      await run(true); const b=tot(), txt=(document.querySelector('#sessionBox .ce-gift')||{}).textContent||'';
+      await run(false); const c=tot();
+      S.meta.pet.cg.n=5; await run(true); const e=tot();
+      return [g1>0, S.meta.pet.granted[d]===g1, b-a, c-b, e-c, txt.includes('+'), S.meta.pet.cg.d===d]; }""")
+    ok("둘째 판 끝 간식 +2(90%↑)·+1(낮으면) · 「+N」 표시 · 5판 넘으면 없음 · granted 그대로", r==[True,True,2,1,0,True,True], r)
     ok("페이지 오류 없음", not errs, errs[:3])
     await b.close()
   print("결과:", "통과" if all(R) else "실패"); sys.exit(0 if all(R) else 1)
