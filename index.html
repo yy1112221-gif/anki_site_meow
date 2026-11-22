@@ -1528,21 +1528,23 @@ function memInit(c){   // 以前の版（段で管理）からの引き継ぎ
   c.S = Math.max(1, iv / (9 * (1 / TARGET() - 1))); c.D = Math.min(9, 5 + (c.lapses || 0) * .8);
   c.last = c.due ? addDays(c.due, -iv) : (c.introduced || today());
 }
-function schedule(c, correct){
+const STEP_W = s => s == null ? 1 : s <= 2 ? .6 : s === 3 ? .8 : 1;   // 쉬운 칸에서 맞힌 건 기억 강도를 덜 올림
+function schedule(c, correct, asked){
   const d = today();
   c.reps++; c.log.push({ d, ok: correct }); if(c.log.length > 40) c.log = c.log.slice(-40);
   const wasNew = c.isNew;
-  if(c.isNew){ c.isNew = false; c.introduced = d; c.S = correct ? 2.4 : 1.0; c.D = correct ? 5 : 6.5; c.last = d; c.level = 1; c.due = addDays(d, 1); c.relearn = !correct; if(!correct) c.lapses++; return; }
+  if(c.isNew){ c.isNew = false; c.introduced = d; c.S = correct ? (asked != null ? 1.6 : 2.4) : 1.0; c.D = correct ? 5 : 6.5; c.last = d; c.level = 1; c.due = addDays(d, 1); c.relearn = !correct; if(!correct) c.lapses++; return; }
   memInit(c);
   const t = Math.max(0, diffDays(c.last || d, d)), R = Math.pow(1 + t / (9 * c.S), -1);
-  if(correct){ c.S = c.S * (1 + 2.6 * ((11 - c.D) / 10) * Math.pow(c.S, -0.15) * (Math.exp((1 - R) * 1.4) - 1) + 0.15); c.D = Math.max(1, c.D - 0.3); c.relearn = false; }
+  if(correct){ const S0 = c.S, Sr = S0 * (1 + 2.6 * ((11 - c.D) / 10) * Math.pow(S0, -0.15) * (Math.exp((1 - R) * 1.4) - 1) + 0.15); c.S = S0 + (Sr - S0) * STEP_W(asked); c.D = Math.max(1, c.D - 0.3); c.relearn = false; }
   else { c.lapses++; c.S = Math.max(0.4, c.S * 0.3); c.D = Math.min(10, c.D + 1.2); c.relearn = true; }
   c.last = d;
   if(!correct){ c.level = 1; c.due = addDays(d, 1); return; }
   let iv = Math.max(1, Math.round(9 * c.S * (1 / TARGET() - 1)));
   if(iv >= 7){ const f = Math.max(1, Math.round(iv * .05)); iv += Math.floor(Math.random() * (2 * f + 1)) - f; }
   c.level = LV_OF(iv);
-  if(iv > 180){ c.mastered = true; c.due = null; return; }
+  if(iv > 180 && (asked == null || asked >= 4)){ c.mastered = true; c.due = null; return; }   // 졸업은 4칸 이상 문제를 맞혔을 때만
+  if(iv > 180) iv = 180;
   c.due = addDays(d, Math.min(365, iv));
 }
 /* 단어 경계: 긴 단어의 일부를 잘라 정답으로 쓰지 않게 (예: ホームシック 안의 シック, 先生 안의 生) */
@@ -1696,24 +1698,41 @@ function studyMore(){   // 오늘 분량을 끝낸 뒤 더: 새 단어 5개 → 
   const x = t(); if(SES) return;
   if(newCandidates().length){ S.meta.bonus = { d: today(), n: bonusNew() + MORE_N }; save(); startSession(); return; }
   const ah = aheadCards().slice(0, 10); if(!ah.length){ toast(x.moreNone); return; }
-  const items = []; ah.forEach(c => reviewModes(c).forEach(m => items.push({ id: c.id, mode: m })));
+  const items = []; ah.forEach(c => stepItems(c).forEach(it => items.push(it)));
   const remaining = {}; items.forEach(it => remaining[it.id] = (remaining[it.id] || 0) + 1);
   SES = { queue: items, done: 0, failed: {}, remaining, finished: [], state: null }; prefetchLazy([...new Set(items.map(it => it.id))]); saveSession();
   $("#sessionStart").classList.add("hidden"); $("#sessionBox").classList.remove("hidden"); nextItem(); }
 /* 문제 고르기 (연구 근거: 수용 지식이 산출보다 먼저·빨리 붙고, 양방향 회상이 가장 효과적, 객관식보다 직접 떠올리기가 오래 감)
    새 단어: 맞혀보기(사전 시도) → 뜻 말하기(외국어→내 언어) → 빈칸/뜻 보고 쓰기(내 언어→외국어)
    복습: 단계가 낮을수록 '뜻 말하기' 비중↑, 올라갈수록 '쓰기·빈칸·문장'으로. 같은 방향만 계속 나오지 않게 돌아가며. */
-function reviewModes(c){
-  if(c.script) return ["script"];
-  const st = S.meta.settings, hasCloze = !!clozeParts(c), r = (c.reps || 0) + (c.level || 0);
-  if(isLeech(c)) return [r % 2 ? "meaning" : (hasCloze ? "cloze" : "recall"), "recall"];   // 자꾸 틀리는 단어: 양방향 둘 다
-  if(c.level <= 1) return [r % 2 ? (hasCloze ? "cloze" : "recall") : "meaning"];
-  if(c.level === 2) return [r % 3 === 0 ? "meaning" : (r % 3 === 1 && canOrder(c)) ? "order" : "recall"];
-  const pool = ["meaning", "recall"]; if(hasCloze) pool.push("cloze", "recall"); if(canOrder(c)) pool.push("order");
-  if(st.writing) pool.push("write");
-  if(st.speaking && c.example && trShow(c)) pool.push("speak");
-  return [pool[r % pool.length]];
+/* 레벨 디자인 v2 — 단어 계단 0~5칸(c.step). 칸이 문제 종류를 정한다: 0 맞혀보기 · 1 뜻 고르기 · 2 뜻 말하기 · 3 빈칸 · 4 뜻 보고 쓰기 · 5 문장(어순·말하기·쓰기)
+   옛 카드는 한 번만 이사(S.meta.stepv): isNew 0 / 졸업 5 / level≤1 2 / 2 3 / ≥3 4, 끈질긴 단어(lapses≥3)는 −1(최소 2). c.step이 없어도 같은 규칙으로 계산(다른 기기 옛 데이터 대비) */
+function stepGuess(c){ if(c.isNew) return 0; if(c.mastered) return 5; const lv = c.level || 0; let s = lv <= 1 ? 2 : lv === 2 ? 3 : 4; if((c.lapses || 0) >= 3) s = Math.max(2, s - 1); return s; }
+function stepOf(c){ const s = Number(c.step); return Number.isFinite(s) && s >= 0 ? Math.min(5, Math.round(s)) : stepGuess(c); }
+function migrateSteps(){ if(LOAD_BAD || (S.meta.stepv || 0) >= 1) return; let n = 0;
+  try{ Object.values(S.cards || {}).forEach(c => { if(!c || c.step != null) return; c.step = stepGuess(c); n++; }); }catch(_){}
+  S.meta.stepv = 1; if(n){ persist(); track("step_migrate", { n }); } }   // 시각(mu·u)은 안 바꿈: 동기화 우선순위 그대로
+function stepMode(c, s){
+  if(c.script) return "script";
+  const st = S.meta.settings, hasCloze = !!clozeParts(c), r = (c.reps || 0);
+  s = s == null ? stepOf(c) : Math.max(0, Math.min(5, s));
+  if(s <= 0) return "study";
+  if(s === 1) return "meaning";   // 1칸: 뜻 고르기(pick)·읽기 함정(trap)은 다음 배포에서 — 지금은 뜻 말하기
+  if(s === 2) return "meaning";
+  if(s === 3) return hasCloze ? "cloze" : "recall";
+  if(s === 4) return "recall";
+  const pool = []; if(canOrder(c)) pool.push("order"); if(st.speaking && c.example && trShow(c)) pool.push("speak"); if(st.writing) pool.push("write");
+  if(!pool.length) return r % 2 ? (hasCloze ? "cloze" : "recall") : "recall";
+  return pool[r % pool.length];
 }
+/* 복습 문제: 지금 칸 1문제. 끈질긴 단어는 지금 칸 + 한 칸 아래 1문제 */
+function stepItems(c){
+  if(c.script) return [{ id: c.id, mode: "script" }];
+  const s = Math.max(1, stepOf(c)), out = [{ id: c.id, mode: stepMode(c, s), st: s }];
+  if(isLeech(c)){ const lo = Math.max(1, s - 1), m = stepMode(c, lo); if(m !== out[0].mode || lo !== s) out.unshift({ id: c.id, mode: m, st: lo }); }
+  return out;
+}
+function reviewModes(c){ return stepItems(c).map(it => it.mode); }   // 옛 이름(다른 곳에서 부를 수 있어 남겨 둠)
 function slangDeck(){ return decks().find(d => d.preset === S.meta.settings.lang + "-slang" && deckOn(d)); }
 function pickNewWithSlang(q){   // 슬랭은 하루 1~2개만 '촉촉하게' 섞기 (설정에 따라)
   const all = newCandidates(), sd = slangDeck(); if(!sd) return all.filter(c => !c.slang).slice(0, q);
@@ -1724,13 +1743,12 @@ function pickNewWithSlang(q){   // 슬랭은 하루 1~2개만 '촉촉하게' 섞
 let SES = null;
 function buildSession(){
   const items = [];
-  dueCards().forEach(c => reviewModes(c).forEach(m => items.push({ id: c.id, mode: m })));
-  // 새 단어는 3개씩 묶어 단계를 번갈아(같은 단어를 연달아 묻지 않고 짧게 간격을 둠): 맞혀보기 → 뜻 말하기 → 빈칸 → 뜻 보고 쓰기
+  dueCards().forEach(c => stepItems(c).forEach(it => items.push(it)));
+  // 새 단어는 3개씩 묶어(같은 단어를 연달아 묻지 않고 짧게 간격을 둠): 0칸 맞혀보기 → 1칸 문제. 첫날 2문제(계단 v2)
   const nw = pickNewWithSlang(newQuota());
   const gs = []; { let n = nw.length, i = 0; const k = Math.max(1, Math.floor(n / 3)); for(let j = 0; j < k; j++){ const sz = Math.floor(n / k) + (j < n % k ? 1 : 0); gs.push(nw.slice(i, i + sz)); i += sz; } }   // 3개 안팎으로 나누되 1~2개만 남는 묶음이 없게
   for(const g of gs){
-    g.forEach(c => items.push({ id: c.id, mode: "study" })); g.forEach(c => items.push({ id: c.id, mode: "meaning" }));
-    g.forEach(c => { if(clozeParts(c)) items.push({ id: c.id, mode: "cloze" }); }); g.slice().reverse().forEach(c => items.push({ id: c.id, mode: "recall" })); }
+    g.forEach(c => items.push({ id: c.id, mode: "study", st: 0 })); g.forEach(c => items.push({ id: c.id, mode: stepMode(c, 1), st: 1 })); }
   const ns = activeCards().filter(c => c.isNew && c.script).sort((a, b) => (a.created || 0) - (b.created || 0)).slice(0, scriptNewToday());
   ns.forEach(c => items.push({ id: c.id, mode: "scriptNew" })); ns.slice().sort(() => Math.random() - .5).forEach(c => items.push({ id: c.id, mode: "script" }));
   const q = spreadQueue(items, []), remaining = {}; q.forEach(it => remaining[it.id] = (remaining[it.id]||0) + 1);
@@ -2121,7 +2139,7 @@ function nextItem(){
 }
 function saveSession(){
   if(!SES){ delete S.meta.session; save(); return; }
-  S.meta.session = { day: today(), lang: S.meta.settings.lang, queue: SES.queue, done: SES.done, failed: SES.failed, remaining: SES.remaining, finished: SES.finished };
+  S.meta.session = { day: today(), lang: S.meta.settings.lang, queue: SES.queue, done: SES.done, failed: SES.failed, remaining: SES.remaining, finished: SES.finished, ask: SES.ask || {} };
   save();
 }
 function savedSession(){
@@ -2132,7 +2150,7 @@ function savedSession(){
 }
 function resumeSession(){ nearPreload();
   const z = savedSession(); if(!z) return startSession();
-  SES = { queue: z.queue, done: z.done || 0, failed: z.failed || {}, remaining: z.remaining || {}, finished: z.finished || [], state: null };
+  SES = { queue: z.queue, done: z.done || 0, failed: z.failed || {}, remaining: z.remaining || {}, finished: z.finished || [], ask: z.ask || {}, state: null };
   $("#sessionStart").classList.add("hidden"); $("#sessionBox").classList.remove("hidden"); nextItem();
 }
 function settleItem(correct){
@@ -2140,15 +2158,20 @@ function settleItem(correct){
   { const c = S.cards[it.id]; if(c){ LAST_Q.push({ w: c.word, m: String(c.meaning || "").slice(0, 60), md: it.mode, ok: !!correct }); if(LAST_Q.length > 3) LAST_Q.shift(); } }
   if(it.mode !== "study" && it.mode !== "scriptNew" && !correct){
     SES.failed[it.id] = true;
-    SES.queue.splice(Math.min(3, SES.queue.length), 0, { id: it.id, mode: it.mode }); SES.queue = spreadQueue(SES.queue, [it.id]);
+    SES.queue.splice(Math.min(3, SES.queue.length), 0, it.st != null ? { id: it.id, mode: it.mode, st: it.st } : { id: it.id, mode: it.mode }); SES.queue = spreadQueue(SES.queue, [it.id]);
     SES.remaining[it.id]++;
   }
+  if(it.st != null){ const a = SES.ask || (SES.ask = {}); a[it.id] = Math.max(a[it.id] == null ? -1 : a[it.id], it.st); }
   SES.remaining[it.id]--; SES.done++;
   { const d = today(), m = S.meta.ans || (S.meta.ans = {}); m[d] = (m[d] || 0) + 1; Object.keys(m).forEach(k => { if(k < addDays(d, -3)) delete m[k]; });   // 今日の回答数（何回かに分けてもOK）
     if(!SES.goalHit && m[d] >= Math.min(DAY_GOAL, m[d] + SES.queue.length) && (!S.meta.days[d] || S.meta.days[d] === "freeze")){ SES.goalHit = true; if(SES.queue.length){ secureDay(); return; } } }
-  if(SES.remaining[it.id] <= 0){ const c = S.cards[it.id]; if(c){ schedule(c, !SES.failed[it.id]); saveCard(c); SES.finished.push({ id: c.id, ok: !SES.failed[it.id] }); } }
+  if(SES.remaining[it.id] <= 0){ const c = S.cards[it.id]; if(c){ const ok = !SES.failed[it.id], asked = c.script ? null : (SES.ask && SES.ask[it.id] != null ? SES.ask[it.id] : c.isNew ? 1 : stepOf(c)); if(asked != null) stepSettle(c, ok, asked); schedule(c, ok, asked); saveCard(c); SES.finished.push({ id: c.id, ok }); } }
   saveSession(); updateStats(); nextItem();
 }
+/* 칸 오르내리기: 그날 낸 가장 높은 칸(asked) 기준. 전부 맞으면 한 칸 위(같은 날 두 번은 안 오름), 틀리면 한 칸 아래(최소 1) */
+function stepSettle(c, ok, asked){ const d = today(); asked = Math.max(0, Math.min(5, asked));
+  if(ok){ if(c.stepAt !== d){ c.step = Math.min(5, Math.max(stepOf(c), asked + 1)); c.stepAt = d; } else if(c.step == null) c.step = stepOf(c); }
+  else { c.step = Math.max(1, asked - 1); c.stepAt = d; } }
 const DAY_GOAL = 10;
 function secureDay(){ setTimeout(() => { if(!SES || !SES.queue || !SES.queue.length) maybeLoginAsk(); else maybeLoginAsk._pending = 1; }, 2600);   // 今日のノルマ達成: 連続日数・肉球スタンプ・おやつ。まだ問題が残っていれば続けられる
   const first = !S.meta.days[today()] || S.meta.days[today()] === "freeze"; if(!first){ saveSession(); updateStats(); nextItem(); return; }
@@ -3503,7 +3526,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v135";
+const APP_VER = "v136";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3739,7 +3762,7 @@ function mergeData(remote){
     const ta = a ? (a.u || a.created || 0) : -1, tb = b ? (b.u || b.created || 0) : -1;
     const win = ta >= tb ? a : b, tw = Math.max(ta, tb);
     if(del[id] && del[id] >= tw) return;
-    if(win) out[id] = win;
+    if(win){ if(a && b && (a.step != null || b.step != null)){ const sa = a.step != null ? stepOf(a) : -1, sb = b.step != null ? stepOf(b) : -1; win.step = Math.max(sa, sb); const da = a.stepAt || "", db = b.stepAt || ""; if(da || db) win.stepAt = da > db ? da : db; } out[id] = win; }   // 계단 칸: 두 기기 중 큰 값
   });
   S.cards = out;
   S.meta.deleted = del;
@@ -5473,8 +5496,8 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
-load(); PET_SIG = petSig(); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+load(); PET_SIG = petSig(); migrateSteps(); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 addEventListener("storage", e => { if(e.key !== LS_KEY || !e.newValue || LOAD_BAD) return;   // 다른 탭에서 저장됨 → 이 탭 메모리에 합침(옛 탭이 새 기록을 덮지 않게)
   try{ const d = JSON.parse(e.newValue); const keepSes = S.meta.session, st = S.meta.settings; mergeData(d); S.meta.settings = st; if(keepSes !== undefined) S.meta.session = keepSes; if(!SES) renderAll(); }catch(_){} });
