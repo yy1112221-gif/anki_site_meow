@@ -2681,7 +2681,8 @@ function askHandsFree(c, mode, promptHTML, target, isGuess){
   const box = $("#sessionBox"), x = t();
   box.innerHTML = head(c, mode) + `<div class="stage">${promptHTML}<div id="fb"></div></div><div class="dock">
     <div class="row" id="acts"><span class="grow"></span><button class="btn primary" type="button" id="rv">${x.reveal}</button></div></div>`;
-  if(mode !== "recall" && trShow(c)) speak(trShow(c), { lang: S.meta.settings.ui, audio: null });
+  if(mode === "meaning") speak(c.word);   // 뜻 문제: 예문 번역(화면 언어)을 읽으면 정답이 소리로 샘(검수단 R1-4-1) → 단어만
+  else if(mode !== "recall" && trShow(c)) speak(trShow(c), { lang: S.meta.settings.ui, audio: null });
   $("#rv").onclick = () => {
     const bl = box.querySelector(".stage .blank"); if(bl){ bl.textContent = target; bl.classList.add("filled", "ok"); }
     $("#fb").innerHTML = `<div class="feedback meh">${fbh("st_listening", x.answer)}<span class="fb-answer">${esc(target)}</span>${c.meaning ? `<span class="fb-mean">${esc(c.meaning)}</span>` : ""}${!bl && c.example ? `<span class="fb-ex">${highlight(c)}</span>` : ""}</div>`;
@@ -3648,7 +3649,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v145";
+const APP_VER = "v146";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));

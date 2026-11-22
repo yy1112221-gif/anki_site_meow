@@ -140,6 +140,12 @@ async def main():
       const run=async(st)=>{ t.setSES({queue:[{id:'h1',mode:'recall',st}],done:0,failed:{},remaining:{h1:1},finished:[],state:null}); t.nextItem(); await new Promise(r=>setTimeout(r,200)); const q=document.querySelector('#sessionBox .q-hint'); return q ? q.textContent : ''; };
       const a=await run(3), b=await run(4); S.meta.settings.lang='ja'; return [t.stepMode(S.cards.h1,3), a, b]; }""")
     ok("I 3칸·빈칸 없음 → recall + 첫 글자 힌트(4칸은 힌트 없음)", r[0]=="recall" and "v…" in r[1] and "7" in r[1] and r[2]=="", r)
+    # ── 검수단 R1-4-1: 「입력 없이」 뜻 문제는 예문 번역(정답 언어)이 아니라 단어를 읽음 ──
+    r=await pg4.evaluate("""async()=>{ const t=window.__t, S=t.S(); const said=[]; try{ const o=speechSynthesis.speak.bind(speechSynthesis); speechSynthesis.speak=u=>{ said.push(u.text); }; }catch(_){ return 'nosynth'; }
+      S.meta.settings.lang='es'; S.meta.settings.handsFree=true; S.cards.hf1={id:'hf1',lang:'es',word:'ventana',meaning:'창문',example:'Abre la ventana.',exampleKo:'창문을 열어.',isNew:false,level:3,reps:3,lapses:0,log:[],step:2,due:'2026-01-01'};
+      t.setSES({queue:[{id:'hf1',mode:'meaning',st:2}],done:0,failed:{},remaining:{hf1:1},finished:[],state:null}); t.nextItem(); await new Promise(r=>setTimeout(r,600));
+      S.meta.settings.handsFree=false; S.meta.settings.lang='ja'; return [!!document.querySelector('#rv'), said]; }""")
+    ok("R1-4-1 입력 없이 뜻 문제: 번역(창문을 열어) 안 읽음", r!='nosynth' and r[0] and not any("창문" in s for s in r[1]), r)
     ok("B3 페이지 오류 없음", not e4, e4[:3])
     await pg4.close()
     await pg.wait_for_timeout(300)
