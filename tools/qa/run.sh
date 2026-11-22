@@ -33,5 +33,5 @@ rm -rf /tmp/srv && mkdir -p /tmp/srv/old && cp -r . /tmp/srv/ 2>/dev/null; rm -r
 git cat-file -e e0646a8 2>/dev/null || git fetch -q --depth=60 origin main
 git show e0646a8:index.html > /tmp/srv/old/index.html; cp -r cat presets slang /tmp/srv/old/
 pkill -f "^python3 -m http.server 8765" 2>/dev/null || true; (cd /tmp/srv && exec python3 -m http.server 8765) >/tmp/srv.log 2>&1 </dev/null & disown; sleep 1
-python3 tools/qa/treg.py && python3 tools/qa/tsafe.py && python3 tools/qa/t_curation.py && python3 tools/qa/t_steps.py
+python3 tools/qa/treg.py && python3 tools/qa/tsafe.py && python3 tools/qa/t_curation.py && python3 tools/qa/t_steps.py && python3 tools/qa/t_course.py
 echo "✅ 전체 통과"
