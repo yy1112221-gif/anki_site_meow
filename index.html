@@ -874,6 +874,12 @@ body.focus .dock:has(.vk-host .vk) .aud{margin-top:6px} body.focus .dock:has(.vk
 .ans-ics .mic-in.on{background:var(--accent)}
 .ans-btns{display:flex;gap:8px} .ans-btns .btn{min-height:50px;justify-content:center;font-weight:800} .ans-btns #chk,.ans-btns #nx{flex:1.5} .ans-btns .idk-b{flex:1;white-space:nowrap;font-size:.92rem;padding:0 10px;background:transparent;border:2px solid var(--line);color:inherit}
 .hv2{display:flex;flex-direction:column;gap:9px}
+.santa-pop{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);animation:spIn .25s ease-out}.santa-pop.out{opacity:0;transition:opacity .25s}
+.santa-card{width:min(88vw,340px);padding:18px 18px 16px;border-radius:24px;background:var(--card,#fff);color:var(--ink,#222);text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.santa-card b{display:block;font-size:1.2rem;margin:6px 0 4px}.santa-card p{margin:0 0 12px;font-size:.9rem;opacity:.75}
+.santa-cat{position:relative;width:180px;height:150px;margin:0 auto}.santa-cat .sc{position:absolute;left:0;bottom:0;width:180px}
+.santa-cat .sh{position:absolute;left:58px;top:-6px;width:74px;transform-origin:50% 90%;animation:spHat .9s cubic-bezier(.3,1.6,.5,1) .35s both}
+@keyframes spIn{from{opacity:0}to{opacity:1}}@keyframes spHat{0%{transform:translateY(-140px) rotate(-30deg);opacity:0}60%{opacity:1}100%{transform:translateY(0) rotate(-8deg)}}
 .hv2-bar{position:relative;padding:20px 44px 2px 0} .hv2-bar .catbar{margin:0}
 .hv2-ruler{position:absolute;left:0;top:2px;width:calc((100% - 44px) * var(--pf));height:12px;pointer-events:none}
 .hv2-ruler i{position:absolute;left:0;right:0;top:4px;height:6px;transform:scaleY(-1);border-left:1.5px solid var(--muted);border-right:1.5px solid var(--muted);background:repeating-linear-gradient(90deg,var(--muted) 0 1px,transparent 1px 8px) bottom/100% 4px no-repeat;opacity:.7}
@@ -3497,7 +3503,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v133";
+const APP_VER = "v134";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3606,6 +3612,21 @@ function attrBoot(){ try{ const a = attrRead(), ext = a.src || a.fb || a.iab || 
   [...q.keys()].forEach(k => { if(/^utm_/.test(k) || k === "fbclid" || k === "src"){ q.delete(k); dirty = true; } });
   if(dirty) history.replaceState(history.state, "", location.pathname + (q.toString() ? "?" + q : "") + location.hash);
   return a; }catch(_){ return {}; } }
+/* 12월 한정 「산타 냥이 모자」: 기간 안에 ① 처음 첫 판을 끝낸 사람(신규) ② 마지막 공부 뒤 3일 이상 쉬다 돌아와 한 판을 끝낸 사람(복귀)에게 한 번만 준다. 받으면 기간 뒤에도 계속 가진다 */
+const SANTA_END = Date.parse("2026-12-25T23:59:59+09:00");
+function santaType(){ const td = today(), past = Object.keys(S.meta.days || {}).filter(d => d < td && S.meta.days[d] === true).sort();
+  if(!past.length) return "new"; return past[past.length - 1] <= addDays(td, -3) ? "back" : null; }
+function santaCheck(){ if(Date.now() > SANTA_END || S.meta.evSanta) return; const type = santaType(); if(!type) return;
+  const cm = S.meta.cos || (S.meta.cos = {}); cm.own = cm.own || {}; cm.own.santa_hat = Date.now(); if(!cm.hat) cm.hat = "santa_hat";
+  S.meta.evSanta = { at: Date.now(), type }; save(); track("ev_santa_grant", { type, src: (S.meta.attr || {}).src || "", cmp: (S.meta.attr || {}).cmp || "" });
+  setTimeout(santaShow, 3200); }
+function santaShow(){ if($("#santaPop")) return; const ja = S.meta.settings.ui === "ja", d = document.createElement("div"); d.id = "santaPop"; d.className = "santa-pop";
+  d.innerHTML = `<div class="santa-card"><div class="santa-cat"><img class="sc" src="${NM_BASE}melt/cat_love.svg" alt=""><img class="sh" src="${NM_BASE}acc/santa_hat.svg" alt=""></div>
+    <b>${ja ? "期間限定サンタ帽子をもらったニャ！" : "한정 산타 모자 받았다냥!"}</b><p>${ja ? "ネコの画面でかぶってるよ。ショップ › 小物でいつでも外せるニャ" : "냥이 화면에서 쓰고 있어. 상점 › 소품에서 언제든 벗을 수 있다냥"}</p>
+    <button type="button" class="btn primary" id="santaOk">${ja ? "見に行く" : "보러 가기"}</button></div>`;
+  document.body.appendChild(d); try{ sfxPoyon(.5); }catch(_){}
+  const close = go => { d.classList.add("out"); setTimeout(() => d.remove(), 260); if(go){ try{ openPet(); }catch(_){} } };
+  $("#santaOk").onclick = () => close(true); d.onclick = e => { if(e.target === d) close(false); }; }
 function evBoot(){ const s = S.meta.settings, A = attrBoot(), F = S.meta.attr || {};
   track("open", { ui: s.ui, lang: s.lang, cards: Object.keys(S.cards).length, days: Object.keys(S.meta.days || {}).length, by: S.meta.by || null, melt: (() => { try{ return meltPct(); }catch(_){ return null; } })(),
     pwa: matchMedia("(display-mode: standalone)").matches, ref: A.ref || "", src: A.src || "", med: A.med || "", cmp: A.cmp || "", cnt: A.cnt || "", term: A.term || "", fb: A.fb || 0, iab: A.iab || "",
@@ -3613,7 +3634,7 @@ function evBoot(){ const s = S.meta.settings, A = attrBoot(), F = S.meta.attr ||
 // 기존 함수에 기록만 덧붙임(동작은 그대로)
 { const _sv = showView; showView = function(v){ track("view", { v }); return _sv.apply(this, arguments); };
   const _st = settleItem; settleItem = function(ok){ try{ const it = SES && SES.queue[0]; track("ans", { m: it && it.mode, ok: !!ok }); }catch(_){} return _st.apply(this, arguments); };
-  const _sd = secureDay; secureDay = function(){ track("goal", { n: (S.meta.ans || {})[today()] || 0 }); return _sd.apply(this, arguments); };
+  const _sd = secureDay; secureDay = function(){ track("goal", { n: (S.meta.ans || {})[today()] || 0 }); const r = _sd.apply(this, arguments); try{ santaCheck(); }catch(_){} return r; };
   const _sh = shareResult; shareResult = function(n){ track("share", { n }); return _sh.apply(this, arguments); };
   const _fo = fbOpen; fbOpen = function(){ track("help_open"); return _fo.apply(this, arguments); };
   const _np = nerdPop; nerdPop = function(b){ const r = _np.apply(this, arguments); if(r) track("nerd"); return r; };
@@ -4306,8 +4327,17 @@ function drawCatTex(st){
   ears.forEach(({ dir, ex, R }) => { g.fillStyle = "rgba(242,161,180,.75)"; g.beginPath(); g.moveTo(...R(ex - dir * .5, 66)); g.quadraticCurveTo(...R(ex - dir * 1.6, 59), ...R(ex - dir * .6, 57.5)); g.quadraticCurveTo(...R(ex + dir * 3, 59), ...R(ex + dir * 7.5, 64)); g.closePath(); g.fill(); });
   arms.forEach(a => { if(a.back) return; g.strokeStyle = "rgba(120,90,65,.45)"; g.lineWidth = .9; [-1.7, 1.7].forEach(o => { const c = Math.cos(a.an), sn = Math.sin(a.an), x = a.tip[0] + c * o, y = a.tip[1] + sn * o; g.beginPath(); g.moveTo(x + sn * 1.6, y - c * 1.6); g.lineTo(x - sn * 1.2, y + c * 1.2); g.stroke(); }); });
   drawCatFace(st, g);
+  if(((S.meta.cos || {}).hat || st.tryHat) === "santa_hat") drawSantaHat(g);
   g0.setTransform(1, 0, 0, 1, 0, 0); g0.drawImage(st.tex2, 0, 0);
 }
+/* 12월 한정 산타 모자: 냥이 텍스처 좌표(정수리 ≈ y 62)에 그린다 */
+function drawSantaHat(g){ g.save(); g.translate(64, 63); g.rotate(-.12); g.scale(.36, .36); g.translate(-60, -80); g.lineJoin = "round"; g.lineWidth = 2.4; g.strokeStyle = "#5a2a2f";
+  const rg = g.createLinearGradient(20, 10, 100, 80); rg.addColorStop(0, "#ef4b5a"); rg.addColorStop(.6, "#d42c3f"); rg.addColorStop(1, "#a81d30");
+  g.beginPath(); g.moveTo(22, 74); g.bezierCurveTo(26, 46, 46, 22, 74, 16); g.bezierCurveTo(88, 13, 100, 20, 104, 34); g.bezierCurveTo(96, 30, 86, 32, 80, 40); g.bezierCurveTo(76, 50, 82, 62, 90, 74); g.closePath(); g.fillStyle = rg; g.fill(); g.stroke();
+  g.strokeStyle = "rgba(255,255,255,.28)"; g.lineWidth = 5; g.lineCap = "round"; g.beginPath(); g.moveTo(40, 60); g.bezierCurveTo(50, 40, 66, 28, 82, 24); g.stroke();
+  const wg = g.createRadialGradient(50, 70, 2, 56, 78, 50); wg.addColorStop(0, "#ffffff"); wg.addColorStop(.7, "#f6f1ea"); wg.addColorStop(1, "#e3dacd");
+  g.strokeStyle = "#5a2a2f"; g.lineWidth = 2.4; g.fillStyle = wg; g.beginPath(); g.roundRect ? g.roundRect(14, 68, 84, 20, 10) : g.rect(14, 68, 84, 20); g.fill(); g.stroke();
+  g.beginPath(); g.arc(104, 38, 11, 0, Math.PI * 2); g.fill(); g.stroke(); g.restore(); }
 function omegaMouth(g, my, w, sq, open, tongue, tongueOut){   // ω: 원래 입꼬리 그대로, 아래 곡선은 더 둥글고 가운데 봉우리는 낮고 완만하게
   const P = (path) => { path.moveTo(64 - w - 2.5, my - 2.5 * sq); path.bezierCurveTo(64 - w - 1.6, my + 1.4 * sq, 64 - w * .82, my + 3.4 * sq, 64 - w / 2, my + 3.4 * sq);
     path.bezierCurveTo(64 - w * .2, my + 3.4 * sq, 64 - .55, my + 2.3 * sq, 64, my + 1 * sq);
@@ -4365,6 +4395,7 @@ const COS = [
   { id: "beanie",   c: "acc", e: "🧶", ko: "털모자", ja: "ニット帽", w: 990, y: 120 },
   { id: "glasses",  c: "acc", e: "👓", ko: "공부 안경", ja: "勉強メガネ", w: 990, y: 120 },
   { id: "crown",    c: "acc", e: "👑", ko: "함락 왕관", ja: "陥落の王冠", w: 1500, y: 160 },
+  { id: "santa_hat", c: "acc", e: "🎅", ko: "산타 냥이 모자 · 12월 한정", ja: "サンタ帽子・12月限定", w: 0, y: 0, lim: 1, hat: 1 },
   { id: "snd_jelly",c: "snd", e: "🔔", ko: "말랑 효과음 팩", ja: "ぷにぷに効果音", w: 1500, y: 160 },
   { id: "sup_gold", c: "skin", e: "🎖", ko: "후원냥 골드 (후원 보상)", ja: "応援ネコ・ゴールド（応援特典）", w: 0, y: 0, f: ["#fff6d6", "#f4cf6a", "#c8962e"], sup: 2 },
   { id: "set1",     c: "set", e: "🎁", ko: "젤리 냥이 세트 (스킨 3 + 리본)", ja: "ゼリーねこセット（スキン3＋リボン）", w: 4900, y: 500 } ];
@@ -4383,15 +4414,16 @@ function cosOpen(){ const pet = $("#pet"); if(!pet || $("#cosDr")) return; const
   ["pointerdown", "touchstart", "mousedown", "wheel"].forEach(ev => dr.addEventListener(ev, e => e.stopPropagation(), { passive: true }));
   pet.appendChild(dr);
   const pick = it => { const box = $("#cosPick"), price = x.cur(ja ? it.y : it.w), done = cm.want[it.id];
-    const own = cm.own && cm.own[it.id]; if(own){ const on = cm.on === it.id; box.innerHTML = `<div class="cos-pick"><p><b>${it.e} ${esc(ja ? it.ja : it.ko)}</b> · ${ja ? "所持中 ✓" : "보유 중 ✓"}</p>${it.f ? `<button type="button" class="cos-want" id="cosEq">${on ? (ja ? "外す" : "벗기") : (ja ? "着る" : "입히기")}</button>` : ""}</div>`;
-      petLift(dr); const eq = $("#cosEq"); if(eq) eq.onclick = () => { cm.on = on ? null : it.id; if(PET) PET.tryOn = null; save(); track("cos_equip", { id: it.id, on: !on }); pick(it); }; return; }
+    const own = cm.own && cm.own[it.id]; if(own){ const on = cm.on === it.id; box.innerHTML = `<div class="cos-pick"><p><b>${it.e} ${esc(ja ? it.ja : it.ko)}</b> · ${ja ? "所持中 ✓" : "보유 중 ✓"}</p>${it.hat ? `<button type="button" class="cos-want" id="cosHat">${cm.hat === it.id ? (ja ? "外す" : "벗기") : (ja ? "かぶる" : "쓰기")}</button>` : ""}${it.f ? `<button type="button" class="cos-want" id="cosEq">${on ? (ja ? "外す" : "벗기") : (ja ? "着る" : "입히기")}</button>` : ""}</div>`;
+      petLift(dr); const hb = $("#cosHat"); if(hb) hb.onclick = () => { cm.hat = cm.hat === it.id ? null : it.id; save(); track("cos_hat", { id: it.id, on: cm.hat === it.id }); pick(it); };
+      const eq = $("#cosEq"); if(eq) eq.onclick = () => { cm.on = on ? null : it.id; if(PET) PET.tryOn = null; save(); track("cos_equip", { id: it.id, on: !on }); pick(it); }; return; }
     if(payOn() && PAY_ITEMS[it.id] && !ja){ box.innerHTML = `<div class="cos-pick"><p><b>${it.e} ${esc(it.ko)}</b> · ${PAY_ITEMS[it.id][0].toLocaleString()}원</p><button type="button" class="cos-want" id="cosBuy">🛒 구매하기</button></div>`; petLift(dr); $("#cosBuy").onclick = () => payOpen(it.id); return; }
     box.innerHTML = `<div class="cos-pick"><p><b>${it.e} ${esc(ja ? it.ja : it.ko)}</b> · ${esc(price)}</p><button type="button" class="cos-want" id="cosWant"${done ? " disabled" : ""}>${esc(done ? x.wanted : x.want)}</button><div id="cosQ"></div></div>`;
     petLift(dr); $("#cosWant").onclick = () => { cm.want[it.id] = Date.now(); save(); track("cos_want", { id: it.id, price: ja ? it.y : it.w, cur: ja ? "JPY" : "KRW" });
       $("#cosWant").disabled = true; $("#cosWant").textContent = x.wanted;
       $("#cosQ").innerHTML = `<p style="margin:2px 0 6px">${esc(x.q(price))}</p><div class="row">${x.opts.map((o, i) => `<button type="button" class="btn sm" data-v="${i}">${esc(o)}</button>`).join("")}</div>`;
       petLift(dr); $("#cosQ").querySelectorAll("[data-v]").forEach(b => b.onclick = () => { track("cos_price", { id: it.id, v: +b.dataset.v, price: ja ? it.y : it.w, cur: ja ? "JPY" : "KRW" }); $("#cosQ").innerHTML = `<p style="margin:2px 0 0">${esc(x.thx)}</p>`; if(PET) petMsg(x.thx, 2400); }); }; };
-  const tab = c => { $("#cosRow").innerHTML = COS.filter(i => i.c === c && (!i.sup || (cm.own || {})[i.id])).map(card).join(""); const nt = dr.querySelector(".cos-note"); if(nt) nt.textContent = c === "snack" ? x.snackNote : x.note; dr.querySelectorAll(".cos-tabs button").forEach(z => z.setAttribute("aria-pressed", String(z.dataset.cat === c)));
+  const tab = c => { $("#cosRow").innerHTML = COS.filter(i => i.c === c && (!(i.sup || i.lim) || (cm.own || {})[i.id])).map(card).join(""); const nt = dr.querySelector(".cos-note"); if(nt) nt.textContent = c === "snack" ? x.snackNote : x.note; dr.querySelectorAll(".cos-tabs button").forEach(z => z.setAttribute("aria-pressed", String(z.dataset.cat === c)));
     $("#cosRow").querySelectorAll(".cos-it").forEach(b => b.onclick = () => onIt(b)); };
   dr.querySelectorAll(".cos-tabs button").forEach(b => b.onclick = () => tab(b.dataset.cat));
   const onIt = b => { const it = COS.find(c => c.id === b.dataset.id);
@@ -5418,7 +5450,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 load(); PET_SIG = petSig(); slimPresets(); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 addEventListener("storage", e => { if(e.key !== LS_KEY || !e.newValue || LOAD_BAD) return;   // 다른 탭에서 저장됨 → 이 탭 메모리에 합침(옛 탭이 새 기록을 덮지 않게)
