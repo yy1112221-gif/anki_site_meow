@@ -671,6 +671,7 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .s7c{display:flex;align-items:center;gap:10px;border-radius:18px;padding:10px 12px;margin:0 0 10px;background:rgba(217,74,126,.1);border:1.5px solid rgba(217,74,126,.35)} .s7c-ch{font-size:1.5rem;font-weight:800;letter-spacing:.05em;white-space:nowrap}
 .s7c-tx{flex:1;min-width:0;display:flex;flex-direction:column} .s7c-tx small{font-size:.74rem;color:var(--muted)} .s7c-tx b small{font-weight:600;margin-left:2px} .s7c-x{border:0;background:transparent;color:var(--muted);font-size:1rem;cursor:pointer;padding:4px}
 .ord-ans{min-height:64px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;padding:10px;border-radius:14px;border:2px dashed rgba(127,127,127,.3);margin:10px 0} .ord-ans.ok{border-color:var(--good);border-style:solid} .ord-ans.no{border-color:#f2708f;border-style:solid}
+.pk-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%} .pk-b{min-height:58px;border:2px solid rgba(127,127,127,.3);background:var(--card-bg,rgba(255,255,255,.7));color:inherit;border-radius:14px;padding:8px 10px;font:inherit;font-size:1.05rem;font-weight:700;cursor:pointer;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical} .pk-b.ok{border-color:#2fa86b;background:rgba(47,168,107,.16)} .pk-b.no{border-color:#d9534f;background:rgba(217,83,79,.14)} .pk-b:disabled{cursor:default;opacity:1} .juku-tag{display:inline-block;background:#ffd84d;color:#5a4400;border-radius:999px;padding:2px 10px;font-size:.85rem;font-weight:800}
 .ord-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:50px} .ord-t{border:2px solid rgba(127,127,127,.3);background:var(--card-bg,rgba(255,255,255,.7));color:inherit;border-radius:12px;padding:8px 12px;font:inherit;font-size:1.1rem;font-weight:700;cursor:pointer}
 @media (prefers-color-scheme:dark){.ord-t{background:rgba(255,255,255,.06)}}
 .sup-ov{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
@@ -1188,7 +1189,7 @@ ja: {
   slTitle:"🔥 いまどきスラング", slDesc:"毎日ニュースから自動で集めた流行語を、実際に使われた文で覚えます。スラングばかりでは使えないので、ふだんの単語に少しだけ混ぜるのがおすすめ。", slAsk:"スラングはどれくらい混ぜますか？", slRec:"おすすめ", slMixN:n=>`1日${n}語だけ混ぜる`, slMixAll:"スラング中心", slChange:"変更", slWhy:"普段の単語と一緒に少しずつ覚えると、実際の会話で自然に使えます。", slDone:(n,m)=>`スラング${n}語を準備しました（${m ? `1日${m}語` : "中心"}）`, slTag:"スラング",
   obHi:"…来たか。まず三つだけ決めろ", obLang:"何語を覚える？", obLevel:"今の実力は？（わからなければテスト）", obDiag:"1分でレベル診断", obGo:"準備ができたら「学習を始める」を押せ", obOwn:"自分の単語を入れたいなら", srsOne:"忘れそうになる直前に、もう一度出します（間隔反復）。",
   meanPh:"意味を日本語で", meanSame:"合ってた（意味は同じ）", meanDiff:"違った", meanMeh:"答えはこれだ。…貴様の答え、意味は同じか？",
-  modes:{ meaning:"意味を答える", scriptNew:"文字を覚える", script:"文字を読む", study:"まず当ててみる", cloze:"穴埋め", order:"語順ならべ", recall:"意味から書く", write:"作文", speak:"スピーキング" },
+  modes:{ meaning:"意味を答える", scriptNew:"文字を覚える", script:"文字を読む", study:"まず当ててみる", pick:"意味をえらぶ", trap:"読みをえらぶ", juku:"★まるごと覚える", cloze:"穴埋め", order:"語順ならべ", recall:"意味から書く", write:"作文", speak:"スピーキング" },
   left:n=>`残り${n}枚`, listen:"発音を聞く", listenEx:"例文を聞く", listenAgain:"もう一度聞く", listenMine:"自分の文を聞く",
   noExample:"例文がありません。単語帳で追加すると穴埋め問題が出ます。", gotIt:"覚えた、次へ",
   setSign:"看板ねこが通る間隔（ペット画面）", signOff:"出さない", sign30:"30秒ごと", sign60:"1分ごと", sign180:"3分ごと", sign600:"10分ごと",
@@ -1209,7 +1210,7 @@ ja: {
   qTitle:(d,n)=>`読み取り ${d}/${n}枚`, qClear:"写真をすべて消す", qDone:"ぜんぶ読み取りました", camDone:"完了", camHint:"画面のどこをタップしても撮れます。どんどん撮ってOK（読み取りは裏で進みます）", textFold:"読み取った文を見る・直す", qEmpty:"文字なし", qErr:"失敗",
   ocrLoading:"文字認識エンジンを準備中…（初回だけ数秒かかります）", ocrReading:n=>`読み取り中… ${n}%`, ocrFail:"読み取れませんでした。明るい場所で、文字が大きく写るように撮ってみてください。", ocrText:"読み取った文（間違いは直せます）", ocrReparse:"この文から単語を拾い直す", ocrPickWords:"学習優先度の高い順。★はおすすめ（選択ずみ・タップで外せます）", ocrScoring:"単語の優先度を計算中…", ocrLvUnknown:"珍", ocrWhy:w=>`優先度 ${Math.round((w.score||0)*100)}${w.rank ? ` · 頻度 ${w.rank}位` : ""} · 抜くと意味が変わる度 ${Math.round((w.abl||0)*100)} · つながり ${Math.round((w.tr||0)*100)}${w.tf > 1 ? ` · 写真に${w.tf}回` : ""}`, ocrUseLine:"写真の文を例文にする", ocrAdd:n=>`選んだ${n}語を追加`, ocrInDeck:"登録済み", ocrNone:"単語が見つかりませんでした。",
   impTitle:"ほかの言語から取り込む", impHelp:"別の言語で覚えている単語を、この言語に訳して追加します。同じ意味の単語どうしがつながり、カードに並んで表示されます。", impFrom:"取り込み元", impAll:"すべて選択", impGo:"選んだ単語を取り込む", impNoSource:"ほかの言語の単語がまだありません。", impWorking:(i,n)=>`訳しています（${i}/${n}）…`, impDone:(n,f)=>`${n}語を取り込みました。${f ? "訳せなかった単語は単語帳で直せます。" : ""}`, impPickSome:"取り込む単語を選んでください。",
-  nmAsk:{ meaning:l=>"この単語…意味は何だ？ 己の言葉で答えろ", scriptNew:l=>"新たなる文字だ…形と音、共に刻め", script:l=>"この文字…読んでみろ", study:l=>"初めて見る単語か…勘でいい、書け。迷いは敗北だ", cloze:l=>"空白…埋めてみせろ", order:l=>"バラバラだ…正しく並べてみせろ", recall:l=>`この意味…${l}で言ってみろ`, write:l=>"この単語で一文…創ってみせろ", speak:l=>"声に出せ。…聞いているぞ" },
+  nmAsk:{ meaning:l=>"この単語…意味は何だ？ 己の言葉で答えろ", scriptNew:l=>"新たなる文字だ…形と音、共に刻め", script:l=>"この文字…読んでみろ", study:l=>"初めて見る単語か…勘でいい、書け。迷いは敗北だ", pick:l=>"この単語の意味…どれだ？", trap:l=>"正しい読み…どれだ？ 罠に気をつけろ", juku:l=>"★これは一字ずつ読まない。まるごと覚えろ", cloze:l=>"空白…埋めてみせろ", order:l=>"バラバラだ…正しく並べてみせろ", recall:l=>`この意味…${l}で言ってみろ`, write:l=>"この単語で一文…創ってみせろ", speak:l=>"声に出せ。…聞いているぞ" },
   nmToday:(a,b)=>`今日は復習${a}枚、新しい単語${b}つ。…覚悟はいいか？`, nmEmpty:"…まだ単語がないようだな。覚えたい単語を持ってこい", nmNone:"今日やることはない。我は…少し目を閉じる", nmDone:"今日もよく耐えた…また明日来るがいい", nmResume:"戻ったか。さっきの続きから始めろ",
   nmFinishAll:"全て一発で…だと？ …認めよう。貴様は強い", nmFinishSome:"ご苦労だった。間違えた奴らは…明日また始末する", resumeTitle:"途中から再開できます", resumeBody:(n,d)=>`前回の続きです。終わった問題 ${d}・残り ${n}問。答えた分はすべて保存されています。`, resume:"続きから", restart:"最初からやり直す", guessLead:"初めての単語です。答えを見る前に、まず推測して書いてみましょう。", copyPrompt:"正解を1回書いてから次へ進みましょう。", copyPh:"正解を書き写す", copyAgain:"もう一度だ。正解をそのまま書け", copyOk:"よし。書けたな", skipCopy:"入力せずに次へ", hfOn:"⌨️ 入力に戻す", hfOff:"👆 入力なしで解く", hfHelp:"歩きながら・電車で：書かずに、答えを聞いて自己採点", remembered:"覚えてた", forgot:"忘れてた", setHf:"入力なしモード（答えを聞いて自己採点）", slow:"ゆっくり", popDetail:"詳細を見る", popAdd:"単語帳に追加", popInDeck:"単語帳にあり", popNoMeaning:"意味を取得できませんでした", popDict:"辞書で調べる", popExamples:"例文", popLoading:"例文を探しています…", popNoEx:"ほかの例文は見つかりませんでした。", popAdded:w=>`「${w}」を単語帳に追加しました。`, popClose:"閉じる", popHint:"文中の単語をタップすると意味と発音が見られます。", voice:"読み上げの声", voiceAuto:"自動（いちばん自然な声）", rate:"読み上げの速さ", preview:"試しに聞く", voiceTip:"iPhoneは「設定 › アクセシビリティ › 読み上げコンテンツ › 声」で「拡張」や「プレミアム」の声をダウンロードすると、ずっと聞き取りやすくなります。ネイティブ録音がある例文は録音を優先して再生します。", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"空欄に入る単語はどれ？ 初めてでもOK、まず推測してみましょう。", guessMCm:(m,l)=>`「${m}」は${l}でどれ？ まず推測してみましょう。`, guessType:"カンで入力OK", guessBtn:"これだと思う", guessRight:"当てたか…やるな", guessWrong:"答えはこれだ。先に悩んだ分、すでに深く刻まれている", guessSkip:"見当もつかない",
   hint:(m,c)=>`ヒント：${m} · 「${c}」で始まる`, recallQ:l=>`この意味の${l}の単語は？`, noMeaning:"（意味なし）",
@@ -1277,7 +1278,7 @@ ko: {
   slTitle:"🔥 요즘 슬랭", slDesc:"뉴스에서 매일 자동으로 모은 유행어를, 실제로 쓰인 문장으로 배워요. 슬랭만 배우면 쓸 데가 없으니, 평소 단어에 조금씩 섞는 걸 추천해요.", slAsk:"슬랭은 얼마나 섞을까요?", slRec:"추천", slMixN:n=>`하루 ${n}개만 섞기`, slMixAll:"슬랭 위주", slChange:"바꾸기", slWhy:"평소 단어랑 같이 한두 개씩 배워야 실제 대화에서 자연스럽게 써먹어요.", slDone:(n,m)=>`슬랭 ${n}개 준비 완료 (${m ? `하루 ${m}개씩` : "슬랭 위주"})`, slTag:"슬랭",
   obHi:"…왔군. 딱 세 가지만 정해라", obLang:"무슨 언어를 외울 건가?", obLevel:"지금 실력은? (모르겠으면 테스트)", obDiag:"1분 레벨 테스트", obGo:"준비되면 ‘학습 시작’을 눌러라", obOwn:"내 단어를 직접 넣고 싶으면", srsOne:"잊어버리기 직전에 다시 물어보는 방식(간격 반복)으로 복습해요.",
   meanPh:"뜻을 한국어로", meanSame:"맞았어 (뜻이 같아)", meanDiff:"틀렸어", meanMeh:"정답은 이것. …네 답, 뜻이 같나?",
-  modes:{ meaning:"뜻 말하기", scriptNew:"글자 외우기", script:"글자 읽기", study:"먼저 맞혀보기", cloze:"빈칸 채우기", order:"어순 맞추기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
+  modes:{ meaning:"뜻 말하기", scriptNew:"글자 외우기", script:"글자 읽기", study:"먼저 맞혀보기", pick:"뜻 고르기", trap:"읽기 고르기", juku:"★ 통째로 외우기", cloze:"빈칸 채우기", order:"어순 맞추기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
   left:n=>`남은 ${n}장`, listen:"발음 듣기", listenEx:"예문 듣기", listenAgain:"다시 듣기", listenMine:"내 문장 듣기",
   noExample:"예문이 없어요. 단어장에서 넣으면 빈칸 문제가 생깁니다.", gotIt:"외웠어요, 다음",
   setSign:"팻말 냥이 지나가는 간격 (펫 화면)", signOff:"안 나옴", sign30:"30초마다", sign60:"1분마다", sign180:"3분마다", sign600:"10분마다",
@@ -1298,7 +1299,7 @@ ko: {
   qTitle:(d,n)=>`읽는 중 ${d}/${n}장`, qClear:"사진 모두 지우기", qDone:"모두 읽었어요", camDone:"완료", camHint:"화면 아무 데나 탭하면 찍혀요. 마구 찍어도 OK (읽기는 뒤에서 진행돼요)", textFold:"읽은 문장 보기·고치기", qEmpty:"글자 없음", qErr:"실패",
   ocrLoading:"글자 인식 엔진 준비 중… (처음 한 번만 몇 초 걸려요)", ocrReading:n=>`읽는 중… ${n}%`, ocrFail:"글자를 읽지 못했어요. 밝은 곳에서 글자가 크게 나오게 찍어 보세요.", ocrText:"읽은 문장 (틀린 곳은 고칠 수 있어요)", ocrReparse:"이 문장에서 단어 다시 뽑기", ocrPickWords:"학습 우선순위 높은 순. ★는 추천(미리 선택됨 · 눌러서 빼기)", ocrScoring:"단어 우선순위 계산 중…", ocrLvUnknown:"희귀", ocrWhy:w=>`우선순위 ${Math.round((w.score||0)*100)}${w.rank ? ` · 빈도 ${w.rank}위` : ""} · 빼면 의미가 바뀌는 정도 ${Math.round((w.abl||0)*100)} · 연결성 ${Math.round((w.tr||0)*100)}${w.tf > 1 ? ` · 사진에 ${w.tf}번` : ""}`, ocrUseLine:"사진 속 문장을 예문으로 쓰기", ocrAdd:n=>`고른 ${n}개 추가`, ocrInDeck:"이미 있음", ocrNone:"단어를 찾지 못했어요.",
   impTitle:"다른 언어에서 가져오기", impHelp:"다른 언어로 외우고 있는 단어를 이 언어로 옮겨 추가해요. 같은 뜻의 단어끼리 연결돼서 카드에 함께 보여요.", impFrom:"가져올 언어", impAll:"전체 선택", impGo:"고른 단어 가져오기", impNoSource:"다른 언어 단어가 아직 없어요.", impWorking:(i,n)=>`번역 중 (${i}/${n})…`, impDone:(n,f)=>`${n}개 가져왔어요.${f ? " 번역 못 한 단어는 단어장에서 고칠 수 있어요." : ""}`, impPickSome:"가져올 단어를 골라 주세요.",
-  nmAsk:{ meaning:l=>"이 단어… 무슨 뜻이지? 네 말로 답해라", scriptNew:l=>"…새로운 글자다. 형태와 소리, 함께 새겨라", script:l=>"이 글자… 읽어 봐라", study:l=>"처음 보는 단어군. 감으로라도 써라. 망설임은 패배다", cloze:l=>"빈칸… 채워 봐라", order:l=>"흩어졌다… 제대로 줄 세워 봐라", recall:l=>`이 뜻을… ${l}로 말해 봐라`, write:l=>"이 단어로 문장 하나. 만들어라", speak:l=>"소리 내어 말해라. …듣고 있다" },
+  nmAsk:{ meaning:l=>"이 단어… 무슨 뜻이지? 네 말로 답해라", scriptNew:l=>"…새로운 글자다. 형태와 소리, 함께 새겨라", script:l=>"이 글자… 읽어 봐라", study:l=>"처음 보는 단어군. 감으로라도 써라. 망설임은 패배다", pick:l=>"이 단어 뜻… 어느 거지?", trap:l=>"맞는 읽기… 어느 거지? 함정 조심해라", juku:l=>"★ 통째로 외우는 단어다. 한 글자씩 읽으면 안 된다", cloze:l=>"빈칸… 채워 봐라", order:l=>"흩어졌다… 제대로 줄 세워 봐라", recall:l=>`이 뜻을… ${l}로 말해 봐라`, write:l=>"이 단어로 문장 하나. 만들어라", speak:l=>"소리 내어 말해라. …듣고 있다" },
   nmToday:(a,b)=>`오늘은 복습 ${a}장, 새 단어 ${b}개. …각오는 됐나?`, nmEmpty:"…아직 단어가 없군. 외울 단어를 가져와라", nmNone:"오늘 할 일은 없다. 나는… 잠시 눈을 감겠다", nmDone:"오늘도 버텼군. …내일 다시 오너라", nmResume:"돌아왔군. 아까 멈춘 곳에서 이어가라",
   nmFinishAll:"전부 단번에…? …인정하지. 넌 강하다", nmFinishSome:"수고했다. 틀린 놈들은… 내일 다시 처리한다", resumeTitle:"이어서 할 수 있어요", resumeBody:(n,d)=>`지난번에 하던 거예요. 끝낸 문제 ${d}개 · 남은 문제 ${n}개. 답한 건 모두 저장돼 있어요.`, resume:"이어서 하기", restart:"처음부터 다시", guessLead:"처음 보는 단어예요. 답을 보기 전에 먼저 짐작해서 써보세요.", copyPrompt:"정답을 한 번 따라 쓰고 넘어가요.", copyPh:"정답 따라 쓰기", copyAgain:"다시. 정답을 그대로 써라", copyOk:"좋다. 써냈군", skipCopy:"안 쓰고 넘어가기", hfOn:"⌨️ 직접 입력으로", hfOff:"👆 입력 없이 풀기", hfHelp:"걸으면서·지하철에서: 쓰지 않고 정답 듣고 직접 채점", remembered:"기억났어요", forgot:"까먹었어요", setHf:"입력 없이 모드 (정답 듣고 직접 채점)", slow:"느리게", popDetail:"상세 보기", popAdd:"단어장에 추가", popInDeck:"단어장에 있음", popNoMeaning:"뜻을 가져오지 못했어요", popDict:"사전에서 찾기", popExamples:"예문", popLoading:"예문 찾는 중…", popNoEx:"다른 예문을 찾지 못했어요.", popAdded:w=>`"${w}"을(를) 단어장에 추가했어요.`, popClose:"닫기", popHint:"문장 속 단어를 누르면 뜻과 발음을 볼 수 있어요.", voice:"읽어주는 목소리", voiceAuto:"자동 (가장 자연스러운 목소리)", rate:"읽기 속도", preview:"들어보기", voiceTip:"아이폰은 설정 › 손쉬운 사용 › 콘텐츠 말하기 › 음성에서 「향상된」·「프리미엄」 음성을 내려받으면 훨씬 잘 들립니다. 원어민 녹음이 있는 예문은 녹음을 먼저 재생합니다.", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"빈칸에 들어갈 단어는? 처음이어도 괜찮아요, 먼저 짐작해 보세요.", guessMCm:(m,l)=>`"${m}"은(는) ${l}로 뭘까요? 먼저 짐작해 보세요.`, guessType:"짐작해서 써 봐", guessBtn:"이거 같아요", guessRight:"맞혔군. …제법이다", guessWrong:"정답은 이것. 먼저 고민한 만큼, 이미 더 깊이 새겨졌다", guessSkip:"전혀 모르겠어요",
   hint:(m,c)=>`힌트: ${m} · ${c}로 시작`, recallQ:l=>`이 뜻의 ${l} 단어는?`, noMeaning:"(뜻 없음)",
@@ -1349,7 +1350,7 @@ const icCat = (n, cls) => `<img class="ic-cat${cls ? " " + cls : ""}" src="${NM_
 const nm = (name, px) => `<img class="nm" src="${NM_BASE}melt/cat_${CAT_OF[name] || "ask"}.svg" width="${Math.round(px*1.36)}" height="${px}" alt="" decoding="async">`;
 const say = (name, text, big) => `<div class="say${big ? " big" : ""}">${nm(name, big ? 128 : 64)}<div class="bubble">${text}</div></div>`;
 const fbh = (name, text) => `<div class="fbh">${nm(name, 64)}<strong>${text}</strong></div>`;
-const MODE_NM = { meaning:"st_default", scriptNew:"st_love", script:"cat_jpop", study:"cat_jpop", cloze:"st_default", recall:"st_listening", write:"st_default", speak:"listen_airpods" };
+const MODE_NM = { meaning:"st_default", scriptNew:"st_love", script:"cat_jpop", study:"cat_jpop", pick:"st_default", trap:"st_default", juku:"st_love", cloze:"st_default", recall:"st_listening", write:"st_default", speak:"listen_airpods" };
 const LEECH = 3;
 const LS_KEY = "focus-vocab-v1";
 const $ = s => document.querySelector(s);
@@ -1717,7 +1718,7 @@ function stepMode(c, s){
   const st = S.meta.settings, hasCloze = !!clozeParts(c), r = (c.reps || 0);
   s = s == null ? stepOf(c) : Math.max(0, Math.min(5, s));
   if(s <= 0) return "study";
-  if(s === 1) return "meaning";   // 1칸: 뜻 고르기(pick)·읽기 함정(trap)은 다음 배포에서 — 지금은 뜻 말하기
+  if(s === 1) return "pick";   // 1칸: 뜻 고르기. 일본어에 읽기 함정 데이터가 있으면 화면에서 trap으로, 보기가 모자라면 meaning으로 바뀜
   if(s === 2) return "meaning";
   if(s === 3) return hasCloze ? "cloze" : "recall";
   if(s === 4) return "recall";
@@ -1742,7 +1743,7 @@ function pickNewWithSlang(q){   // 슬랭은 하루 1~2개만 '촉촉하게' 섞
   const out = rest.slice(0, q - k), pos = Math.min(out.length, 2); out.splice(pos, 0, ...sl.slice(0, k)); return out; }
 let SES = null;
 function buildSession(){
-  const items = [];
+  const items = []; if(S.meta.settings.lang === "ja") jaxLoad();
   dueCards().forEach(c => stepItems(c).forEach(it => items.push(it)));
   // 새 단어는 3개씩 묶어(같은 단어를 연달아 묻지 않고 짧게 간격을 둠): 0칸 맞혀보기 → 1칸 문제. 첫날 2문제(계단 v2)
   const nw = pickNewWithSlang(newQuota());
@@ -2133,6 +2134,7 @@ function nextItem(){
     Promise.race([fillLazy(c), sleep(3000)]).then(() => { if(SES && SES.queue[0] === it) nextItem(); }); return; }
   if(c.example && !c.exampleKo && !it.trWait && (c.lang || "es") !== S.meta.settings.ui && Date.now() >= TR_OFF){ it.trWait = 1; Promise.race([fillTr(c), sleep(2500)]).then(() => { if(SES && SES.queue[0] === it) nextItem(); }); return; }
   if(it.mode === "recall" && !c.script && !nativeOk(c)) it.mode = "meaning";
+  if((it.mode === "pick" || it.mode === "study") && (c.lang || "es") === "ja" && !JAX && !it.jxWait && Date.now() - JAX_FAIL > 6e4){ it.jxWait = 1; Promise.race([jaxLoad(), sleep(2500)]).then(() => { if(SES && SES.queue[0] === it) nextItem(); }); return; }
   SES.state = { answered: false }; document.body.classList.add("focus"); renderItem(c, it.mode);
   { const bx = $("#sessionBox"), sy = bx.querySelector(":scope > .say"), st = bx.querySelector(".stage"); if(sy && st){ st.prepend(sy); sy.classList.add("qc"); bindQcat(sy); } }   // 문제 내는 냥이: 작게, 만질 수 있게
   centerBox($("#sessionBox"));
@@ -2156,7 +2158,7 @@ function resumeSession(){ nearPreload();
 function settleItem(correct){
   const it = SES.queue.shift();
   { const c = S.cards[it.id]; if(c){ LAST_Q.push({ w: c.word, m: String(c.meaning || "").slice(0, 60), md: it.mode, ok: !!correct }); if(LAST_Q.length > 3) LAST_Q.shift(); } }
-  if(it.mode !== "study" && it.mode !== "scriptNew" && !correct){
+  if(it.mode !== "study" && it.mode !== "scriptNew" && it.mode !== "juku" && !correct){
     SES.failed[it.id] = true;
     SES.queue.splice(Math.min(3, SES.queue.length), 0, it.st != null ? { id: it.id, mode: it.mode, st: it.st } : { id: it.id, mode: it.mode }); SES.queue = spreadQueue(SES.queue, [it.id]);
     SES.remaining[it.id]++;
@@ -2677,10 +2679,48 @@ function dockTidy(){ const box = $("#sessionBox"), dock = box && box.querySelect
       const sk = acts.querySelector("#skipCopy"); if(sk){ sk.classList.remove("ghost"); sk.classList.add("idk-b"); row.insertBefore(sk, row.firstChild); }
       acts.classList.toggle("hidden", !acts.querySelector("button:not(.hidden), .aud")); } bar.classList.toggle("hidden", !bar.children.length); requestAnimationFrame(fitDock); }; upd();
   new MutationObserver(upd).observe(dock, { subtree: true, childList: true, attributes: true, attributeFilter: ["id", "class"] }); }
+/* ── 레벨 디자인 v2 새 문제: 뜻 고르기(pick) · 읽기 함정(trap) · ★ 소개(juku). 데이터 presets/ja-extra.json은 처음 쓸 때 한 번 받아 메모리에 둠(실패하면 meaning) ── */
+let JAX = null, JAX_P = null, JAX_FAIL = 0;
+function jaxLoad(){ if(JAX) return Promise.resolve(JAX); if(JAX_P) return JAX_P; if(Date.now() - JAX_FAIL < 6e4) return Promise.resolve(null);
+  JAX_P = fetch("presets/ja-extra.json").then(r => { if(!r.ok) throw new Error("jax"); return r.json(); }).then(d => { JAX = (d && d.words) || {}; JAX_P = null; return JAX; }).catch(() => { JAX_FAIL = Date.now(); JAX_P = null; return null; }); return JAX_P; }
+const jaxOf = c => (JAX && (c.lang || "es") === "ja" && c.word) ? (JAX[c.word] || null) : null;
+const meanOnly = m => String(m || "").replace(/^\s*[ぁ-ゖァ-ヺー]+\s*[·・]\s*/, "").trim();
+function shuffle(a){ for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function trapOpts(c){ const jx = jaxOf(c), rd = readingOf(c); if(!jx || !rd || !Array.isArray(jx.trap) || !jx.trap.length) return null;
+  const tr = [...new Set(jx.trap.map(String).filter(x => x && x !== rd))].slice(0, 3); if(!tr.length) return null;
+  return { q: c.word, sub: meanOnly(c.meaning), ans: rd, opts: shuffle([rd, ...tr]), juku: !!jx.juku }; }
+function pickOpts(c){ const ans = meanOnly(c.meaning); if(!ans) return null; const mine = new Set(meanToks(ans)), lang = c.lang || "es", end = Array.from(c.word || "").pop() || "";
+  const seen = new Set([norm(ans)]), pool = cardsHere().filter(o => o.id !== c.id && (o.lang || "es") === lang && o.meaning && !o.script).map(o => ({ o, m: meanOnly(o.meaning) })).filter(z => z.m && !meanToks(z.m).some(x => mine.has(x)));
+  const score = z => (z.o.deck === c.deck ? 4 : 0) + (Math.abs((z.o.level || 0) - (c.level || 0)) <= 1 ? 2 : 0) + ((Array.from(z.o.word || "").pop() || "") === end ? 3 : 0) + Math.random() * 1.5;
+  const out = []; pool.map(z => [score(z), z]).sort((a, b) => b[0] - a[0]).forEach(([, z]) => { if(out.length >= 3) return; const k = norm(z.m); if(seen.has(k)) return; seen.add(k); out.push(z.m); });
+  if(out.length < 3) return null; return { q: c.word, sub: "", ans, opts: shuffle([ans, ...out]) }; }
+function diffKind(a, b){ const ja = S.meta.settings.ui === "ja", L = ja ? { l: "長音", d: "濁音", s: "促音" } : { l: "장음", d: "탁음", s: "촉음" };
+  const dk = s => s.normalize("NFD").replace(/[\u3099\u309A]/g, "").normalize("NFC"); a = toHira(String(a)); b = toHira(String(b));
+  if(a.replace(/っ/g, "") === b.replace(/っ/g, "")) return L.s; if(dk(a) === dk(b)) return L.d;
+  const lg = s => s.replace(/([おこそとのほもよろごぞどぼぽょゅ])う/g, "$1").replace(/([えけせてねへめれげぜでべぺ])い/g, "$1").replace(/ー/g, ""); if(lg(a) === lg(b) || a.replace(/[うい]/g, "") === b.replace(/[うい]/g, "")) return L.l; return ""; }
+function askChoice(c, kind, o){ const box = $("#sessionBox"), x = t(), ja = S.meta.settings.ui === "ja"; SES.state = { answered: false };
+  box.innerHTML = head(c, kind) + `<div class="stage"><div><div class="word" lang="${esc(c.lang || "")}">${esc(o.q)}</div>${o.sub ? `<p class="q-sub">${esc(o.sub)}</p>` : ""}</div><div id="fb"></div></div>
+    <div class="dock"><div class="pk-grid" id="pkG">${o.opts.map((v, i) => `<button type="button" class="pk-b" data-i="${i}"${kind === "trap" ? ` lang="ja"` : ""}>${esc(v)}</button>`).join("")}</div>
+    <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${x.idk}</button><span class="grow"></span><button class="btn primary" type="button" id="chk" disabled>${x.next}</button></div></div>`;
+  const t0 = Date.now(), btns = [...box.querySelectorAll(".pk-b")];
+  const done = i => { if(SES.state.answered) return; SES.state.answered = true; const v = i == null ? null : o.opts[i], ok = v === o.ans;
+    btns.forEach(b => { b.disabled = true; const bv = o.opts[+b.dataset.i]; if(bv === o.ans) b.classList.add("ok"); else if(+b.dataset.i === i) b.classList.add("no"); });
+    let why = ""; if(!ok && kind === "trap" && v){ const k = o.juku ? (ja ? "特別な読み" : "특수 읽기") : diffKind(o.ans, v); if(k) why = ja ? `ちがいは「${k}」` : `차이: ${k}`; }
+    const line = kind === "trap" ? `${esc(c.word)} · ${esc(o.ans)} · ${esc(o.sub)}` : `${esc(c.word)}${readingOf(c) ? " · " + esc(readingOf(c)) : ""} · ${esc(o.ans)}`;
+    $("#fb").innerHTML = `<div class="feedback ${ok ? "ok" : "no"}"><strong>${esc(ok ? (ja ? "正解だニャ" : "정답이다냥") : (ja ? "正解はこれだ" : "정답은 이거다"))}</strong><span class="fb-mean">${line}</span>${why ? `<span class="small">${esc(why)}</span>` : ""}</div>`;
+    try{ speak(c.word); }catch(_){} try{ track("choice", { k: kind, ok, ms: Date.now() - t0 }); }catch(_){}
+    const nb = $("#chk"); nb.disabled = false; nb.onclick = () => settleItem(ok); const ik = $("#idk"); if(ik) ik.style.visibility = "hidden"; };
+  btns.forEach(b => b.onclick = () => done(+b.dataset.i)); $("#idk").onclick = () => done(null); }
+function askJuku(c){ const box = $("#sessionBox"), x = t(), ja = S.meta.settings.ui === "ja", rd = readingOf(c); SES.state = { answered: true };
+  box.innerHTML = head(c, "juku") + `<div class="stage"><div><span class="juku-tag">${ja ? "★ まるごと覚える単語" : "★ 통째로 외우는 단어"}</span><div class="word" lang="ja">${esc(c.word)}</div><p class="q-sub" lang="ja" style="font-size:1.25rem;font-weight:800">${esc(rd)}</p><p class="q-sub">${esc(meanOnly(c.meaning))}</p></div><div id="fb"></div></div>
+    <div class="dock"><div class="row" id="acts">${listenBtn(rd || c.word, x.listenAgain)}<span class="grow"></span><button class="btn primary" type="button" id="chk">${x.next}</button></div></div>`;
+  bindSay(box); try{ speak(c.word); }catch(_){} $("#chk").onclick = () => settleItem(true); }
 function renderItem(c, mode){ const r = renderItem0(c, mode); try{ dockTidy(); }catch(_){} try{ hfBig(); }catch(_){} requestAnimationFrame(fitDock); return r; }
 function renderItem0(c, mode){
   if(c.script) return askScript(c, mode);
   if(mode === "order") return askOrder(c);
+  if(mode === "pick" || mode === "trap"){ const tr = trapOpts(c); if(tr && !S.meta.settings.handsFree) return askChoice(c, "trap", tr); const pk = ((c.lang || "es") === "ja" && !JAX) ? null : pickOpts(c); if(pk && !S.meta.settings.handsFree) return askChoice(c, "pick", pk); return renderItem(c, "meaning"); }
+  if(mode === "study" && jaxOf(c) && jaxOf(c).juku && readingOf(c)) return askJuku(c);
   const box = $("#sessionBox"), x = t();
   const hf = !!S.meta.settings.handsFree;
   if(hf && mode === "write") mode = (c.example && trShow(c)) ? "speak" : "recall";
@@ -3526,7 +3566,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v136";
+const APP_VER = "v137";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5496,7 +5536,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, trapOpts, pickOpts, diffKind, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 load(); PET_SIG = petSig(); migrateSteps(); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 addEventListener("storage", e => { if(e.key !== LS_KEY || !e.newValue || LOAD_BAD) return;   // 다른 탭에서 저장됨 → 이 탭 메모리에 합침(옛 탭이 새 기록을 덮지 않게)

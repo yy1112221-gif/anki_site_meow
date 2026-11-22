@@ -29,7 +29,7 @@ async def main():
     ok("이사: 다른 키 변화 0 (u 포함)", r==[], r[:8])
     # 칸 → 문제
     r=await pg.evaluate("""()=>{ const t=window.__t; const c={id:'z',lang:'es',word:'hablar',meaning:'말하다',example:'',reps:0,level:1,lapses:0}; return [0,1,2,3,4,5].map(s=>t.stepMode(c,s)); }""")
-    ok("칸→문제 (빈칸 없는 카드 3칸=recall, 5칸=cloze↔recall 대체)", r[:5]==["study","meaning","meaning","recall","recall"] and r[5] in ("recall","order","write","speak"), r)
+    ok("칸→문제 (빈칸 없는 카드 3칸=recall, 5칸=cloze↔recall 대체)", r[:5]==["study","pick","meaning","recall","recall"] and r[5] in ("recall","order","write","speak"), r)
     r=await pg.evaluate("""()=>{ const t=window.__t; const c={id:'l',lang:'es',word:'hablar',meaning:'말하다',reps:4,level:3,lapses:4,step:4}; return t.stepItems(c).map(i=>[i.mode,i.st]); }""")
     ok("끈질긴 단어: 한 칸 아래 + 지금 칸 2문제", r==[["meaning",3],["recall",4]] or (len(r)==2 and r[0][1]==3 and r[1][1]==4), r)
     # 오르내리기
@@ -52,7 +52,7 @@ async def main():
     ok("mergeData: A 3칸 · B 4칸 → 4 (늦은 stepAt)", r==[4,"2026-11-21",500], r)
     # 새 단어 첫날 2문제
     r=await pg.evaluate("""()=>{ const t=window.__t, S=t.S(); Object.values(S.cards).forEach(c=>{ if(!c.isNew) c.due=t.addDays(t.today(),5); }); const s=t.buildSession(); const per={}; s.queue.forEach(i=>{ per[i.id]=(per[i.id]||[]).concat([i.mode+':'+i.st]); }); return per; }""")
-    ok("새 단어 첫날 = 맞혀보기 + 1칸 (2문제)", all(sorted(v)==sorted(["study:0","meaning:1"]) for v in r.values()) and len(r)>=1, r)
+    ok("새 단어 첫날 = 맞혀보기 + 1칸 뜻 고르기 (2문제)", all(sorted(v)==sorted(["study:0","pick:1"]) for v in r.values()) and len(r)>=1, r)
     # 세션 진행: 새 단어 맞힘 → step 2
     r=await pg.evaluate("""()=>{ const t=window.__t, S=t.S(); const s=t.buildSession(); s.queue=s.queue.filter(i=>i.id==='n1'); s.remaining={n1:s.queue.length}; t.setSES(s);
       try{ t.settleItem(true); t.settleItem(true); }catch(e){ return 'err '+e; } const c=S.cards.n1; return [c.step, c.isNew, c.stepAt===t.today(), S.meta.session ? !!S.meta.session.ask : 'none']; }""")
@@ -61,6 +61,47 @@ async def main():
     r=await pg.evaluate("""()=>{ const t=window.__t, S=t.S(); t.setSES({queue:[{id:'a3',mode:'cloze'},{id:'a3',mode:'recall'}],done:0,failed:{},remaining:{a3:2},finished:[],state:null});
       try{ t.settleItem(true); t.settleItem(true); }catch(e){ return 'err '+e; } const c=S.cards.a3; return [c.step, c.reps]; }""")
     ok("옛 세션(st 없음) 이어 하기 정상 → 칸 +1", r==[5,4], r)
+    # ── B2: trap·pick·juku ──
+    pg2=await b.new_page(viewport={"width":390,"height":844}); e2=[]; pg2.on("pageerror",lambda e:e2.append(str(e)))
+    await pg2.goto("http://localhost:8765/index.html")
+    words=[("今朝","けさ · 오늘 아침"),("財布","さいふ · 지갑"),("近い","ちかい · 가깝다"),("行く","いく · 가다"),("食べる","たべる · 먹다"),("水","みず · 물"),("雑誌","ざっし · 잡지")]
+    cards={f"j{i}":dict(id=f"j{i}",lang="ja",word=w,meaning=m,example="",level=1,due="2026-01-01",isNew=False,lapses=0,reps=2,created=i,introduced="2026-01-01",mastered=False,relearn=False,log=[],deck="default",step=1) for i,(w,m) in enumerate(words)}
+    await pg2.evaluate("s=>localStorage.setItem('focus-vocab-v1', s)", json.dumps({"cards":cards,"meta":{"setup":1,"tutAsked":1,"loginAsked":1,"days":{},"settings":{"ui":"ko","lang":"ja"},"stepv":1}}))
+    await pg2.reload(); await pg2.wait_for_timeout(1500)
+    r=await pg2.evaluate("""async()=>{ const t=window.__t, S=t.S(); await t.jaxLoad(); const tr=t.trapOpts(S.cards.j1), pk=t.pickOpts(S.cards.j2), nj=t.trapOpts(S.cards.j3);
+      return {tr: tr && [tr.ans, tr.opts.length, tr.opts.includes('ざいふ')], pk: pk && [pk.ans, pk.opts.length, new Set(pk.opts).size, pk.opts.every(o=>!/^[ぁ-ゖ]+ ·/.test(o))], nj: nj, jk: !!(t.jaxOf(S.cards.j0)||{}).juku}; }""")
+    ok("trap 보기 = 정답 읽기 + 함정 (財布 → さいふ/ざいふ…)", r["tr"] and r["tr"][0]=="さいふ" and r["tr"][1]>=2 and r["tr"][2], r)
+    ok("pick 보기 4개 · 겹침 없음 · 읽기 앞머리 지움", r["pk"]==["가깝다",4,4,True], r)
+    ok("trap 데이터 없는 단어 → trap 안 냄", r["nj"] is None, r)
+    r=await pg2.evaluate("""()=>{ const d=window.__t.diffKind; return [d('ざっし','ざし'), d('さいふ','ざいふ'), d('きょう','きょ'), d('とうきょう','ときょう'), d('いく','ゆく')]; }""")
+    ok("diffKind: 촉음·탁음·장음·없음", r==["촉음","탁음","장음","장음",""], r)
+    # 화면: trap 2×2 → 오답 고르면 빨강+정답 초록+차이 줄, 한 화면
+    r=await pg2.evaluate("""()=>{ const t=window.__t, S=t.S(); t.setSES({queue:[{id:'j1',mode:'pick',st:1}],done:0,failed:{},remaining:{j1:1},finished:[],state:null});
+      document.querySelector('#sessionStart').classList.add('hidden'); document.querySelector('#sessionBox').classList.remove('hidden'); t.nextItem();
+      const bs=[...document.querySelectorAll('#sessionBox .pk-b')]; const wrong=bs.find(b=>b.textContent!=='さいふ'); wrong.click();
+      return {n:bs.length, no:wrong.classList.contains('no'), okb:bs.some(b=>b.classList.contains('ok')&&b.textContent==='さいふ'), fb:document.querySelector('#fb').textContent, nx:!document.querySelector('#chk').disabled, sh:document.documentElement.scrollHeight<=innerHeight+1}; }""")
+    ok("trap 화면: 2×2 버튼 · 오답 빨강 · 정답 초록 · 다음 버튼", r["n"]>=2 and r["no"] and r["okb"] and r["nx"] and "さいふ" in r["fb"], r)
+    ok("trap 화면 스크롤 없음(390×844)", r["sh"], r)
+    await pg2.evaluate("()=>document.querySelector('#chk').click()"); await pg2.wait_for_timeout(300)
+    r=await pg2.evaluate("()=>{ const t=window.__t, Q=t.getSES().queue; const re=Q.length===1&&Q[0].st===1; t.settleItem(true); const c=t.S().cards.j1; return [re, c.step, c.lapses]; }")
+    ok("trap 틀림 → 다시 내기(칸 유지) → 끝나면 칸 1(최소 1)·lapses +1", r==[True,1,1], r)
+    # juku: 0칸 ★ 소개, 채점 없음
+    r=await pg2.evaluate("""()=>{ const t=window.__t, S=t.S(); const c=S.cards.j0; c.isNew=true; c.step=0; t.setSES({queue:[{id:'j0',mode:'study',st:0},{id:'j0',mode:'pick',st:1}],done:0,failed:{},remaining:{j0:2},finished:[],state:null}); t.nextItem();
+      const tag=!!document.querySelector('#sessionBox .juku-tag'); document.querySelector('#chk').click(); return [tag, !!t.getSES().failed.j0, t.getSES().queue.length]; }""")
+    ok("★ juku 소개 화면 · 채점 없음", r==[True,False,1], r)
+    await pg2.close()
+    # 오프라인: ja-extra 받기 실패 → meaning
+    pg3=await b.new_page(); e3=[]; pg3.on("pageerror",lambda e:e3.append(str(e)))
+    await pg3.route("**/ja-extra.json", lambda rt: rt.abort())
+    await pg3.goto("http://localhost:8765/index.html"); await pg3.wait_for_timeout(1500)
+    await pg3.evaluate("s=>localStorage.setItem('focus-vocab-v1', s)", json.dumps({"cards":cards,"meta":{"setup":1,"tutAsked":1,"loginAsked":1,"days":{},"settings":{"ui":"ko","lang":"ja"},"stepv":1}}))
+    await pg3.reload(); await pg3.wait_for_timeout(1500)
+    r=await pg3.evaluate("""async()=>{ const t=window.__t; const j=await t.jaxLoad(); t.setSES({queue:[{id:'j1',mode:'pick',st:1}],done:0,failed:{},remaining:{j1:1},finished:[],state:null});
+      document.querySelector('#sessionStart').classList.add('hidden'); document.querySelector('#sessionBox').classList.remove('hidden'); t.nextItem(); await new Promise(r=>setTimeout(r,2800));
+      return [j, document.querySelectorAll('#sessionBox .pk-b').length, !!document.querySelector('#sessionBox #ans')]; }""")
+    ok("ja-extra 실패(오프라인) → trap 대신 meaning, 오류 없음", r[0] is None and r[1]==0 and r[2] and not e3, [r,e3[:2]])
+    await pg3.close()
+    ok("B2 페이지 오류 없음", not e2, e2[:3])
     await pg.wait_for_timeout(300)
     ok("페이지 오류 없음", not errs, errs[:3])
     await b.close()
