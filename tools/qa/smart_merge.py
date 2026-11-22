@@ -4,7 +4,7 @@
   - 기준(base) = PR이 갈라진 지점, PR = gateN, 지금 = origin/main
   - 항목 i 를 PR이 바꿨고 지금 main 의 i 가 기준과 같으면 → PR 값으로
   - 둘 다 같은 값으로 바꿨으면 → 그대로 / 서로 다르게 바꿨으면 → 충돌(자동으로 고르지 않음)
-  - 그 밖의 파일: main 쪽이 그 파일을 안 바꿨으면 PR 것으로, 둘 다 바꿨으면 충돌
+  - 그 밖의 파일: main 쪽이 안 바꿨으면 PR 것으로, 둘 다 바꿨으면 줄 단위 3자 병합(같은 줄을 둘 다 고쳤을 때만 충돌)
 결과: MERGED (exit 0, 로컬 main에 병합 커밋 — 부모 2개라 GitHub가 PR을 merged로 표시) / CONFLICT: … (exit 4, 아무것도 안 바꿈)"""
 import json, os, subprocess, sys
 n = sys.argv[1]; head = f"gate{n}"
@@ -52,6 +52,14 @@ for line in changed:
             compact = "\n" not in o.strip()[:200]
             txt = json.dumps(R, ensure_ascii=False, separators=(",", ":")) if compact else json.dumps(R, ensure_ascii=False, indent=1)
             writes[p] = txt + ("\n" if o.endswith("\n") else ""); continue
+    if b is not None and o is not None and t is not None:   # 그 밖의 텍스트 파일: 줄 단위 3자 병합(겹치는 줄을 양쪽이 고쳤을 때만 충돌)
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            fo, fb, ft = (os.path.join(d, x) for x in ("o", "b", "t"))
+            for f_, s_ in ((fo, o), (fb, b), (ft, t)): open(f_, "w", encoding="utf-8").write(s_)
+            r = subprocess.run(["git", "merge-file", "-p", fo, fb, ft], capture_output=True)
+            if r.returncode == 0: writes[p] = r.stdout.decode("utf-8"); continue
+            conf.append(f"{p}: 같은 줄을 양쪽이 고침({r.returncode}곳)"); continue
     conf.append(f"{p}: PR과 main이 같은 파일을 둘 다 고침")
 if conf: out("CONFLICT: " + "; ".join(conf[:6]), 4)
 for p, txt in writes.items():
