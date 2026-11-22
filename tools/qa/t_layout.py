@@ -27,6 +27,16 @@ async def main():
           return {sh:document.scrollingElement.scrollHeight, ih:innerHeight, cb:Math.round(card.getBoundingClientRect().bottom), nt:Math.round(nt)}; }""")
         ok(f"홈 {W}×{H} {name}: 스크롤 없음", r["sh"]<=r["ih"]+2, r)
         ok(f"홈 {W}×{H} {name}: 카드가 아래 메뉴에 안 가림", r["cb"]<=r["nt"]+2, r)
+      # 냥이 화면(백로그 L): 겹침 없음 · 스크롤 없음
+      st=state("due"); st["meta"]["pet"]={"inv":{"kari":3,"nibo":2,"sasa":1,"can":1}}
+      await pg.evaluate("s=>localStorage.setItem('focus-vocab-v1', s)", json.dumps(st)); await pg.reload(); await pg.wait_for_timeout(1800)
+      await pg.evaluate("window.__t.showView('today')"); await pg.evaluate("window.__t.openPet()"); await pg.wait_for_timeout(900)
+      r=await pg.evaluate("""()=>{ const R=s=>{const e=document.querySelector(s); return e&&e.offsetHeight?e.getBoundingClientRect():null};
+        const hit=(a,b)=>a&&b&&a.left<b.right-1&&b.left<a.right-1&&a.top<b.bottom-1&&b.top<a.bottom-1;
+        const h=R('#pet .pet-hint'); const bad=['#petClose','#petSnd','#petCos','#petBrag'].filter(s=>hit(h,R(s)));
+        const p=document.querySelector('#pet'); return {bad, inner:p.scrollHeight-p.clientHeight, hb:h&&Math.round(h.bottom), ih:innerHeight}; }""")
+      ok(f"냥이 화면 {W}×{H}: 안내 줄이 버튼과 안 겹침", not r["bad"], r)
+      ok(f"냥이 화면 {W}×{H}: 스크롤 없음", r["inner"]<=2, r)
       await ctx.close()
     ok("페이지 오류 없음", not errs, errs[:3])
     await b.close()
