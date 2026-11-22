@@ -771,6 +771,11 @@ body.dropping::after{content:"📥";position:fixed;inset:10px;z-index:90;display
 .pitem.rec{outline:2px solid #e8a400;background:#fff6d6}
 .diag{margin-top:12px;padding:14px;border-radius:20px;background:var(--glass-strong);border:1px solid var(--glass-edge);display:flex;flex-direction:column;gap:10px}
 .dres{font-size:1.2rem;color:var(--ink)}
+.dc-h{display:flex;gap:10px;align-items:center} .dc-ti{font-size:2rem;line-height:1} .dcard.fresh{animation:dcIn .45s ease-out}
+@keyframes dcIn{0%{transform:scale(.92);opacity:0}70%{transform:scale(1.03);opacity:1}100%{transform:none}}
+.dpg-st{display:inline-flex;gap:3px;align-items:center;font-size:.9rem;margin:0 auto 0 8px;min-width:0;white-space:nowrap;overflow:hidden} .dpg-st i{font-style:normal;color:var(--muted);transition:transform .25s} .dpg-st i.on{transform:translateY(-2px) scale(1.25)} .dpg-mood{margin-left:4px;font-style:normal;font-size:.8rem;font-weight:700;color:var(--accent)}
+.chiptog.boing{animation:boing .28s ease-out} @keyframes boing{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.dcard.fresh,.chiptog.boing{animation:none}}
 .dbars{display:flex;flex-direction:column;gap:6px}
 .dbar{display:grid;grid-template-columns:52px 1fr 40px;gap:8px;align-items:center;font-size:.8rem}
 .dbar div{height:10px;border-radius:999px;background:var(--field);overflow:hidden} .dbar i{display:block;height:100%;background:var(--accent);border-radius:999px}
@@ -1893,7 +1898,7 @@ function spreadQueue(items, recent){
 function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1); while(S.meta.days[d]){ n++; d = addDays(d, -1); } return n; }
 
 function renderStart(){
-  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); moveIn(); setTimeout(moveBanner, 600); authBoot(); setTimeout(payBoot, 300); setTimeout(payRetry, 1500); setTimeout(buyBoot, 700); setTimeout(homePetBoot, 450); setTimeout(giftCheck, 600); setTimeout(nickBoot, 2500); }
+  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); moveIn(); setTimeout(moveBanner, 600); authBoot(); setTimeout(payBoot, 300); setTimeout(payRetry, 1500); setTimeout(buyBoot, 700); setTimeout(diagBoot, 800); setTimeout(homePetBoot, 450); setTimeout(giftCheck, 600); setTimeout(nickBoot, 2500); }
   if(maybeLoginAsk._pending && !SES){ maybeLoginAsk._pending = 0; setTimeout(maybeLoginAsk, 1500); }
   const box = $("#sessionStart"), pos = box.querySelector(".poster");
   box.querySelectorAll(".say .bubble").forEach(b => { b.classList.add("tapme"); b.onclick = () => { if(NERD_ON) return; if(Math.random() < .08 && nerdPop(b)) return; if(Math.random() < .3){ b.textContent = sciLine(); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); try{ sfxPoyon(.15); }catch(e){} return; } const st = meltStage(), L = st ? meltL().home[st] : (t().homeTalk || []); if(!L.length) return; let i; do{ i = Math.floor(Math.random() * L.length); }while(L.length > 1 && i === renderStart.last); renderStart.last = i;
@@ -1961,7 +1966,8 @@ async function renderOnboard(box){   // 첫 시작: ① 배울 언어 ② 지금
     const gb = $("#goAddB"); if(gb) gb.onclick = () => showView("add"); return; }
   lv.innerHTML = `<button class="btn primary onb-diag" type="button" id="obDiag">🧪 ${esc(x.obDiag)}</button><div class="onb-pills">${set.levels.map(l => `<button class="btn" type="button" data-oblv="${l.id}">${esc(lvLabel(l))}</button>`).join("")}</div>
     ${SCRIPT_SETS[lang] ? `<button class="btn ghost sm" type="button" id="goScript">🔤 ${esc(x.scriptTitle)}</button>` : ""}`;
-  $("#obDiag").onclick = () => { $("#obDiag").classList.add("hidden"); startDiag(lang, lv.parentElement.querySelector("#diagBox")); };
+  $("#obDiag").onclick = () => { $("#obDiag").classList.add("hidden"); startDiag(lang, lv.parentElement.querySelector("#diagBox"), "onboard"); };
+  { const odg = (S.meta.diag || {})[lang], ob = lv.parentElement.querySelector("#diagBox"); if(odg && ob){ $("#obDiag").classList.add("hidden"); ob.innerHTML = diagCardHTML(lang, odg, set); diagCardBind(lang, odg, set, ob); diagSeen("onboard"); } }
   lv.querySelectorAll("[data-oblv]").forEach(b => b.onclick = () => addPreset(lang, b.dataset.oblv, b));
   const gs = $("#goScript"); if(gs) gs.onclick = () => scr7Open();
 }
@@ -3740,7 +3746,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v162";
+const APP_VER = "v163";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5328,12 +5334,13 @@ async function renderPresets(){
   const set = idx.sets[lang]; $("#presetCard").classList.toggle("hidden", !set && !SCRIPT_SETS[lang] && !SLANG_LANGS.includes(lang)); renderSlangBox(lang); if(!set){ box.innerHTML = scriptSectionHTML(lang); box.querySelectorAll("[data-scr]").forEach(b => b.onclick = () => addScriptSet(lang, b.dataset.scr)); return; }
   const dg = (S.meta.diag || {})[lang];
   box.innerHTML = `<div class="row" style="gap:8px;flex-wrap:wrap;align-items:center"><button class="btn primary" type="button" id="diagBtn">${esc(x.diagBtn)}</button>${dg ? `<span class="small muted">${esc(x.lastDiag(dg.est, dg.date.slice(5).replace("-", "/")))}</span>` : ""}</div>
-    <div id="diagBox"></div>
+    <div id="diagBox">${dg ? diagCardHTML(lang, dg, set) : ""}</div>
     <div class="plist">${set.levels.map(lv => { const done = decks().some(d => d.preset === lang + "-" + lv.id); return `<div class="pitem${dg && dg.rec === lv.id ? " rec" : ""}"><b>${esc(lvLabel(lv))}</b><span>${lv.n.toLocaleString()}</span><button class="btn sm${done ? "" : " primary"}" type="button" data-pre="${lv.id}" ${done ? "disabled" : ""}>${done ? "✓" : esc(x.presetAdd)}</button></div>`; }).join("")}</div>
     <p class="tiny muted">${esc(x.presetSrc)}: <a href="${set.url}" target="_blank" rel="noopener">${esc(set.src)}</a></p><p class="small" id="presetNote" aria-live="polite"></p>${scriptSectionHTML(lang)}`;
   box.querySelectorAll("[data-scr]").forEach(b => b.onclick = () => addScriptSet(lang, b.dataset.scr));
   box.querySelectorAll("[data-pre]").forEach(b => b.onclick = () => addPreset(lang, b.dataset.pre, b));
-  $("#diagBtn").onclick = () => startDiag(lang, box.querySelector("#diagBox"));
+  $("#diagBtn").onclick = () => startDiag(lang, box.querySelector("#diagBox"), "presets");
+  if(dg){ diagCardBind(lang, dg, set, box.querySelector("#diagBox")); diagSeen("presets"); }
 }
 /* セットは全部をカードにしない: 60語ずつ「補充」する（保存容量・速さのため）。デッキに出典と読み進めた位置だけ持つ */
 const PRESET_CHUNK = 60, PRESET_LOW = 25, PRESET_DATA = {};
@@ -5443,8 +5450,8 @@ async function addPreset(lang, lvId, btn, skip){
     const name = presetDeckName(lang, lv); const d = addDeck(name); d.preset = lang + "-" + lvId; d.skip = (skip || []).slice(0, 200); d.cursor = 0;
     const n = materialize(d, data, PRESET_CHUNK), k = (skip || []).length;
     save(); renderAll(); const msg = x.presetDone(lv.n, name, k); const nt = $("#presetNote"); if(nt) nt.textContent = msg; toast(msg); showView("today"); window.scrollTo({ top: 0, behavior: "smooth" }); const sb = $("#startBtn"); if(sb) sb.classList.add("pulse");
-  }catch(e){ if(btn){ btn.disabled = false; btn.textContent = x.presetAdd; } toast(x.ocrFail); }
-  renderPresets();
+  }catch(e){ if(btn){ btn.disabled = false; btn.textContent = x.presetAdd; } toast(x.ocrFail); renderPresets(); return false; }
+  renderPresets(); return true;
 }
 /* 勉強するときに、意味（表示言語）と例文を取りに行く */
 const LAZY = new Map();
@@ -5475,8 +5482,8 @@ function fillLazy(c){
 }
 async function prefetchLazy(ids){ for(const id of ids){ const c = S.cards[id]; if(c && c.lazy){ await fillLazy(c); await sleep(300); } else if(c && c.example && !c.exampleKo){ await fillTr(c); await sleep(300); } } }
 /* レベル診断: 各レベルから数語＋存在しない単語。わかる率を「うそ○」で補正（yes/no 語彙テスト） */
-async function startDiag(lang, host){
-  const x = t(), idx = await presetIndex(), dg = idx.diag[lang], set = idx.sets[lang]; if(!dg) return;
+async function startDiag(lang, host, from){
+  const x = t(), idx = await presetIndex(), dg = idx.diag[lang], set = idx.sets[lang]; if(!dg) return; track("diag_start", { lang, from: from || "" });
   // 적응형: 한 페이지 = 지금 레벨 단어 4 + 없는 단어 1. 잘 알면 한 단계 위, 모르면 한 단계 아래로 (10페이지)
   const shuf = a => a.slice().sort(() => Math.random() - .5), pools = {}, fakes = shuf(dg.fake), L = set.levels.map(l => l.id);
   set.levels.forEach(lv => pools[lv.id] = shuf(dg.levels[lv.id] || []));
@@ -5487,18 +5494,20 @@ async function startDiag(lang, host){
     shuf(pg).forEach(it => items.push(it)); return true; };
   addPage();
   const box = host || $("#diagBox"); const known = new Set(); if(!box) return; box.scrollIntoView({ behavior: "smooth", block: "center" });
-  const PG = 5, total = PAGES, ja = S.meta.settings.ui === "ja"; let page = 0;   // 5개씩, 1/10 처럼 넘기며 (긴 스크롤 대신)
+  const PG = 5, total = PAGES, ja = S.meta.settings.ui === "ja"; let page = 0, mood = "";   // 5개씩, 1/10 처럼 넘기며 (긴 스크롤 대신)
   const draw = () => { const sl = items.slice(page * PG, page * PG + PG), last = page === total - 1;
-    box.innerHTML = `<div class="diag dpg"><div class="dpg-h"><b>${esc(x.diagTitle)}</b><span class="dpg-n">${page + 1} / ${total}</span></div><div class="dpg-bar"><i style="width:${Math.round((page + 1) / total * 100)}%"></i></div>
+    const ti = diagTitleIdx(cur, L.length);
+    box.innerHTML = `<div class="diag dpg"><div class="dpg-h"><b>${esc(x.diagTitle)}</b><span class="dpg-st" aria-hidden="true">${DIAG_TI.map((e, i) => `<i class="${i === ti ? "on" : i < ti ? "past" : ""}">${i === ti ? e : "·"}</i>`).join("")}${mood ? `<em class="dpg-mood">${esc(mood)}</em>` : ""}</span><span class="dpg-n">${page + 1} / ${total}</span></div><div class="dpg-bar"><i style="width:${Math.round((page + 1) / total * 100)}%"></i></div>
       <p class="small muted">${esc(ja ? "意味がわかる単語だけ押してね（存在しない単語も混ざってる）" : "뜻을 아는 단어만 눌러 줘 (없는 단어도 섞여 있어)")}</p>
       <div class="dpg-w">${sl.map((it, k) => { const i = page * PG + k; return `<button type="button" class="chiptog" data-di="${i}" aria-pressed="${known.has(i)}">${esc(it.w)}${it.r && lang === "ja" ? `<span class="tiny muted"> ${esc(it.r)}</span>` : ""}</button>`; }).join("")}</div>
       <div class="dpg-a"><button class="btn ghost" type="button" id="diagNone">${esc(ja ? "ひとつも知らない" : "하나도 모르겠어요")}</button><button class="btn primary" type="button" id="diagNext">${esc(last ? x.diagJudge : (ja ? "次へ →" : "다음 →"))}</button></div>
       <div class="dpg-f">${page ? `<button class="linkbtn" type="button" id="diagPrev">← ${ja ? "前へ" : "이전"}</button>` : "<span></span>"}<button class="linkbtn" type="button" id="diagX">${esc(x.diagCancel)}</button></div></div>`;
-    box.querySelectorAll("[data-di]").forEach(b => b.onclick = () => { const i = +b.dataset.di; if(known.has(i)) known.delete(i); else known.add(i); b.setAttribute("aria-pressed", known.has(i)); upd(); });
+    box.querySelectorAll("[data-di]").forEach(b => b.onclick = () => { const i = +b.dataset.di; if(known.has(i)) known.delete(i); else known.add(i); b.setAttribute("aria-pressed", known.has(i)); b.classList.remove("boing"); void b.offsetWidth; b.classList.add("boing"); upd(); });
     const upd = () => { const any = sl.some((it, k) => known.has(page * PG + k)); $("#diagNone").classList.toggle("dim", any); }; upd();
     const go = () => { if(last) return judge();
       const real = sl.filter(it => !it.fake), k = real.filter(it => known.has(items.indexOf(it))).length, fk = sl.some(it => it.fake && known.has(items.indexOf(it)));
-      const lvi = L.indexOf(real[0] && real[0].lv); if(lvi >= 0){ if(k >= 3 && !fk) cur = Math.min(L.length - 1, lvi + 1); else if(k <= 1) cur = Math.max(0, lvi - 1); else cur = lvi; }
+      const lvi = L.indexOf(real[0] && real[0].lv), c0 = cur; if(lvi >= 0){ if(k >= 3 && !fk) cur = Math.min(L.length - 1, lvi + 1); else if(k <= 1) cur = Math.max(0, lvi - 1); else cur = lvi; }
+      mood = cur > c0 ? (ja ? "⬆ レベルアップ！" : "⬆ 레벨 업!") : cur < c0 ? (ja ? "大丈夫ニャ" : "괜찮다냥") : "";
       if(page + 1 >= items.length / PG && !addPage()) return judge(); page++; draw(); };
     $("#diagNext").onclick = go; $("#diagNone").onclick = () => { sl.forEach((it, k) => known.delete(page * PG + k)); go(); };
     const pv = $("#diagPrev"); if(pv) pv.onclick = () => { page--; draw(); };
@@ -5511,17 +5520,59 @@ async function startDiag(lang, host){
       const h = its.filter(it => known.has(items.indexOf(it))).length / its.length; return { lv, h, adj: f >= 1 ? 0 : Math.max(0, (h - f) / (1 - f)) }; });
     let est = null, rec = null; for(const r of res){ if(r.adj >= .7) est = r; else { rec = r; break; } }
     const knownWords = items.filter((it, i) => known.has(i) && !it.fake).map(it => it.w);
-    S.meta.diag = S.meta.diag || {}; S.meta.diag[lang] = { date: today(), est: est ? lvLabel(est.lv) : x.diagStart, rec: rec ? rec.lv.id : null, adj: res.map(r => Math.round(r.adj * 100)) }; save();
-    box.innerHTML = `<div class="diag"><b class="dres">${esc(x.diagEst(est ? lvLabel(est.lv) : x.diagStart))}</b>
-      <div class="dbars">${res.map(r => `<div class="dbar${rec && r.lv.id === rec.lv.id ? " rec" : ""}"><span>${esc(lvLabel(r.lv))}</span><div><i style="width:${Math.round(r.adj * 100)}%"></i></div><em>${Math.round(r.adj * 100)}%</em></div>`).join("")}</div>
-      ${f >= .3 ? `<p class="small" style="color:var(--bad)">${esc(x.diagFake)}</p>` : ""}
-      <p>${rec ? esc(x.diagRec(lvLabel(rec.lv))) : esc(x.diagAll)}</p>${!est && SCRIPT_SETS[lang] && res[0].adj < .3 ? `<p class="small"><b>🔤 ${esc(x.diagScript)}</b></p>` : ""}
-      <div class="row" style="gap:8px;flex-wrap:wrap">${rec && !decks().some(d => d.preset === lang + "-" + rec.lv.id) ? `<button class="btn primary" type="button" id="diagAdd">${esc(x.diagRecAdd(lvLabel(rec.lv)))}</button>` : ""}<button class="btn ghost" type="button" id="diagRe">${esc(x.diagAgain)}</button></div></div>`;
-    const da = $("#diagAdd"); if(da) da.onclick = () => addPreset(lang, rec.lv.id, da, knownWords);
-    $("#diagRe").onclick = () => startDiag(lang, box);
+    const ei = est ? set.levels.indexOf(est.lv) : -1;
+    S.meta.diag = S.meta.diag || {}; S.meta.diag[lang] = Object.assign({}, S.meta.diag[lang] || {}, { date: today(), est: est ? lvLabel(est.lv) : x.diagStart, rec: rec ? rec.lv.id : null, adj: res.map(r => Math.round(r.adj * 100)),
+      recLabel: rec ? lvLabel(rec.lv) : null, known: knownWords.slice(0, 200), fakeHit: fa, fakeN: fakes.length, at: Date.now(), ei }); save();
+    track("diag_end", { lang, est: S.meta.diag[lang].est, rec: S.meta.diag[lang].rec, fake: fa });
+    box.innerHTML = diagCardHTML(lang, S.meta.diag[lang], set, 1); diagCardBind(lang, S.meta.diag[lang], set, box); diagSeen("result");
     document.querySelectorAll(".pitem [data-pre]").forEach(bt => bt.closest(".pitem").classList.toggle("rec", !!rec && bt.dataset.pre === rec.lv.id));
   };
 }
+
+/* 레벨 진단 결과 카드(백로그 R): 저장된 S.meta.diag[lang]으로 언제든 다시 그림(옛 형식 {date,est,rec,adj}도). 주 버튼은 늘 하나 */
+const DIAG_TI = ["🍼", "🐾", "🏠", "🎓", "👑"];
+const DIAG_TN = { ko: ["아기냥", "길냥", "집냥", "학자냥", "대장냥"], ja: ["赤ちゃんニャ", "野良ニャ", "家ニャ", "学者ニャ", "大将ニャ"] };
+const DIAG_CM = { ko: [["걸음마부터 차근차근이다냥", "오늘부터 시작이면 충분하다냥"], ["길은 익혔다냥, 이제 집을 찾자", "기본기는 있다냥!"], ["제법 사는 티가 난다냥", "이 정도면 생활은 된다냥"], ["어려운 말도 꽤 안다냥…", "책 좀 읽은 냥이다냥"], ["…대장 자리 내놔라냥", "더 가르칠 게 없다냥… 유행어로 가자"]],
+  ja: [["よちよち歩きからでいいニャ", "今日始めれば十分ニャ"], ["道は覚えたニャ、次は家だ", "基本はあるニャ！"], ["なかなか暮らせてるニャ", "これなら生活はできるニャ"], ["難しい言葉もけっこう知ってるニャ…", "本を読んでるニャだ"], ["…大将の座をよこすニャ", "もう教えることがないニャ… 流行語にいこう"]] };
+function diagTitleIdx(ei, n){ if(ei == null || ei < 0 || !n) return 0; return Math.max(1, Math.min(4, Math.round((ei + 1) / n * 4))); }
+function diagEi(dg, set){ if(typeof dg.ei === "number") return dg.ei; return set.levels.findIndex(l => lvLabel(l) === dg.est); }
+function diagKind(lang, dg, set){ const ei = diagEi(dg, set), adj = dg.adj || [];
+  if(ei < 0 && SCRIPT_SETS[lang] && (adj[0] == null || adj[0] < 30)) return { k: "d" };
+  const id = dg.rec || set.levels[set.levels.length - 1].id, lv = set.levels.find(l => l.id === id) || set.levels[set.levels.length - 1];
+  const has = decks().some(d => d.preset === lang + "-" + lv.id);
+  return { k: !dg.rec ? "c" : has ? "b" : "a", lv, has }; }
+function diagCardHTML(lang, dg, set, fresh){ const ui = S.meta.settings.ui === "ja" ? "ja" : "ko", ja = ui === "ja", x = t();
+  const ei = diagEi(dg, set), ti = diagTitleIdx(ei, set.levels.length), cm = DIAG_CM[ui][ti], K = diagKind(lang, dg, set), adj = dg.adj || [];
+  const line = cm[(dg.at || 0) % cm.length];
+  const lab = K.k === "d" ? (ja ? "🔤 文字から7分" : "🔤 글자부터 7분") : K.has ? (ja ? `${lvLabel(K.lv)} すぐ勉強` : `${lvLabel(K.lv)} 바로 공부`) : (ja ? `${lvLabel(K.lv)} を追加してすぐ1回目` : `${lvLabel(K.lv)} 추가하고 바로 첫 판`);
+  const fk = dg.fakeN ? (dg.fakeHit ? (ja ? `存在しない言葉にだまされたニャ…（ワナ ${dg.fakeN}個中 ${dg.fakeHit}個）` : `없는 말에 속았다냥… (함정 ${dg.fakeN}개 중 ${dg.fakeHit}개)`) : (ja ? `ワナの単語 ${dg.fakeN}個中 ${dg.fakeN}個よけた 🐾` : `함정 단어 ${dg.fakeN}개 중 ${dg.fakeN}개 피함 🐾`)) : "";
+  return `<div class="diag dcard${fresh ? " fresh" : ""}"><div class="dc-h"><span class="dc-ti" aria-hidden="true">${DIAG_TI[ti]}</span><div><b class="dres">${esc(ja ? `あなたは ${DIAG_TN.ja[ti]}` : `당신은 ${DIAG_TN.ko[ti]}`)}</b><div class="small muted">${esc(x.diagEst(dg.est || x.diagStart))} · ${esc(String(dg.date || "").slice(5).replace("-", "/"))}</div></div></div>
+    <div class="dbars">${set.levels.map((l, i) => `<div class="dbar${dg.rec === l.id ? " rec" : ""}"><span>${esc(lvLabel(l))}</span><div><i style="width:${adj[i] || 0}%"></i></div><em>${adj[i] || 0}%</em></div>`).join("")}</div>
+    <p class="small" style="margin:0">${esc(line)}${fk ? `<br><span class="muted">${esc(fk)}</span>` : ""}</p>
+    ${K.k === "c" && SLANG_LANGS.includes(lang) ? `<p class="small" style="margin:0">🔥 ${ja ? "<button class=\"linkbtn\" type=\"button\" id=\"diagSl\">流行語セット</button>もおすすめ" : "<button class=\"linkbtn\" type=\"button\" id=\"diagSl\">유행어 세트</button>도 추천"}</p>` : ""}
+    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn primary" type="button" id="diagGo" data-k="${K.k}">${esc(lab)}</button><button class="btn ghost" type="button" id="diagRe">${esc(x.diagAgain)}</button><button class="btn ghost" type="button" id="diagShare" aria-label="${ja ? "自慢する" : "자랑하기"}" title="${ja ? "自慢する" : "자랑하기"}">📤</button></div></div>`; }
+function diagSeen(where){ try{ track("diag_card_view", { where }); }catch(_){} }
+function diagCardBind(lang, dg, set, box){ if(!box) return; const K = diagKind(lang, dg, set);
+  const go = box.querySelector("#diagGo"); if(go) go.onclick = () => diagGo(lang, dg, K, go);
+  const re = box.querySelector("#diagRe"); if(re) re.onclick = () => startDiag(lang, box, "again");
+  const sh = box.querySelector("#diagShare"); if(sh) sh.onclick = () => diagShare(lang, dg, set);
+  const sl = box.querySelector("#diagSl"); if(sl) sl.onclick = () => { const b = $("#slangBox"); if(b) b.scrollIntoView({ behavior: "smooth", block: "center" }); }; }
+async function diagGo(lang, dg, K, btn){ track("diag_cta", { kind: K.k });
+  if(K.k === "d"){ scr7Open(); return; }
+  const pid = lang + "-" + K.lv.id; let d = decks().find(x => x.preset === pid);
+  if(!d){ const ok = await addPreset(lang, K.lv.id, btn, (dg.known || []).slice(0, 200)); if(!ok) return; d = decks().find(x => x.preset === pid); }
+  if(d && !d.on){ d.on = true; save(); }
+  if(SES){ showView("today"); return; }
+  showView("today"); renderAll(); window.scrollTo({ top: 0 }); startSession(); }
+async function diagShare(lang, dg, set){ const ja = S.meta.settings.ui === "ja", ti = diagTitleIdx(diagEi(dg, set), set.levels.length), url = "https://meowca.app/?diag=1&src=share_diag";
+  const text = ja ? `MEOWCAのレベル診断、${DIAG_TN.ja[ti]}${DIAG_TI[ti]}だった（${dg.est}くらい）。あなたは？` : `나 MEOWCA 레벨 진단 ${DIAG_TN.ko[ti]}${DIAG_TI[ti]} 나옴 (${dg.est} 정도). 너는?`;
+  track("diag_share", { lang, ti });
+  try{ if(navigator.share){ await navigator.share({ title: "MEOWCA!", text, url }); return; } await navigator.clipboard.writeText(text + " " + url); toast(ja ? "リンクをコピーしました" : "링크를 복사했어요"); }catch(e){} }
+/* ?diag=1 로 들어오면 바로 진단: 카드가 없으면 온보딩의 진단 버튼, 있으면 레벨별 세트 화면 */
+function diagBoot(){ const q = new URLSearchParams(location.search); if(q.get("diag") !== "1") return; q.delete("diag"); history.replaceState(history.state, "", location.pathname + (q.toString() ? "?" + q : "") + location.hash);
+  let n = 0; const tick = () => { const ob = $("#obDiag"); if(ob && !ob.classList.contains("hidden")){ ob.click(); return; }
+    if(cardsHere().length || ++n > 15){ showView("add"); setAddPanel("preset"); const lang = S.meta.settings.lang; setTimeout(() => { const b = $("#presetBox #diagBox"); if(b) startDiag(lang, b, "link"); }, 700); return; }
+    setTimeout(tick, 200); }; tick(); }
 
 /* ════════ 文字から: ハングル（가나다）とひらがな・カタカナ ════════ */
 const R2H = (() => { // ローマ字 → ハングルのおおよその音（韓国語表示用）
@@ -5721,7 +5772,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { canSpeakLang, pickVoice, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 load(); PET_SIG = petSig(); migrateSteps(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
