@@ -523,6 +523,8 @@ img.nm[src$=".svg"]{image-rendering:auto}
 .petgrant{margin:10px 0;padding:14px 16px;border-radius:22px;background:linear-gradient(135deg,rgba(255,214,90,.35),rgba(242,161,180,.3));border:1px solid rgba(255,214,90,.6)}
 .petgrant .pg-top{display:flex;flex-direction:column;gap:2px} .petgrant .pg-top b{font-size:1.15rem;color:var(--ink)} .petgrant .pg-top span{font-size:.8rem;color:var(--muted)}
 .petgrant .pg-items{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 6px}
+.row.ce-row{flex-wrap:nowrap;gap:8px;align-items:stretch} .row.ce-row .ce-main{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.02em;padding-left:12px;padding-right:12px} .row.ce-row .ce-ic{flex:0 0 auto;min-width:46px;padding-left:10px;padding-right:10px;font-size:1.15rem}
+@media (max-height:720px){ .petgrant.ce{padding:10px 14px;margin:6px 0} .petgrant.ce .pg-top{flex-direction:row;flex-wrap:wrap;align-items:baseline;column-gap:8px} .petgrant.ce .pg-top b{font-size:1rem} .petgrant.ce .pg-items{margin:6px 0 2px} .petgrant.ce .pg-it img,.petgrant.ce .pg-it svg{max-height:20px} .poster.ce{gap:4px} .poster.ce .catbar{display:none} }
 .pg-it{display:inline-flex;align-items:center;gap:3px;padding:4px 9px;border-radius:999px;background:rgba(255,255,255,.6)} .pg-it i{font-style:normal;font-size:.8rem;font-weight:700;color:var(--ink)}
 .pg-it.main{outline:2px solid #e8a400;background:#fff6d6}
 .petgrant .pg-main{font-size:.8rem;color:var(--ink);font-weight:600}
@@ -2214,6 +2216,11 @@ function settleItem(correct){
 function courseEnd(co){ const z = ddaState(), g = co.g || 0, acc = g ? (co.ok || 0) / g : 1;
   if(g >= 4){ if(acc > .92){ z.n = Math.min(4, z.n + 1); z.lo = 0; } else if(acc < .75){ z.n = Math.max(1, z.n - 1); z.lo = 1; } else z.lo = 0; }
   try{ track("course_end", { ok: co.ok || 0, n: co.n, newK: co.newK || 0, up: SES.up || 0, ret: co.ret ? 1 : 0 }); }catch(_){} save(); return { acc, ret: !!co.ret }; }
+/* 판 끝 화면 한 줄 버튼(360×640 한 화면): [▶ 한 판 더](넓게) + 아이콘 📤·🍖·🏠. 글자는 aria-label·title로 남김 */
+function ceCompact(box, r, main){ r.classList.add("ce-row"); main.classList.add("ce-main"); const g = r.querySelector(".grow"); if(g) g.remove();
+  r.querySelectorAll("button").forEach(b => { if(b === main) return; const tx = b.textContent.trim(), m = tx.match(/^(\S+)\s+(.+)$/), ic = b.id === "backHome" ? "🏠" : m ? m[1] : tx, lb = m && b.id !== "backHome" ? m[2] : tx;
+    b.textContent = ic; b.setAttribute("aria-label", lb); b.title = lb; b.classList.add("ce-ic"); if(!main.disabled || b.id !== "backHome") b.classList.remove("primary"); else b.classList.add("primary"); });
+  const pg = box.querySelector(".petgrant"); if(pg) pg.classList.add("ce"); const po = box.querySelector(".poster"); if(po) po.classList.add("ce"); }
 /* 판 안에서 틀린 문제 다시 내기: 남은 「복습 칸」(k:"m"·"a", 그 단어의 마지막 문제) 하나를 빼고 그 자리에. 빠진 복습은 기록 없이 다음 판으로. 남은 복습 칸이 없으면 다음 판 첫 본편으로 넘김 */
 function courseRetry(it){ const Q = SES.queue; let j = -1;
   for(let k = Q.length - 1; k >= 1; k--){ const q = Q[k]; if((q.k === "m" || q.k === "a") && q.id !== it.id && SES.remaining[q.id] === 1){ j = k; break; } }
@@ -2268,7 +2275,7 @@ function finishSession(){
   if(SES.course){ const r = box.querySelector(".row:last-of-type"), ja = S.meta.settings.ui === "ja", nx = buildCourse(); if(r){ const b = document.createElement("button"); b.type = "button";
       if(nx.queue.length){ b.className = "btn primary"; b.id = "oneMore"; b.textContent = ja ? "▶ もう1回" : "▶ 한 판 더"; b.onclick = () => { SES = null; startSession(); }; const bh = $("#backHome"); if(bh) bh.classList.remove("primary"); }
       else { b.className = "btn ghost"; b.disabled = true; b.textContent = ja ? "今日はおしまい！" : "오늘 끝!"; }
-      r.prepend(b); } }
+      r.prepend(b); ceCompact(box, r, b); } }
   else if(canMore()){ const r = box.querySelector(".row:last-of-type"); if(r){ const b = document.createElement("button"); b.className = "btn"; b.type = "button"; b.textContent = "＋ " + x.moreBtn; b.onclick = () => { SES = null; document.body.classList.remove("focus"); box.classList.add("hidden"); $("#sessionStart").classList.remove("hidden"); studyMore(); }; r.prepend(b); } }
   $("#backHome").onclick = () => { SES = null; document.body.classList.remove("focus"); box.classList.add("hidden"); $("#sessionStart").classList.remove("hidden"); renderAll(); setTimeout(maybeRiskPrompt, 600); };
 }
@@ -3638,7 +3645,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v142";
+const APP_VER = "v143";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));

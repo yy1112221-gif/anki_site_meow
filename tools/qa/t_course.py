@@ -47,6 +47,20 @@ async def main():
     ok("판 끝 화면 [한 판 더] · 세션 정리", r[2] and r[3]==False, r)
     r=await pg.evaluate("()=>document.documentElement.scrollHeight<=innerHeight+1")
     ok("판 끝 화면 한 화면(390×844)", r, r)
+    # G: 360×640에서도 한 화면 · 버튼 한 줄([▶ 한 판 더] + 아이콘 📤·🍖·🏠)
+    p2=await b.new_page(viewport={"width":360,"height":640}); p2.on("pageerror",lambda e:errs.append(str(e)))
+    await p2.goto("http://localhost:8765/index.html"); await seed(p2, mk(30,0))
+    r=await p2.evaluate("""async()=>{ const t=window.__t; document.querySelector('#petClose') && document.querySelector('#petClose').click(); t.startSession(); const s=t.getSES(); let g=0; while(s.queue.length && g++<40) t.settleItem(true);
+      await new Promise(r=>setTimeout(r,3500)); const p=document.querySelector('#pet'); if(p && !p.classList.contains('hidden')) document.querySelector('#petClose').click(); await new Promise(r=>setTimeout(r,300));
+      const bs=[...document.querySelectorAll('#sessionBox .row.ce-row button')], tops=new Set(bs.map(b=>Math.round(b.getBoundingClientRect().top)));
+      return [document.documentElement.scrollHeight<=innerHeight+1, bs.length, tops.size, !!document.querySelector('#oneMore'), bs.filter(b=>b.classList.contains('ce-ic')).every(b=>b.getAttribute('aria-label'))]; }""")
+    ok("판 끝 화면 한 화면(360×640) · 버튼 한 줄 · 아이콘에 이름", r[0] and r[1]>=2 and r[2]==1 and r[3] and r[4], r)
+    r=await p2.evaluate("""async()=>{ const t=window.__t, S=t.S(); Object.keys(S.cards).forEach(k=>delete S.cards[k]);
+      document.querySelector('#backHome').click(); await new Promise(r=>setTimeout(r,300)); t.setSES({queue:[{id:'d1',mode:'recall',st:3,k:'m'}],done:11,failed:{},remaining:{d1:1},finished:[],state:null,course:{n:12,i:11,newK:0,ok:11,g:11}});
+      document.querySelector('#sessionStart').classList.add('hidden'); document.querySelector('#sessionBox').classList.remove('hidden'); t.settleItem(true); await new Promise(r=>setTimeout(r,800)); const p=document.querySelector('#pet'); if(p && !p.classList.contains('hidden')) document.querySelector('#petClose').click(); await new Promise(r=>setTimeout(r,300));
+      const h=document.querySelector('#backHome'); return [!document.querySelector('#oneMore'), h.classList.contains('primary'), document.documentElement.scrollHeight<=innerHeight+1]; }""")
+    ok("다음 판 없으면 「오늘 끝!」 + 🏠가 주 버튼 · 한 화면", r==[True,True,True], r)
+    await p2.close()
     # 옛 세션(course 없음) 이어 하기
     await seed(pg, mk(5,0), {"session":{"day":"__TODAY__","lang":"es","queue":[{"id":"d1","mode":"meaning"},{"id":"d2","mode":"recall"}],"done":3,"failed":{},"remaining":{"d1":1,"d2":1},"finished":[]}})
     r=await pg.evaluate("""()=>{ const t=window.__t, S=t.S(); S.meta.session.day=t.today(); document.querySelector('#petClose') && document.querySelector('#petClose').click(); const rb=document.querySelector('#resumeBtn'); 
