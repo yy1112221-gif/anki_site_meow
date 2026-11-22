@@ -2246,6 +2246,19 @@ function catBarDraw(el, t){ const cv = el.firstElementChild; if(!cv || !el.offse
     g.save(); belly(); g.clip(); g.beginPath(); g.rect(0, 0, UX(XW) - .2, H); g.clip();
     g.strokeStyle = fur; g.lineWidth = 4.2; g.lineCap = "round"; g.lineJoin = "round"; g.beginPath();
     for(let k = 0; k < ARC.length; k += 2) g[k ? "lineTo" : "moveTo"](UX(ARC[k]), UY(ARC[k + 1])); g.stroke(); g.restore();
+    // 3-1) 이음부 다듬기: 뱃살의 위·아래 선과 피부를 냥이 몸 쪽으로 몇 단계에 걸쳐 서서히 녹여 계단·턱을 없앤다
+    { const jx = UX(XW) - .5, L = Math.max(10, (XW - VBX) * ppu), R = 0, ya = top(N - 1), yb = bot(N - 1);   // 냥이 몸 뒤쪽(가장 넓은 곳 왼쪽)에서만, 얼굴은 안 덮음
+      const oc = st.oc || (st.oc = document.createElement("canvas")); if(oc.width !== cv.width || oc.height !== cv.height){ oc.width = cv.width; oc.height = cv.height; }
+      const o2 = oc.getContext("2d"); o2.setTransform(dpr, 0, 0, dpr, 0, 0); o2.clearRect(0, 0, W, H);
+      const ease = u => u * u * (3 - 2 * u), steps = 8, path = sgn => { for(let k = 0; k <= steps; k++){ const u = k / steps, x = jx - L + (L + R) * u, ins = 0; o2.lineTo(x, sgn < 0 ? ya + ins : yb - ins); } };
+      o2.beginPath(); o2.moveTo(jx - L, ya); path(-1); o2.lineTo(jx + R, yb); for(let k = steps; k >= 0; k--){ const u = k / steps, x = jx - L + (L + R) * u, ins = 0; o2.lineTo(x, yb - ins); } o2.closePath();
+      o2.fillStyle = fur; o2.fill();
+      o2.strokeStyle = INKC; o2.lineWidth = LW; o2.lineCap = "round"; o2.lineJoin = "round";
+      o2.beginPath(); o2.moveTo(jx - L, ya); path(-1); o2.stroke(); o2.beginPath(); o2.moveTo(jx - L, yb); path(1); o2.stroke();
+      o2.globalCompositeOperation = "destination-in"; const m = o2.createLinearGradient(jx - L, 0, jx + R, 0);
+      m.addColorStop(0, "rgba(0,0,0,1)"); m.addColorStop(.45, "rgba(0,0,0,1)"); m.addColorStop(.65, "rgba(0,0,0,.75)"); m.addColorStop(.82, "rgba(0,0,0,.4)"); m.addColorStop(.94, "rgba(0,0,0,.12)"); m.addColorStop(1, "rgba(0,0,0,0)");
+      o2.fillStyle = m; o2.fillRect(jx - L - 2, 0, L + R + 4, H); o2.globalCompositeOperation = "source-over";
+      g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(oc, 0, 0); g.restore(); }
     // 4) 귀는 다시 위로
     if(IM.ears.complete && IM.ears.naturalWidth) g.drawImage(IM.ears, sx, sy, hw, hh); }
   // 5) 츄르: 몸통 위로 올라와 입에 앙 물림(길이 = 남은 양)
@@ -3457,7 +3470,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v125";
+const APP_VER = "v126";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
