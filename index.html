@@ -671,7 +671,7 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .s7c{display:flex;align-items:center;gap:10px;border-radius:18px;padding:10px 12px;margin:0 0 10px;background:rgba(217,74,126,.1);border:1.5px solid rgba(217,74,126,.35)} .s7c-ch{font-size:1.5rem;font-weight:800;letter-spacing:.05em;white-space:nowrap}
 .s7c-tx{flex:1;min-width:0;display:flex;flex-direction:column} .s7c-tx small{font-size:.74rem;color:var(--muted)} .s7c-tx b small{font-weight:600;margin-left:2px} .s7c-x{border:0;background:transparent;color:var(--muted);font-size:1rem;cursor:pointer;padding:4px}
 .ord-ans{min-height:64px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;padding:10px;border-radius:14px;border:2px dashed rgba(127,127,127,.3);margin:10px 0} .ord-ans.ok{border-color:var(--good);border-style:solid} .ord-ans.no{border-color:#f2708f;border-style:solid}
-.pk-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%} .pk-b{min-height:58px;border:2px solid rgba(127,127,127,.3);background:var(--card-bg,rgba(255,255,255,.7));color:inherit;border-radius:14px;padding:8px 10px;font:inherit;font-size:1.05rem;font-weight:700;cursor:pointer;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical} .pk-b.ok{border-color:#2fa86b;background:rgba(47,168,107,.16)} .pk-b.no{border-color:#d9534f;background:rgba(217,83,79,.14)} .pk-b:disabled{cursor:default;opacity:1} .juku-tag{display:inline-block;background:#ffd84d;color:#5a4400;border-radius:999px;padding:2px 10px;font-size:.85rem;font-weight:800}
+.pk-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%} .pk-b{min-height:58px;border:2px solid rgba(127,127,127,.3);background:var(--card-bg,rgba(255,255,255,.7));color:inherit;border-radius:14px;padding:8px 10px;font:inherit;font-size:1.05rem;font-weight:700;cursor:pointer;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical} .pk-b.ok{border-color:#2fa86b;background:rgba(47,168,107,.16)} .pk-b.no{border-color:#d9534f;background:rgba(217,83,79,.14)} .pk-b:disabled{cursor:default;opacity:1} .kj-sib{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.85} .juku-tag{display:inline-block;background:#ffd84d;color:#5a4400;border-radius:999px;padding:2px 10px;font-size:.85rem;font-weight:800}
 .ord-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:50px} .ord-t{border:2px solid rgba(127,127,127,.3);background:var(--card-bg,rgba(255,255,255,.7));color:inherit;border-radius:12px;padding:8px 12px;font:inherit;font-size:1.1rem;font-weight:700;cursor:pointer}
 @media (prefers-color-scheme:dark){.ord-t{background:rgba(255,255,255,.06)}}
 .sup-ov{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
@@ -1173,7 +1173,7 @@ ja: {
   emailHelp:"意味・例文の翻訳に使うMyMemoryは、メールアドレスを一緒に送ると1日の上限が約10倍になります。メールは翻訳リクエストにのみ使います。",
   backup:"バックアップ", backupHelp:"単語と進み具合はこの端末のブラウザにだけ保存されます。機種変更やブラウザのデータ削除の前にファイルで保存してください。",
   btnExport:"バックアップを保存", btnCopy:"コピー", importFile:"バックアップファイルから復元", importPaste:"または貼り付けて復元", btnImport:"貼り付けた内容を読み込む",
-  credits:'例文：<a href="https://tatoeba.org" target="_blank" rel="noopener">Tatoeba</a>（CC BY 2.0 FR、録音は各話者のライセンス）· 翻訳：<a href="https://mymemory.translated.net" target="_blank" rel="noopener">MyMemory</a> · 英語の意味：<a href="https://en.wiktionary.org" target="_blank" rel="noopener">Wiktionary</a>（CC BY-SA）· 難易度の目安：<a href="https://github.com/hermitdave/FrequencyWords" target="_blank" rel="noopener">FrequencyWords</a>（OpenSubtitles 2018）',
+  credits:'例文：<a href="https://tatoeba.org" target="_blank" rel="noopener">Tatoeba</a>（CC BY 2.0 FR、録音は各話者のライセンス）· 翻訳：<a href="https://mymemory.translated.net" target="_blank" rel="noopener">MyMemory</a> · 英語の意味：<a href="https://en.wiktionary.org" target="_blank" rel="noopener">Wiktionary</a>（CC BY-SA）· 難易度の目安：<a href="https://github.com/hermitdave/FrequencyWords" target="_blank" rel="noopener">FrequencyWords</a>（OpenSubtitles 2018） · 日本語の読み・漢字：<a href="https://www.edrdg.org/" target="_blank" rel="noopener">JMdict・KANJIDIC2</a>（EDRDG、CC BY-SA 4.0）',
   dateLabel:(m,d,w)=>`${m}月${d}日（${w}）· 1日は朝4時に切り替わります`, week:["日","月","火","水","木","金","土"], todayShort:"今日",
   levels:["新出","〜2日","〜1週","〜1か月","〜3か月","3か月〜"], levelSuffix:"の段", chipNew:"新出", chipDone:"卒業", chipLeech:"苦手",
   emptyTitle:"単語を入れるだけで、復習スケジュールは自動で組みます",
@@ -1262,7 +1262,7 @@ ko: {
   emailHelp:"뜻·예문 번역에 쓰는 MyMemory는 이메일을 함께 보내면 하루 번역 한도가 약 10배로 늘어납니다. 이메일은 번역 요청에만 쓰입니다.",
   backup:"백업", backupHelp:"단어와 진도는 이 기기 브라우저에만 저장됩니다. 기기를 바꾸거나 브라우저 데이터를 지우기 전에 파일로 받아두세요.",
   btnExport:"백업 파일 받기", btnCopy:"복사", importFile:"백업 파일로 복원", importPaste:"또는 붙여넣어 복원", btnImport:"붙여넣은 내용 가져오기",
-  credits:'예문: <a href="https://tatoeba.org" target="_blank" rel="noopener">Tatoeba</a> (CC BY 2.0 FR, 녹음은 각 화자의 라이선스) · 번역: <a href="https://mymemory.translated.net" target="_blank" rel="noopener">MyMemory</a> · 영어 뜻: <a href="https://en.wiktionary.org" target="_blank" rel="noopener">Wiktionary</a> (CC BY-SA) · 난이도 기준: <a href="https://github.com/hermitdave/FrequencyWords" target="_blank" rel="noopener">FrequencyWords</a> (OpenSubtitles 2018)',
+  credits:'예문: <a href="https://tatoeba.org" target="_blank" rel="noopener">Tatoeba</a> (CC BY 2.0 FR, 녹음은 각 화자의 라이선스) · 번역: <a href="https://mymemory.translated.net" target="_blank" rel="noopener">MyMemory</a> · 영어 뜻: <a href="https://en.wiktionary.org" target="_blank" rel="noopener">Wiktionary</a> (CC BY-SA) · 난이도 기준: <a href="https://github.com/hermitdave/FrequencyWords" target="_blank" rel="noopener">FrequencyWords</a> (OpenSubtitles 2018) · 일본어 읽기·한자: <a href="https://www.edrdg.org/" target="_blank" rel="noopener">JMdict·KANJIDIC2</a> (EDRDG, CC BY-SA 4.0)',
   dateLabel:(m,d,w)=>`${m}월 ${d}일 (${w}) · 하루는 새벽 4시에 바뀝니다`, week:["일","월","화","수","목","금","토"], todayShort:"오늘",
   levels:["새 단어","~2일","~1주","~1달","~3달","3달~"], levelSuffix:" 칸", chipNew:"새 단어", chipDone:"졸업", chipLeech:"약점",
   emptyTitle:"단어를 넣으면 복습 일정은 알아서 짭니다",
@@ -1743,7 +1743,7 @@ function pickNewWithSlang(q){   // 슬랭은 하루 1~2개만 '촉촉하게' 섞
   const out = rest.slice(0, q - k), pos = Math.min(out.length, 2); out.splice(pos, 0, ...sl.slice(0, k)); return out; }
 let SES = null;
 function buildSession(){
-  const items = []; if(S.meta.settings.lang === "ja") jaxLoad();
+  const items = []; if(S.meta.settings.lang === "ja"){ jaxLoad(); kjxLoad(); }
   dueCards().forEach(c => stepItems(c).forEach(it => items.push(it)));
   // 새 단어는 3개씩 묶어(같은 단어를 연달아 묻지 않고 짧게 간격을 둠): 0칸 맞혀보기 → 1칸 문제. 첫날 2문제(계단 v2)
   const nw = pickNewWithSlang(newQuota());
@@ -1765,7 +1765,7 @@ function Rof(c){ const d = today(); if(c.S && c.last){ const tt = Math.max(0, di
 function courseItem(c, k, R){ let s = Math.max(1, stepOf(c)); if(R != null && R < .6 && S.meta.dda && S.meta.dda.lo && k !== "b") s = Math.max(1, s - 1);   // 지난 판이 어려웠으면 잊어 가는 단어는 한 칸 아래 문제로(칸 자체는 안 내림)
   return { id: c.id, mode: stepMode(c, s), st: s, k }; }
 function buildCourse(){
-  if(S.meta.settings.lang === "ja") jaxLoad();
+  if(S.meta.settings.lang === "ja"){ jaxLoad(); kjxLoad(); }
   if(activeCards().some(c => c.script && (c.isNew || (!c.mastered && c.due && c.due <= today())))) return buildSession();
   const N = COURSE_N, used = new Set(), take = c => { used.add(c.id); return c; };
   const ret = isReturnDay(); let pool = dueAll().filter(c => !c.script).map(c => ({ c, R: Rof(c) }));
@@ -2605,7 +2605,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
     // 不正解：答えを見せて、書き写してから次へ（書かずに進むこともできる）
     phase = "copy";
     fillBlank(false);
-    const sl = !isGuess && Math.random() < .3 ? slangPick() : null; $("#fb").innerHTML = `<div class="feedback ${isGuess ? "meh" : "no"}">${fbh(isGuess ? "st_default" : "st_surprised", isGuess ? x.guessWrong : (sl ? `…${esc(sl)}. ` : "") + x.wrong)}${answerBlock()}<span class="fb-note"><b>${x.copyPrompt}</b>${isGuess ? "" : " " + x.retryLater}</span></div>`; showFb();
+    const sl = !isGuess && Math.random() < .3 ? slangPick() : null; $("#fb").innerHTML = `<div class="feedback ${isGuess ? "meh" : "no"}">${fbh(isGuess ? "st_default" : "st_surprised", isGuess ? x.guessWrong : (sl ? `…${esc(sl)}. ` : "") + x.wrong)}${answerBlock()}<span class="fb-note"><b>${x.copyPrompt}</b>${isGuess ? "" : " " + x.retryLater}</span>${isGuess ? "" : kanjiSib(c)}</div>`; showFb();
     input.value = ""; input.classList.add("miss"); input.placeholder = x.copyPh; input.focus({ preventScroll: true });
     $("#acts").innerHTML = `${listenBtn(target)}<span class="grow"></span><button class="btn ghost" type="button" id="skipCopy">${x.skipCopy}</button>`;
     bindSay(box);
@@ -2661,7 +2661,7 @@ function askMeaning(c, promptHTML){
   const reveal = res => { if(done) return; done = true; SES.state.answered = true;
     if(res === "ok"){ input.classList.add("done"); $("#fb").innerHTML = `<div class="feedback ok">${fbh("st_happy", x.correct)}${ansBlock()}</div>`; show();
       const nb = $("#chk"); nb.id = "nx"; nb.textContent = x.next; nb.onclick = () => settleItem(true); $("#ansForm").onsubmit = e => { e.preventDefault(); settleItem(true); }; speak(c.example || c.word); return; }
-    const typed = res === "check"; $("#fb").innerHTML = `<div class="feedback ${typed ? "meh" : "no"}">${fbh(typed ? "st_surprised" : "st_default", typed ? x.meanMeh : x.wrong)}${ansBlock()}</div>`; show();
+    const typed = res === "check"; $("#fb").innerHTML = `<div class="feedback ${typed ? "meh" : "no"}">${fbh(typed ? "st_surprised" : "st_default", typed ? x.meanMeh : x.wrong)}${ansBlock()}${kanjiSib(c)}</div>`; show();
     $("#ansForm").style.display = "none";
     $("#acts").innerHTML = `${listenBtn(c.example || c.word)}<span class="grow"></span>${typed ? `<button class="btn bad" type="button" id="mNo">${esc(x.meanDiff)}</button><button class="btn good" type="button" id="mOk">${esc(x.meanSame)}</button>` : `<button class="btn primary" type="button" id="mNo">${x.next}</button>`}`;
     bindSay(box); $("#mNo").onclick = () => settleItem(false); const ok = $("#mOk"); if(ok) ok.onclick = () => settleItem(true); input.blur(); speak(c.example || c.word); };
@@ -2739,6 +2739,14 @@ function dockTidy(){ const box = $("#sessionBox"), dock = box && box.querySelect
 let JAX = null, JAX_P = null, JAX_FAIL = 0;
 function jaxLoad(){ if(JAX) return Promise.resolve(JAX); if(JAX_P) return JAX_P; if(Date.now() - JAX_FAIL < 6e4) return Promise.resolve(null);
   JAX_P = fetch("presets/ja-extra.json").then(r => { if(!r.ok) throw new Error("jax"); return r.json(); }).then(d => { JAX = (d && d.words) || {}; JAX_P = null; try{ fixReadings(); }catch(_){} return JAX; }).catch(() => { JAX_FAIL = Date.now(); JAX_P = null; return null; }); return JAX_P; }
+/* C9 한자 형제: 틀린 일본어 단어의 한자로 아는(쉬운) 단어 3개를 한 줄로. presets/ja-kanji.json도 처음 한 번만 받음 */
+let KJX = null, KJX_P = null, KJX_FAIL = 0;
+function kjxLoad(){ if(KJX) return Promise.resolve(KJX); if(KJX_P) return KJX_P; if(Date.now() - KJX_FAIL < 6e4) return Promise.resolve(null);
+  KJX_P = fetch("presets/ja-kanji.json").then(r => { if(!r.ok) throw new Error("kjx"); return r.json(); }).then(d => { KJX = (d && d.kanji) || {}; KJX_P = null; return KJX; }).catch(() => { KJX_FAIL = Date.now(); KJX_P = null; return null; }); return KJX_P; }
+function kanjiSib(c){ try{ if(!KJX || (c.lang || "es") !== "ja") return ""; const ja = S.meta.settings.ui === "ja", lvN = l => Number(String(l || "n0").replace(/\D/g, "")) || 0;
+  for(const ch of Array.from(c.word || "")){ const k = KJX[ch]; if(!k || !Array.isArray(k.w)) continue;
+    const sib = k.w.filter(x => x && x[0] && x[0] !== c.word && x[0] !== c.form).sort((a, b) => lvN(b[2]) - lvN(a[2])).slice(0, 3).map(x => x[0]); if(!sib.length) continue;
+    return `<span class="small kj-sib" lang="ja">${esc(ch)} ${ja ? "の仲間" : "형제"}: ${esc(sib.join("·"))}</span>`; } }catch(_){} return ""; }
 const jaxOf = c => (JAX && (c.lang || "es") === "ja" && c.word) ? (JAX[c.word] || null) : null;
 const isKanaWord = c => { const jx = jaxOf(c); return !!(jx && jx.kana && readingOf(c)); };
 const kanaFace = c => isKanaWord(c) ? `<div class="word" lang="ja">${esc(readingOf(c))}</div><p class="q-sub" lang="ja">${esc(c.word)}</p>` : `<div class="word">${esc(c.word)}</div>`;   // 가나 단어는 가나 크게, 한자 작게
@@ -2770,7 +2778,7 @@ function askChoice(c, kind, o){ const box = $("#sessionBox"), x = t(), ja = S.me
     btns.forEach(b => { b.disabled = true; const bv = o.opts[+b.dataset.i]; if(bv === o.ans) b.classList.add("ok"); else if(+b.dataset.i === i) b.classList.add("no"); });
     let why = ""; if(!ok && kind === "trap" && v){ const k = o.juku ? (ja ? "特別な読み" : "특수 읽기") : diffKind(o.ans, v); if(k) why = ja ? `ちがいは「${k}」` : `차이: ${k}`; }
     const line = kind === "trap" ? `${esc(c.word)} · ${esc(o.ans)} · ${esc(o.sub)}` : `${esc(c.word)}${readingOf(c) ? " · " + esc(readingOf(c)) : ""} · ${esc(o.ans)}`;
-    $("#fb").innerHTML = `<div class="feedback ${ok ? "ok" : "no"}"><strong>${esc(ok ? (ja ? "正解だニャ" : "정답이다냥") : (ja ? "正解はこれだ" : "정답은 이거다"))}</strong><span class="fb-mean">${line}</span>${why ? `<span class="small">${esc(why)}</span>` : ""}</div>`;
+    $("#fb").innerHTML = `<div class="feedback ${ok ? "ok" : "no"}"><strong>${esc(ok ? (ja ? "正解だニャ" : "정답이다냥") : (ja ? "正解はこれだ" : "정답은 이거다"))}</strong><span class="fb-mean">${line}</span>${why ? `<span class="small">${esc(why)}</span>` : ""}${ok ? "" : kanjiSib(c)}</div>`;
     try{ speak(c.word); }catch(_){} try{ track("choice", { k: kind, ok, ms: Date.now() - t0 }); }catch(_){}
     const nb = $("#chk"); nb.disabled = false; nb.onclick = () => settleItem(ok); const ik = $("#idk"); if(ik) ik.style.visibility = "hidden"; };
   btns.forEach(b => b.onclick = () => done(+b.dataset.i)); $("#idk").onclick = () => done(null); }
@@ -3629,7 +3637,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v140";
+const APP_VER = "v141";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5601,7 +5609,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 load(); PET_SIG = petSig(); migrateSteps(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);

@@ -120,6 +120,12 @@ async def main():
     r=await pg4.evaluate("""()=>{ const t=window.__t; t.setSES({queue:[{id:'r3',mode:'meaning',st:2}],done:0,failed:{},remaining:{r3:1},finished:[],state:null});
       document.querySelector('#sessionStart').classList.add('hidden'); document.querySelector('#sessionBox').classList.remove('hidden'); t.nextItem(); return document.querySelector('#sessionBox .word').textContent; }""")
     ok("C8 가나 단어는 가나를 크게 표시", r=="いす", r)
+    # ── E: 한자 형제 한 줄 ──
+    r=await pg4.evaluate("""async()=>{ const t=window.__t; await t.kjxLoad(); const a=t.kanjiSib({lang:'ja',word:'学生'}), b=t.kanjiSib({lang:'es',word:'hola'}), c=t.kanjiSib({lang:'ja',word:'ねこ'}); return [a,b,c]; }""")
+    ok("C9 한자 형제 한 줄(学生 → 学 형제: …, 자기 단어 빼고 3개)", r[0].count("·")==2 and "学生" not in [x.strip() for x in r[0].split(":")[1].split("<")[0].split("·")] and r[1]=="" and r[2]=="", r)
+    r=await pg4.evaluate("""()=>{ const t=window.__t; t.setSES({queue:[{id:'r4',mode:'pick',st:1}],done:0,failed:{},remaining:{r4:1},finished:[],state:null}); t.nextItem(); const bs=[...document.querySelectorAll('#sessionBox .pk-b')]; if(!bs.length) return 'nogrid'; const w=bs.find(b=>!b.classList.contains('x')&&b.textContent!=='がくせい'); w.click(); return !!document.querySelector('#fb .kj-sib'); }""")
+    ok("C9 틀린 문제 피드백에 형제 줄", r==True, r)
+    r=await pg4.evaluate("()=>document.body.innerHTML.includes('EDRDG') || (window.__t.S().meta.settings.ui==='ko')")
     ok("B3 페이지 오류 없음", not e4, e4[:3])
     await pg4.close()
     await pg.wait_for_timeout(300)
