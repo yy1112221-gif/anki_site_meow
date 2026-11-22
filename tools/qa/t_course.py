@@ -19,9 +19,9 @@ async def main():
     await seed(pg, {})
     r=await pg.evaluate("()=>window.__t.buildCourse().queue.length"); ok("복습 0·새 단어 0 → 빈 판", r==0, r)
     await seed(pg, mk(3,0))
-    r=await pg.evaluate("()=>{ const s=window.__t.buildCourse(); return [s.queue.length, s.course.n, new Set(s.queue.map(i=>i.id)).size]; }"); ok("복습 3개만 → 3칸", r==[3,3,3], r)
+    r=await pg.evaluate("()=>{ const s=window.__t.buildCourse(); return [s.queue.length, s.course.n, new Set(s.queue.map(i=>i.id)).size]; }"); ok("복습 3개만 → 3칸(+끈질긴 단어 보여 주기 1칸, R1-10-2)", r==[4,4,3], r)
     await seed(pg, mk(200,30))
-    r=await pg.evaluate("""()=>{ const s=window.__t.buildCourse(), q=s.queue; const ks=q.map(i=>i.k).join(''); const per={}; q.forEach(i=>per[i.id]=(per[i.id]||0)+1);
+    r=await pg.evaluate("""()=>{ const s=window.__t.buildCourse(), q=s.queue; const ks=q.map(i=>i.k).join(''); const per={}; q.forEach(i=>{ if(i.mode!=='study') per[i.id]=(per[i.id]||0)+1; });
       return {n:q.length, cn:s.course.n, ks, newc:Object.keys(per).filter(k=>k[0]==='n').length, dup:Object.entries(per).filter(([k,v])=>k[0]==='d'&&v>1).length, boss:q[10].id}; }""")
     ok("복습 200개(밀림)·새 단어 30 → 12칸: 몸풀기2·본편8·보스1·마무리1", r["n"]==12 and r["cn"]==12 and r["ks"][:2]=="ww" and r["ks"][-2:]=="bf" and r["dup"]==0, r)
     ok("새 단어 3개(×2칸) · 보스 = 끈질긴 단어", r["newc"]==3 and r["boss"]=="d0", r)
@@ -75,7 +75,7 @@ async def main():
       run(5,12); a.push(t.ddaState().n, t.ddaState().lo); run(10,12); a.push(t.ddaState().n, t.ddaState().lo);
       for(let k=0;k<6;k++) run(2,12); a.push(t.ddaState().n); return a; }""")
     ok("85% 조절: >92% +1(최대 4) · <75% −1(최소 1)+쉬운 문제 · 사이면 그대로", r==[3,4,4,4,3,1,3,0,1], r)
-    r=await pg.evaluate("""()=>{ const t=window.__t, S=t.S(); S.meta.dda={n:1,h:[]}; const a=t.buildCourse().course.newK; S.meta.dda={n:4,h:[]}; const b=t.buildCourse().course.newK; S.meta.dda={n:3,h:[]}; return [a,b]; }""")
+    r=await pg.evaluate("""()=>{ const t=window.__t, S=t.S(); S.cards.d0.lapses=0; S.meta.dda={n:1,h:[]}; const a=t.buildCourse().course.newK; S.meta.dda={n:4,h:[]}; const b=t.buildCourse().course.newK; S.meta.dda={n:3,h:[]}; return [a,b]; }""")
     ok("판당 새 단어 수 = dda.n", r==[1,4], r)
     r=await pg.evaluate("""()=>{ const t=window.__t, S=t.S(); S.meta.days={}; S.meta.days[t.addDays(t.today(),-4)]=true; S.meta.days[t.addDays(t.today(),-5)]=true;
       for(let k=1;k<=20;k++){ const c=S.cards['d'+k]; c.S=2; c.last=t.addDays(t.today(),-5); }

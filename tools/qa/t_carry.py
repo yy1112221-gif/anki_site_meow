@@ -36,7 +36,7 @@ async def main():
     ok("다음 판 없으면 「한 판 더」 버튼 없음", r2==[False,0], r2)
     # 첫 판은 3문제여도 그대로(기존 동작)
     await seed(pg, mk(3))
-    r=await pg.evaluate("()=>window.__t.buildCourse().queue.length"); ok("오늘 첫 판은 3문제여도 만듦", r==3, r)
+    r=await pg.evaluate("()=>window.__t.buildCourse().queue.length"); ok("오늘 첫 판은 4문제 아래(복습 3개)여도 만듦", r>=3, r)
     # 큰 덱: 끈질긴 단어 계속 틀려도 같은 날 3번째 판엔 없음, 판은 12칸
     await seed(pg, mk(80))
     r=await pg.evaluate(PLAY, ["d0","d1"])
