@@ -876,7 +876,7 @@ body.focus .dock:has(.vk-host .vk) .aud{margin-top:6px} body.focus .dock:has(.vk
 @media (prefers-color-scheme:dark){.vk-k{background:#4a4d55;color:#f2f2f2;box-shadow:0 1px 0 rgba(0,0,0,.5)} .vk-fn{background:#33363d} .vk-ok{background:var(--accent);color:#1d1d1d}}
 .ic-cat{height:1.55em;width:auto;vertical-align:middle;display:inline-block;margin:-.25em 0} .aud-i .ic-cat{height:1.5em;margin:-.35em -.1em} .aud .aud-b{gap:3px} #gradBtn .ic-cat{height:1.7em}
 .mic-in .ic-cat{height:26px} .btn.mic .ic-cat{height:1.6em}
-.ansrow{display:flex} .ans-field{position:relative;flex:1;display:flex;min-width:0} .ans-field input{flex:1;min-width:0;padding-right:96px}
+.ansrow{display:flex} .ans-field{position:relative;flex:1;display:flex;min-width:0} .ans-field input{flex:1;min-width:0;padding-right:96px} @media (max-width:380px){ .ans-field input::placeholder{font-size:.82em} }   /* 360폭: 안내문이 🎤·⌨️에 안 가리게 */
 .ans-ics{position:absolute;right:6px;top:50%;transform:translateY(-50%);display:flex;gap:4px;align-items:center}
 .ans-ic,.ans-ics .mic-in{width:42px;height:42px;min-width:0;padding:0;border-radius:50%;border:0;background:rgba(127,127,127,.12);font-size:1.15rem;display:flex;align-items:center;justify-content:center;box-shadow:none}
 .ans-ics .mic-in.on{background:var(--accent)}
@@ -2031,7 +2031,7 @@ function bindCorner(){ const ko = S.meta.settings.ui === "ko", a = $("#tutAgain"
   a.onclick = () => { showView("today"); if(cardsHere().length) setTimeout(runTour, 350); else { S.meta.tutWant = 1; save(); } };
   c.checked = !S.meta.noTrack; c.onchange = () => { S.meta.noTrack = !c.checked; save(); };
   const vk = $("#vkOnChk"); if(vk){ $("#vkLbl").textContent = ko ? "화면 자판 쓰기 (끄면 폰 키보드)" : "画面キーボードを使う（オフでスマホのキーボード）"; vk.checked = vkOn(); vk.onchange = () => { S.meta.settings.vk = vk.checked; save(); track("vk_set", { on: vk.checked }); }; }
-  const kj = $("#kanjiChk"); if(kj){ $("#kanjiLbl").textContent = ko ? "일본어: 한자까지 정확히 써야 정답 (끄면 히라가나도 정답)" : "日本語：漢字まで正確に書かないと不正解（オフならひらがなもOK）"; kj.checked = !!S.meta.settings.strictKanji; $("#kanjiRow").classList.toggle("hidden", S.meta.settings.lang !== "ja"); kj.onchange = () => { S.meta.settings.strictKanji = kj.checked; save(); }; }
+  const kj = $("#kanjiChk"); if(kj){ $("#kanjiLbl").textContent = ko ? "일본어: 한자까지 정확히 써야 정답 (끄면 히라가나도 정답)" : "日本語：漢字まで正確に書かないと不正解（オフならひらがなもOK）"; kj.checked = !!S.meta.settings.strictKanji; $("#kanjiRow").classList.toggle("hidden", S.meta.settings.lang !== "ja"); kj.onchange = () => { S.meta.settings.strictKanji = kj.checked; save(); if(kj.checked && vkOn()) toast(ko ? "화면 자판으론 한자를 못 써서, 일본어 답은 폰 키보드로 받는다냥" : "画面キーボードでは漢字が打てないので、日本語の答えはスマホのキーボードになるニャ"); }; }
   const hp = $("#homePetOn"); if(hp){ $("#homePetLbl").textContent = ko ? "앱 열면 냥이부터" : "起動したらネコから"; hp.checked = S.meta.settings.homePet !== false; hp.onchange = () => { S.meta.settings.homePet = hp.checked; save(); track("home_pet", { on: hp.checked }); }; }
   bindNick(ko); { const b = $("#s7Again"); if(b){ const lang = S.meta.settings.lang, ok = !!SCRIPT_SETS[lang]; b.style.display = ok ? "" : "none"; b.textContent = ko ? "🔤 글자 7분 코스 (다시 보이기·이어 하기)" : "🔤 文字7分コース（再表示・つづき）";
     b.onclick = () => { const z = scr7State(lang); z.skip = 0; save(); showView("today"); renderAll(); setTimeout(scr7Open, 200); }; } }
@@ -2506,7 +2506,7 @@ function catBarDraw(el, t){ const cv = el.firstElementChild; if(!cv || !el.offse
         g.beginPath(); g.arc(sx + 1.2, cy + d * (ch / 2 - bite), 2.2, d > 0 ? -Math.PI * .1 : -Math.PI * .9, d > 0 ? Math.PI * .9 : Math.PI * .1, d < 0); g.stroke(); });
       g.fillStyle = "rgba(242,135,159,.9)"; g.beginPath(); g.ellipse(sx - .4, cy, 1.1, 1.5 + chew * .6, 0, 0, Math.PI * 2); g.fill(); } }
 }
-function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.course ? SES.course.n : SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="row" style="flex-wrap:nowrap;gap:10px"><button class="btn sm ghost" type="button" id="homeBtn">‹ ${esc(t().home)}</button>${catBarHTML(pct)}<button class="btn sm ghost" type="button" id="gradBtn" title="${esc(t().gradTitle)}">${icCat("grad")} ${esc(t().grad)}</button></div><div class="modehead"><span class="muted small">${t().modes[mode]}${c.slang ? `<span class="sl-tag">${esc(t().slTag)}</span>` : ""} · ${SES.course ? `${Math.min(SES.done + 1, SES.course.n)} / ${SES.course.n}` : t().left(SES.queue.length)}</span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}" title="${esc(t().hfHelp)}">${hf ? t().hfOn : t().hfOff}</button>${levelChip(c)}</span></div>${say(MODE_NM[mode] || "st_default", esc(t().nmAsk[mode](langName())))}`; }
+function head(c, mode){ const pct = Math.round(SES.done / Math.max(1, SES.course ? SES.course.n : SES.done + SES.queue.length) * 100); const hf = !!S.meta.settings.handsFree; return `<div class="row" style="flex-wrap:nowrap;gap:10px"><button class="btn sm ghost" type="button" id="homeBtn">‹ ${esc(t().home)}</button>${catBarHTML(pct)}<button class="btn sm ghost" type="button" id="gradBtn" title="${esc(t().gradTitle)}">${icCat("grad")} ${esc(t().grad)}</button></div><div class="modehead"><span class="muted small">${t().modes[mode]}${c.slang ? `<span class="sl-tag">${esc(t().slTag)}</span>` : ""} · <span style="white-space:nowrap">${SES.course ? `${Math.min(SES.done + 1, SES.course.n)} / ${SES.course.n}` : t().left(SES.queue.length)}</span></span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn sm${hf ? " primary" : ""}" type="button" id="hfToggle" aria-pressed="${hf}" title="${esc(t().hfHelp)}">${hf ? t().hfOn : t().hfOff}</button>${levelChip(c)}</span></div>${say(MODE_NM[mode] || "st_default", esc(t().nmAsk[mode](langName())))}`; }
 document.addEventListener("click", e => {
   if(!e.target.closest("#gradBtn") || !SES) return;
   const it = SES.queue[0]; const c = it && S.cards[it.id]; if(!c) return;
@@ -2553,6 +2553,7 @@ const srcLine = c => c.src ? `<a class="tiny" href="https://tatoeba.org/sentence
 /* ════════ 앱 자판(화면 키보드): 폰 키보드가 문제·답을 가리지 않게 앱 안에서 직접 입력 ════════
    기본 ON. 설정에서 끄면 폰 키보드. 일본어(12키 플릭·로마자), 한국어(천지인·쿼티), 라틴(영어·스페인어 등) */
 const vkOn = () => S.meta.settings.vk !== false;
+const vkFor = lang => vkOn() && !(lang === "ja" && S.meta.settings.strictKanji);   // 「한자까지 정확히」면 일본어 답은 폰 키보드(화면 자판엔 한자 변환이 없음)
 const HG_CHO = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ", HG_JUNG = "ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ",
   HG_JONG = ["", "ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"],
   HG_VC = { "ㅗㅏ":"ㅘ","ㅗㅐ":"ㅙ","ㅗㅣ":"ㅚ","ㅜㅓ":"ㅝ","ㅜㅔ":"ㅞ","ㅜㅣ":"ㅟ","ㅡㅣ":"ㅢ" },
@@ -2601,7 +2602,7 @@ function vkHTML(kind, lang, shift){ const k = (v, lab, cls) => `<button type="bu
     return `<div class="vk vk-g5">${k("@br", "→", "vk-fn")}${J("a", "あ")}${J("k", "か")}${J("s", "さ")}${k("@bs", "⌫", "vk-fn")}
       ${k("ー", null, "vk-fn")}${J("t", "た")}${J("n", "な")}${J("h", "は")}${k(" ", "空白", "vk-fn")}
       ${sw || k("@br", "→", "vk-fn")}${J("m", "ま")}${J("y", "や")}${J("r", "ら")}${k("@ok", "↵", "vk-ok vk-r2")}
-      ${k("@hide", "▾", "vk-fn")}${k("@mod", "<b>゛゜</b><small>小</small>", "vk-fn")}${J("w", "わ")}${J("p", "、。?!")}</div>`; }
+      ${k("@hide", "▾", "vk-fn")}${k("@mod", "<b>゛゜</b><small>小っゃ</small>", "vk-fn")}${J("w", "わ")}${J("p", "、。?!")}</div>`; }
   if(kind === "kocj"){ const C = (i) => k("@c" + i, CJ_C[i].slice(0, 2).join(""), "vk-c");
     return `<div class="vk vk-g4">${k("@vㅣ", "ㅣ", "vk-c")}${k("@vㆍ", "ㆍ", "vk-c")}${k("@vㅡ", "ㅡ", "vk-c")}${k("@bs", "⌫", "vk-fn")}
       ${C(0)}${C(1)}${C(2)}${k("@br", "→", "vk-fn")}${C(3)}${C(4)}${C(5)}${k("@pu", ".,?!", "vk-fn")}
@@ -2613,7 +2614,7 @@ function vkHTML(kind, lang, shift){ const k = (v, lab, cls) => `<button type="bu
     <div class="vk-row">${Array.from(rows[0]).map(c => k(c)).join("")}</div><div class="vk-row vk-in">${Array.from(rows[1]).map(c => k(c)).join("")}</div>
     <div class="vk-row">${kind === "koqw" ? k("@sh", "⇧", "vk-fn" + (shift ? " on" : "")) : ""}${Array.from(rows[2]).map(c => k(c)).join("")}${kind === "jaro" ? k("-", "ー") : ""}${k("@bs", "⌫", "vk-fn")}</div>
     <div class="vk-row">${sw}${k("@hide", "▾", "vk-fn")}${k(" ", kind === "jaro" ? "空白" : kind === "koqw" ? "띄어쓰기" : "space", "vk-fn vk-sp")}${k("@ok", "↵", "vk-ok")}</div></div>`; }
-function vkAttach(input, lang){ if(!input || !vkOn()) return null; const box = input.closest(".dock") || input.parentElement; if(!box || box.querySelector(".vk-host")) return null;
+function vkAttach(input, lang){ if(!input || !vkFor(lang)) return null; const box = input.closest(".dock") || input.parentElement; if(!box || box.querySelector(".vk-host")) return null;
   lang = ["ja", "ko"].includes(lang) ? lang : "lat";
   const pref = S.meta.vkLay || (S.meta.vkLay = {}); let kind = vkLayouts(lang).includes(pref[lang]) ? pref[lang] : vkLayouts(lang)[0], shift = false;
   const host = document.createElement("div"); host.className = "vk-host"; const fm = input.form || input; fm.after(host);
@@ -2709,7 +2710,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
     <form id="ansForm" autocomplete="off" class="ansrow"><input type="text" id="ans" class="answer" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${isGuess ? x.guessType : x.answerPh}" aria-label="${x.answer}" enterkeyhint="go"><button class="btn primary" type="button" id="chk">${isGuess ? x.guessBtn : x.check}</button></form>
     ${kbdHTML()}
     <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${isGuess ? x.guessSkip : x.idk}</button></div></div>`;
-  const input = $("#ans"); bindKbd(box, input); micAttach(input, L().speech); vkAttach(input, S.meta.settings.lang); if(!vkOn()) input.focus({ preventScroll: true });
+  const input = $("#ans"); bindKbd(box, input); micAttach(input, L().speech); vkAttach(input, S.meta.settings.lang); if(!vkFor(S.meta.settings.lang)) input.focus({ preventScroll: true });
   let phase = "answer";
   const blank = box.querySelector(".stage .blank");
   // 答えは問題の空欄にそのまま入れる。フィードバックには「単語・意味」だけ（例文は上に出ているので繰り返さない）
@@ -2789,7 +2790,7 @@ function askMeaning(c, promptHTML){
   box.innerHTML = head(c, mode) + `<div class="stage">${promptHTML}<div id="fb"></div></div><div class="dock">
     <form id="ansForm" autocomplete="off" class="ansrow"><input type="text" id="ans" class="answer" spellcheck="false" placeholder="${esc(x.meanPh)}" aria-label="${x.answer}" enterkeyhint="go"><button class="btn primary" type="button" id="chk">${x.check}</button></form>
     <div class="row" id="acts">${listenBtn(c.word)}<span class="grow"></span><button class="btn ghost" type="button" id="idk">${x.idk}</button></div></div>`;
-  const input = $("#ans"); micAttach(input, S.meta.settings.ui === "ja" ? "ja-JP" : "ko-KR"); vkAttach(input, S.meta.settings.ui === "ja" ? "ja" : "ko"); if(!vkOn()) input.focus({ preventScroll: true }); bindSay(box); speak(c.word);
+  const input = $("#ans"); micAttach(input, S.meta.settings.ui === "ja" ? "ja-JP" : "ko-KR"); vkAttach(input, S.meta.settings.ui === "ja" ? "ja" : "ko"); if(!vkFor(S.meta.settings.ui === "ja" ? "ja" : "ko")) input.focus({ preventScroll: true }); bindSay(box); speak(c.word);
   const keep = b => b.addEventListener("pointerdown", e => { if(document.activeElement === input) e.preventDefault(); });
   box.querySelectorAll(".dock button").forEach(keep);
   const ansBlock = () => `<span class="fb-answer">${esc(c.meaning)}</span><span class="fb-mean">${esc(c.word)}</span>${c.example ? `<span class="fb-ex">${highlight(c)}</span>${trShow(c) ? `<span class="fb-mean">${esc(trShow(c))}</span>` : ""}` : ""}`;
@@ -2963,7 +2964,7 @@ function renderItem0(c, mode){
       <div class="dock"><textarea id="wr" spellcheck="false" aria-label="${x.myText}" placeholder="${x.myText}"></textarea>
       ${kbdHTML()}
       <div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${x.idk}</button><span class="grow"></span><button class="btn primary" type="button" id="chk">${x.wrote}</button></div></div>`;
-    const ta = $("#wr"); bindKbd(box, ta); vkAttach(ta, S.meta.settings.lang); if(!vkOn()) ta.focus({ preventScroll: true });
+    const ta = $("#wr"); bindKbd(box, ta); vkAttach(ta, S.meta.settings.lang); if(!vkFor(S.meta.settings.lang)) ta.focus({ preventScroll: true });
     $("#idk").onclick = () => { if(SES.state.answered) return; SES.state.answered = true; ta.disabled = true;
       $("#fb").innerHTML = `<div class="feedback no">${fbh("st_default", x.seeExample)}<span>${highlight(c)}</span><span class="small muted">${esc(trShow(c))}</span></div>`;
       $("#acts").innerHTML = `<span class="grow"></span><button class="btn primary" type="button" id="nx">${x.next}</button>`; $("#nx").onclick = () => settleItem(false); };
@@ -3777,7 +3778,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v166";
+const APP_VER = "v167";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5716,7 +5717,7 @@ function askScript(c, mode){
       : `<form id="ansForm" autocomplete="off" class="ansrow"><input type="text" id="ans" class="answer" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${esc(x.scriptPh)}" enterkeyhint="go"><button class="btn primary" type="button" id="chk">${x.check}</button></form><div class="row" id="acts"><button class="btn ghost" type="button" id="idk">${x.idk}</button></div>`}</div>`;
   const play = () => speak(sc.say || c.word); $("#scSay").onclick = play;
   if(isNew){ setTimeout(play, 250); $("#scOk").onclick = () => settleItem(true); return; }
-  const input = $("#ans"); vkAttach(input, "lat"); if(!vkOn()) input.focus({ preventScroll: true });
+  const input = $("#ans"); vkAttach(input, "lat"); if(!vkFor("lat")) input.focus({ preventScroll: true });
   const done = ok => { if(SES.state.answered) return; SES.state.answered = true; input.classList.add(ok ? "done" : "miss"); $("#fb").innerHTML = answerHTML(ok); play();
     $("#acts").innerHTML = ""; const nb = $("#chk"); nb.id = "nx"; nb.textContent = x.next; nb.onclick = () => settleItem(ok); input.focus({ preventScroll: true }); };
   box.querySelectorAll(".dock button").forEach(b => b.addEventListener("pointerdown", e => { if(document.activeElement === input) e.preventDefault(); }));
