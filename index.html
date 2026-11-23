@@ -1423,6 +1423,10 @@ function addDays(ds, n){ const [y,m,d] = ds.split("-").map(Number); const t = ne
 function diffDays(a, b){ const pa=a.split("-").map(Number), pb=b.split("-").map(Number); return Math.round((Date.UTC(pb[0],pb[1]-1,pb[2]) - Date.UTC(pa[0],pa[1]-1,pa[2]))/86400000); }
 const stripAcc = s => String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g, (m, i, t) => m === "\u0303" && /[nN]/.test(t[i - 1]) ? m : "").normalize("NFC");   // 검수단 R1-7-3: ñ는 다른 글자(año≠ano)라 남긴다
 const norm = s => String(s||"").normalize("NFC").toLowerCase().replace(/[¿¡.,!?;:"«»()「」。、！？（）]/g, " ").replace(/\s+/g, " ").trim();
+/* 말하기 채점 전용(검수단 R1-4-3): 스페인어 음성 인식이 동음어 철자(vaya/valla·bello/vello·botar/votar)로 받아 적어도 핵심 단어로 봄. check·norm은 그대로 */
+const esPhon = s => norm(stripAcc(s)).replace(/ll/g, "y").replace(/v/g, "b").replace(/(^|[^c])h/g, "$1");
+function spkHas(heard, key, lang){ if(!heard || !key) return { ok: false }; if(findForm(heard, key)) return { ok: true }; if((lang || "es") !== "es") return { ok: false };
+  const k = esPhon(key); if(!k) return { ok: false }; return ` ${esPhon(heard)} `.includes(` ${k} `) ? { ok: true, spell: key } : { ok: false }; }
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"), 2800); }
 
 /* ───────── 保存（この端末のブラウザ） ───────── */
@@ -3000,10 +3004,10 @@ function renderItem0(c, mode){
       };
     }
     $("#rv").onclick = () => {
-      const hasKey = heard && !!findForm(heard, key);
+      const hk = spkHas(heard, key, c.lang), hasKey = !!(heard && hk.ok);
       const exW = new Set(norm(stripAcc(c.example)).split(" ")); const hW = norm(stripAcc(heard)).split(" ").filter(Boolean);
       const overlap = hW.length ? Math.round(hW.filter(w => exW.has(w)).length / exW.size * 100) : 0;
-      $("#fb").innerHTML = `<div class="feedback ${heard ? (hasKey ? "ok" : "no") : "meh"}">${fbh(heard && hasKey ? "st_happy" : "listen_airpods", x.original)}<span class="sentence" style="font-size:1.1rem">${highlight(c)}</span>${heard ? `<span class="small">${hasKey ? x.keyHeard : x.keyMissed} · ${x.overlap(overlap)}</span>` : ""}</div>`;
+      $("#fb").innerHTML = `<div class="feedback ${heard ? (hasKey ? "ok" : "no") : "meh"}">${fbh(heard && hasKey ? "st_happy" : "listen_airpods", x.original)}<span class="sentence" style="font-size:1.1rem">${highlight(c)}</span>${heard ? `<span class="small">${hasKey ? x.keyHeard : x.keyMissed} · ${x.overlap(overlap)}</span>` : ""}${hk.spell ? `<span class="small spk-sp">${S.meta.settings.ui === "ja" ? "つづりは" : "철자는"} <b>${esc(hk.spell)}</b></span>` : ""}</div>`;
       speak(c.example);
       $("#acts").innerHTML = `${listenBtn(c.example, x.listenAgain)}<span class="grow"></span><button class="btn bad" type="button" id="sNo">${x.stuck}</button><button class="btn good" type="button" id="sOk">${x.saidOk}</button>`;
       bindSay(box); $("#sNo").onclick = () => settleItem(false); $("#sOk").onclick = () => settleItem(true);
@@ -3778,7 +3782,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v167";
+const APP_VER = "v168";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5814,7 +5818,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 load(); PET_SIG = petSig(); migrateSteps(); sulkInit(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
