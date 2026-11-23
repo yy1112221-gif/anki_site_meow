@@ -2323,7 +2323,7 @@ function settleItem(correct){
   const it = SES.queue.shift();
   { const c = S.cards[it.id], graded = it.mode !== "study" && it.mode !== "scriptNew" && it.mode !== "juku";
     if(c && graded && !c.script){ const z = ddaState(); z.h.push(correct ? 1 : 0); if(z.h.length > 30) z.h = z.h.slice(-30); if(SES.course){ SES.course.g = (SES.course.g || 0) + 1; if(correct) SES.course.ok = (SES.course.ok || 0) + 1; }
-      try{ track("q", { st: it.st != null ? it.st : -1, md: it.mode, ok: !!correct, ms: SES.qT ? Date.now() - SES.qT : 0 }); }catch(_){} } }
+      try{ track("q", { st: it.st != null ? it.st : -1, md: it.mode, ok: !!correct, ms: SES.qT ? Date.now() - SES.qT : 0, ...(it.near ? { near: 1 } : {}) }); }catch(_){} } }
   { const c = S.cards[it.id]; if(c){ LAST_Q.push({ w: c.word, m: String(c.meaning || "").slice(0, 60), md: it.mode, ok: !!correct }); if(LAST_Q.length > 3) LAST_Q.shift(); } }
   if(SES.course && it.mode !== "study" && it.mode !== "scriptNew" && it.mode !== "juku" && !correct){ SES.failed[it.id] = true; courseRetry(it); }
   else if(it.mode !== "study" && it.mode !== "scriptNew" && it.mode !== "juku" && !correct){
@@ -2753,6 +2753,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
     if(!input.value.trim()){ input.focus({ preventScroll: true }); return; }
     if(phase === "answer"){ if(SES.state.answered) return; let r = ansOk(c, input.value, target);
       if(r === "no" && !SES.state.dictNudge && dictFormHit(c, input.value, target)){ SES.state.dictNudge = 1; const fb = $("#fb"), ja = S.meta.settings.ui === "ja"; if(fb) fb.innerHTML = `<div class="feedback meh">${say("st_surprised", esc(ja ? "意味は合ってる！ 文の形にしてみて" : "뜻은 맞았어! 문장 모양으로 바꿔 봐"))}</div>`; buzz(12); track("dict_form", { l: c.lang || "" }); return; }
+      if(r === "no" && norm(target) === norm(c.word) && sameMeanSyn(c, input.value)){ r = "ok"; SES.state.synOk = 1; const q0 = SES.queue && SES.queue[0]; if(q0 && q0.id === c.id) q0.near = 1; track("near_syn", { k: "same", ok: 1 }); }   // 뜻 칸이 완전히 같은 다른 단어(팔십/여든)는 정답(R1-20-6)
       if(r === "no" && (SES.state.near || 0) < 2){ const nk = nearSyn(c, input.value); if(nk){ SES.state.near = (SES.state.near || 0) + 1; const fb = $("#fb"); if(fb) fb.innerHTML = `<div class="feedback meh">${say("st_surprised", esc(nearMsg(nk)))}</div>`; buzz(12); track("near_syn", { k: nk }); return; } }
       reveal(r); return; }
     if(ansOk(c, input.value, target) !== "no"){ toast(x.copyOk); finish(false); }
@@ -3795,7 +3796,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v169";
+const APP_VER = "v170";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5469,6 +5470,12 @@ function ansOk(c, v, target){ let r = check(v, target);
 /* C4: 빈칸 정답이 활용형(예: 예쁜)인데 사전형(예쁘다)을 쓰면 오답 대신 한 번 유도 */
 function dictFormHit(c, typed, target){ const v = norm(typed), w = norm(c.word || ""); if(!v || !w || !target || norm(target) === w) return false;
   if(v === w) return true; if((c.lang || "") === "ja"){ const rd = readingOf(c); if(rd && toHira(v) === toHira(norm(rd))) return true; } return false; }
+/* 뜻 칸이 norm 기준 완전히 같은 다른 카드(단어장)의 단어를 쓰면 정답: 팔십↔여든·정치인↔정치가. 첫 뜻만 같은 쌍은 nearSyn 안내 그대로 */
+function sameMeanSyn(c, typed){ const t = norm(typed), th = toHira(t); if(!t || !c.meaning) return false; const nm = v => norm(String(v || "")).replace(/\s+/g, ""), mm = nm(c.meaning); if(!mm) return false;
+  if(t === norm(c.word)) return false; const lang = c.lang || S.meta.settings.lang;
+  const wHit = (w, rd) => norm(w) === t || toHira(norm(w)) === th || (rd && toHira(norm(rd)) === th);
+  if(Object.values(S.cards).some(o => o.id !== c.id && (o.lang || "es") === lang && norm(o.word) !== norm(c.word) && wHit(o.word, o.reading) && nm(o.meaning) === mm)) return true;
+  return Object.entries(PRESET_DATA).some(([id, d]) => id.startsWith(lang + "-") && (d.items || []).some(it => norm(it[0] || "") !== norm(c.word) && (lang === "ja" ? wHit(it[0], it[1]) && (nm(it[2]) === mm || nm(it[3]) === mm) : wHit(it[0], "") && (nm(it[1]) === mm || nm(it[2]) === mm)))); }
 function nearSyn(c, typed){ const t = norm(typed), th = toHira(t); if(!t || !c.meaning) return null; const mine = new Set(meanToks(c.meaning)); if(!mine.size) return null; const lang = c.lang || S.meta.settings.lang;
   const hit = (w, rd, m) => (norm(w) === t || (rd && toHira(norm(rd)) === th) || toHira(norm(w)) === th) && meanToks(m).some(x => mine.has(x));
   let ok = Object.values(S.cards).some(o => o.id !== c.id && (o.lang || "es") === lang && hit(o.word, o.reading, o.meaning));
@@ -5831,7 +5838,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { qMean, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 load(); PET_SIG = petSig(); migrateSteps(); sulkInit(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
