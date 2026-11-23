@@ -2262,15 +2262,18 @@ function meltLine(kind, a, b){ const st = meltStage(), L = meltL()[kind]; if(!st
   return Array.isArray(v) ? v[Math.floor(Math.random() * v.length)] : String(v).replace("{a}", a).replace("{b}", b); }
 function meltCheck(){ const st = meltStage(), seen = S.meta.meltSeen; if(seen == null){ S.meta.meltSeen = st; save(); return; }
   if(st !== seen){ const m = meltL(); S.meta.meltSeen = st; save(); setTimeout(() => toast(st > seen ? "🐾 " + m.up[st] : "🧊 " + m.down), 1200); } }
+function courseEndToday(){ if(savedSession() || SES) return false; const z = S.meta.cday; if(!z || z.d !== today() || !(z.c > 0)) return false;
+  try{ const b = buildCourse(); return !!(b && b.course && !b.queue.length); }catch(_){ return false; } }
 function renderStartInner(){
   const box = $("#sessionStart"), x = t();
   const due = dueCards().length, nq = Math.min(newQuota(), newCandidates().length) + scriptNewToday();
   if(cardsHere().length === 0){ renderOnboard(box);     return;
   }
-  if(due + nq === 0){
-    const next = cardsHere().filter(c => !c.mastered && c.due).map(c => c.due).sort()[0];
+  const endToday = due + nq > 0 && courseEndToday();   // 판 끝 「오늘 끝!」과 같은 판정(오늘 한 판 뒤 남은 게 4문제 아래 → 메인도 오늘 끝)
+  if(due + nq === 0 || endToday){
+    const next = endToday ? null : cardsHere().filter(c => !c.mastered && c.due).map(c => c.due).sort()[0];
     const wantPreset = PRESET_LANGS.includes(S.meta.settings.lang) && !decks().some(d => d.preset && !d.preset.startsWith("script-"));
-    box.innerHTML = `${heroHTML(S.meta.days[today()] ? x.doneTitle : x.noneTitle, next ? x.nextReview(next, diffDays(today(), next)).replace(/<[^>]+>/g, "") : "", S.meta.days[today()] ? 100 : 0)}${actRow(canMore() && !wantPreset ? `<button class="btn primary big" id="moreBtn" type="button">＋ ${esc(x.moreBtn)}</button>` : `<button class="btn big${wantPreset ? " primary" : ""}" id="goAdd2" type="button">＋ ${wantPreset ? esc(x.presetTitle) : x.addMore}</button>`)}${canMore() && !wantPreset ? `<div class="row tight"><button class="linkbtn small" type="button" id="goAdd2">${x.addMore}</button></div>` : ""}${say(S.meta.days[today()] ? "st_love" : "st_sleepy", esc(S.meta.days[today()] ? (meltLine("done") || x.nmDone) : (meltLine("none") || x.nmNone)))}${deckChips()}`;
+    box.innerHTML = `${heroHTML(S.meta.days[today()] ? x.doneTitle : x.noneTitle, endToday ? (S.meta.settings.ui === "ja" ? "残りは明日にまわしたニャ" : "남은 건 내일로 넘겼다냥") : next ? x.nextReview(next, diffDays(today(), next)).replace(/<[^>]+>/g, "") : "", S.meta.days[today()] ? 100 : 0)}${actRow(canMore() && !wantPreset ? `<button class="btn primary big" id="moreBtn" type="button">＋ ${esc(x.moreBtn)}</button>` : `<button class="btn big${wantPreset ? " primary" : ""}" id="goAdd2" type="button">＋ ${wantPreset ? esc(x.presetTitle) : x.addMore}</button>`)}${canMore() && !wantPreset ? `<div class="row tight"><button class="linkbtn small" type="button" id="goAdd2">${x.addMore}</button></div>` : ""}${say(S.meta.days[today()] ? "st_love" : "st_sleepy", esc(S.meta.days[today()] ? (meltLine("done") || x.nmDone) : (meltLine("none") || x.nmNone)))}${deckChips()}`;
     { const mb = $("#moreBtn"); if(mb) mb.onclick = studyMore; }
     $("#goAdd2").onclick = async () => { showView("add"); if(PRESET_LANGS.includes(S.meta.settings.lang)){ setAddPanel("preset"); await renderPresets(); $("#presetCard").scrollIntoView({ behavior: "smooth", block: "start" }); } };
     return;
@@ -3810,6 +3813,7 @@ function applyUi(){
   document.querySelectorAll("[data-i18n-aria]").forEach(el => { el.setAttribute("aria-label", x[el.dataset.i18nAria]); });
   const su = $("#setUi"); if(su) su.value = S.meta.settings.ui;
   fillLangs(); closeEdit(); renderAll();
+  const fbs = $("#fbBtn small"); if(fbs) fbs.textContent = fbT().btn;
 }
 function openSheet(html){
   closePop(); const bg = document.createElement("div"); bg.className = "sheet-bg"; POP = bg;
@@ -3869,7 +3873,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v181";
+const APP_VER = "v182";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5767,14 +5771,16 @@ async function wlBoot(){ if(!WL_W || wlBoot._done) return; wlBoot._done = 1; con
   track("wlink", { w: WL_W, found: 1, fresh: 0, how: have ? "have" : "show", lang, kind: hit.kind, src }); }
 function wlShow(c, have, hit){ if($("#wlPop")) return; const ja = S.meta.settings.ui === "ja", d = document.createElement("div"); d.id = "wlPop"; d.className = "santa-pop wl-pop";
   const rd = c.reading && c.reading !== c.word ? `<small class="wl-r">${esc(c.reading)}</small>` : "", other = (c.lang || "es") !== S.meta.settings.lang;
+  const same = (c.lang || "es") === S.meta.settings.ui;   // 링크 단어 언어 = 화면 언어: 뜻(영어로 채워짐)을 안 보이고, 넣기·학습 언어 바꾸기 안 함
+  const sameNote = ja ? "日本語の画面では日本語の単語は学べないニャ" : "한국어 화면에선 한국어 단어를 배울 수 없다냥";
   d.innerHTML = `<div class="santa-card wl-card"><span class="wl-tag">${ja ? "リンクの単語" : "링크로 온 단어"} · ${esc(t().langNames[c.lang] || c.lang)}</span><b class="wl-w">${esc(c.word)}</b>${rd}
-    <p class="wl-m">${esc(c.meaning || "")}</p>${c.example ? `<p class="wl-ex">${esc(c.example)}</p>` : ""}
-    <div class="wl-btns">${have ? `<button type="button" class="btn primary" id="wlGo">${ja ? "単語帳で見る" : "단어장에서 보기"}</button>` : `<button type="button" class="btn primary" id="wlAdd">${ja ? "単語帳に入れる" : "단어장에 넣기"}</button>`}<button type="button" class="btn ghost" id="wlX">${ja ? "閉じる" : "닫기"}</button></div>
-    ${have ? `<p class="wl-note">${ja ? "もう単語帳にあるニャ" : "이미 단어장에 있다냥"}</p>` : ""}</div>`;
+    ${same && !have ? "" : `<p class="wl-m">${esc(c.meaning || "")}</p>`}${c.example ? `<p class="wl-ex">${esc(c.example)}</p>` : ""}
+    <div class="wl-btns">${have ? `<button type="button" class="btn primary" id="wlGo">${ja ? "単語帳で見る" : "단어장에서 보기"}</button>` : same ? "" : `<button type="button" class="btn primary" id="wlAdd">${ja ? "単語帳に入れる" : "단어장에 넣기"}</button>`}<button type="button" class="btn ghost" id="wlX">${ja ? "閉じる" : "닫기"}</button></div>
+    ${same && !have ? `<p class="wl-note" id="wlSame">${sameNote}</p>` : have ? `<p class="wl-note">${ja ? "もう単語帳にあるニャ" : "이미 단어장에 있다냥"}</p>` : ""}</div>`;
   document.body.appendChild(d); try{ sfxPoyon(.4); }catch(_){}
   const close = () => { d.classList.add("out"); setTimeout(() => d.remove(), 260); };
   d.onclick = e => { if(e.target === d) close(); }; $("#wlX").onclick = close;
-  const go = $("#wlGo"); if(go) go.onclick = () => { close(); if(other){ S.meta.settings.lang = c.lang; save(); try{ fillLangs(); fillVoices(); }catch(_){} renderAll(); } showView("list"); const s = $("#search"); if(s){ s.value = c.word; renderList(); } setTimeout(() => openEdit(c.id), 150); track("wlink_go"); };
+  const go = $("#wlGo"); if(go) go.onclick = () => { close(); if(other && !same){ S.meta.settings.lang = c.lang; save(); try{ fillLangs(); fillVoices(); }catch(_){} renderAll(); } showView("list"); const s = $("#search"); if(s){ s.value = c.word; renderList(); } setTimeout(() => openEdit(c.id), 150); track("wlink_go"); };
   const ad = $("#wlAdd"); if(ad) ad.onclick = () => { c.deck = wlDeck(c.lang).id; wlPut(c); close(); renderAll(); toast(ja ? `「${c.word}」を単語帳に入れたニャ！次の一回で出るよ` : `「${c.word}」 단어장에 넣었다냥! 다음 판에 나온다`); const sb = $("#startBtn"); if(sb && !other) sb.classList.add("pulse"); track("wlink_add", { lang: c.lang, other: other ? 1 : 0 }); }; }
 /* ════════ 文字から: ハングル（가나다）とひらがな・カタカナ ════════ */
 const R2H = (() => { // ローマ字 → ハングルのおおよその音（韓国語表示用）

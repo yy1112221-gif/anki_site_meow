@@ -49,7 +49,8 @@ async def main():
       ok(f"{tag} 이미 있는 단어: 「단어장에서 보기」(넣기 없음, 내 뜻 그대로)", bool(r) and r["go"] and not r["add"] and "내 뜻" in r["t"], r)
       await pg.click("#wlGo"); await pg.wait_for_timeout(700)
       r=await pg.evaluate("()=>({lang:__t.S().meta.settings.lang, view:document.body.dataset.view, n:Object.keys(__t.S().cards).length, m:__t.S().cards.kk.meaning, edit:document.body.innerText.includes('내 뜻')})")
-      ok(f"{tag} 보기: 학습 언어 ko로, 단어장 화면, 카드 수·뜻 그대로", r["lang"]=="ko" and r["view"]=="list" and r["n"]==4 and r["m"]=="내 뜻", r)
+      # 검수단 R1-46-2(11-24): 링크 단어 언어 = 화면 언어(ko)면 학습 언어를 ko로 바꾸지 않음(ui ko·lang ko 모순 설정 방지)
+      ok(f"{tag} 보기: 화면 ko라 학습 언어 ja 그대로, 단어장 화면, 카드 수·뜻 그대로", r["lang"]=="ja" and r["view"]=="list" and r["n"]==4 and r["m"]=="내 뜻", r)
       # ⑥ ?w 없는 평소 진입은 그대로
       await pg.goto(U); await pg.wait_for_timeout(1200)
       ok(f"{tag} ?w 없으면 카드 창 없음", not await pg.query_selector("#wlPop"))

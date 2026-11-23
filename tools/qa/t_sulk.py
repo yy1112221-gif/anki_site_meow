@@ -9,7 +9,7 @@ async def seed(pg, extra=None, days=None, cards=None):
   meta={"setup":1,"tutAsked":1,"loginAsked":1,"days":days or {},"settings":{"ui":"ko","lang":"es","homePet":False},"stepv":1,"pet":{"inv":{"kari":5},"kcal":0,"lv":1,"granted":{},"seenTier":9}}
   if extra: meta.update(extra)
   await pg.evaluate("s=>localStorage.setItem('focus-vocab-v1', s)", json.dumps({"cards":cards if cards is not None else mk(),"meta":meta})); await pg.reload(); await pg.wait_for_timeout(1200)
-async def ago(pg,n): return await pg.evaluate("n=>{ const d=new Date(); d.setDate(d.getDate()-n); return d.toLocaleDateString('sv-SE'); }", n)
+async def ago(pg,n): return await pg.evaluate("n=>{ const d=new Date(window.__t.today()+'T12:00:00'); d.setDate(d.getDate()-n); return d.toLocaleDateString('sv-SE'); }", n)
 async def sul(pg): return await pg.evaluate("()=>{ const s=window.__t.S().meta; return {sulk:s.sulk, seen:s.seen, today:window.__t.today()}; }")
 async def main():
   async with async_playwright() as pw:
