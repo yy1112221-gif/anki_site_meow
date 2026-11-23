@@ -884,7 +884,7 @@ body.focus .dock:has(.vk-host .vk) .aud{margin-top:6px} body.focus .dock:has(.vk
 .hv2{display:flex;flex-direction:column;gap:9px}
 .santa-pop{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);animation:spIn .25s ease-out}.santa-pop.out{opacity:0;transition:opacity .25s}
 .santa-card{width:min(88vw,340px);padding:18px 18px 16px;border-radius:24px;background:var(--card,#fff);color:var(--ink,#222);text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.3)}
-.santa-card b{display:block;font-size:1.2rem;margin:6px 0 4px}.santa-card p{margin:0 0 12px;font-size:.9rem;opacity:.75}
+.santa-card b{display:block;font-size:1.2rem;margin:6px 0 4px}.wl-card{text-align:left}.wl-card .wl-tag{font-size:.75rem;opacity:.65}.wl-card b.wl-w{font-size:1.9rem;margin:6px 0 0;line-height:1.2;word-break:break-all}.wl-card .wl-r{display:block;opacity:.7;margin-bottom:4px}.wl-card p.wl-m{font-size:1rem;opacity:1;margin:6px 0 8px;font-weight:600}.wl-card p.wl-ex{font-size:.85rem;margin:0 0 12px;max-height:5.6em;overflow:hidden}.wl-btns{display:flex;gap:8px}.wl-btns .btn{flex:1;white-space:nowrap;padding-left:10px;padding-right:10px}.wl-btns .btn.primary{flex:2}.wl-card p.wl-note{margin:8px 0 0;font-size:.8rem;text-align:center}.santa-card p{margin:0 0 12px;font-size:.9rem;opacity:.75}
 .santa-cat{position:relative;width:180px;height:150px;margin:0 auto}.santa-cat .sc{position:absolute;left:0;bottom:0;width:180px}
 .santa-cat .sh{position:absolute;left:58px;top:-6px;width:74px;transform-origin:50% 90%;animation:spHat .9s cubic-bezier(.3,1.6,.5,1) .35s both}
 @keyframes spIn{from{opacity:0}to{opacity:1}}@keyframes spHat{0%{transform:translateY(-140px) rotate(-30deg);opacity:0}60%{opacity:1}100%{transform:translateY(0) rotate(-8deg)}}
@@ -1766,7 +1766,7 @@ const dueAll = () => { const d = today(); return activeCards().filter(c => !c.ma
 const reviewCap = () => Math.max(10, Number(S.meta.settings.maxReviews) || 80);
 const dueCards = () => dueAll().slice(0, reviewCap());
 const introducedToday = () => cardsHere().filter(c => c.introduced === today() && !c.script).length;
-const newCandidates = () => orderNew(activeCards().filter(c => c.isNew && !c.script));
+const newCandidates = () => { const l = orderNew(activeCards().filter(c => c.isNew && !c.script)), w = l.filter(c => c.wlPri).sort((a, b) => b.wlPri - a.wlPri); return w.length ? w.concat(l.filter(c => !c.wlPri)) : l; };   // 링크로 넣은 단어(wlPri)는 맨 먼저
 const scriptNewToday = () => Math.min(activeCards().filter(c => c.isNew && c.script).length, Math.max(0, 15 - cardsHere().filter(c => c.script && c.introduced === today()).length));
 function recentAcc(){ const from = addDays(today(), -7); let n = 0, ok = 0; cardsHere().forEach(c => (c.log || []).forEach(l => { if(l.d >= from){ n++; if(l.ok) ok++; } })); return n >= 20 ? ok / n : null; }
 const struggling = () => { const a = recentAcc(); return a !== null && a < .6; };
@@ -1933,7 +1933,7 @@ function spreadQueue(items, recent){
 function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1); while(S.meta.days[d]){ n++; d = addDays(d, -1); } return n; }
 
 function renderStart(){
-  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); moveIn(); setTimeout(moveBanner, 600); authBoot(); setTimeout(payBoot, 300); setTimeout(payRetry, 1500); setTimeout(buyBoot, 700); setTimeout(diagBoot, 800); setTimeout(homePetBoot, 450); setTimeout(giftCheck, 600); setTimeout(nickBoot, 2500); }
+  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); moveIn(); setTimeout(moveBanner, 600); authBoot(); setTimeout(payBoot, 300); setTimeout(payRetry, 1500); setTimeout(buyBoot, 700); setTimeout(diagBoot, 800); wlBoot(); setTimeout(homePetBoot, 450); setTimeout(giftCheck, 600); setTimeout(nickBoot, 2500); }
   if(maybeLoginAsk._pending && !SES){ maybeLoginAsk._pending = 0; setTimeout(maybeLoginAsk, 1500); }
   const box = $("#sessionStart"), pos = box.querySelector(".poster");
   box.querySelectorAll(".say .bubble").forEach(b => { b.classList.add("tapme"); b.onclick = () => { if(NERD_ON) return; if(Math.random() < .08 && nerdPop(b)) return; if(Math.random() < .3){ b.textContent = sciLine(); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); try{ sfxPoyon(.15); }catch(e){} return; } const st = meltStage(), L = st ? meltL().home[st] : (t().homeTalk || []); if(!L.length) return; let i; do{ i = Math.floor(Math.random() * L.length); }while(L.length > 1 && i === renderStart.last); renderStart.last = i;
@@ -2213,7 +2213,7 @@ const SETUP_T = {
  ko: { hi: "…왔군. 세 가지만 탁탁탁 골라라.", ui: "너가 가장 편한 언어 (배우는 언어 말고)", learn: "배우는 언어", born: "태어난 해", ok: "이걸로", skip: "건너뛰기", tut: "1분 튜토리얼 볼래?", tutNote: "나중에 설정에서 다시 볼 수 있으니 안심해라냥", back: "← 뒤로" },
  ja: { hi: "…来たか。三つだけ、ポンポンポンと選べ。", ui: "いちばん楽な言語（学ぶ言語じゃなくて）", learn: "学ぶ言語", born: "生まれた年", ok: "これで", skip: "スキップ", tut: "1分チュートリアル見る？", tutNote: "あとで設定からまた見られるから安心するニャ", back: "← 戻る" } };
 const needSetup = () => !/move=/.test(location.hash) && !S.meta.setup && !Object.keys(S.cards).length && !Object.keys(S.meta.days || {}).length && !syncOn();
-function maybeSetup(){ if(!needSetup() || $("#setupBox")) return; const st = S.meta.settings, box = document.createElement("div"); box.id = "setupBox"; box.setAttribute("role", "dialog"); document.body.appendChild(box);
+function maybeSetup(){ if(!needSetup() || $("#setupBox") || WL_PENDING) return; const st = S.meta.settings, box = document.createElement("div"); box.id = "setupBox"; box.setAttribute("role", "dialog"); document.body.appendChild(box);
   let step = 0; const T0 = Date.now(); const Y = new Date().getFullYear(), years = []; for(let y = Y - 6; y >= Y - 80; y--) years.push(y);
   const draw = () => { const x = SETUP_T[st.ui] || SETUP_T.ko, tt = t(); let body = "";
     if(step === 0) body = `<h3>${esc(SETUP_T.ko.ui)}<br><small style="font-weight:600;opacity:.75">${esc(SETUP_T.ja.ui)}</small></h3><div class="su-big">${[["ko", "🇰🇷 한국어<small> 韓国語</small>"], ["ja", "🇯🇵 日本語<small> 일본어</small>"]].map(([k, l]) => `<button type="button" class="su-opt${st.ui === k ? " on" : ""}" data-ui="${k}">${l}</button>`).join("")}</div>`;
@@ -3796,7 +3796,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v174";
+const APP_VER = "v175";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -3898,7 +3898,7 @@ addEventListener("visibilitychange", () => { if(document.hidden){ track("hide", 
 function attrRead(){ const q = new URLSearchParams(location.search), ua = navigator.userAgent || "", g = k => (q.get(k) || "").slice(0, 80);
   const ref = (document.referrer.match(/^https?:\/\/([^/]+)/) || [])[1] || "";
   const iab = /Instagram/i.test(ua) ? "ig" : /FBAN|FBAV|FB_IAB|FBIOS|FB4A/i.test(ua) ? "fb" : /KAKAOTALK/i.test(ua) ? "kakao" : /Line\//i.test(ua) ? "line" : "";
-  return { src: g("utm_source") || g("src"), med: g("utm_medium"), cmp: g("utm_campaign"), cnt: g("utm_content"), term: g("utm_term"), fb: q.has("fbclid") ? 1 : 0, iab, ref: ref === location.host ? "" : ref }; }
+  return { src: g("utm_source") || g("src"), w: WL_W || g("w"), med: g("utm_medium"), cmp: g("utm_campaign"), cnt: g("utm_content"), term: g("utm_term"), fb: q.has("fbclid") ? 1 : 0, iab, ref: ref === location.host ? "" : ref }; }
 function attrBoot(){ try{ const a = attrRead(), ext = a.src || a.fb || a.iab || a.ref;
   if(ext && !S.meta.attr){ S.meta.attr = Object.assign({ at: new Date().toISOString().slice(0, 10), v: APP_VER }, a); save(); }
   const q = new URLSearchParams(location.search); let dirty = false;   // 공유될 때 꼬리표가 따라가지 않게 주소창에서 지움(결제 복귀 등 다른 값은 그대로)
@@ -3923,7 +3923,7 @@ function santaShow(){ if($("#santaPop")) return; const ja = S.meta.settings.ui =
 function evBoot(){ const s = S.meta.settings, A = attrBoot(), F = S.meta.attr || {};
   track("open", { ui: s.ui, lang: s.lang, cards: Object.keys(S.cards).length, days: Object.keys(S.meta.days || {}).length, by: S.meta.by || null, melt: (() => { try{ return meltPct(); }catch(_){ return null; } })(),
     pwa: matchMedia("(display-mode: standalone)").matches, ref: A.ref || "", src: A.src || "", med: A.med || "", cmp: A.cmp || "", cnt: A.cnt || "", term: A.term || "", fb: A.fb || 0, iab: A.iab || "",
-    first: F.src || F.iab || F.ref || "", first_cmp: F.cmp || "", first_cnt: F.cnt || "", first_at: F.at || "", w: innerWidth, h: innerHeight, sync: syncOn() }); }
+    wl: A.w || "", first: F.src || F.iab || F.ref || "", first_cmp: F.cmp || "", first_cnt: F.cnt || "", first_at: F.at || "", w: innerWidth, h: innerHeight, sync: syncOn() }); }
 // 기존 함수에 기록만 덧붙임(동작은 그대로)
 { const _sv = showView; showView = function(v){ track("view", { v }); return _sv.apply(this, arguments); };
   const _st = settleItem; settleItem = function(ok){ try{ const it = SES && SES.queue[0]; track("ans", { m: it && it.mode, ok: !!ok }); }catch(_){} return _st.apply(this, arguments); };
@@ -5640,6 +5640,49 @@ function diagBoot(){ const q = new URLSearchParams(location.search); if(q.get("d
     if(cardsHere().length || ++n > 15){ showView("add"); setAddPanel("preset"); const lang = S.meta.settings.lang; setTimeout(() => { const b = $("#presetBox #diagBox"); if(b) startDiag(lang, b, "link"); }, 700); return; }
     setTimeout(tick, 200); }; tick(); }
 
+/* ④ 인스타 단어 바로가기: meowca.app/?w=<단어>&src=ig_<이름> — 단어장 데이터(유행어·레벨 세트)에서 찾아 처음 온 사람은 설정 없이 그 단어가 든 첫 판, 이미 쓰는 사람은 카드 한 장 + 「단어장에 넣기」. 없으면 그냥 첫 화면 */
+const WL_W = (() => { try{ return (new URLSearchParams(location.search).get("w") || "").trim().slice(0, 40); }catch(_){ return ""; } })();
+let WL_PENDING = !!WL_W;   // 찾는 동안 첫 설정 창을 띄우지 않음
+const wlLangOf = w => /[가-힯ㄱ-ㆎ]/.test(w) ? "ko" : /[぀-ヿ㐀-鿿ｦ-ﾟ]/.test(w) ? "ja" : /[a-zA-ZñÑáéíóúü]/.test(w) ? "es" : "";
+async function wlFind(w){ const lang = wlLangOf(w); if(!lang) return null; const nw = norm(w), langs = lang === "es" ? ["es", "en"] : [lang];
+  for(const lg of langs){
+    if(CORE_SL.includes(lg)){ try{ const r = await fetch(SLANG_BASE + lg + "_core.json", { cache: "no-cache" }); if(r.ok){ const x = ((await r.json()).terms || []).find(z => norm(z.t) === nw && z.ex && z.ex.length); if(x) return { lang: lg, kind: "slang", x }; } }catch(_){} }
+    let idx = null; try{ idx = await presetIndex(); }catch(_){} const set = idx && idx.sets[lg]; if(!set) continue;
+    for(const lv of set.levels){ let data; try{ data = await presetData(lg + "-" + lv.id); }catch(_){ continue; } const it = (data.items || []).find(z => z && z[0] && norm(z[0]) === nw); if(it) return { lang: lg, kind: "preset", lv: lv.id, it }; } }
+  return null; }
+function wlDeck(lang){ let d = decks().find(z => z.wlink === lang); if(!d){ d = addDeck(S.meta.settings.ui === "ja" ? "🔗 リンクの単語" : "🔗 링크 단어"); d.wlink = lang; } return d; }
+/* 카드 하나 만들기(S.cards에 넣지 않음): 유행어는 topUpCore와, 레벨 세트는 materialize와 같은 규칙 */
+function wlMake(hit, deckId){ const ui = S.meta.settings.ui === "ja" ? "ja" : "ko", lang = hit.lang;
+  if(hit.kind === "slang"){ const x = hit.x, c = newCard({ word: x.t, deck: deckId, lang }); c.meaning = x[ui] || x.ko || ""; c.mOk = 1; c.gloss = (x.def || [])[0] || ""; c.example = x.ex[0]; c.exAlt = x.ex.slice(1, 3); c.form = findForm(c.example, c.word) || x.t; return c; }
+  const before = new Set(Object.keys(S.cards)); materialize({ id: deckId, preset: lang + "-wl", cursor: 0 }, { items: [hit.it] }, 1);
+  const id = Object.keys(S.cards).find(k => !before.has(k)); if(!id) return null; const c = S.cards[id]; delete S.cards[id]; return c; }
+const wlHave = (lang, w) => Object.values(S.cards).find(c => (c.lang || "es") === lang && norm(c.word) === norm(w));
+function wlPut(c){ c.wlPri = Date.now(); c.created = Date.now(); S.cards[c.id] = c; save(); return c; }   // wlPri: 새 단어 중 맨 먼저 나옴(아직 안 푼 동안만)
+function wlClean(){ try{ const q = new URLSearchParams(location.search); if(!q.has("w")) return; q.delete("w"); history.replaceState(history.state, "", location.pathname + (q.toString() ? "?" + q : "") + location.hash); }catch(_){} }
+async function wlBoot(){ if(!WL_W || wlBoot._done) return; wlBoot._done = 1; const fresh = needSetup(); let hit = null;
+  try{ hit = await Promise.race([wlFind(WL_W), new Promise(r => setTimeout(() => r(null), 9000))]); }catch(_){}
+  wlClean(); WL_PENDING = false; const src = (new URLSearchParams(location.search).get("src") || (S.meta.attr || {}).src || "").slice(0, 80);
+  if(!hit){ track("wlink", { w: WL_W, found: 0, fresh: fresh ? 1 : 0, src }); if(fresh) maybeSetup(); return; }
+  const lang = hit.lang;
+  if(fresh){ const st = S.meta.settings; if(lang === "ja") setUiLang("ko"); else if(lang === "ko") setUiLang("ja"); st.lang = lang; st.handsFree = false; S.meta.setup = 1; S.meta.tutAsked = 1; S.meta.tutWant = 0;
+    $("#setupBox") && $("#setupBox").remove();
+    try{ const idx = await presetIndex(), set = idx.sets[lang]; if(set){ const lv = set.levels[0], data = await presetData(lang + "-" + lv.id), d = addDeck(presetDeckName(lang, lv)); d.preset = lang + "-" + lv.id; d.cursor = 0; materialize(d, data, PRESET_CHUNK); } }catch(_){}
+    const c = wlHave(lang, WL_W) || wlMake(hit, wlDeck(lang).id); if(c && !S.cards[c.id]) wlPut(c); else if(c){ c.wlPri = Date.now(); save(); }
+    track("wlink", { w: WL_W, found: 1, fresh: 1, how: "start", lang, kind: hit.kind, src });
+    try{ fillLangs(); fillVoices(); }catch(_){} renderAll(); drawRain(); setTimeout(() => { if(!SES){ showView("today"); startSession(); } }, 200); return; }
+  const have = wlHave(lang, WL_W), c = have || wlMake(hit, null); if(!c) return; wlShow(c, !!have, hit);
+  track("wlink", { w: WL_W, found: 1, fresh: 0, how: have ? "have" : "show", lang, kind: hit.kind, src }); }
+function wlShow(c, have, hit){ if($("#wlPop")) return; const ja = S.meta.settings.ui === "ja", d = document.createElement("div"); d.id = "wlPop"; d.className = "santa-pop wl-pop";
+  const rd = c.reading && c.reading !== c.word ? `<small class="wl-r">${esc(c.reading)}</small>` : "", other = (c.lang || "es") !== S.meta.settings.lang;
+  d.innerHTML = `<div class="santa-card wl-card"><span class="wl-tag">${ja ? "リンクの単語" : "링크로 온 단어"} · ${esc(t().langNames[c.lang] || c.lang)}</span><b class="wl-w">${esc(c.word)}</b>${rd}
+    <p class="wl-m">${esc(c.meaning || "")}</p>${c.example ? `<p class="wl-ex">${esc(c.example)}</p>` : ""}
+    <div class="wl-btns">${have ? `<button type="button" class="btn primary" id="wlGo">${ja ? "単語帳で見る" : "단어장에서 보기"}</button>` : `<button type="button" class="btn primary" id="wlAdd">${ja ? "単語帳に入れる" : "단어장에 넣기"}</button>`}<button type="button" class="btn ghost" id="wlX">${ja ? "閉じる" : "닫기"}</button></div>
+    ${have ? `<p class="wl-note">${ja ? "もう単語帳にあるニャ" : "이미 단어장에 있다냥"}</p>` : ""}</div>`;
+  document.body.appendChild(d); try{ sfxPoyon(.4); }catch(_){}
+  const close = () => { d.classList.add("out"); setTimeout(() => d.remove(), 260); };
+  d.onclick = e => { if(e.target === d) close(); }; $("#wlX").onclick = close;
+  const go = $("#wlGo"); if(go) go.onclick = () => { close(); if(other){ S.meta.settings.lang = c.lang; save(); try{ fillLangs(); fillVoices(); }catch(_){} renderAll(); } showView("list"); const s = $("#search"); if(s){ s.value = c.word; renderList(); } setTimeout(() => openEdit(c.id), 150); track("wlink_go"); };
+  const ad = $("#wlAdd"); if(ad) ad.onclick = () => { c.deck = wlDeck(c.lang).id; wlPut(c); close(); renderAll(); toast(ja ? `「${c.word}」を単語帳に入れたニャ！次の一回で出るよ` : `「${c.word}」 단어장에 넣었다냥! 다음 판에 나온다`); const sb = $("#startBtn"); if(sb && !other) sb.classList.add("pulse"); track("wlink_add", { lang: c.lang, other: other ? 1 : 0 }); }; }
 /* ════════ 文字から: ハングル（가나다）とひらがな・カタカナ ════════ */
 const R2H = (() => { // ローマ字 → ハングルのおおよその音（韓国語表示用）
   const m = { a:"아",i:"이",u:"우",e:"에",o:"오",ka:"카",ki:"키",ku:"쿠",ke:"케",ko:"코",sa:"사",shi:"시",su:"스",se:"세",so:"소",ta:"타",chi:"치",tsu:"쓰",te:"테",to:"토",na:"나",ni:"니",nu:"누",ne:"네",no:"노",ha:"하",hi:"히",fu:"후",he:"헤",ho:"호",ma:"마",mi:"미",mu:"무",me:"메",mo:"모",ya:"야",yu:"유",yo:"요",ra:"라",ri:"리",ru:"루",re:"레",ro:"로",wa:"와",wo:"오",n:"응(ㄴ)",
@@ -5838,7 +5881,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { wlFind, wlLangOf, wlMake, newCandidates: () => newCandidates(), rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 load(); PET_SIG = petSig(); migrateSteps(); sulkInit(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
