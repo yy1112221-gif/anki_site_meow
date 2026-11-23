@@ -1272,7 +1272,7 @@ ja: {
   nmAsk:{ meaning:l=>"この単語…意味は何だ？ 己の言葉で答えろ", scriptNew:l=>"新たなる文字だ…形と音、共に刻め", script:l=>"この文字…読んでみろ", study:l=>"初めて見る単語か…勘でいい、書け。迷いは敗北だ", pick:l=>"この単語の意味…どれだ？", trap:l=>"正しい読み…どれだ？ 罠に気をつけろ", juku:l=>"★これは一字ずつ読まない。まるごと覚えろ", cloze:l=>"空白…埋めてみせろ", order:l=>"バラバラだ…正しく並べてみせろ", recall:l=>`この意味…${l}で言ってみろ`, write:l=>"この単語で一文…創ってみせろ", speak:l=>"声に出せ。…聞いているぞ" },
   nmToday:(a,b)=>`今日は復習${a}枚、新しい単語${b}つ。…覚悟はいいか？`, nmEmpty:"…まだ単語がないようだな。覚えたい単語を持ってこい", nmNone:"今日やることはない。我は…少し目を閉じる", nmDone:"今日もよく耐えた…また明日来るがいい", nmResume:"戻ったか。さっきの続きから始めろ",
   nmFinishAll:"全て一発で…だと？ …認めよう。貴様は強い", nmFinishSome:"ご苦労だった。間違えた奴らは…明日また始末する", resumeTitle:"途中から再開できます", resumeBody:(n,d)=>`前回の続きです。終わった問題 ${d}・残り ${n}問。答えた分はすべて保存されています。`, resume:"続きから", restart:"最初からやり直す", guessLead:"初めての単語です。答えを見る前に、まず推測して書いてみましょう。", copyPrompt:"正解を1回書いてから次へ進みましょう。", copyPh:"正解を書き写す", copyAgain:"もう一度だ。正解をそのまま書け", copyOk:"よし。書けたな", skipCopy:"入力せずに次へ", hfOn:"⌨️ 入力に戻す", hfOff:"👆 入力なしで解く", hfHelp:"歩きながら・電車で：書かずに、答えを聞いて自己採点", remembered:"覚えてた", forgot:"忘れてた", setHf:"入力なしモード（答えを聞いて自己採点）", slow:"ゆっくり", popDetail:"詳細を見る", popAdd:"単語帳に追加", popInDeck:"単語帳にあり", popNoMeaning:"意味を取得できませんでした", popDict:"辞書で調べる", popExamples:"例文", popLoading:"例文を探しています…", popNoEx:"ほかの例文は見つかりませんでした。", popAdded:w=>`「${w}」を単語帳に追加しました。`, popClose:"閉じる", popHint:"文中の単語をタップすると意味と発音が見られます。", voice:"読み上げの声", voiceAuto:"自動（いちばん自然な声）", rate:"読み上げの速さ", preview:"試しに聞く", voiceTip:"iPhoneは「設定 › アクセシビリティ › 読み上げコンテンツ › 声」で「拡張」や「プレミアム」の声をダウンロードすると、ずっと聞き取りやすくなります。ネイティブ録音がある例文は録音を優先して再生します。", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"空欄に入る単語はどれ？ 初めてでもOK、まず推測してみましょう。", guessMCm:(m,l)=>`「${m}」は${l}でどれ？ まず推測してみましょう。`, guessType:"カンで入力OK", guessBtn:"これだと思う", guessRight:"当てたか…やるな", guessWrong:"答えはこれだ。先に悩んだ分、すでに深く刻まれている", guessSkip:"見当もつかない",
-  hint:(m,c)=>`ヒント：${m} · 「${c}」で始まる`, recallQ:l=>`この意味の${l}の単語は？`, noMeaning:"（意味なし）",
+  hint:(m,c)=>`ヒント：${m} · 「${c}」で始まる`, hint1:c=>`ヒント：「${c}」で始まる`, listenQ:"聞こえた単語を書いてみて", recallQ:l=>`この意味の${l}の単語は？`, noMeaning:"（意味なし）",
   answerPh:"答えを入力", answer:"答え", idk:"わからない", check:"確認", next:"次へ",
   correct:"正解だ。…悪くない", correctAccent:"惜しいな。アクセントを侮るな", wrong:"構わん。答えはこれだ。刻め", baseForm:"原形", retryLater:"3枚後にもう一度出ます。",
   writePrompt:"この単語を使って文を1つ書いてみましょう。今日あったことだとなお良いです。", myText:"自分の文", wrote:"書けた",
@@ -1361,7 +1361,7 @@ ko: {
   nmAsk:{ meaning:l=>"이 단어… 무슨 뜻이지? 네 말로 답해라", scriptNew:l=>"…새로운 글자다. 형태와 소리, 함께 새겨라", script:l=>"이 글자… 읽어 봐라", study:l=>"처음 보는 단어군. 감으로라도 써라. 망설임은 패배다", pick:l=>"이 단어 뜻… 어느 거지?", trap:l=>"맞는 읽기… 어느 거지? 함정 조심해라", juku:l=>"★ 통째로 외우는 단어다. 한 글자씩 읽으면 안 된다", cloze:l=>"빈칸… 채워 봐라", order:l=>"흩어졌다… 제대로 줄 세워 봐라", recall:l=>`이 뜻을… ${l}로 말해 봐라`, write:l=>"이 단어로 문장 하나. 만들어라", speak:l=>"소리 내어 말해라. …듣고 있다" },
   nmToday:(a,b)=>`오늘은 복습 ${a}장, 새 단어 ${b}개. …각오는 됐나?`, nmEmpty:"…아직 단어가 없군. 외울 단어를 가져와라", nmNone:"오늘 할 일은 없다. 나는… 잠시 눈을 감겠다", nmDone:"오늘도 버텼군. …내일 다시 오너라", nmResume:"돌아왔군. 아까 멈춘 곳에서 이어가라",
   nmFinishAll:"전부 단번에…? …인정하지. 넌 강하다", nmFinishSome:"수고했다. 틀린 놈들은… 내일 다시 처리한다", resumeTitle:"이어서 할 수 있어요", resumeBody:(n,d)=>`지난번에 하던 거예요. 끝낸 문제 ${d}개 · 남은 문제 ${n}개. 답한 건 모두 저장돼 있어요.`, resume:"이어서 하기", restart:"처음부터 다시", guessLead:"처음 보는 단어예요. 답을 보기 전에 먼저 짐작해서 써보세요.", copyPrompt:"정답을 한 번 따라 쓰고 넘어가요.", copyPh:"정답 따라 쓰기", copyAgain:"다시. 정답을 그대로 써라", copyOk:"좋다. 써냈군", skipCopy:"안 쓰고 넘어가기", hfOn:"⌨️ 직접 입력으로", hfOff:"👆 입력 없이 풀기", hfHelp:"걸으면서·지하철에서: 쓰지 않고 정답 듣고 직접 채점", remembered:"기억났어요", forgot:"까먹었어요", setHf:"입력 없이 모드 (정답 듣고 직접 채점)", slow:"느리게", popDetail:"상세 보기", popAdd:"단어장에 추가", popInDeck:"단어장에 있음", popNoMeaning:"뜻을 가져오지 못했어요", popDict:"사전에서 찾기", popExamples:"예문", popLoading:"예문 찾는 중…", popNoEx:"다른 예문을 찾지 못했어요.", popAdded:w=>`"${w}"을(를) 단어장에 추가했어요.`, popClose:"닫기", popHint:"문장 속 단어를 누르면 뜻과 발음을 볼 수 있어요.", voice:"읽어주는 목소리", voiceAuto:"자동 (가장 자연스러운 목소리)", rate:"읽기 속도", preview:"들어보기", voiceTip:"아이폰은 설정 › 손쉬운 사용 › 콘텐츠 말하기 › 음성에서 「향상된」·「프리미엄」 음성을 내려받으면 훨씬 잘 들립니다. 원어민 녹음이 있는 예문은 녹음을 먼저 재생합니다.", previewText:"Hola, ¿qué tal? Hoy hace muy buen tiempo.", guessMC:"빈칸에 들어갈 단어는? 처음이어도 괜찮아요, 먼저 짐작해 보세요.", guessMCm:(m,l)=>`"${m}"은(는) ${l}로 뭘까요? 먼저 짐작해 보세요.`, guessType:"짐작해서 써 봐", guessBtn:"이거 같아요", guessRight:"맞혔군. …제법이다", guessWrong:"정답은 이것. 먼저 고민한 만큼, 이미 더 깊이 새겨졌다", guessSkip:"전혀 모르겠어요",
-  hint:(m,c)=>`힌트: ${m} · ${c}로 시작`, recallQ:l=>`이 뜻의 ${l} 단어는?`, noMeaning:"(뜻 없음)",
+  hint:(m,c)=>`힌트: ${m} · 첫 글자 ${c}`, hint1:c=>`힌트: 첫 글자 ${c}`, listenQ:"들은 단어를 써 봐", recallQ:l=>`이 뜻의 ${l} 단어는?`, noMeaning:"(뜻 없음)",
   answerPh:"정답 입력", answer:"정답", idk:"모르겠어요", check:"확인", next:"다음",
   correct:"정답이다. …나쁘지 않군", correctAccent:"아깝군. 악센트를 소홀히 하지 마라", wrong:"괜찮다. 정답은 이것이다. 새겨라", baseForm:"기본형", retryLater:"3장 뒤에 다시 나옵니다.",
   writePrompt:"이 단어를 넣어 문장을 하나 직접 써보세요. 오늘 있었던 일이면 더 좋아요.", myText:"내 문장", wrote:"다 썼어요",
@@ -2297,7 +2297,7 @@ function nextItem(){
   if(c.lazy && !it.waited){ it.waited = 1; document.body.classList.add("focus"); $("#sessionBox").innerHTML = `<div class="stage">${say("load_run", esc(t().prepping))}</div>`;
     Promise.race([fillLazy(c), sleep(3000)]).then(() => { if(SES && SES.queue[0] === it) nextItem(); }); return; }
   if(c.example && !c.exampleKo && !it.trWait && (c.lang || "es") !== S.meta.settings.ui && Date.now() >= TR_OFF){ it.trWait = 1; Promise.race([fillTr(c), sleep(2500)]).then(() => { if(SES && SES.queue[0] === it) nextItem(); }); return; }
-  if(it.mode === "recall" && !c.script && !nativeOk(c)) it.mode = "meaning";
+  if(it.mode === "recall" && !c.script && !nativeOk(c) && (qMean(c.meaning, c) || !c.meaning)) it.mode = "meaning";   // 뜻 = 정답인 약어 카드는 recall 그대로 → 듣고 쓰기
   if((it.mode === "pick" || it.mode === "study") && (c.lang || "es") === "ja" && !JAX && !it.jxWait && Date.now() - JAX_FAIL > 6e4){ it.jxWait = 1; Promise.race([jaxLoad(), sleep(2500)]).then(() => { if(SES && SES.queue[0] === it) nextItem(); }); return; }
   SES.state = { answered: false }; SES.qT = Date.now(); document.body.classList.add("focus"); renderItem(c, it.mode);
   { const bx = $("#sessionBox"), sy = bx.querySelector(":scope > .say"), st = bx.querySelector(".stage"); if(sy && st){ st.prepend(sy); sy.classList.add("qc"); bindQcat(sy); } }   // 문제 내는 냥이: 작게, 만질 수 있게
@@ -2898,13 +2898,19 @@ function fixReadings(){ if(LOAD_BAD || (S.meta.rfix || 0) >= 1 || !JAX) return 0
   try{ Object.values(S.cards || {}).forEach(c => { if(!c || (c.lang || "es") !== "ja") return; const jx = JAX[c.word]; if(!jx || !jx.r) return; const old = String(c.reading || ""), r = jx.r; if(old === r) return;
       if(old && !old.includes(r)) return; c.reading = r; const m = String(c.meaning || ""); if(old && m.startsWith(old + " · ")) c.meaning = r + " · " + m.slice(old.length + 3); else if(!old && /^\s*[ぁ-ゖァ-ヺー;；\s]+\s*·\s*/.test(m)) c.meaning = m.replace(/^\s*[ぁ-ゖァ-ヺー;；\s]+\s*·\s*/, r + " · "); n++; }); }catch(_){}
   S.meta.rfix = 1; persist(); if(n) track("reading_fix", { n }); return n; }
+// 출제·힌트용 뜻(R1-22-1·R1-22-2): 라틴 글자 단어장이면 뜻 칸 괄호 속 원어(3글자 이상 라틴)·정답 단어가 든 괄호/쉼표 조각을 숨김. 다 숨겨지면 ""(뜻 = 정답인 약어 카드). 정답 공개 뒤 해설은 c.meaning 그대로
+function qMean(m, c){ m = String(m || ""); const lg = (c && c.lang) || "es"; if(lg === "ja" || lg === "ko" || !m) return m;
+  const w = norm(c && c.word || ""), hasW = s => w.length >= 2 && /[a-zà-ÿ]/.test(w) && (" " + norm(s) + " ").includes(" " + w + " ");
+  let o = m.replace(/\s*[(（]([^()（）]*)[)）]/g, (a, b) => (/[A-Za-zÀ-ÿ]{3,}/.test(b) || hasW(b)) ? "" : a).trim();
+  const ps = o.split(/\s*[,、，;]\s*/); if(ps.some(hasW)) o = ps.filter(s => s && !hasW(s)).join(S.meta.settings.ui === "ja" ? "、" : ", ");
+  o = o.replace(/^[\s,、，;·・]+|[\s,、，;·・]+$/g, "").replace(/\s{2,}/g, " "); return o; }
 const meanOnly = m => String(m || "").replace(/^\s*[ぁ-ゖァ-ヺー]+\s*[·・]\s*/, "").trim();
 function shuffle(a){ for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function trapOpts(c){ const jx = jaxOf(c), rd = readingOf(c); if(!jx || !rd || !Array.isArray(jx.trap) || !jx.trap.length) return null;
   const tr = [...new Set(jx.trap.map(String).filter(x => x && x !== rd))].slice(0, 3); if(!tr.length) return null;
   return { q: c.word, sub: meanOnly(c.meaning), ans: rd, opts: shuffle([rd, ...tr]), juku: !!jx.juku }; }
-function pickOpts(c){ const ans = meanOnly(c.meaning); if(!ans) return null; const mine = new Set(meanToks(ans)), lang = c.lang || "es", end = Array.from(c.word || "").pop() || "";
-  const seen = new Set([norm(ans)]), pool = cardsHere().filter(o => o.id !== c.id && (o.lang || "es") === lang && o.meaning && !o.script).map(o => ({ o, m: meanOnly(o.meaning) })).filter(z => z.m && !meanToks(z.m).some(x => mine.has(x)));
+function pickOpts(c){ const ans = meanOnly(qMean(c.meaning, c)) || meanOnly(c.meaning); if(!ans) return null; const mine = new Set(meanToks(ans)), lang = c.lang || "es", end = Array.from(c.word || "").pop() || "";
+  const seen = new Set([norm(ans)]), pool = cardsHere().filter(o => o.id !== c.id && (o.lang || "es") === lang && o.meaning && !o.script).map(o => ({ o, m: meanOnly(qMean(o.meaning, o)) })).filter(z => z.m && !meanToks(z.m).some(x => mine.has(x)));
   const score = z => (z.o.deck === c.deck ? 4 : 0) + (Math.abs((z.o.level || 0) - (c.level || 0)) <= 1 ? 2 : 0) + ((Array.from(z.o.word || "").pop() || "") === end ? 3 : 0) + Math.random() * 1.5;
   const out = []; pool.map(z => [score(z), z]).sort((a, b) => b[0] - a[0]).forEach(([, z]) => { if(out.length >= 3) return; const k = norm(z.m); if(seen.has(k)) return; seen.add(k); out.push(z.m); });
   if(out.length < 3) return null; return { q: c.word, sub: "", ans, opts: shuffle([ans, ...out]) }; }
@@ -2929,6 +2935,11 @@ function askJuku(c){ const box = $("#sessionBox"), x = t(), ja = S.meta.settings
   box.innerHTML = head(c, "juku") + `<div class="stage"><div><span class="juku-tag">${ja ? "★ まるごと覚える単語" : "★ 통째로 외우는 단어"}</span><div class="word" lang="ja">${esc(c.word)}</div><p class="q-sub" lang="ja" style="font-size:1.25rem;font-weight:800">${esc(rd)}</p><p class="q-sub">${esc(meanOnly(c.meaning))}</p></div><div id="fb"></div></div>
     <div class="dock"><div class="row" id="acts">${listenBtn(rd || c.word, x.listenAgain)}<span class="grow"></span><button class="btn primary" type="button" id="chk">${x.next}</button></div></div>`;
   bindSay(box); try{ speak(c.word); }catch(_){} $("#chk").onclick = () => settleItem(true); }
+// 뜻 = 정답인 카드(tv·dvd·cd): 뜻을 보여 주면 답이 보이므로 듣고 쓰기. 그 언어 음성이 없으면 뜻 고르기, 그것도 안 되면 null(옛 화면)
+function askListenWrite(c, mode, isGuess){ const x = t();
+  if(!canSpeakLang()){ const pk = pickOpts(c); return pk && !S.meta.settings.handsFree ? (askChoice(c, "pick", pk) || true) : null; }
+  const promptHTML = `<div>${listenBtn(c.word)}<p class="q-hint">${esc(x.listenQ)} · ${esc(x.hint1(Array.from(c.word)[0]))}</p></div>`;
+  askTyped(c, mode, promptHTML, c.word, isGuess); const box = $("#sessionBox"); try{ bindSay(box); }catch(_){} try{ speak(c.word); }catch(_){} if(SES && SES.state) SES.state.lw = 1; return true; }
 function renderItem(c, mode){ const r = renderItem0(c, mode); try{ dockTidy(); }catch(_){} try{ hfBig(); }catch(_){} requestAnimationFrame(fitDock); return r; }
 function renderItem0(c, mode){
   if(c.script) return askScript(c, mode);
@@ -2942,10 +2953,11 @@ function renderItem0(c, mode){
     const p = clozeParts(c);
     if(mode === "cloze" && !p) return renderItem(c, "recall");
     const isGuess = mode === "study";
-    const target = p ? p.answer : c.word;
+    const target = p ? p.answer : c.word, qm = qMean(c.meaning, c), f0 = Array.from(target)[0];
+    if(!qm && c.meaning && !hf){ const d = askListenWrite(c, mode, isGuess); if(d) return d; }
     const promptHTML = p
-      ? `<p class="sentence">${tokHTML(p.before)}<span class="blank">____</span>${tokHTML(p.after)}</p><p class="q-sub">${esc(trShow(c))}</p><p class="q-hint">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p>`
-      : `<div><div class="word" style="font-size:1.6rem">${esc((c.reading ? String(c.meaning || "").replace(/^[^·]*·\s*/, "") : c.meaning) || x.noMeaning)}</div><p class="q-hint">${esc(x.hint(c.meaning, Array.from(target)[0]))}</p></div>`;
+      ? `<p class="sentence">${tokHTML(p.before)}<span class="blank">____</span>${tokHTML(p.after)}</p>${trShow(c) ? `<p class="q-sub">${esc(trShow(c))}</p>` : ""}<p class="q-hint">${esc(qm ? x.hint(qm, f0) : x.hint1(f0))}</p>`
+      : `<div><div class="word" style="font-size:1.6rem">${esc((c.reading ? String(qm || "").replace(/^[^·]*·\s*/, "") : qm) || c.meaning || x.noMeaning)}</div><p class="q-hint">${esc(x.hint1(f0))}</p></div>`;
     return (hf ? askHandsFree : askTyped)(c, mode, promptHTML, target, isGuess);
   }
   if(mode === "meaning"){
@@ -2957,8 +2969,9 @@ function renderItem0(c, mode){
   if(mode === "recall"){
     const i0 = SES && SES.queue && SES.queue[0], h1 = !!(i0 && i0.id === c.id && i0.st === 3 && !clozeParts(c));   // 3칸인데 빈칸 문장이 없으면: 쓰기 + 첫 글자 힌트(설계 1-3 대체 규칙)
     if(h1) i0.hint1 = 1;
-    const leech = (c.lapses || 0) >= 3 || h1, ch = Array.from(c.word);
-    const promptHTML = `<div><div class="word" style="font-size:1.6rem">${esc((c.reading ? String(c.meaning || "").replace(/^[^·]*·\s*/, "") : c.meaning) || x.noMeaning)}</div>${leech ? `<p class="q-hint">${esc(x.leechHint(ch[0], ch.length))}</p>` : ""}</div>`;
+    const leech = (c.lapses || 0) >= 3 || h1, ch = Array.from(c.word), qm = qMean(c.meaning, c);
+    if(!qm && c.meaning && !hf){ const d = askListenWrite(c, mode, false); if(d) return d; }
+    const promptHTML = `<div><div class="word" style="font-size:1.6rem">${esc((c.reading ? String(qm || "").replace(/^[^·]*·\s*/, "") : qm) || c.meaning || x.noMeaning)}</div>${leech ? `<p class="q-hint">${esc(x.leechHint(ch[0], ch.length))}</p>` : ""}</div>`;
     return (hf ? askHandsFree : askTyped)(c, mode, promptHTML, c.word, false);
   }
   if(mode === "write"){
@@ -3782,7 +3795,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v168";
+const APP_VER = "v169";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5818,7 +5831,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { qMean, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 load(); PET_SIG = petSig(); migrateSteps(); sulkInit(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
