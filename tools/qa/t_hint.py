@@ -82,9 +82,12 @@ async def main():
     await ctx.close()
     # 일본어 카드 晩·広い 힌트(받침 무관 꼴)
     ctx,pg=await page(390,844,state("ko","ja"))
-    for cid,ch in [("ban","晩"),("hiro","広")]:
+    for cid,ch in [("hiro","広")]:
       await pg.evaluate(ASK,[cid,"study",0]); await pg.wait_for_timeout(350)
       h=await pg.inner_text("#sessionBox .q-hint"); ok(f"{ch} study 힌트 '첫 글자 {ch}'·'로 시작' 없음", f"첫 글자 {ch}" in h and "로 시작" not in h and "저녁" not in h and "넓다" not in h, h)
+    # 한 글자 정답 晩은 「첫 글자 晩」(=정답) 대신 읽기 첫 가나 (R1-39-1, t_onechar.py 에서 자세히)
+    await pg.evaluate(ASK,["ban","study",0]); await pg.wait_for_timeout(350)
+    h=await pg.inner_text("#sessionBox .q-hint"); ok("晩 study 힌트: 정답 글자 없음·'읽기 ば…'", "晩" not in h and "읽기 ば…" in h and "저녁" not in h, h)
     await ctx.close()
     # ko 카드(화면 ja) 끄집어내다 예문 없음 study: 뜻 중복 없음·빈 줄 없음
     ko=[card("kk","ko","끄집어내다","引っ張り出す"),card("k2","ko","사과","りんご"),card("k3","ko","학교","学校"),card("k4","ko","의자","椅子")]
