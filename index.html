@@ -3873,7 +3873,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v182";
+const APP_VER = "v183";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -4095,9 +4095,45 @@ async function sbRpc(fn, body, keepalive){
   if(!r.ok) throw new Error("sync " + r.status);
   const tx = await r.text(); return tx ? JSON.parse(tx) : null;
 }
-function payload(){ const meta = Object.assign({}, S.meta); delete meta.session; delete meta.sync; return { v: 1, cards: S.cards, meta }; }
-const MERGE_LOCAL = ["session", "sync", "mu", "settings", "payPend", "payErr", "diag", "riskSnooze", "movedAt", "movedIn", "lastDeck"];   // 이 기기 전용: 다른 기기·탭 것을 받지 않음
-function mergeData(remote){
+function payload(){ const meta = Object.assign({}, S.meta); delete meta.session; delete meta.sync; delete meta.petBase; return { v: 1, cards: S.cards, meta }; }
+const MERGE_LOCAL = ["session", "sync", "mu", "settings", "payPend", "payErr", "diag", "riskSnooze", "movedAt", "movedIn", "lastDeck", "petBase"];   // 이 기기 전용: 다른 기기·탭 것을 받지 않음
+/* 검수단 R1-49-1·R1-49-3: 동기화 병합 — 카드는 복습 기록 쪽(마지막 복습일·횟수)이 복습 칸을, 수정 시각 u 쪽이 내용을 이김 · 냥이는 지난 동기화 기준(petBase)으로 양쪽 변화를 더함 */
+const MG_REV = ["reps", "lapses", "log", "due", "S", "D", "last", "level", "isNew", "introduced", "mastered", "relearn"], MG_FILL = ["reps", "lapses", "log", "due", "S", "D", "last", "level", "isNew", "introduced"];
+function mgRevKey(c){ return [String(c.last || ""), +c.reps || 0]; }
+function mergeCard(a, b){   // a = 이 기기, b = 다른 기기 (둘 다 있음)
+  const ta = a.u || a.created || 0, tb = b.u || b.created || 0, cw = ta >= tb ? a : b, cl = cw === a ? b : a;
+  const ka = mgRevKey(a), kb = mgRevKey(b), rw = (ka[0] !== kb[0]) ? (ka[0] > kb[0] ? a : b) : (ka[1] !== kb[1] ? (ka[1] > kb[1] ? a : b) : cw), rl = rw === a ? b : a;
+  const out = Object.assign({}, cw);
+  if(rw !== cw) MG_REV.forEach(k => { if(k in rw) out[k] = rw[k]; else delete out[k]; });
+  MG_FILL.forEach(k => { if(!(k in out) && (k in rl)) out[k] = rl[k]; });   // 필드 빠진 카드가 이겨도 due·reps 가 비지 않게
+  return out;
+}
+function buyKey(l){ return l.id + "|" + l.exp; }
+function buyGone(p, l){ const g = p.bgone || (p.bgone = []); const k = buyKey(l); if(!g.includes(k)){ g.push(k); if(g.length > 80) g.splice(0, g.length - 80); } }
+function petSnap(p){ return p ? { u: p.u || 0, coins: p.coins || 0, inv: Object.assign({}, p.inv || {}), at: Date.now(), c: (S.meta.sync || {}).code || "" } : null; }   // c = 어느 동기화 코드의 기준인지 (코드를 바꾸면 안 씀)
+function mergePet(a, b, base){   // a = 이 기기, b = 다른 기기
+  if(!b) return a; if(!a) return b;
+  const win = (b.u || 0) > (a.u || 0) ? b : a, lose = win === a ? b : a;
+  const out = JSON.parse(JSON.stringify(win));
+  const gone = new Set([...(a.bgone || []), ...(b.bgone || [])]);
+  if(gone.size) out.bgone = [...gone].slice(-80);
+  const bm = new Map();
+  [win, lose].forEach(p => (p.buy || []).forEach(l => { const k = buyKey(l); if(gone.has(k)) return; const o = bm.get(k); if(!o) bm.set(k, Object.assign({}, l)); else o.n = Math.min(o.n, l.n); }));
+  if(bm.size || out.buy) out.buy = [...bm.values()];
+  if(base && base.inv){   // 지난 동기화 뒤 두 기기에서 생긴 변화를 둘 다 더함 (산 간식·번 코인이 사라지지 않게)
+    const keys = new Set([...Object.keys(a.inv || {}), ...Object.keys(b.inv || {}), ...Object.keys(base.inv)]), inv = {};
+    keys.forEach(k => { const v0 = base.inv[k] || 0, v = v0 + ((a.inv || {})[k] || 0) - v0 + ((b.inv || {})[k] || 0) - v0; if(v > 0) inv[k] = v; });
+    out.inv = inv;
+    out.coins = Math.max(0, (base.coins || 0) + ((a.coins || 0) - (base.coins || 0)) + ((b.coins || 0) - (base.coins || 0)));
+  } else {   // 기준이 없으면(첫 동기화): 새 쪽 그대로 + 진 쪽에만 있는 산 간식(아직 안 쓴 만큼)을 더함
+    const wk = new Set((win.buy || []).map(buyKey)); out.inv = Object.assign({}, win.inv || {});
+    (lose.buy || []).forEach(l => { const k = buyKey(l); if(wk.has(k) || gone.has(k) || !(l.n > 0)) return; out.inv[l.id] = (out.inv[l.id] || 0) + l.n; });
+  }
+  if(a.granted || b.granted) out.granted = Object.assign({}, lose.granted || {}, win.granted || {});
+  out.u = Math.max(a.u || 0, b.u || 0);
+  return out;
+}
+function mergeData(remote, opt){
   if(!remote || !remote.cards) return;
   const rm = remote.meta || {};
   const del = Object.assign({}, rm.deleted || {}, S.meta.deleted || {});
@@ -4107,7 +4143,7 @@ function mergeData(remote){
   ids.forEach(id => {
     const a = S.cards[id], b = remote.cards[id];
     const ta = a ? (a.u || a.created || 0) : -1, tb = b ? (b.u || b.created || 0) : -1;
-    const win = ta >= tb ? a : b, tw = Math.max(ta, tb);
+    const win = (a && b) ? mergeCard(a, b) : (a || b), tw = Math.max(ta, tb);
     if(del[id] && del[id] >= tw) return;
     if(win){ if(a && b && (a.step != null || b.step != null)){ const sa = a.step != null ? stepOf(a) : -1, sb = b.step != null ? stepOf(b) : -1; win.step = Math.max(sa, sb); const da = a.stepAt || "", db = b.stepAt || ""; if(da || db) win.stepAt = da > db ? da : db; } out[id] = win; }   // 계단 칸: 두 기기 중 큰 값
   });
@@ -4121,7 +4157,8 @@ function mergeData(remote){
   if(rm.nick && rm.nick.name && !rm.nick.auto && (!S.meta.nick || S.meta.nick.auto)) S.meta.nick = rm.nick;   // 자동 닉네임보다 직접 정한 닉네임 우선
   // 이 기기에 아직 없는 기록(닉네임·계정·보너스 등)은 다른 기기 것을 받아 둠 — 있는 건 그대로
   Object.keys(rm).forEach(k => { if(!MERGE_LOCAL.includes(k) && S.meta[k] === undefined) S.meta[k] = rm[k]; });
-  if(rm.pet && (rm.pet.u || 0) > ((S.meta.pet || {}).u || 0)){ S.meta.pet = rm.pet; PET_SIG = petSig(); }
+  if(rm.pet){ const lp = S.meta.pet, bs0 = (opt && opt.noBase) ? null : S.meta.petBase, bs = (bs0 && bs0.c === ((S.meta.sync || {}).code || "")) ? bs0 : null, mp = mergePet(lp, rm.pet, bs); if(JSON.stringify(mp) !== JSON.stringify(lp)){ S.meta.pet = mp; PET_SIG = petSig(); } }
+  if(opt && opt.server) S.meta.petBase = petSnap(rm.pet);   // 서버에서 받은 냥이 = 다음 병합의 기준
   // 単語帳: 両方の単語帳を残す（同じ id はこの端末を優先）
   const dk = new Map(); (rm.decks || []).forEach(d => dk.set(d.id, d)); (S.meta.decks || []).forEach(d => dk.set(d.id, d)); if(dk.size) S.meta.decks = [...dk.values()];
   // 設定は新しく変えた方。ただし表示言語・学習言語はこの端末のまま
@@ -4137,10 +4174,10 @@ async function syncNow(opts){
   try{
     const id = await codeId(S.meta.sync.code);
     const got = await sbRpc("sync_get", { p_id: id });
-    if(got && got.data) mergeData(got.data);
+    if(got && got.data) mergeData(got.data, { server: 1 });
     else if(opts.mustExist){ throw new Error("notfound"); }
     try{ persist(); }catch(e){}
-    await sbRpc("sync_put", { p_id: id, p_data: payload() });
+    const pl = payload(); await sbRpc("sync_put", { p_id: id, p_data: pl }); if(pl.meta.pet) S.meta.petBase = petSnap(pl.meta.pet);
     S.meta.sync.lastAt = Date.now(); try{ persist(); }catch(e){}
     setSyncState("ok"); if(!SES) renderAll(); riskUI();
     return true;
@@ -4252,7 +4289,7 @@ const PT = {
 const pt = () => PT[S.meta.settings.ui] || PT.ja;
 const itName = it => it[S.meta.settings.ui] || it.ja;
 /* 산 간식: 묶음(lot)마다 유통기한. 학습으로 받은 간식은 기한 없음. 쓸 땐 산 것(기한 임박 순)부터 */
-function buyExpire(p){ if(!p.buy || !p.buy.length) return; const now = Date.now(); p.buy = p.buy.filter(l => { if(l.exp > now && l.n > 0) return true; const k = Math.min(l.n, p.inv[l.id] || 0); if(k){ p.inv[l.id] -= k; if(!p.inv[l.id]) delete p.inv[l.id]; } return false; }); }
+function buyExpire(p){ if(!p.buy || !p.buy.length) return; const now = Date.now(); p.buy = p.buy.filter(l => { if(l.exp > now && l.n > 0) return true; buyGone(p, l); const k = Math.min(l.n, p.inv[l.id] || 0); if(k){ p.inv[l.id] -= k; if(!p.inv[l.id]) delete p.inv[l.id]; } return false; }); }
 function buyUse(p, id){ if(!p.buy) return; const l = p.buy.filter(z => z.id === id && z.n > 0).sort((a, b) => a.exp - b.exp)[0]; if(l) l.n--; }
 function buyGrant(id, n, days){ const p = petState(); p.buy = p.buy || []; p.buy.push({ id, n, exp: Date.now() + days * 864e5 }); p.inv[id] = (p.inv[id] || 0) + n; save(); }
 function petState(){ const p = S.meta.pet || (S.meta.pet = {}); p.inv = p.inv || {}; buyExpire(p); p.kcal = p.kcal || 0; p.lv = p.lv || 1; p.granted = p.granted || {}; p.freezes = p.freezes || 0; p.seenTier = p.seenTier ?? 0; p.coins = p.coins || 0; return p; }
@@ -5980,12 +6017,12 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { jaTailOk, formBoundOk, loanMatch, loanSk, frameSplit, frameParts, frameOpts, askFrame, materializeFrame, addPresetMore, presetMore, wlFind, wlLangOf, wlMake, newCandidates: () => newCandidates(), rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { mergeData, mergeCard, mergePet, syncNow, payload, jaTailOk, formBoundOk, loanMatch, loanSk, frameSplit, frameParts, frameOpts, askFrame, materializeFrame, addPresetMore, presetMore, wlFind, wlLangOf, wlMake, newCandidates: () => newCandidates(), rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 load(); PET_SIG = petSig(); migrateSteps(); sulkInit(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 addEventListener("storage", e => { if(e.key !== LS_KEY || !e.newValue || LOAD_BAD) return;   // 다른 탭에서 저장됨 → 이 탭 메모리에 합침(옛 탭이 새 기록을 덮지 않게)
-  try{ const d = JSON.parse(e.newValue); const keepSes = S.meta.session, st = S.meta.settings; mergeData(d); S.meta.settings = st; if(keepSes !== undefined) S.meta.session = keepSes; if(!SES) renderAll(); }catch(_){} });
+  try{ const d = JSON.parse(e.newValue); const keepSes = S.meta.session, st = S.meta.settings, ob = (d.meta || {}).petBase; mergeData(d, { noBase: 1 }); if(ob && ob.at > ((S.meta.petBase || {}).at || 0)) S.meta.petBase = ob; S.meta.settings = st; if(keepSes !== undefined) S.meta.session = keepSes; if(!SES) renderAll(); }catch(_){} });
 try{ if(canSpeak()){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
 if("serviceWorker" in navigator && location.protocol === "https:"){ navigator.serviceWorker.register("sw.js").catch(() => {}); }
 })();
