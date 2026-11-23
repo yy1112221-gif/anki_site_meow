@@ -2590,7 +2590,7 @@ const RJ = (() => { const m = { "-":"ー", ",":"、", ".":"。", "n'":"ん", "xt
   m.ja = "じゃ"; m.ju = "じゅ"; m.jo = "じょ"; return m; })();
 const RJ_KEYS = Object.keys(RJ);
 function rjStep(st){ let out = "", p = st.p; for(let g = 0; g < 8 && p; g++){
-    if(p.startsWith("nn") && p.length >= 3){ out += "ん"; p = p.slice(1); continue; }
+    if(p.startsWith("nn") && p.length >= 3){ out += "ん"; p = "aiueo".includes(p[2]) ? p.slice(1) : p.slice(2); continue; }   // nn+모음은 ん+な행(kanna→かんな), nn+자음은 ん 하나(kannji→かんじ)
     if(p === "nn") break;
     if(RJ[p]){ out += RJ[p]; p = ""; break; }
     if(p.length >= 2 && p[0] === p[1] && !"aiueon".includes(p[0]) && /[a-z]/.test(p[0])){ out += "っ"; p = p.slice(1); continue; }
@@ -3796,7 +3796,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v170";
+const APP_VER = "v171";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5838,7 +5838,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 load(); PET_SIG = petSig(); migrateSteps(); sulkInit(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);

@@ -34,5 +34,5 @@ git cat-file -e e0646a8 2>/dev/null || git fetch -q --depth=60 origin main
 git show e0646a8:index.html > /tmp/srv/old/index.html; cp -r cat presets slang /tmp/srv/old/
 pkill -f "^python3 -m http.server 8765" 2>/dev/null || true; (cd /tmp/srv && exec python3 -m http.server 8765) >/tmp/srv.log 2>&1 </dev/null & disown; sleep 1
 # 한 줄씩(&& 사슬 안의 실패는 set -e가 못 잡아 「전체 통과」가 잘못 찍히던 문제 수정)
-for T in treg tsafe t_curation t_steps t_course t_layout t_meaning t_carry t_leech t_cloze t_norm t_voice t_touch t_diag t_sulk t_input t_speak t_hint t_syn; do python3 tools/qa/$T.py || { echo "❌ $T 실패"; exit 1; }; done
+for T in treg tsafe t_curation t_steps t_course t_layout t_meaning t_carry t_leech t_cloze t_norm t_voice t_touch t_diag t_sulk t_input t_speak t_hint t_syn t_roma; do python3 tools/qa/$T.py || { echo "❌ $T 실패"; exit 1; }; done
 echo "✅ 전체 통과"
