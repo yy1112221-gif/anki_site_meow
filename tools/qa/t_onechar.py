@@ -34,13 +34,13 @@ async def main():
       await pg.evaluate(ASK,[cid,mode,st]); await pg.wait_for_timeout(350); return await pg.evaluate(HINT)
     # 일본어 단어장, 화면 ko
     ctx,pg=await page(390,844,state("ko","ja",JA),"ko-KR")
-    h=await hint(pg,"ban","study"); ok("晩 study(예문): 정답 글자 없음", "晩" not in h and "한 글자 단어" in h, h)
+    h=await hint(pg,"ban","study"); ok("晩 study(예문): 정답 글자 없음·읽기는 첫 음절만", "晩" not in h and "ばん" not in h and ("한 글자 단어" in h or "읽기 ば…" in h), h)
     h=await hint(pg,"yoru","study"); ok("夜 study(예문 없음, 위에 뜻만): '힌트: 읽기 よ…'", h=="힌트: 읽기 よ…", h)
-    h=await hint(pg,"ban","cloze"); ok("晩 cloze(뜻 칸에 읽기 ばん 이미 보임): 정답 글자 없음·「한 글자 단어」", "晩" not in h and h=="힌트: ばん · 저녁 · 한 글자 단어", h)
+    h=await hint(pg,"ban","cloze"); ok("晩 cloze: 정답 글자 없음·읽기 전체 없음(R1-42-2) → '읽기 ば…'", "晩" not in h and h=="힌트: 저녁 · 읽기 ば…", h)
     h=await hint(pg,"te","cloze"); ok("手 cloze: 정답 글자 없음·「한 글자 단어」", "手" not in h and "한 글자 단어" in h, h)
     await pg.evaluate("()=>{ const c=window.__t.S().cards.te; c.example=''; c.exampleKo=''; }")
     h=await hint(pg,"te","study"); ok("手(읽기 1글자, 예문 없음) study: 「한 글자 단어」·て 안 보임", "手" not in h and "て" not in h and h=="힌트: 한 글자 단어", h)
-    h=await hint(pg,"hiro","cloze"); ok("広い(두 글자) cloze: '첫 글자 広' 그대로", h=="힌트: ひろい · 넓다 · 첫 글자 広", h)
+    h=await hint(pg,"hiro","cloze"); ok("広い(두 글자) cloze: 읽기 빼고 '첫 글자 広'", h=="힌트: 넓다 · 첫 글자 広", h)
     h=await hint(pg,"me","recall"); ok("目 끈질긴 단어 쓰기 힌트: 정답 글자 없음", "目" not in h and "め" not in h, h)
     # 정답 처리는 그대로
     await pg.evaluate(ASK,["ban","study",4]); await pg.wait_for_timeout(300)

@@ -1615,6 +1615,7 @@ function schedule(c, correct, asked){
 /* 단어 경계: 긴 단어의 일부를 잘라 정답으로 쓰지 않게 (예: ホームシック 안의 シック, 先生 안의 生) */
 const RX_KATA = /[ァ-ヺー・]/, RX_KAN = /[一-龯々]/, RX_HG = /[가-힣]/, RX_LAT = /\p{L}/u;
 function formBoundOk(ex, i, len, w, strictR){ const L = ex[i - 1] || "", R = ex[i + len] || "";
+  if(/^[ぁ-ゖー]+$/.test(w)){ if(RX_HIR.test(L) && !JA_LOK.includes(L)) return false; return !(strictR && RX_HIR.test(R)) || jaTailOk(ex.slice(i + len)); }   // 검수단 R1-42-1: 히라가나 단어 (いずれ 속 ずれ, ことば 속 こと 제외)
   if(/^[ァ-ヺー・]+$/.test(w)) return !RX_KATA.test(L) && !RX_KATA.test(R);
   if(RX_KAN.test(w[0]) && RX_KAN.test(L)) return false;
   if(RX_KAN.test(w[w.length - 1]) && RX_KAN.test(R)) return false;
@@ -1629,6 +1630,11 @@ const HG_VB = /^(하|해|했|한|할|함|합|되|돼|됐|된|될|됨|됩|시키|
 function hgTailOk(rest){ const t = (String(rest).match(/^[가-힣]+/) || [""])[0]; if(!t) return true;
   const go = k => { if(k === t.length) return true; if(k > 0 && HG_VB.test(t.slice(k))) return true; for(const m of HG_PT) if(t.startsWith(m, k) && go(k + m.length)) return true; return false; };
   return HG_VB.test(t) || go(0); }
+/* 히라가나 단어 경계: 왼쪽은 조사·어미 한 글자(の·は·た·る…)만, 오른쪽은 조사·조동사로 시작할 때만 (작은 가나가 바로 이어지면 다른 낱말: ないしょ) */
+const RX_HIR = /[ぁ-ゖ]/, JA_LOK = "はがをにでともへやのなただる";
+const JA_PT = ["けれど","けど","ので","のに","から","まで","より","だけ","しか","ほど","など","くらい","ぐらい","でも","では","には","とは","って","です","でし","だっ","だろ","でしょ","じゃ","んだ","んで","みたい","らしい","よう","する","して","した","しま","され","させ","は","が","を","に","で","と","も","の","へ","や","か","ね","よ","な","さ","ぞ","わ","だ","し"];
+function jaTailOk(rest){ const r = String(rest || ""); if(!RX_HIR.test(r[0] || "")) return true;
+  return JA_PT.some(p => r.startsWith(p) && !/^[ぁぃぅぇぉゃゅょゎっ]/.test(r.slice(p.length))); }
 function findAt(low, lw, ex, w, strictR){ let i = low.indexOf(lw); while(i >= 0){ if(formBoundOk(ex, i, lw.length, w, strictR)) return i; i = low.indexOf(lw, i + 1); } return -1; }
 function findForm(text, word){
   const ex = text || ""; const w = searchTerm(word);
@@ -2814,9 +2820,12 @@ function loanSk(w){ const out = []; for(const ch0 of String(w || "")){ const ch 
       const F = { 1: "K", 2: "K", 4: "N", 7: "T", 8: "R", 16: "M", 17: "P", 19: "T", 21: "N", 24: "K" }[fin]; if(F) out.push(F); }
     else if(KANA_CK[ch]) out.push(KANA_CK[ch]); }
   return out.join(""); }
-function loanMatch(ans, word){ const a = String(ans || "").trim(), w = String(word || "").trim(); if(!a || !w) return false;
-  const kataW = /^[ァ-ヺー・]+$/.test(w), hanW = /^[가-힣]+$/.test(w), kataA = /^[ァ-ヺーぁ-ゖ]+$/.test(a), hanA = /^[가-힣]+$/.test(a);
-  if(!((kataW && hanA) || (hanW && kataA))) return false; const x = loanSk(a), y = loanSk(w); return x.length >= 2 && x === y; }
+function loanMatch(ans, word, meaning){ const a = String(ans || "").trim(), w = String(word || "").trim(); if(!a || !w) return false;
+  const kataW = /^[ァ-ヺー・]+$/.test(w), hanW = /^[가-힣]+$/.test(w), kataA = /^[ァ-ヺー]+$/.test(a), hanA = /^[가-힣]+$/.test(a);
+  if(!((kataW && hanA) || (hanW && kataA))) return false; const x = loanSk(a), y = loanSk(w); if(!(x.length >= 2 && x === y)) return false;
+  if(kataW) return true;
+  /* 한글 단어 ← 가타카나 답: 뜻 칸에 같은 뼈대의 가타카나 표기가 있는 외래어 카드만 (곰←かめ·감←ガム 같은 우연 일치 막기, R1-41-1) */
+  return (String(meaning || "").match(/[ァ-ヺー]+/g) || []).some(r => loanSk(r) === x); }
 function askMeaning(c, promptHTML){
   const box = $("#sessionBox"), x = t(), mode = "meaning";
   box.innerHTML = head(c, mode) + `<div class="stage">${promptHTML}<div id="fb"></div></div><div class="dock">
@@ -2835,7 +2844,7 @@ function askMeaning(c, promptHTML){
     $("#ansForm").style.display = "none";
     $("#acts").innerHTML = `${listenBtn(c.example || c.word)}<span class="grow"></span>${typed ? `<button class="btn bad" type="button" id="mNo">${esc(x.meanDiff)}</button><button class="btn good" type="button" id="mOk">${esc(x.meanSame)}</button>` : `<button class="btn primary" type="button" id="mNo">${x.next}</button>`}`;
     bindSay(box); $("#mNo").onclick = () => settleItem(false); const ok = $("#mOk"); if(ok) ok.onclick = () => settleItem(true); input.blur(); speak(c.example || c.word); };
-  const submit = () => { if(done) return; const v = input.value.trim(); if(!v){ input.focus({ preventScroll: true }); return; } reveal(meaningMatch(v, c.meaning) || loanMatch(v, c.word) ? "ok" : "check"); };
+  const submit = () => { if(done) return; const v = input.value.trim(); if(!v){ input.focus({ preventScroll: true }); return; } reveal(meaningMatch(v, c.meaning) || loanMatch(v, c.word, c.meaning) ? "ok" : "check"); };
   $("#ansForm").onsubmit = e => { e.preventDefault(); submit(); }; $("#chk").onclick = submit; $("#idk").onclick = () => reveal("no");
 }
 function askHandsFree(c, mode, promptHTML, target, isGuess){
@@ -3021,7 +3030,7 @@ function renderItem0(c, mode){
     const target = p ? p.answer : c.word, qm = qMean(c.meaning, c), f0 = Array.from(target)[0];
     if(!qm && c.meaning && !hf){ const d = askListenWrite(c, mode, isGuess); if(d) return d; }
     const promptHTML = p
-      ? `<p class="sentence">${tokHTML(p.before)}<span class="blank">____</span>${tokHTML(p.after)}</p>${trShow(c) ? `<p class="q-sub">${esc(trShow(c))}</p>` : ""}<p class="q-hint">${esc(hintTxt(x, c, target, qm))}</p>`
+      ? `<p class="sentence">${tokHTML(p.before)}<span class="blank">____</span>${tokHTML(p.after)}</p>${trShow(c) ? `<p class="q-sub">${esc(trShow(c))}</p>` : ""}<p class="q-hint">${esc(hintTxt(x, c, target, (c.lang || "") === "ja" ? meanOnly(qm) : qm))}</p>`
       : `<div><div class="word" style="font-size:1.6rem">${esc((c.reading ? String(qm || "").replace(/^[^·]*·\s*/, "") : qm) || c.meaning || x.noMeaning)}</div><p class="q-hint">${esc(hintTxt(x, c, target, ""))}</p></div>`;
     return (hf ? askHandsFree : askTyped)(c, mode, promptHTML, target, isGuess);
   }
@@ -3860,7 +3869,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v180";
+const APP_VER = "v181";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5965,7 +5974,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { frameSplit, frameParts, frameOpts, askFrame, materializeFrame, addPresetMore, presetMore, wlFind, wlLangOf, wlMake, newCandidates: () => newCandidates(), rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { jaTailOk, formBoundOk, loanMatch, loanSk, frameSplit, frameParts, frameOpts, askFrame, materializeFrame, addPresetMore, presetMore, wlFind, wlLangOf, wlMake, newCandidates: () => newCandidates(), rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 load(); PET_SIG = petSig(); migrateSteps(); sulkInit(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
