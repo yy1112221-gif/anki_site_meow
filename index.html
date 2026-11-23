@@ -161,6 +161,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .say.big{flex-direction:column;align-items:center;text-align:center;gap:6px}
 .say.big .bubble{border-radius:16px}
 #setupBox{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;background:var(--bg,#f3f3f0);padding:20px;transition:opacity .25s}
+.biz-foot{margin:18px auto 6px;max-width:560px;text-align:center;font-size:.72rem;line-height:1.55;color:var(--muted,#6e6253)} .biz-foot p{margin:2px 0} .biz-foot a{color:inherit;text-decoration:underline} #setupBox .biz-foot{position:absolute;left:12px;right:12px;bottom:max(10px,env(safe-area-inset-bottom));margin:0}
 #setupBox.out{opacity:0} .su-in{width:min(420px,100%);display:flex;flex-direction:column;gap:14px}
 .su-in h3{margin:4px 0 0;font-size:1.25rem;font-weight:900} .su-dots{display:flex;gap:6px} .su-dots i{width:22px;height:5px;border-radius:9px;background:rgba(127,127,127,.25)} .su-dots i.on{background:var(--accent)}
 .su-big{display:grid;grid-template-columns:1fr 1fr;gap:10px} .su-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -1934,7 +1935,7 @@ function spreadQueue(items, recent){
 function streak(){ let n = 0, d = today(); if(!S.meta.days[d]) d = addDays(d, -1); while(S.meta.days[d]){ n++; d = addDays(d, -1); } return n; }
 
 function renderStart(){
-  renderStartInner(); renderSide(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); moveIn(); setTimeout(moveBanner, 600); authBoot(); setTimeout(payBoot, 300); setTimeout(payRetry, 1500); setTimeout(buyBoot, 700); setTimeout(diagBoot, 800); wlBoot(); setTimeout(homePetBoot, 450); setTimeout(giftCheck, 600); setTimeout(nickBoot, 2500); }
+  renderStartInner(); renderSide(); bizFill(); setTimeout(maybeTutAsk, 900); meltCheck(); fbInit(); maybeSetup(); if(!renderStart._ev){ renderStart._ev = 1; setTimeout(evBoot, 1200); moveIn(); setTimeout(moveBanner, 600); authBoot(); setTimeout(payBoot, 300); setTimeout(payRetry, 1500); setTimeout(buyBoot, 700); setTimeout(diagBoot, 800); wlBoot(); setTimeout(homePetBoot, 450); setTimeout(giftCheck, 600); setTimeout(nickBoot, 2500); }
   if(maybeLoginAsk._pending && !SES){ maybeLoginAsk._pending = 0; setTimeout(maybeLoginAsk, 1500); }
   const box = $("#sessionStart"), pos = box.querySelector(".poster");
   box.querySelectorAll(".say .bubble").forEach(b => { b.classList.add("tapme"); b.onclick = () => { if(NERD_ON) return; if(Math.random() < .08 && nerdPop(b)) return; if(Math.random() < .3){ b.textContent = sciLine(); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); try{ sfxPoyon(.15); }catch(e){} return; } const st = meltStage(), L = st ? meltL().home[st] : (t().homeTalk || []); if(!L.length) return; let i; do{ i = Math.floor(Math.random() * L.length); }while(L.length > 1 && i === renderStart.last); renderStart.last = i;
@@ -2080,8 +2081,11 @@ async function giftCheck(){ const m = location.hash.match(/gift=([\w-]+)/); if(!
   g[h] = Date.now(); save(); track("gift_in"); toast(ko ? "🎁 간식 전부 100개 + 꾸미기 전부 받았다냥!" : "🎁 おやつ全部100個＋着せかえ全部ゲットニャ！"); if(!SES) renderAll(); }
 function petSens(){ const v = +S.meta.settings.petSens; return v > 0 ? v : 1; }
 let BIZ = null;   // biz.json: 사업자 정보 — 사업자등록번호가 채워지면 설정 화면 맨 아래에 자동 표시
+/* 사업자 정보 푸터 — PG 심사(11-23): 홈페이지 하단에 상호·대표·사업자등록번호·주소·전화 + 판매 상품(상점) 링크 */
+function bizFootHTML(){ const ko = (S.meta.settings.ui || "ko") !== "ja";
+  return `<footer class="biz-foot"><p><a href="shop">🛒 ${ko ? "상점(판매 상품·가격·환불 안내)" : "ショップ（商品・価格・返金）"}</a> · <a href="terms">${ko ? "이용약관" : "利用規約"}</a> · <a href="privacy">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a></p><p class="bizL"></p></footer>`; }
 async function bizFill(){ try{ if(!BIZ){ const r = await fetch("biz.json", { cache: "no-cache" }); BIZ = r.ok ? await r.json() : {}; } }catch(_){ BIZ = {}; }
-  const el = $("#bizLine"); if(!el || !BIZ.regNo) return;
+  const els = document.querySelectorAll("#bizLine, .bizL"); if(!els.length || !BIZ.regNo) return; const el = { set innerHTML(v){ els.forEach(e => e.innerHTML = v); } };
   const ko = S.meta.settings.ui === "ko", b = BIZ, L = ko ? ["상호", "대표", "사업자등록번호", "통신판매업 신고", "주소", "문의", "대표전화"] : ["商号", "代表", "事業者登録番号", "通信販売業申告", "所在地", "お問い合わせ", "電話"];
   el.innerHTML = [[L[0], b.name], [L[1], b.owner], [L[2], b.regNo], [L[3], b.mailOrderNo], [L[4], b.address], [L[6] || "TEL", b.tel], [L[5], b.email]].filter(x => x[1]).map(x => `${esc(x[0])} ${esc(x[1])}`).join(" · "); }
 /* 후원 숍: 후원 금액별 보상. 결제는 사업자등록·통신판매업 신고 뒤 PG로 연결 — 지금은 「이걸로 후원할래」 의향만 모음 */
@@ -2134,7 +2138,7 @@ function payOpen(id){ const it = PAY_ITEMS[id]; if(!it) return; const ko = S.met
   if(KID()){ toast(ko ? "만 14세 미만은 보호자와 함께 결제해 주세요" : "14歳未満は保護者と一緒に購入してください"); return; }
   if(!payOn()){ toast(ko ? "결제 준비 중이다냥. 곧 열린다!" : "決済は準備中ニャ"); return; }
   track("pay_open", { id });
-  const ov = document.createElement("div"); ov.className = "sup-ov"; ov.setAttribute("role", "dialog");
+  const ov = document.createElement("div"); ov.className = "sup-ov"; ov.style.zIndex = "100"; ov.setAttribute("role", "dialog");
   ov.innerHTML = `<div class="sup-sh"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">🛒 ${ko ? "구매하기" : "購入"}</h3><button type="button" class="btn sm" id="payX">${ko ? "닫기" : "閉じる"}</button></div>
     <p style="font-size:1.05rem;margin:14px 0 4px"><b>${esc(it[1])}</b></p><p style="font-size:1.6rem;font-weight:900;margin:0">${it[0].toLocaleString()}원 <small style="font-size:.8rem;color:var(--muted)">부가세 포함</small></p>
     ${payWhat(id)}
@@ -2221,7 +2225,7 @@ function maybeSetup(){ if(!needSetup() || $("#setupBox") || WL_PENDING) return; 
     if(step === 1) body = `<h3>${esc(x.learn)}</h3><div class="su-grid">${["ja", "ko", "en", "es"].filter(k => k !== st.ui).map(k => `<button type="button" class="su-opt${st.lang === k ? " on" : ""}" data-lg="${k}">${FLAGS[k] || ""} ${esc(tt.langNames[k])}</button>`).join("")}</div>`;
     if(step === 2) body = `<h3>${esc(x.born)}</h3><div class="su-wheel" id="suWheel">${years.map(y => `<div class="su-y" data-y="${y}">${y}</div>`).join("")}</div><div class="su-row"><button type="button" class="linkbtn" id="suSkip">${esc(x.skip)}</button><button type="button" class="btn primary big" id="suOk">${esc(x.ok)}</button></div>`;
     if(step === 3) body = `<h3>${esc(x.tut)}</h3><div class="su-big"><button type="button" class="su-opt ox" data-tut="1">⭕</button><button type="button" class="su-opt ox" data-tut="0">❌</button></div><p class="su-note">${esc(x.tutNote)}</p>`;
-    box.innerHTML = `<div class="su-in">${say("st_default", step === 0 ? esc(SETUP_T.ko.hi) + "<br>" + esc(SETUP_T.ja.hi) : esc(x.hi))}<div class="su-dots">${[0, 1, 2, 3].map(i => `<i class="${i <= step ? "on" : ""}"></i>`).join("")}</div>${body}${step ? `<button type="button" class="linkbtn su-back" id="suBack">${esc(x.back)}</button>` : ""}</div>`;
+    box.innerHTML = `<div class="su-in">${say("st_default", step === 0 ? esc(SETUP_T.ko.hi) + "<br>" + esc(SETUP_T.ja.hi) : esc(x.hi))}<div class="su-dots">${[0, 1, 2, 3].map(i => `<i class="${i <= step ? "on" : ""}"></i>`).join("")}</div>${body}${step ? `<button type="button" class="linkbtn su-back" id="suBack">${esc(x.back)}</button>` : ""}</div>${bizFootHTML()}`; bizFill();
     const bk = $("#suBack"); if(bk) bk.onclick = () => { step--; draw(); };
     box.querySelectorAll("[data-ui]").forEach(b => b.onclick = () => { if(st.lang === b.dataset.ui) st.lang = b.dataset.ui === "ko" ? "ja" : "ko"; setUiLang(b.dataset.ui); track("setup", { step: 0, v: st.ui, ms: Date.now() - T0 }); step = 1; draw(); });
     box.querySelectorAll("[data-lg]").forEach(b => b.onclick = () => { st.lang = b.dataset.lg; st.handsFree = false; save(); track("setup", { step: 1, v: st.lang, ms: Date.now() - T0 }); step = 2; draw(); });
@@ -3856,7 +3860,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v179";
+const APP_VER = "v180";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -4765,16 +4769,16 @@ const COS = [
   { id: "sup_gold", c: "skin", e: "🎖", ko: "후원냥 골드 (후원 보상)", ja: "応援ネコ・ゴールド（応援特典）", w: 0, y: 0, f: ["#fff6d6", "#f4cf6a", "#c8962e"], sup: 2 },
   { id: "set1",     c: "set", e: "🎁", ko: "젤리 냥이 세트 (스킨 3 + 리본)", ja: "ゼリーねこセット（スキン3＋リボン）", w: 4900, y: 500 } ];
 const COS_T = {
-  ko: { title: "냥이 상점", note: "곧 판매 예정 · 스킨은 눌러서 입어 볼 수 있다냥. 찜하면 나올 때 제일 먼저 알려 준다냥", cats: { snack: "간식 🛒", skin: "말랑 스킨", acc: "소품", snd: "소리", set: "세트" }, snackNote: "남들 공부할 때, 나는 냥이 간식비를 낸다 💸 (공부로 받은 간식은 평생 보관 · 산 간식은 기간 안에, 많이 살수록 오래)", want: "사고 싶다냥 ♥", wanted: "찜했다냥 ♥", soon: "준비 중",
+  ko: { title: "냥이 상점", notePay: "스킨은 눌러서 입어 보고, 마음에 들면 바로 살 수 있다냥 (로그인 없이 카드 결제)", note: "곧 판매 예정 · 스킨은 눌러서 입어 볼 수 있다냥. 찜하면 나올 때 제일 먼저 알려 준다냥", cats: { snack: "간식 🛒", skin: "말랑 스킨", acc: "소품", snd: "소리", set: "세트" }, snackNote: "남들 공부할 때, 나는 냥이 간식비를 낸다 💸 (공부로 받은 간식은 평생 보관 · 산 간식은 기간 안에, 많이 살수록 오래)", want: "사고 싶다냥 ♥", wanted: "찜했다냥 ♥", soon: "준비 중",
     q: p => `${p}이면?`, opts: ["더 싸면 살래", "이 가격이면 산다", "더 비싸도 산다", "안 살래"], thx: "고맙다냥! 나오면 제일 먼저 알려 주겠다냥", close: "닫기", cur: n => `₩${n.toLocaleString()}` },
   ja: { title: "ネコのショップ", note: "近日発売予定 · スキンはタップで試着できるニャ。お気に入りすると発売時に真っ先に知らせるニャ", cats: { snack: "おやつ 🛒", skin: "スキン", acc: "小物", snd: "サウンド", set: "セット" }, snackNote: "みんなが勉強してる間、わたしはネコのおやつ代を払う 💸（勉強でもらったおやつは永久保存・買ったおやつは期限内に、たくさん買うほど長持ち）", want: "欲しいニャ ♥", wanted: "お気に入り済み ♥", soon: "準備中",
     q: p => `${p}なら？`, opts: ["もっと安ければ", "この値段なら買う", "もっと高くても買う", "買わない"], thx: "ありがとニャ！ 発売したら真っ先に知らせるニャ", close: "閉じる", cur: n => `¥${n.toLocaleString()}` } };
 function cosFur(st){ const id = (st && st.tryOn) || (S.meta.cos && S.meta.cos.on); const it = id && COS.find(c => c.id === id && c.f); return it ? it.f : COS_FUR0; }
 function cosOpen(){ const pet = $("#pet"); if(!pet || $("#cosDr")) return; const ja = S.meta.settings.ui === "ja", x = COS_T[ja ? "ja" : "ko"];
   const cm = S.meta.cos || (S.meta.cos = {}); cm.want = cm.want || {}; track("cos_open");
-  const card = it => `<button type="button" class="cos-it" data-id="${it.id}" aria-pressed="${PET && PET.tryOn === it.id}"><div class="cos-sw" style="background:${it.f ? `radial-gradient(circle at 35% 30%,${it.f[0]},${it.f[1]} 55%,${it.f[2]})` : "rgba(0,0,0,.04)"}">${it.f ? "" : it.e}</div><b>${it.f ? it.e + " " : ""}${esc(ja ? it.ja : it.ko)}</b><small>${esc(x.cur(ja ? it.y : it.w))}${cm.want[it.id] ? " · ♥" : ""}${it.f ? "" : " · " + esc(x.soon)}</small></button>`;
+  const card = it => `<button type="button" class="cos-it" data-id="${it.id}" aria-pressed="${PET && PET.tryOn === it.id}"><div class="cos-sw" style="background:${it.f ? `radial-gradient(circle at 35% 30%,${it.f[0]},${it.f[1]} 55%,${it.f[2]})` : "rgba(0,0,0,.04)"}">${it.f ? "" : it.e}</div><b>${it.f ? it.e + " " : ""}${esc(ja ? it.ja : it.ko)}</b><small>${esc(x.cur(ja ? it.y : it.w))}${cm.want[it.id] ? " · ♥" : ""}${it.f || (payOn() && PAY_ITEMS[it.id] && !ja) ? "" : " · " + esc(x.soon)}</small></button>`;
   const dr = document.createElement("div"); dr.className = "cos-dr"; dr.id = "cosDr";
-  dr.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><h3>🎀 ${esc(x.title)}</h3><button type="button" class="btn sm" id="cosX">${esc(x.close)}</button></div><p class="cos-note">${esc(x.note)}</p>
+  dr.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><h3>🎀 ${esc(x.title)}</h3><button type="button" class="btn sm" id="cosX">${esc(x.close)}</button></div><p class="cos-note">${esc(payOn() && !ja ? x.notePay : x.note)}</p>
     <div class="cos-tabs">${["snack", "skin", "acc", "snd", "set"].map((c, i) => `<button type="button" data-cat="${c}" aria-pressed="${!i}">${esc(x.cats[c])}</button>`).join("")}</div><div class="cos-row" id="cosRow"></div><div id="cosPick"></div>`;
   ["pointerdown", "touchstart", "mousedown", "wheel"].forEach(ev => dr.addEventListener(ev, e => e.stopPropagation(), { passive: true }));
   pet.appendChild(dr);
@@ -4788,7 +4792,7 @@ function cosOpen(){ const pet = $("#pet"); if(!pet || $("#cosDr")) return; const
       $("#cosWant").disabled = true; $("#cosWant").textContent = x.wanted;
       $("#cosQ").innerHTML = `<p style="margin:2px 0 6px">${esc(x.q(price))}</p><div class="row">${x.opts.map((o, i) => `<button type="button" class="btn sm" data-v="${i}">${esc(o)}</button>`).join("")}</div>`;
       petLift(dr); $("#cosQ").querySelectorAll("[data-v]").forEach(b => b.onclick = () => { track("cos_price", { id: it.id, v: +b.dataset.v, price: ja ? it.y : it.w, cur: ja ? "JPY" : "KRW" }); $("#cosQ").innerHTML = `<p style="margin:2px 0 0">${esc(x.thx)}</p>`; if(PET) petMsg(x.thx, 2400); }); }; };
-  const tab = c => { $("#cosRow").innerHTML = COS.filter(i => i.c === c && (!(i.sup || i.lim) || (cm.own || {})[i.id])).map(card).join(""); const nt = dr.querySelector(".cos-note"); if(nt) nt.textContent = c === "snack" ? x.snackNote : x.note; dr.querySelectorAll(".cos-tabs button").forEach(z => z.setAttribute("aria-pressed", String(z.dataset.cat === c)));
+  const tab = c => { $("#cosRow").innerHTML = COS.filter(i => i.c === c && (!(i.sup || i.lim) || (cm.own || {})[i.id])).map(card).join(""); const nt = dr.querySelector(".cos-note"); if(nt) nt.textContent = c === "snack" ? x.snackNote : (payOn() && !ja ? x.notePay : x.note); dr.querySelectorAll(".cos-tabs button").forEach(z => z.setAttribute("aria-pressed", String(z.dataset.cat === c)));
     $("#cosRow").querySelectorAll(".cos-it").forEach(b => b.onclick = () => onIt(b)); };
   dr.querySelectorAll(".cos-tabs button").forEach(b => b.onclick = () => tab(b.dataset.cat));
   const onIt = b => { const it = COS.find(c => c.id === b.dataset.id);

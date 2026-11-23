@@ -19,6 +19,8 @@ h1{font-size:1.7rem;margin:22px 0 4px} h2{font-size:1.2rem;margin:30px 0 10px} .
 .price{font-size:1.25rem;font-weight:900;margin-top:auto} .price small{font-size:.75rem;color:#6E6253;font-weight:600}
 .buy{border:0;border-radius:999px;padding:11px;font:inherit;font-weight:800;background:#D94A7E;color:#fff;cursor:pointer;min-height:44px}
 .sw{width:44px;height:44px;border-radius:50%;border:2px solid rgba(0,0,0,.08)}
+.pimg{width:100%;height:auto;aspect-ratio:480/327;object-fit:cover;border-radius:12px;background:#F7F6F3;display:block} .term{font-size:.8rem;color:#6E6253;margin:0} .term span{color:#1E1A16;font-weight:700}
+@media (prefers-color-scheme: dark){.term span{color:#ECEEF2}}
 .box{background:#fff;border-radius:18px;padding:16px 20px} .box ul{margin:6px 0;padding-left:1.2em}
 a{color:#C23C70} footer{margin-top:36px;padding-top:16px;border-top:1px solid #E8D9C8;font-size:.86rem;color:#5E5446}
 dialog{border:0;border-radius:18px;max-width:360px;padding:20px} dialog::backdrop{background:rgba(0,0,0,.4)}
@@ -33,6 +35,7 @@ dialog{border:0;border-radius:18px;max-width:360px;padding:20px} dialog::backdro
 </header>
 <h1>암기냥이 묘카 상점</h1>
 <p class="muted">단어 학습은 앞으로도 전부 무료예요. 여기 상품은 앱 안에서 쓰는 디지털 아이템이며, 결제 즉시 내 계정(기기)에 지급돼요. 가격은 모두 부가세 포함입니다.</p>
+<p class="muted">💳 <b>로그인·회원가입 없이</b> 「구매하기」를 누르면 바로 카드로 결제할 수 있어요(비회원 결제, 토스페이먼츠).</p>
 
 <h2>🍖 간식 묶음</h2>
 <p class="muted">냥이에게 던져 주는 간식이에요. 산 간식은 표시된 기간 안에 써야 해요(공부로 받은 간식은 기한 없음).</p>
@@ -66,14 +69,14 @@ dialog{border:0;border-radius:18px;max-width:360px;padding:20px} dialog::backdro
 <dialog id="dlg"><p id="dlgT" style="margin:0 0 14px"></p><form method="dialog"><button class="buy" style="width:100%">확인</button></form></dialog>
 <script>
 const P = {
-  snack: [["snk_s","🐟","간식 한 줌","간식 10개 · 3일 안에 사용",990],["snk_whale","🐋","고래 한 마리","특별 간식 고래 1마리 · 7일 안에 사용",1500],["snk_m","🛍️","간식 한 봉지","간식 40개 · 7일 안에 사용",2900],["snk_l","🚚","간식 트럭","간식 150개 · 14일 안에 사용",6900]],
-  skin: [["mochi_st","#ffdce4","딸기 찹쌀떡","분홍빛 털 스킨",1900],["mochi_mc","#dfeec3","말차 찹쌀떡","연두빛 털 스킨",1900],["cheese","#ffe2a8","치즈 냥","노란 털 스킨",1900],["pudding","#f7e0b5","푸딩 말랑","캐러멜 털 스킨",1900],["sesame","#cfcac4","흑임자 떡","회색 털 스킨",1900],["soda","#bfe6ff","소다 젤리","반투명 하늘색 스킨",2900]],
+  snack: [["snk_s","🐟","간식 한 줌","냥이에게 던져 주는 간식 10개(그때 열려 있는 간식이 골고루)","제공 기간: 결제 즉시 지급, 지급일부터 3일 동안 사용",990],["snk_whale","🐋","고래 한 마리","특별 간식 고래 1마리(먹는 연출이 따로 있는 큰 간식)","제공 기간: 결제 즉시 지급, 지급일부터 7일 동안 사용",1500],["snk_m","🛍️","간식 한 봉지","냥이에게 던져 주는 간식 40개(그때 열려 있는 간식이 골고루)","제공 기간: 결제 즉시 지급, 지급일부터 7일 동안 사용",2900],["snk_l","🚚","간식 트럭","냥이에게 던져 주는 간식 150개(그때 열려 있는 간식이 골고루)","제공 기간: 결제 즉시 지급, 지급일부터 14일 동안 사용",6900]],
+  skin: [["mochi_st","#ffdce4","딸기 찹쌀떡","냥이의 털 색을 분홍빛으로 바꾸는 꾸미기 아이템(학습 기능과 무관)","제공 기간: 결제 즉시 지급, 기간 제한 없이 서비스 운영 기간 동안 사용",1900],["mochi_mc","#dfeec3","말차 찹쌀떡","냥이의 털 색을 연두빛으로 바꾸는 꾸미기 아이템(학습 기능과 무관)","제공 기간: 결제 즉시 지급, 기간 제한 없이 서비스 운영 기간 동안 사용",1900],["cheese","#ffe2a8","치즈 냥","냥이의 털 색을 노란색으로 바꾸는 꾸미기 아이템(학습 기능과 무관)","제공 기간: 결제 즉시 지급, 기간 제한 없이 서비스 운영 기간 동안 사용",1900],["pudding","#f7e0b5","푸딩 말랑","냥이의 털 색을 캐러멜색으로 바꾸는 꾸미기 아이템(학습 기능과 무관)","제공 기간: 결제 즉시 지급, 기간 제한 없이 서비스 운영 기간 동안 사용",1900],["sesame","#cfcac4","흑임자 떡","냥이의 털 색을 회색으로 바꾸는 꾸미기 아이템(학습 기능과 무관)","제공 기간: 결제 즉시 지급, 기간 제한 없이 서비스 운영 기간 동안 사용",1900],["soda","#bfe6ff","소다 젤리","냥이의 털 색을 반투명 하늘색으로 바꾸는 꾸미기 아이템(학습 기능과 무관)","제공 기간: 결제 즉시 지급, 기간 제한 없이 서비스 운영 기간 동안 사용",2900]],
 };
 const won = n => n.toLocaleString("ko-KR") + "원";
 const esc = s => String(s).replace(/[<>&"]/g, c => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" })[c]);
 for (const [k, list] of Object.entries(P)) {
   const g = document.getElementById("g-" + k);
-  g.innerHTML = list.map(([id, e, name, desc, price]) => `<div class="card">${e.startsWith("#") ? `<div class="sw" style="background:radial-gradient(circle at 35% 30%,#fff,${e})"></div>` : `<div class="e" aria-hidden="true">${e}</div>`}<b>${esc(name)}</b><p>${esc(desc)}</p><div class="price">${k === "sup" ? `<s style="font-size:.8rem;color:#9a8f82;font-weight:600">${won({s1:1000,s2:3000,s3:10000,s4:30000}[id])}</s> ` : ""}${won(price)} <small>부가세 포함</small></div><button class="buy" type="button" data-id="${id}" data-name="${esc(name)}" data-price="${price}">구매하기</button></div>`).join("");
+  g.innerHTML = list.map(([id, e, name, desc, term, price]) => `<div class="card"><img class="pimg" src="img/shop/${id}.webp" alt="${esc(name)} 상품 이미지" width="480" height="327" loading="lazy"><b>${esc(name)}</b><p>${esc(desc)}</p><p class="term"><span>${esc(term)}</span></p><div class="price">${k === "sup" ? `<s style="font-size:.8rem;color:#9a8f82;font-weight:600">${won({s1:1000,s2:3000,s3:10000,s4:30000}[id])}</s> ` : ""}${won(price)} <small>부가세 포함</small></div><button class="buy" type="button" data-id="${id}" data-name="${esc(name)}" data-price="${price}">구매하기</button></div>`).join("");
 }
 document.addEventListener("click", e => { const b = e.target.closest(".buy[data-id]"); if (!b) return;
   location.href = "./?buy=" + encodeURIComponent(b.dataset.id); });
