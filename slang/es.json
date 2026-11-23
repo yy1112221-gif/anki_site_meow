@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-22T21:59:47.180877Z",
+ "updated": "2026-11-23T22:10:39.470615Z",
  "lang": "es",
  "terms": [
   {
@@ -12,8 +12,8 @@
    "first": "2026-11-18",
    "def": [],
    "ex": [],
-   "at": "2026-11-22T21:59:47.180877Z",
-   "cue": 9
+   "at": "2026-11-23T22:10:39.470615Z",
+   "cue": 10
   },
   {
    "t": "maxxing",
@@ -25,7 +25,7 @@
    "first": "2026-11-18",
    "def": [],
    "ex": [],
-   "at": "2026-11-22T21:59:47.180877Z",
+   "at": "2026-11-23T22:10:39.470615Z",
    "cue": 5
   },
   {
@@ -37,8 +37,8 @@
    "s": 5,
    "first": "2026-11-18",
    "def": [
-    "No significa que si no hubiese venido aquí, hubiera dejado el golf, no.",
-    "golf"
+    "golf",
+    "No significa que si no hubiese venido aquí, hubiera dejado el golf, no."
    ],
    "ex": [
     "Para mí el golf es importante porque adoro jugar, pero lo más importante es mi familia.",
@@ -46,20 +46,20 @@
     "P: Ahora está en el LIV Golf, un campeonato que tiene menos días de competición.",
     "También fue el primer Golf en ofrecer la transmisión de doble embrague DSG."
    ],
-   "at": "2026-11-22T21:59:47.180877Z",
-   "cue": 4
+   "at": "2026-11-23T22:10:39.470615Z",
+   "cue": 3
   },
   {
    "t": "farmear aura",
-   "n": 3,
+   "n": 2,
    "src": [
     "bing_news"
    ],
-   "s": 5,
+   "s": 4,
    "first": "2026-11-18",
    "def": [
     "Así que, llevado al lenguaje de internet, “farmear aura” significa hacer cosas que “te dan puntos de aura”.",
-    "Agosto 21, 2026 • Gabriela Velasco Ceja Twitter Pinterest Tumblr Email ¿Qué significa farmear aura y por qué es una tendencia?",
+    "\"Farmear aura\" combina un término propio de los videojuegos con una tendencia que se volvió viral en TikTok.",
     "to aura farm"
    ],
    "ex": [
@@ -68,8 +68,8 @@
     "- Farmear aura (ganar popularidad o mejorar la reputación dentro del grupo).",
     "Al unir ambos conceptos aparece “farmear aura”, es decir, hacer algo que aumenta la percepción de carisma o actitud de una persona ."
    ],
-   "at": "2026-11-22T21:59:47.180877Z",
-   "cue": 5
+   "at": "2026-11-23T22:10:39.470615Z",
+   "cue": 6
   },
   {
    "t": "demure",
@@ -85,13 +85,26 @@
     "Pero, ¿qué significa 'demure' exactamente?"
    ],
    "ex": [
+    "“Very demure, very mindful”, dice, con tono sottomesso e molto calmo.",
+    "Inizialmente demure descrive una persona, generalmente una donna, caratterizzata da riservatezza, modestia, pudore e discrezione.",
     "En la cultura pop, \"demure\" ha adquirido un nuevo sentido tras volverse un meme este año.",
-    "Ahora el turno es para 'demure'.",
-    "La mejor traducción para \"demure\" al español podría ser 'recatado', 'modesto' o incluso 'discreto'.",
-    "“Very demure, very mindful”, dice, con tono sottomesso e molto calmo."
+    "Ahora el turno es para 'demure'."
    ],
-   "at": "2026-11-22T21:59:47.180877Z",
-   "cue": 7
+   "at": "2026-11-23T22:10:39.470615Z",
+   "cue": 14
+  },
+  {
+   "t": "bad gyal",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-22",
+   "def": [],
+   "ex": [],
+   "at": "2026-11-23T22:10:39.470615Z",
+   "cue": 2
   },
   {
    "t": "a la",
@@ -106,20 +119,38 @@
     "to the"
    ],
    "ex": [],
-   "at": "2026-11-22T21:59:47.180877Z",
+   "at": "2026-11-23T22:10:39.470615Z",
    "cue": 12
   },
   {
-   "t": "bad gyal",
+   "t": "extraordinary",
    "n": 1,
    "src": [
     "google_news"
    ],
    "s": 3,
-   "first": "2026-11-22",
+   "first": "2026-11-23",
    "def": [],
    "ex": [],
-   "at": "2026-11-22T21:59:47.180877Z",
+   "at": "2026-11-23T22:10:39.470615Z",
+   "cue": 2
+  },
+  {
+   "t": "blocus",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "Blocus toma su nombre del vocablo francés 'bloquer', que significa bloquear o parar."
+   ],
+   "ex": [
+    "La etiqueta #BlocusBCN identificaba mensajes que anunciaban la concentración en la capital catalana.",
+    "El caso de Blocus muestra cómo las convocatorias juveniles pueden difundirse mediante diferentes plataformas digitales, desde perfiles públicos hasta grupos privados de mensajería."
+   ],
+   "at": "2026-11-23T22:10:39.470615Z",
    "cue": 2
   },
   {
@@ -139,7 +170,7 @@
     "No tanto, porque 'polyester' no apareció de la nada.",
     "La red no tardó en etiquetar este vídeo diseñado por y para el algoritmo, que aspira a ser modelo de vida, como 'polyester' o 'Polyester lifestyle'."
    ],
-   "at": "2026-11-22T21:59:47.180877Z",
+   "at": "2026-11-23T22:10:39.470615Z",
    "cue": 2
   },
   {
@@ -160,8 +191,30 @@
     "Alguna cosa similar ha ocurrido con ‘ALV’ .",
     "Las siglas 'ALV' son un ejemplo."
    ],
-   "at": "2026-11-22T21:59:47.180877Z",
+   "at": "2026-11-23T22:10:39.470615Z",
    "cue": 6
+  },
+  {
+   "t": "chats",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "Que WhatsApp guarde una copia de tus chats no significa que lo haga gratis para tu cuenta de Google.",
+    "Entonces, una vez aclarado qué significa en WhatsApp el error algo falló con tu historial de chats, ¿cómo solucionarlo?",
+    "A pesar de su amplio uso, no todos conocen su funcionamiento, por ejemplo ¿qué significa el punto verde en los chats ?"
+   ],
+   "ex": [
+    "Los trolls se dedican a sembrar cizaña por chats, foros, blogs y páginas web colaborativas.",
+    "Los trolls se dedican a sembrar cizaña en chats, foros, blogs y páginas web colaborativas.",
+    "En los chats de WhatsApp hay varios códigos secretos para comunicar ideas o emociones.",
+    "Se debe a que la plataforma de mensajería es incapaz de restaurar tus chats ."
+   ],
+   "at": "2026-11-23T22:10:39.470615Z",
+   "cue": 5
   },
   {
    "t": "cringe",
@@ -182,7 +235,7 @@
     "En resumen, evita cualquier acción que podría generarles cringe o vergüenza ajena a otros.",
     "- Cringe (algo que da vergüenza ajena)."
    ],
-   "at": "2026-11-22T21:59:47.180877Z",
+   "at": "2026-11-23T22:10:39.470615Z",
    "cue": 6
   },
   {
@@ -202,8 +255,8 @@
     "Sobre el registro: NPC es coloquial-juvenil y funciona bien en redes, chats y conversaciones informales.",
     "¿ Por qué se dice que NPC es un insulto ?"
    ],
-   "at": "2026-11-22T21:59:47.180877Z",
-   "cue": 5
+   "at": "2026-11-23T22:10:39.470615Z",
+   "cue": 3
   },
   {
    "t": "shippear",
@@ -220,12 +273,12 @@
    ],
    "ex": [
     "Shippear es desear que dos personas estén en una relación de pareja.",
-    "En los últimos años, la palabra \"shippear\" se ha vuelto muy popular en redes sociales.",
-    "En pocas palabras, shippear es unir a dos personas en un romance aunque no sea real.",
-    "“Shippear” viene del inglés shipping , que a su vez es abreviatura de relationship ."
+    "“Shippear” viene del inglés shipping , que a su vez es abreviatura de relationship .",
+    "Es parte del ritual de shippear.",
+    "En los últimos años, la palabra \"shippear\" se ha vuelto muy popular en redes sociales."
    ],
-   "at": "2026-11-22T21:59:47.180877Z",
-   "cue": 4
+   "at": "2026-11-23T22:10:39.470615Z",
+   "cue": 3
   },
   {
    "t": "delulu",
@@ -245,7 +298,7 @@
     "Segundo os relatos nas redes sociais, a mentalidade \"delulu\" envolve o uso de afirmações, otimismo e pensamento positivo 👍 .",
     "- Delulu (persona que vive demasiado en su propia fantasía)."
    ],
-   "at": "2026-11-22T21:59:47.180877Z",
+   "at": "2026-11-23T22:10:39.470615Z",
    "cue": 5
   },
   {
@@ -266,7 +319,7 @@
     "“Llevo todo el curso sacando sobresalientes, estoy en mi prime”.",
     "No es la primera vez que sucede algo así."
    ],
-   "at": "2026-11-22T21:59:47.180877Z",
+   "at": "2026-11-23T22:10:39.470615Z",
    "cue": 3
   },
   {
@@ -284,31 +337,11 @@
    ],
    "ex": [
     "Ghostear puede causar daños emocionales en la persona que ha sido “ghosteada” .",
-    "Por supuesto que estamos hablando de ghostear sin motivo aparente.",
     "Esta acción tiene un nombre y se llama ghostear.",
-    "Ghostear a una persona origina un dolor emocional y a veces es peor que una simple ruptura."
+    "Ghostear a una persona origina un dolor emocional y a veces es peor que una simple ruptura.",
+    "Por supuesto que estamos hablando de ghostear sin motivo aparente."
    ],
-   "at": "2026-11-22T21:59:47.180877Z",
-   "cue": 5
-  },
-  {
-   "t": "chats",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "A pesar de su amplio uso, no todos conocen su funcionamiento, por ejemplo ¿qué significa el punto verde en los chats ?"
-   ],
-   "ex": [
-    "Los trolls se dedican a sembrar cizaña por chats, foros, blogs y páginas web colaborativas.",
-    "Los trolls se dedican a sembrar cizaña en chats, foros, blogs y páginas web colaborativas.",
-    "El punto verde ayuda a localizar los mensajes o chats pendientes por leer.",
-    "En los chats de WhatsApp hay varios códigos secretos para comunicar ideas o emociones."
-   ],
-   "at": "2026-11-22T21:59:47.180877Z",
+   "at": "2026-11-23T22:10:39.470615Z",
    "cue": 5
   },
   {
@@ -317,14 +350,7 @@
    "src": [
     "bing_news"
    ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [],
-   "ex": [
-    "No puedo más con ello."
-   ],
-   "at": "2026-11-22T21:59:47.180877Z",
-   "cue": 1
+   "s": 3
   },
   {
    "t": "fomo",
@@ -332,19 +358,7 @@
    "src": [
     "bing_news"
    ],
-   "s": 3,
-   "first": "2026-11-22",
-   "def": [
-    "¿Qué significa FOMO y cómo usar la palabra?",
-    "FOMO"
-   ],
-   "ex": [
-    "La forma corta —FOMO— fue McGinnis quien la consolidó y puso en circulación.",
-    "Si el FOMO es la ansiedad, el JOMO es la cura voluntaria.",
-    "El uso constante del móvil es un síntoma de tener FOMO."
-   ],
-   "at": "2026-11-22T21:59:47.180877Z",
-   "cue": 5
+   "s": 3
   },
   {
    "t": "side quest",
@@ -363,14 +377,6 @@
    "s": 3
   },
   {
-   "t": "generación lamine yamal",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
    "t": "farmeando aura",
    "n": 1,
    "src": [
@@ -379,30 +385,12 @@
    "s": 3
   },
   {
-   "t": "al",
+   "t": "generación lamine yamal",
    "n": 1,
    "src": [
     "bing_news"
    ],
    "s": 3
-  },
-  {
-   "t": "blocus",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Blocus toma su nombre del vocablo francés 'bloquer', que significa bloquear o parar."
-   ],
-   "ex": [
-    "La etiqueta #BlocusBCN identificaba mensajes que anunciaban la concentración en la capital catalana.",
-    "El caso de Blocus muestra cómo las convocatorias juveniles pueden difundirse mediante diferentes plataformas digitales, desde perfiles públicos hasta grupos privados de mensajería."
-   ],
-   "at": "2026-11-21T21:58:07.188591Z",
-   "cue": 3
   },
   {
    "t": "padrear",
