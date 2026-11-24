@@ -1870,7 +1870,7 @@ function sulkOpen(st){ const s = S.meta.sulk; if(!sulkOn()) return false; const 
   if(!s.sh){ s.sh = 1; save(); track("sulk_show", { lv: s.lv, gap: s.gap }); }
   if(s.lv === 1) setTimeout(() => petMsg(x.l1(), 3200), 450);
   else if(s.lv === 2) setTimeout(() => petMsg(x.l2(s.gap), 3200), 450);
-  else { st.shake = Math.max(st.shake || 0, 18); setTimeout(() => petMsg(x.l3a, 1800), 450); setTimeout(() => { if(PET === st && sulkOn()) petMsg(x.l3b(s.gap), 2600); }, 2300); }
+  else { st.shake = Math.max(st.shake || 0, 18); setTimeout(() => petMsg(x.l3a, 1800), 450); setTimeout(() => { if(PET === st && sulkOn()){ petMsg(x.l3b(s.gap), 2600); fxSet(st, "cry", 2600); } }, 2300); }
   return true; }
 function sulkTouch(){ if(!sulkOn()) return; const s = S.meta.sulk, st = PET; s.c = (s.c || 0) + 1;
   if(s.c >= s.need){ sulkCalm("pet"); return; }
@@ -1881,7 +1881,7 @@ function sulkSnack(it){ if(!sulkOn()) return false; const s = S.meta.sulk;   // 
   sulkCalm("snack"); return false; }
 function sulkCalm(how){ const s = S.meta.sulk; if(!s || s.done || s.at !== today()) return; const st = PET; s.done = 1; s.c = Math.max(s.c || 0, s.need || 0); save();
   track("sulk_calm", { lv: s.lv, how, ms: st && st.sulk0 ? Math.round(performance.now() - st.sulk0) : 0 });
-  if(st){ st.bliss = Math.max(st.bliss || 0, .85); for(let i = 0; i < 6; i++){ const c = st.toScr(64 + (Math.random() - .5) * 60, 60); (st.hearts = st.hearts || []).push({ x: c.x, y: c.y, t: -i * .08, s: .8 + Math.random() * .6, ph: Math.random() * 6 }); } setTimeout(() => petMsg(sulkT().calm, 3000), 200); try{ sfxPoyon(.4); }catch(_){} } }
+  if(st){ st.bliss = Math.max(st.bliss || 0, .85); fxSet(st, "wink", 1600); for(let i = 0; i < 6; i++){ const c = st.toScr(64 + (Math.random() - .5) * 60, 60); (st.hearts = st.hearts || []).push({ x: c.x, y: c.y, t: -i * .08, s: .8 + Math.random() * .6, ph: Math.random() * 6 }); } setTimeout(() => petMsg(sulkT().calm, 3000), 200); try{ sfxPoyon(.4); }catch(_){} } }
 function lastStudyGap(){ const td = today(), ds = Object.keys(S.meta.days || {}).filter(d => S.meta.days[d] === true && d < td).sort(); return ds.length ? diffDays(ds[ds.length - 1], td) : 0; }
 const isReturnDay = () => lastStudyGap() >= 3 && !(S.meta.days[today()] === true);
 function Rof(c){ const d = today(); if(c.S && c.last){ const tt = Math.max(0, diffDays(c.last, d)); return Math.pow(1 + tt / (9 * c.S), -1); } const od = c.due ? Math.max(0, diffDays(c.due, d)) : 0; return Math.max(.05, .8 - od * .03 - (c.lapses || 0) * .05); }
@@ -3878,7 +3878,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v186";
+const APP_VER = "v187";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -4489,7 +4489,7 @@ function openPet(welcome){
     $("#petTestS").onchange = e => { const n = Math.max(0, Math.min(200, parseInt(e.target.value, 10) || 0)); S.meta.days = {}; for(let i = 0; i < n; i++) S.meta.days[addDays(today(), -i)] = true; save(); openPet(); }; }
   sulkInit(); petStart(); petTray(); buyExpNote(); el.classList.remove("enter"); void el.offsetWidth; el.classList.add("enter"); const sulked = sulkOpen(PET); if(welcome === true && !sulked) setTimeout(() => petMsg(meltLine("done") || pt().welcome, 3200), 450);
   const top = petTier(streak()); if(top > p.seenTier){ const its = PET_ITEMS.filter(i => i.t === top); p.seenTier = top; save(); setTimeout(() => { petMsg(`${x.unlock} ${its.map(i => i.e || "").join("")} ${its.map(itName).join("・")}`, 3200); sfxFanfare(); }, 500); }
-  else if(!petCount()) petMsg(x.empty, 4200);
+  else if(!petCount()){ petMsg(x.empty, 4200); setTimeout(() => fxSet(PET, "plead", 2600), 500); }
 }
 function closePet(){ bragStop(true); const el = $("#pet"); if(el){ el.classList.add("hidden"); el.innerHTML = ""; } document.body.classList.remove("petopen"); if(PET){ petRefundFlying(PET); cancelAnimationFrame(PET.raf); window.removeEventListener("resize", PET.onResize); PET = null; } sfxSqueezeEnd(); save(); renderAll(); }
 let PMSG_T = null;
@@ -4777,6 +4777,27 @@ function omegaMouth(g, my, w, sq, open, tongue, tongueOut){   // ω: 원래 입�
     g.fillStyle = "#6b2c34"; g.fill(om); if(tongue && !tongueOut){ g.save(); g.clip(om); g.fillStyle = "#ef8aa0"; g.beginPath(); g.ellipse(64, my + 4.6 + o * 2, Math.min(3.2, w * .55), 1.6 + o * .6, 0, 0, Math.PI * 2); g.fill(); g.restore(); } }
   const pth = new Path2D(); P(pth); g.strokeStyle = INKC; g.lineWidth = 2; g.stroke(pth); }
 function drawCatFace(st, g){ const fk = st.faceK || S.meta.settings.faceK || 1; g.save(); g.translate(64, 86); g.scale(fk, fk); g.translate(-64, -86); drawCatFace0(st, g); g.restore(); }
+/* 3D 냥이 표정 이식(11-24, 릴스공장 face.js drawSadFace·wink) — 입은 항상 ω. st.fx = {e, u}: 잠깐 덮어쓰는 표정 */
+const TEARC = "rgba(150,205,255,.9)";
+function fxSet(st, e, ms){ if(st) st.fx = { e, u: performance.now() + ms }; }
+function fxBrows(g, y, k){ g.strokeStyle = INKC; g.lineWidth = 1.6; [[52, 1], [76, -1]].forEach(([ex, s]) => { g.beginPath(); g.moveTo(ex - 4.5 * s, y - 5.6 + .9 * k); g.lineTo(ex + 3.2 * s, y - 7.8 - .6 * k); g.stroke(); }); }
+function fxDroop(g, ex, y, o){ const ly = x => y - .6 + 1.5 * ((x - ex) / 6) * o; g.save(); g.beginPath(); g.moveTo(ex - 6, ly(ex - 6)); g.lineTo(ex + 6, ly(ex + 6)); g.lineTo(ex + 6, y + 8); g.lineTo(ex - 6, y + 8); g.closePath(); g.clip();
+  g.fillStyle = INKC; g.beginPath(); g.arc(ex, y + .3, 3.2, 0, Math.PI * 2); g.fill(); g.restore(); g.strokeStyle = INKC; g.lineWidth = 1.8; g.beginPath(); g.moveTo(ex - 4, ly(ex - 4)); g.lineTo(ex + 4, ly(ex + 4)); g.stroke(); }
+function fxBigEye(g, ex, y, t){ g.fillStyle = INKC; g.beginPath(); g.ellipse(ex, y, 4.1, 4.4, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "rgba(255,255,255,.95)"; g.beginPath(); g.arc(ex - 1.4, y - 1.6, 1.4, 0, Math.PI * 2); g.fill(); g.beginPath(); g.arc(ex + 1.5, y + 1.2, .7, 0, Math.PI * 2); g.fill();
+  g.save(); g.beginPath(); g.ellipse(ex, y, 4.1, 4.4, 0, 0, Math.PI * 2); g.clip(); g.fillStyle = `rgba(140,200,255,${.45 + .15 * Math.sin(t * 5)})`; g.beginPath(); g.ellipse(ex, y + 3.6 + .3 * Math.sin(t * 3), 4.6, 1.9, 0, 0, Math.PI * 2); g.fill(); g.restore(); }
+function fxTear(g, x, y0, len){ g.fillStyle = TEARC; g.beginPath(); g.moveTo(x, y0); g.quadraticCurveTo(x + 1.6, y0 + len * .6, x + .1, y0 + len); g.arc(x, y0 + len, 1.25, 0, Math.PI); g.quadraticCurveTo(x - 1.4, y0 + len * .5, x, y0); g.fill(); }
+function fxEyes(g, e, t, y, L, R){
+  if(e === "sad"){ fxBrows(g, y, 1); fxDroop(g, L, y, -1); fxDroop(g, R, y, 1); }
+  else if(e === "plead"){ fxBrows(g, y, 1.3); fxBigEye(g, L, y, t); fxBigEye(g, R, y, t + 1); }
+  else if(e === "cry"){ fxBrows(g, y, 1.5); g.strokeStyle = INKC; g.lineWidth = 2.2; [L, R].forEach(ex => { g.beginPath(); g.moveTo(ex - 4.2, y - .4); g.lineTo(ex + 4.2, y - .4); g.stroke(); }); }
+  else if(e === "wink"){ g.strokeStyle = INKC; g.lineWidth = 2.2; g.beginPath(); g.moveTo(L - 4, y + 1.5); g.quadraticCurveTo(L, y - 3.5, L + 4, y + 1.5); g.stroke();
+    g.fillStyle = INKC; g.beginPath(); g.arc(R, y, 3.1, 0, Math.PI * 2); g.fill(); g.fillStyle = "rgba(255,255,255,.9)"; g.beginPath(); g.arc(R - 1, y - 1.2, .9, 0, Math.PI * 2); g.fill(); }
+  g.strokeStyle = INKC; g.fillStyle = INKC; g.lineWidth = 2.2; }
+function fxTears(g, e, t, y){
+  if(e === "sad"){ const c = (t * .45) % 1; if(c < .8) fxTear(g, 77.5, y + 3.5, 2 + c * 9); }
+  else if(e === "plead"){ const c = (t * .35) % 1; if(c > .35) fxTear(g, 49, y + 4.6, (c - .35) * 14); }
+  else if(e === "cry"){ g.fillStyle = TEARC; [52, 76].forEach(ex => [-2, 2].forEach(o => { const len = 10 + 2.5 * Math.sin(t * 6 + o + ex); g.beginPath(); g.moveTo(ex + o - .9, y + .8); g.lineTo(ex + o + .9, y + .8); g.lineTo(ex + o + 1.3, y + .8 + len); g.arc(ex + o, y + .8 + len, 1.3, 0, Math.PI); g.closePath(); g.fill(); })); } }
 function drawCatFace0(st, g){
   // 顔
   const b = st.bliss || 0, y = 82, L = 52, R = 76, hit = st.hit > .15, happy = !hit && b > .45 && performance.now() - st.lastHit < 1400, dopey = !hit && b > .62;
@@ -4784,7 +4805,9 @@ function drawCatFace0(st, g){
   if(b > .15){ g.fillStyle = `rgba(244,130,155,${Math.min(.45, b * .5)})`; [44, 84].forEach(x => { g.beginPath(); g.ellipse(x, 88.5, 6 + b * 3, 3.4 + b * 1.6, 0, 0, Math.PI * 2); g.fill(); }); g.fillStyle = INKC; }   // 볼이 점점 발그레
   const cw = st.chew && st.chew.t > CH_IN ? st.chew.t - CH_IN : -1, cph = cw < 0 ? (st.vacFace && performance.now() < st.vacFace ? 2 : 0) : cw < CH_CHEW ? 1 : cw < CH_CHEW + CH_SLURP ? 2 : 3;
   const sk = sulkLv(), skp = sk ? 1 - sulkProg() * .7 : 0;
-  if(sk && !hit && !cph){ const gx = sk === 1 ? 1.4 : 0; [L, R].forEach(ex => { g.beginPath(); g.arc(ex + gx, y + .4, 3.1, 0, Math.PI); g.fill(); g.beginPath(); g.moveTo(ex - 4.2, y + .4); g.lineTo(ex + 4.2, y + .4); g.stroke(); }); }   // 삐짐·화남: 반쯤 감은 눈(삐짐은 옆으로 흘끔)
+  const fxe = cph ? null : st.fx && performance.now() < st.fx.u ? st.fx.e : (sk && !hit && sulkProg() >= .5 ? (sk === 1 ? "sad" : "plead") : null);   // 풀리는 중: 화남 → 서운함
+  if(fxe) fxEyes(g, fxe, st.t, y, L, R);
+  else if(sk && !hit && !cph){ const gx = sk === 1 ? 1.4 : 0; [L, R].forEach(ex => { g.beginPath(); g.arc(ex + gx, y + .4, 3.1, 0, Math.PI); g.fill(); g.beginPath(); g.moveTo(ex - 4.2, y + .4); g.lineTo(ex + 4.2, y + .4); g.stroke(); }); }   // 삐짐·화남: 반쯤 감은 눈(삐짐은 옆으로 흘끔)
   else if(cph === 1 || cph === 2){ [L, R].forEach(ex => { g.beginPath(); if(cph === 1){ g.moveTo(ex - 4, y + 1.5); g.quadraticCurveTo(ex, y - 3.5, ex + 4, y + 1.5); } else { g.moveTo(ex - 3.6, y); g.lineTo(ex + 3.6, y); } g.stroke(); }); }
   else if(cph === 3){ [[L, 1], [R, -1]].forEach(([ex, dir]) => { g.beginPath(); g.moveTo(ex - 4 * dir, y - 3.5); g.lineTo(ex + 3 * dir, y); g.lineTo(ex - 4 * dir, y + 3.5); g.stroke(); }); }
   else if(st.wipe && !hit){ [L, R].forEach(ex => { g.beginPath(); g.moveTo(ex - 3.5, y + .5); g.lineTo(ex + 3.5, y + .5); g.stroke(); }); }   // 슥슥 닦는 중: 진지
@@ -4793,13 +4816,17 @@ function drawCatFace0(st, g){
   else if(happy || (st.holding && b > .45)){ [L, R].forEach(ex => { g.beginPath(); g.moveTo(ex - 4, y + 1.5); g.quadraticCurveTo(ex, y - 3.5, ex + 4, y + 1.5); g.stroke(); }); }
   else { const bl = (st.t % 3.4) < .12; [L, R].forEach(ex => { g.beginPath(); if(bl) g.ellipse(ex, y, 3, .8, 0, 0, Math.PI * 2); else g.arc(ex, y, 3.1, 0, Math.PI * 2); g.fill();
     if(!bl){ g.fillStyle = "rgba(255,255,255,.9)"; g.beginPath(); g.arc(ex - 1, y - 1.2, .9, 0, Math.PI * 2); g.fill(); g.fillStyle = INKC; } }); }
-  if(sk >= 2){ g.strokeStyle = INKC; g.lineWidth = 2; [[L, 1], [R, -1]].forEach(([ex, d]) => { g.beginPath(); g.moveTo(ex - 5 * d, y - 8.5 - 1.5 * skp); g.lineTo(ex + 3.5 * d, y - 5); g.stroke(); }); }   // 화남: 눈썹 ↘↙ (입은 그대로 ω)
+  if(sk >= 2 && !fxe){ g.strokeStyle = INKC; g.lineWidth = 2; [[L, 1], [R, -1]].forEach(([ex, d]) => { g.beginPath(); g.moveTo(ex - 5 * d, y - 8.5 - 1.5 * skp); g.lineTo(ex + 3.5 * d, y - 5); g.stroke(); }); }   // 화남: 눈썹 ↘↙ (입은 그대로 ω)
   g.strokeStyle = "rgba(232,121,143,.85)"; g.lineWidth = 1.5; [44, 84].forEach(x => { for(const o of [-5, -1, 3]){ g.beginPath(); g.moveTo(x + o, 90.5); g.lineTo(x + o + 2.4, 85.8); g.stroke(); } });
   g.fillStyle = PINK; g.beginPath(); g.ellipse(64, y + 4.5, 1.9, 1.3, 0, 0, Math.PI * 2); g.fill();
   const my = y + 8; g.strokeStyle = INKC; g.lineWidth = 2;
   // 입은 어떤 동작이든 ω(3을 눕힌 모양)를 유지: 폭·높이만 바뀌고, 벌어짐·혀는 그 아래로
   let mw = 5.5, sq = 1, open = 0, tongue = 0, tongueOut = 0;
-  if(cph === 1){ const op = Math.abs(Math.sin(cw * 7 * Math.PI)); sq = .55 + op * .6; mw = 5.5 + op * .6; }          // 우물우물: ω가 위아래로 오물
+  if(fxe === "sad"){ mw = 4.2; sq = .75; }
+  else if(fxe === "plead"){ mw = 3.6; sq = .8 + .12 * Math.sin(st.t * 22); open = .45; }
+  else if(fxe === "cry"){ mw = 4.6; open = 2 + .7 * Math.abs(Math.sin(st.t * 9)); tongue = 1; }
+  else if(fxe === "wink"){ open = 1.2; tongue = 1; tongueOut = 1; }
+  else if(cph === 1){ const op = Math.abs(Math.sin(cw * 7 * Math.PI)); sq = .55 + op * .6; mw = 5.5 + op * .6; }          // 우물우물: ω가 위아래로 오물
   else if(cph === 2){ mw = 3; sq = 1.1; open = .5; }                                                                  // 쓰읍: ω를 오므리고 가운데로 빨아들임
   else if(cph === 3){ mw = 4.2; open = 2.2; }                                                                         // 퉤: 오므린 ω 아래로 확
   else if(st.lick || (st.eat && st.eat.mode === "tongue")){ open = 1.2; tongue = 1; tongueOut = 1; }   // 혀 내밀기
@@ -4808,7 +4835,8 @@ function drawCatFace0(st, g){
   else if(dopey){ open = (b - .62) * 2.6 + .6; tongue = 1; }
   else if(happy){ open = .7; tongue = 1; }
   omegaMouth(g, my, mw, sq, open, tongue, tongueOut);
-  if(dopey && b > .7 && !cph){ const dl = 2 + (b - .7) * 16 + Math.sin(st.t * 2.3) * 1.2; g.fillStyle = "rgba(200,232,255,.9)"; g.beginPath(); g.moveTo(68.4, my + 3.4); g.quadraticCurveTo(70.4, my + 3.4 + dl * .6, 69.6, my + 3.4 + dl); g.arc(68.8, my + 3.4 + dl, 1.3, 0, Math.PI); g.quadraticCurveTo(67.6, my + 3.4 + dl * .5, 68.4, my + 3.4); g.fill(); }
+  if(fxe) fxTears(g, fxe, st.t, y);
+  if(dopey && b > .7 && !cph && !fxe){ const dl = 2 + (b - .7) * 16 + Math.sin(st.t * 2.3) * 1.2; g.fillStyle = "rgba(200,232,255,.9)"; g.beginPath(); g.moveTo(68.4, my + 3.4); g.quadraticCurveTo(70.4, my + 3.4 + dl * .6, 69.6, my + 3.4 + dl); g.arc(68.8, my + 3.4 + dl, 1.3, 0, Math.PI); g.quadraticCurveTo(67.6, my + 3.4 + dl * .5, 68.4, my + 3.4); g.fill(); }
   g.lineWidth = 1.1; g.strokeStyle = "rgba(60,48,38,.5)"; [[-1, 38], [1, 90]].forEach(([sx, x0]) => [[-3, -4], [1.5, 0], [6, 4]].forEach(([dy, an]) => { g.beginPath(); g.moveTo(x0, 84 + dy); const wd = (st.bliss || 0) * 5; g.quadraticCurveTo(x0 + sx * 9, 84 + dy + an * .4 + st.hit * 3 * an + wd * .4, x0 + sx * 16, 84 + dy + an + wd); g.stroke(); }));
 }
 /* ════════ 냥이 꾸미기 상점 (출시 전: 입어 보기 + 「사고 싶다냥」 찜·가격 반응 측정. 실제 결제는 사업자·통신판매업 신고 뒤 연결) ════════ */
