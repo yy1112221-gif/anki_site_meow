@@ -1216,7 +1216,7 @@ html.short body.focus #sessionBox:has(.poster.ce) > .say{display:flex}
 /* ───────── 表示言語 (日本語が基本、韓国語はオプション) ───────── */
 const T = {
 ja: {
-  appName:"ミヤオウカ", logoTag:"暗記して、ミヤオウ！", learnLang:"学習する言語", summary:"今日のまとめ",
+  appName:"ミャオカ", logoTag:"暗記して、ミャオ！", learnLang:"学習する言語", summary:"今日のまとめ",
   statDue:"今日の復習", statNew:"今日の新出", statLearning:"学習中", statMastered:"卒業",
   tabToday:"今日", tabAdd:"単語を追加", tabList:"単語帳", tabHow:"設定",
   addOne:"ひとつずつ追加", amSlang:"いまどきスラング", amSlangSub:"毎日あたらしく収集", amSlangLong:"ニュースやブログで実際に使われている新語を毎日集めます。学習の合間に1日1〜2語ずつ混ぜます。", amSlangNone:"この言語のスラングはまだ集めていません。", amRec:"おすすめ", amPresetSub:"レベル別に数百語をまとめて", amPhotoSub:"教材を撮ると単語を取り出します", fWord:"単語", btnFind:"意味・例文を探す", btnFindAgain:"もう一度探す", finding:"探しています…",
@@ -2065,7 +2065,7 @@ const NICK_BASE = { ko: ["냥이집사", "츄르도둑", "꾹꾹이장인", "말
   ja: ["ネコの下僕", "ちゅーる泥棒", "ふみふみ職人", "香箱座り中", "猫パンチ被害者", "ゴロゴロDJ", "猫吸い常習犯", "肉球マニア", "毛玉製造機", "おやつ係", "にゃんモナイト", "ねこ様の家来"] };
 function nickRand(){ const a = NICK_BASE[S.meta.settings.ui === "ja" ? "ja" : "ko"]; return a[Math.floor(Math.random() * a.length)] + (1 + Math.floor(Math.random() * 999)); }
 function nickState(){ const n = S.meta.nick || (S.meta.nick = {}); if(!n.key){ const b = new Uint8Array(18); crypto.getRandomValues(b); n.key = [...b].map(v => v.toString(16).padStart(2, "0")).join(""); } return n; }
-const nickOk = v => /^[0-9A-Za-z_가-힣ぁ-んァ-ヶー一-龥]{2,12}$/.test(v) && !/(admin|운영자|관리자|meowca|묘카|암기냥이|ミヤオウカ|시발|씨발|병신|fuck|shit)/i.test(v);
+const nickOk = v => /^[0-9A-Za-z_가-힣ぁ-んァ-ヶー一-龥]{2,12}$/.test(v) && !/(admin|운영자|관리자|meowca|묘카|암기냥이|ミヤオウカ|ミャオカ|시발|씨발|병신|fuck|shit)/i.test(v);
 async function nickClaim(name){ const n = nickState();
   try{ const r = await fetch(SB_URL + "/rest/v1/rpc/nick_claim", { method: "POST", headers: { apikey: SB_KEY, "Content-Type": "application/json" }, body: JSON.stringify({ p_key: n.key, p_name: name }) });
     if(r.status === 404) return "nosrv"; if(!r.ok) return "err"; return await r.json(); }catch(e){ return "err"; } }
@@ -2205,11 +2205,11 @@ async function payConfirm(){ const ko = S.meta.settings.ui !== "ja", pp = S.meta
   }catch(e){ toast(ko ? "결제 확인이 늦어진다냥. 새로고침해 줘" : "確認が遅れてるニャ。再読み込みしてね"); }
 }
 function renderSupBox(){ const el = $("#supBox"); if(!el) return; const ko = S.meta.settings.ui === "ko";
-  el.innerHTML = `<div class="sup-row">${nm("st_love", 52)}<div><b>${ko ? "MEOWCA! 암기냥이는 무료예요" : "MEOWCA!（ミヤオウカ）は無料です"}</b><p class="small muted" style="margin:.2em 0 0">${ko ? "광고도 없어요. 마음에 들면 친구에게 알려 주세요." : "広告もありません。気に入ったら友達に教えてください。"}</p></div></div>
+  el.innerHTML = `<div class="sup-row">${nm("st_love", 52)}<div><b>${ko ? "MEOWCA! 암기냥이는 무료예요" : "MEOWCA!（ミャオカ）は無料です"}</b><p class="small muted" style="margin:.2em 0 0">${ko ? "광고도 없어요. 마음에 들면 친구에게 알려 주세요." : "広告もありません。気に入ったら友達に教えてください。"}</p></div></div>
     <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button>${ko ? `<a class="btn" href="shop">🛒 상점</a>` : ""}</div>
     <p class="tiny muted" style="margin:0"><a href="privacy.html">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a> · <a href="terms.html">${ko ? "이용약관" : "利用規約"}</a></p><p class="tiny muted" id="bizLine" style="margin:0"></p>`;
   bizFill();
-  $("#supShare").onclick = async () => { const url = "https://meowca.app/?ref=invite", text = ko ? "MEOWCA! 암기냥이 — 가성비로 딱 필요한 만큼만 외우고, 나머진 말랑 냥이 괴롭히기 🐾 무료" : "MEOWCA!（ミヤオウカ）— もう無理やり暗記しなくていい。最小限だけ覚えて、あとはネコと遊ぶ 🐾 無料";
+  $("#supShare").onclick = async () => { const url = "https://meowca.app/?ref=invite", text = ko ? "MEOWCA! 암기냥이 — 가성비로 딱 필요한 만큼만 외우고, 나머진 말랑 냥이 괴롭히기 🐾 무료" : "MEOWCA!（ミャオカ）— もう無理やり暗記しなくていい。最小限だけ覚えて、あとはネコと遊ぶ 🐾 無料";
     try{ if(navigator.share){ await navigator.share({ title: "MEOWCA!", text, url }); return; } await navigator.clipboard.writeText(text + " " + url); toast(ko ? "링크를 복사했어요" : "リンクをコピーしました"); }catch(e){} }; }
 function setAddPanel(k){   // 단어 추가: 스크롤 대신 메뉴에서 하나 고르기
   const v = $("#view-add"); if(!v) return; k = k || v.dataset.panel || "preset"; v.dataset.panel = k;
@@ -2394,7 +2394,7 @@ function secureDay(){ setTimeout(() => { if(!SES || !SES.queue || !SES.queue.len
 function shareCardImg(n){ return new Promise(res => { const W = 1080, H = 1350, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const g = cv.getContext("2d"), ko = S.meta.settings.ui === "ko", sk = streak();
   const bg = g.createRadialGradient(W * .7, H * .25, 50, W * .6, H * .4, H); bg.addColorStop(0, "#fffdf7"); bg.addColorStop(.6, "#f3efe6"); bg.addColorStop(1, "#e4ddcf"); g.fillStyle = bg; g.fillRect(0, 0, W, H);
   const font = (w, px) => `${w} ${px}px "Noto Sans KR","Noto Sans JP","Apple SD Gothic Neo","Hiragino Sans",sans-serif`;
-  g.fillStyle = "#3dc38f"; g.font = font(800, 44); g.fillText((ko ? "MEOWCA! 암기냥이 · " : "MEOWCA! ミヤオウカ · ") + langName(), 90, 150);
+  g.fillStyle = "#3dc38f"; g.font = font(800, 44); g.fillText((ko ? "MEOWCA! 암기냥이 · " : "MEOWCA! ミャオカ · ") + langName(), 90, 150);
   g.fillStyle = "#1d2b27"; g.font = font(900, 92); g.fillText(ko ? "오늘 딱" : "今日はたった", 90, 290);
   g.font = font(900, 230); const num = String(n), nw = g.measureText(num).width; g.fillStyle = "#ffd84d"; g.fillRect(84, 450, nw + 30, 70); g.fillStyle = "#1d2b27"; g.fillText(num, 96, 520);
   g.font = font(900, 92); g.fillText(ko ? "개만 외웠다냥" : "語だけおぼえたニャ", 120 + nw, 520);
