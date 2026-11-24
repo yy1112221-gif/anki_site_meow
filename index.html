@@ -663,7 +663,7 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 #pet.night #petGL{filter:sepia(.14) saturate(1.06) brightness(.96)} #pet.night .pet-hint{color:#e6e0f0}
 #pet.pf #petBG{opacity:0} #pet.pf{background:radial-gradient(120% 80% at 50% 45%,#fffdf8,#fbf1f4 60%,#f3e6ef)} #pet.pf #petGL{filter:saturate(1.18) brightness(1.05) drop-shadow(0 0 16px rgba(255,170,210,.75))}
 .myset h2{margin:0 0 8px} .ms-row{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid rgba(127,127,127,.15)} .ms-row:first-of-type{border-top:0}
-.ms-tg{flex-direction:row;align-items:center;justify-content:space-between;font-weight:600} .ms-tg input[type=checkbox]{width:22px;height:22px} .ms-tg select{font:inherit;padding:6px 10px;border-radius:10px;flex:0 0 auto;width:auto} .ms-tg>span{white-space:nowrap}
+.ms-tg{flex-direction:row;align-items:center;justify-content:space-between;font-weight:600} .ms-tg input[type=checkbox]{width:22px;height:22px} .ms-tg select{font:inherit;padding:6px 10px;border-radius:10px;flex:0 0 auto;width:auto} .ms-tg{gap:10px} .ms-tg>span{white-space:normal;flex:1 1 auto;min-width:0;overflow-wrap:anywhere;word-break:keep-all} .ms-tg>input,.ms-tg>select{flex:none}
 .ms-row>span{font-weight:700} .ms-nick{display:flex;gap:6px} .ms-nick input{flex:1;min-width:0;font:inherit;font-size:16px;padding:9px 12px;border-radius:12px;border:1.5px solid rgba(127,127,127,.3);background:transparent;color:inherit}
 .sup-early{border-radius:16px;padding:12px 14px;margin:0 0 12px;background:linear-gradient(135deg,rgba(255,214,120,.25),rgba(255,160,190,.2));border:1.5px dashed rgba(230,140,80,.5)} .sup-early p{margin:4px 0;font-size:.86rem;line-height:1.55} .sup-early ol{margin:4px 0 0;padding-left:1.3em;font-size:.82rem;line-height:1.6} .sup-was{opacity:.5;font-weight:600;font-size:.8em;margin-right:4px}
 #s7{position:fixed;inset:0;z-index:90;background:var(--bg,#f4f2ec);display:flex;flex-direction:column;padding:calc(10px + env(safe-area-inset-top)) 16px calc(14px + env(safe-area-inset-bottom))} @media (prefers-color-scheme:dark){#s7{background:#15171c;color:#eef0ee}}
@@ -1168,8 +1168,9 @@ html.short body.focus #sessionBox:has(.poster.ce) > .say{display:flex}
       <label for="setSign"><span data-i18n="setSign"></span><select id="setSign"><option value="0" data-i18n="signOff"></option><option value="30" data-i18n="sign30"></option><option value="60" data-i18n="sign60"></option><option value="180" data-i18n="sign180"></option><option value="600" data-i18n="sign600"></option></select></label>
       <label class="switch" for="setHf"><span data-i18n="setHf"></span><input type="checkbox" id="setHf"></label>
       <label class="switch" for="setWrite"><span data-i18n="setWrite"></span><input type="checkbox" id="setWrite"></label>
+      <p class="muted tiny" data-i18n="writeHelp"></p>
       <label class="switch" for="setSpeak"><span data-i18n="setSpeak"></span><input type="checkbox" id="setSpeak"></label>
-      <label class="switch" for="setAccent"><span data-i18n="setAccent"></span><input type="checkbox" id="setAccent"></label>
+      <label class="switch" for="setAccent" id="accentRow"><span data-i18n="setAccent"></span><input type="checkbox" id="setAccent"></label>
       <label for="setVoice"><span data-i18n="voice"></span>
         <select id="setVoice"></select>
       </label>
@@ -1227,12 +1228,12 @@ ja: {
   phSearch:"単語や意味で検索", fAll:"すべて", fLeech:"苦手",
   forecastTitle:"これから7日間の復習量", ladderTitle:"復習のはしご",
   ladderHelp:"単語ごとに「どれくらい覚えているか」を計算し、忘れかける頃（覚えている確率が目標まで下がる日）にもう一度出します。思い出しにくい単語は短い間隔で、簡単な単語は長い間隔で。間違えると翌日もう一度。次の間隔が半年を超えたら卒業です。",
-  note1:"<b>答えを見る前にまず推測。</b>新しい単語は答えを見せる前に、まず推測して書いてもらいます。外れても、先に思い出そうとしてから答えを見たほうが記憶に残ります（Kornellほか 2009）。間違えたら答えを見て1回書き写してから進みます。<br><b>その日のうちに再テスト。</b>そのあと「穴埋め → 意味から書く」をすべて正解するまでその日は終わりません。間違えたカードは3枚後にもう一度出ます。読み返すより自分で思い出すほうがずっと長く残る、という研究（Karpicke・Roediger 2008）に基づいています。",
+  note1:"<b>1回12問、単語ごとに0〜5段の階段。</b>1回はウォームアップ2 → 本編8 → ボス1 → しめ1の12問です。単語は段によって問題が変わります：0 まず当ててみる・1 意味をえらぶ・2 意味を答える・3 穴埋め・4 意味から書く・5 文（語順・スピーキング・作文）。正解すると1日1回1段上がり、間違えると1段下がります。<br><b>新しい単語はまず推測。</b>新しい単語は答えを見る前にまず推測して書き（まず当ててみる）、続けて意味をえらぶ問題を解きます。外れても、先に思い出そうとしてから答えを見たほうが記憶に残ります（Kornellほか 2009）。間違えた問題は同じ回の後ろでもう一度出て、解ききれなければ次の回の最初に回ります。読み返すより自分で思い出すほうがずっと長く残る、という研究（Karpicke・Roediger 2008）に基づいています。",
   note2:"<b>翌日は必ずもう一度。</b>正解した単語も間違えた単語も翌日に出ます。1週間覚えておくには1日の間隔が最も効果的だったという結果（Cepedaほか 2008）と一致します。",
   note3:"<b>間隔は単語ごとに伸びる。</b>忘れかけたころに思い出せた単語ほど、次の間隔が大きく伸びます（FSRS の忘却曲線モデル）。1日の復習は上限まで、遅れているものから。日付は±5%ずらして、特定の日に集中しないようにしています。",
-  note4:"<b>苦手な単語。</b>3回以上間違えた単語には赤い印が付き、復習のたびに穴埋めと書き取りの両方が出ます。",
+  note4:"<b>苦手な単語。</b>3回以上間違えた単語には赤い印が付き、1回に2つまで出ます。問題の前に一度見せ、1段下の問題もいっしょに出し、段が低いうちは日ごとに形式を変えます（意味をえらぶ → 意味を答える → 穴埋め）。",
   settings:"設定", uiHelp:"意味と例文の訳は、ここで選んだ言語で取得します。",
-  setNew:"1日の新しい単語数", setWrite:"作文の問題", setSpeak:"スピーキングの問題", setAccent:"アクセント記号まで厳しく採点",
+  setNew:"1日の新しい単語数", setWrite:"作文の問題", setSpeak:"スピーキングの問題", setAccent:"アクセント記号（é など）まで厳しく採点", writeHelp:"オフにすると5段の作文問題だけ出なくなります（語順・スピーキングはそのまま）。",
   setEmail:"翻訳上限を増やすためのメール（任意）", phEmail:"空欄なら1日約5,000字まで翻訳",
   emailHelp:"意味・例文の翻訳に使うMyMemoryは、メールアドレスを一緒に送ると1日の上限が約10倍になります。メールは翻訳リクエストにのみ使います。",
   backup:"バックアップ", backupHelp:"単語と進み具合はこの端末のブラウザにだけ保存されます。機種変更やブラウザのデータ削除の前にファイルで保存してください。",
@@ -1316,12 +1317,12 @@ ko: {
   phSearch:"단어나 뜻으로 찾기", fAll:"전체", fLeech:"약점",
   forecastTitle:"다음 7일 복습량", ladderTitle:"복습 사다리",
   ladderHelp:"단어마다 '얼마나 기억하고 있는지'를 계산해서, 잊어버릴 즈음(기억할 확률이 목표까지 내려가는 날)에 다시 냅니다. 어려운 단어는 짧은 간격, 쉬운 단어는 긴 간격으로. 틀리면 다음 날 다시. 다음 간격이 반년을 넘으면 졸업이에요.",
-  note1:"<b>답을 보기 전에 먼저 짐작.</b> 새 단어는 답을 보여주기 전에 먼저 짐작해서 써봅니다. 틀려도 먼저 떠올려 본 뒤 답을 보는 쪽이 더 잘 기억납니다(Kornell 외 2009). 틀리면 정답을 보고 한 번 따라 쓴 뒤 넘어갑니다.<br><b>당일 재시험.</b> 그다음 빈칸 → 뜻 보고 쓰기를 모두 맞혀야 그날 끝납니다. 틀린 카드는 3장 뒤에 다시 나옵니다. 다시 읽기보다 직접 떠올리기가 훨씬 오래 남는다는 연구(Karpicke·Roediger 2008)를 따랐습니다.",
+  note1:"<b>한 판 12문제, 단어마다 계단 0~5칸.</b> 한 판은 몸풀기 2 → 본편 8 → 보스 1 → 마무리 1, 모두 12문제입니다. 단어는 칸에 따라 문제가 바뀝니다: 0 먼저 맞혀보기 · 1 뜻 고르기 · 2 뜻 쓰기 · 3 빈칸 · 4 뜻 보고 쓰기 · 5 문장(어순·말하기·쓰기). 맞히면 하루 한 번 한 칸 오르고, 틀리면 한 칸 내려갑니다.<br><b>새 단어는 먼저 짐작.</b> 새 단어는 답을 보기 전에 먼저 짐작해서 써 보고(먼저 맞혀보기), 이어서 뜻 고르기를 풉니다. 틀려도 먼저 떠올려 본 뒤 답을 보는 쪽이 더 잘 기억납니다(Kornell 외 2009). 틀린 문제는 같은 판 뒤쪽에 다시 나오고, 다 못 풀면 다음 판 맨 앞으로 넘어갑니다. 다시 읽기보다 직접 떠올리기가 훨씬 오래 남는다는 연구(Karpicke·Roediger 2008)를 따랐습니다.",
   note2:"<b>다음 날 무조건 한 번 더.</b> 맞힌 단어도 틀린 단어도 다음 날 다시 봅니다. 1주일 동안 기억하려면 하루 간격이 가장 좋았다는 결과(Cepeda 외 2008)와 맞습니다.",
   note3:"<b>간격은 단어마다 늘어난다.</b> 잊어버릴 즈음에 떠올린 단어일수록 다음 간격이 크게 늘어납니다 (FSRS 망각곡선 모델). 하루 복습은 상한까지, 밀린 것부터. 날짜는 ±5% 흩어서 한 날에 몰리지 않게 했습니다.",
-  note4:"<b>약점 단어.</b> 3번 이상 틀린 단어는 빨간 표시가 붙고, 복습 때마다 빈칸과 쓰기 문제가 둘 다 나옵니다.",
+  note4:"<b>약점 단어.</b> 3번 이상 틀린 단어는 빨간 표시가 붙고, 한 판에 2개까지 나옵니다. 문제 앞에 한 번 보여 주고 한 칸 아래 문제도 함께 내며, 칸이 낮을 땐 날마다 형식을 바꿉니다(뜻 고르기 → 뜻 쓰기 → 빈칸).",
   settings:"설정", uiHelp:"뜻과 예문 해석은 여기서 고른 언어로 가져옵니다.",
-  setNew:"하루 새 단어 수", setWrite:"문장 쓰기 문제", setSpeak:"말하기 문제", setAccent:"악센트까지 엄격하게 채점",
+  setNew:"하루 새 단어 수", setWrite:"문장 쓰기 문제", setSpeak:"말하기 문제", setAccent:"악센트까지 엄격하게 채점", writeHelp:"끄면 칸 5의 문장 쓰기 문제만 빠집니다(어순·말하기 문제는 그대로).",
   setEmail:"번역 한도 늘리기용 이메일 (선택)", phEmail:"비워두면 하루 약 5천 자까지 번역",
   emailHelp:"뜻·예문 번역에 쓰는 MyMemory는 이메일을 함께 보내면 하루 번역 한도가 약 10배로 늘어납니다. 이메일은 번역 요청에만 쓰입니다.",
   backup:"백업", backupHelp:"단어와 진도는 이 기기 브라우저에만 저장됩니다. 기기를 바꾸거나 브라우저 데이터를 지우기 전에 파일로 받아두세요.",
@@ -1342,7 +1343,7 @@ ko: {
   slTitle:"🔥 요즘 슬랭", slDesc:"뉴스에서 매일 자동으로 모은 유행어를, 실제로 쓰인 문장으로 배워요. 슬랭만 배우면 쓸 데가 없으니, 평소 단어에 조금씩 섞는 걸 추천해요.", slAsk:"슬랭은 얼마나 섞을까요?", slRec:"추천", slMixN:n=>`하루 ${n}개만 섞기`, slMixAll:"슬랭 위주", slChange:"바꾸기", slWhy:"평소 단어랑 같이 한두 개씩 배워야 실제 대화에서 자연스럽게 써먹어요.", slDone:(n,m)=>`슬랭 ${n}개 준비 완료 (${m ? `하루 ${m}개씩` : "슬랭 위주"})`, slTag:"슬랭",
   obHi:"…왔군. 딱 세 가지만 정해라", obLang:"무슨 언어를 외울 건가?", obLevel:"지금 실력은? (모르겠으면 테스트)", obDiag:"1분 레벨 테스트", obGo:"준비되면 ‘학습 시작’을 눌러라", obOwn:"내 단어를 직접 넣고 싶으면", srsOne:"잊어버리기 직전에 다시 물어보는 방식(간격 반복)으로 복습해요.",
   meanPh:"뜻을 한국어로", meanSame:"맞았어 (뜻이 같아)", meanDiff:"틀렸어", meanMeh:"정답은 이것. …네 답, 뜻이 같나?",
-  modes:{ meaning:"뜻 말하기", scriptNew:"글자 외우기", script:"글자 읽기", study:"먼저 맞혀보기", pick:"뜻 고르기", trap:"읽기 고르기", juku:"★ 통째로 외우기", frame:"문형 빈칸", cloze:"빈칸 채우기", order:"어순 맞추기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
+  modes:{ meaning:"뜻 쓰기", scriptNew:"글자 외우기", script:"글자 읽기", study:"먼저 맞혀보기", pick:"뜻 고르기", trap:"읽기 고르기", juku:"★ 통째로 외우기", frame:"문형 빈칸", cloze:"빈칸 채우기", order:"어순 맞추기", recall:"뜻 보고 쓰기", write:"문장 쓰기", speak:"말하기" },
   left:n=>`남은 ${n}장`, listen:"발음 듣기", listenEx:"예문 듣기", listenAgain:"다시 듣기", listenMine:"내 문장 듣기",
   noExample:"예문이 없어요. 단어장에서 넣으면 빈칸 문제가 생깁니다.", gotIt:"외웠어요, 다음",
   setSign:"팻말 냥이 지나가는 간격 (펫 화면)", signOff:"안 나옴", sign30:"30초마다", sign60:"1분마다", sign180:"3분마다", sign600:"10분마다",
@@ -3772,7 +3773,7 @@ function renderHow(){ try{ bindCorner(); renderAuthBox(); }catch(e){}
   $("#forecast").innerHTML = days.map((v,i) => { const [y,m,dd] = v.d.split("-").map(Number); return `<div class="fc${i ? "" : " today"}"><em>${v.n}</em><i style="height:${Math.round(v.n/max*62)}px"></i><span>${i ? x.week[new Date(y,m-1,dd).getDay()] : x.todayShort}</span></div>`; }).join("");
   const st = S.meta.settings;
   $("#setTarget").value = String(st.target || .8); $("#setMaxRev").value = st.maxReviews || 80; $("#estMin").textContent = x.estMin(estMinutes(st.newLimit));
-  $("#setUi").value = st.ui; $("#setNew").value = st.newLimit; $("#setWrite").checked = st.writing; $("#setOrder").value = st.newOrder || "added"; $("#setSign").value = String(st.signCat == null ? 60 : st.signCat); $("#setHf").checked = !!st.handsFree; $("#setSpeak").checked = st.speaking; $("#setAccent").checked = st.strictAccent; $("#setEmail").value = st.email || ""; $("#setRate").value = st.rate || 0.8; $("#rateOut").textContent = "×" + Number(st.rate || 0.8).toFixed(2); fillVoices();
+  $("#setUi").value = st.ui; $("#setNew").value = st.newLimit; $("#setWrite").checked = st.writing; $("#setOrder").value = st.newOrder || "added"; $("#setSign").value = String(st.signCat == null ? 60 : st.signCat); $("#setHf").checked = !!st.handsFree; $("#setSpeak").checked = st.speaking; $("#setAccent").checked = st.strictAccent; $("#accentRow").style.display = /^(es|fr|de|it|pt)$/.test(st.lang || "es") ? "" : "none";   // 악센트 기호가 있는 라틴 글자 언어에서만 $("#setEmail").value = st.email || ""; $("#setRate").value = st.rate || 0.8; $("#rateOut").textContent = "×" + Number(st.rate || 0.8).toFixed(2); fillVoices();
 }
 function setUiLang(v){
   S.meta.settings.ui = v; save(); applyUi();
@@ -3780,7 +3781,7 @@ function setUiLang(v){
 }
 $("#setUi").onchange = e => setUiLang(e.target.value);
 
-$("#setNew").onchange = e => { S.meta.settings.newLimit = Math.max(1, Math.min(100, parseInt(e.target.value, 10) || 7)); save(); renderAll(); };
+$("#setNew").onchange = e => { S.meta.settings.newLimit = Math.max(1, Math.min(100, parseInt(e.target.value, 10) || 7)); e.target.value = S.meta.settings.newLimit; $("#estMin").textContent = t().estMin(estMinutes(S.meta.settings.newLimit)); save(); renderAll(); };
 $("#setNew").oninput = e => { const n = parseInt(e.target.value, 10); if(n > 0) $("#estMin").textContent = t().estMin(estMinutes(n)); };
 $("#setTarget").onchange = e => { S.meta.settings.target = Number(e.target.value) || .8; save(); renderAll(); };
 $("#setMaxRev").onchange = e => { S.meta.settings.maxReviews = Math.max(10, Math.min(500, parseInt(e.target.value, 10) || 80)); save(); renderAll(); };
@@ -3885,7 +3886,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v189";
+const APP_VER = "v190";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
