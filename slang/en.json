@@ -1,15 +1,14 @@
 {
- "updated": "2026-11-23T22:10:39.470615Z",
+ "updated": "2026-11-24T22:15:26.468142Z",
  "lang": "en",
  "terms": [
   {
    "t": "mogging",
-   "n": 42,
+   "n": 51,
    "src": [
-    "bing_news",
     "google_news"
    ],
-   "s": 46,
+   "s": 53,
    "first": "2026-11-18",
    "def": [
     "The act or habit of being significantly more attractive than someone or something; a domination in appearance",
@@ -19,43 +18,23 @@
     "Are you mogging or maxxing?",
     "#WordOfTheDay: \"mogging\" Curious about the definition and etymology of our WOTD?"
    ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 51
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 60
   },
   {
    "t": "maxxing",
-   "n": 9,
+   "n": 13,
    "src": [
     "google_news"
    ],
-   "s": 11,
+   "s": 15,
    "first": "2026-11-18",
    "def": [],
    "ex": [
     "Are you mogging or maxxing?"
    ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 10
-  },
-  {
-   "t": "clock it",
-   "n": 4,
-   "src": [
-    "bing_news",
-    "google_news"
-   ],
-   "s": 8,
-   "first": "2026-11-18",
-   "def": [
-    "A congratulation of success",
-    "A congratulation of success .",
-    "Leading the trend was BJP MP Bansuri Swaraj, who used the phrase \"clock it\", a Gen Z expression meaning to notice or correctly identify something, to praise the Narendra Modi government."
-   ],
-   "ex": [
-    "BJP MP Bansuri Swaraj used the phrase \"clock it\" while supporting the Bill and praising the government's approach to tackling examination-related irregularities."
-   ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 6
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 15
   },
   {
    "t": "skibidi",
@@ -67,32 +46,52 @@
    "s": 7,
    "first": "2026-11-19",
    "def": [
-    "Not every new entry comes with a clear-cut meaning, and skibidi is no exception.",
     "Skibidi word has various different meaning in some cases it can mean \"bad\" or \"cool,\" or it can be used in a meaningless way, according to the dictionary.",
-    "A nonsense word , sometimes used to form noun adjuncts for humorous effect"
+    "A nonsense word , sometimes used to form noun adjuncts for humorous effect",
+    "A strong reaction or an exclamation, sometimes used to replace words in set phrases or other interjections for humorous effect"
    ],
    "ex": [
     "Skibidi we put the rhythm to the 'tism!",
     "Definition: There is no one definition for skibidi, it is more of an expression.",
-    "Oh, and if you're sick of skibidi toilet, you might have skibidi toilet syndrome .",
-    "Skibidi toilet, gyatt, Ohio, rizz — what are the kids going on about these days?"
+    "Skibidi toilet, gyatt, Ohio, rizz — what are the kids going on about these days?",
+    "The task of defining \"skibidi,\" a term derived from viral memes, was also taken on by the publishers."
    ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 13
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 6
+  },
+  {
+   "t": "clock it",
+   "n": 2,
+   "src": [
+    "google_news"
+   ],
+   "s": 4,
+   "first": "2026-11-18",
+   "def": [
+    "Here's what it means and how it became the basis for many memes.\",\"headline\":\"What Is The 'Clock It' Meme?",
+    "A congratulation of success",
+    "A congratulation of success ."
+   ],
+   "ex": [
+    "In this context, phrases such as \"clock it\" and \"clock that tea\" function as affirmations, signaling agreement with or praise for someone's observation.",
+    "For the full history of Clock It, be sure to check out Know Your Meme's encyclopedia entry for more information.",
+    "BJP MP Bansuri Swaraj used the phrase \"clock it\" while supporting the Bill and praising the government's approach to tackling examination-related irregularities."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 7
   },
   {
    "t": "delulu",
-   "n": 3,
+   "n": 2,
    "src": [
-    "bing_news",
     "google_news"
    ],
-   "s": 7,
+   "s": 4,
    "first": "2026-11-18",
    "def": [
-    "If someone calls you \"delulu,\" what does that mean?",
-    "Here is what \\\"delulu\\\" means.\",\"headline\":\"What does 'delulu' mean?",
-    "Delusional"
+    "Another term that the government now recognises as an acronym for delusions is \"Delulu.\" It refers to someone believing things that are unrealistic, often out of choice.",
+    "Delusional",
+    "Delusion ; delusional attitudes or thoughts"
    ],
    "ex": [
     "\"If being delulu is wrong, I don't want to be right.\"",
@@ -100,28 +99,8 @@
     "In other instances, \"delulu\" is used in a light-hearted manner, often in memes or social media comments, to poke fun at one's interests.",
     "Meanwhile, words like Delulu are shortened versions of existing words."
    ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 10
-  },
-  {
-   "t": "code rot",
-   "n": 3,
-   "src": [
-    "google_news"
-   ],
-   "s": 5,
-   "first": "2026-11-18",
-   "def": [
-    "Synonym of bit rot : the development of bugs and incompatibilities of software due to changes in its environment , etc",
-    "Synonym of bit rot : the development of bugs and incompatibilities of software due to changes in its environment , etc."
-   ],
-   "ex": [
-    "Users also found \"code rot\" in other games, like Fortnite and Genshin Impact .",
-    "\"Yup yup yup i f*cking knew it this assignment is definitely code rotted.\" Can't log into your Google account?",
-    "By October, a Despicable Me 4 TikTok filter had brought the \"code rot\" joke beyond Roblox."
-   ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 5
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 4
   },
   {
    "t": "firewave",
@@ -137,7 +116,7 @@
    "ex": [
     "Other shortlisted words included “firewave”, “ghost jobs” and “carspreading”."
    ],
-   "at": "2026-11-23T22:10:39.470615Z",
+   "at": "2026-11-24T22:15:26.468142Z",
    "cue": 3
   },
   {
@@ -156,27 +135,46 @@
     "The flaws, however, might be the precise thing that makes friendslop trustworthy and approachable as a genre.",
     "Friendslop is chopped, and mogging is sigma."
    ],
-   "at": "2026-11-23T22:10:39.470615Z",
+   "at": "2026-11-24T22:15:26.468142Z",
    "cue": 3
   },
   {
-   "t": "crashing out",
+   "t": "code rot",
+   "n": 2,
+   "src": [
+    "google_news"
+   ],
+   "s": 4,
+   "first": "2026-11-18",
+   "def": [
+    "Synonym of bit rot : the development of bugs and incompatibilities of software due to changes in its environment , etc",
+    "Synonym of bit rot : the development of bugs and incompatibilities of software due to changes in its environment , etc."
+   ],
+   "ex": [
+    "Users also found \"code rot\" in other games, like Fortnite and Genshin Impact .",
+    "\"Yup yup yup i f*cking knew it this assignment is definitely code rotted.\" Can't log into your Google account?",
+    "\"Code rot\" is the latest gaming term to make its way into Gen Z slang.",
+    "By October, a Despicable Me 4 TikTok filter had brought the \"code rot\" joke beyond Roblox."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 6
+  },
+  {
+   "t": "pressed",
    "n": 2,
    "src": [
     "bing_news"
    ],
    "s": 4,
-   "first": "2026-11-18",
+   "first": "2026-11-24",
    "def": [
-    "15 slang words Gen Zers are using in 2025 — and what they mean From the popular \"6-7\" to \"crashing out\" and looking \"chopped,\" these are 15 slang terms you might've heard your Gen Z coworkers using in 2025."
+    "Under strain or deprivation",
+    "Upset , bothered , reprimanded"
    ],
    "ex": [
-    "If you've been online lately, you've likely seen people talking about crashing out.",
-    "Well, not literally — though, plenty of people actually are crashing out.",
-    "For some, “crashing out” can be a liberating release of pent-up emotions.",
-    "In 2025, if you're not locking in, you might be crashing out."
+    "The staff was even more pressed for useful intelligence about the enemy's intentions than it was about the enemy's capabilities."
    ],
-   "at": "2026-11-23T22:10:39.470615Z",
+   "at": "2026-11-24T22:15:26.468142Z",
    "cue": 2
   },
   {
@@ -189,24 +187,48 @@
    "first": "2026-11-23",
    "def": [],
    "ex": [],
-   "at": "2026-11-23T22:10:39.470615Z",
+   "at": "2026-11-24T22:15:26.468142Z",
    "cue": 1
   },
   {
-   "t": "because they can",
+   "t": "aura farming",
    "n": 1,
    "src": [
     "google_news"
    ],
    "s": 3,
-   "first": "2026-11-22",
-   "def": [],
-   "ex": [
-    "They want to adopt a child because they can't have a baby.",
-    "People are sickeningly jealous of all Capricorns because they can't be them."
+   "first": "2026-11-24",
+   "def": [
+    "This of where the slang meaning of aura farming intersects with Mystical Michaela's wisdom.",
+    "The act of cultivating an appearance or aesthetic of effortless, nonchalant charisma"
    ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 1
+   "ex": [
+    "Aura farming is the art of cultivating an undeniable, magnetic energy that draws people in.",
+    "Aura farming requires the same care, patience, and cultivation as growing a nutritious crop of vegetables.",
+    "Social media scrollers, or people who have a teen in residence, have probably heard of \"Aura Farming\" ."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 8
+  },
+  {
+   "t": "looksmaxxing",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-24",
+   "def": [
+    "Take \"looksmaxxing,\" a term used to describe the often extreme measures young men pursue to optimize their appearance.",
+    "The practice of enhancing one's physical appearance in order to increase one's PSL scale rank to ultimately \" ascend \" ( transcend sub-5 status/ inceldom )"
+   ],
+   "ex": [
+    "\"I believe looksmaxxing is about more than just improving your physical appearance,\" Cyrus says.",
+    "What Cyrus calls \"looksmaxxing\" is a sprawling online movement devoted to maximising physical attractiveness.",
+    "One of looksmaxxing's best-known creators, Clavicular, has turned that extremity into spectacle."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 7
   },
   {
    "t": "unc",
@@ -226,8 +248,8 @@
     "If you're wondering this, you probably are \\\"unc\\\"—but that may not be a bad thing.",
     "“Unc” also has roots in broader cultural contexts, particularly within AAVE, where it traditionally referred to actual family members."
    ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 7
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 9
   },
   {
    "t": "ratioed",
@@ -238,15 +260,15 @@
    "s": 3,
    "first": "2026-11-18",
    "def": [
-    "‘Ratioed’ means that a tweet or post gets more replies than likes.",
     "Modified or multiplied by a ratio",
-    "Having significantly more replies than retweets or likes , indicating a general dislike by the public"
+    "Having significantly more replies than retweets or likes , indicating a general dislike by the public",
+    "‘Ratioed’ means that a tweet or post gets more replies than likes."
    ],
    "ex": [
     "But often something simple can end up being ratioed as it goes unexpectedly viral."
    ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 2
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 1
   },
   {
    "t": "calling me unc",
@@ -258,8 +280,8 @@
    "first": "2026-11-22",
    "def": [],
    "ex": [],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 2
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 1
   },
   {
    "t": "human",
@@ -276,26 +298,11 @@
    "ex": [
     "To err is human ; to forgive, divine.",
     "She's only human , so give her a break !",
-    "Their fresh and accessible translations remind us that love is both ever-changing and eternally essential to human life.",
-    "Dogs, scientists tell us, domesticated themselves, choosing to live among the reliable treat-delivering humans rather than risk starving alongside their fellow wolves."
+    "But this community of enthusiasts also offers deep insights into human nature.",
+    "Their fresh and accessible translations remind us that love is both ever-changing and eternally essential to human life."
    ],
-   "at": "2026-11-23T22:10:39.470615Z",
+   "at": "2026-11-24T22:15:26.468142Z",
    "cue": 2
-  },
-  {
-   "t": "tante-tante code",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "What Does the 'Tante-Tante Code' Mean?"
-   ],
-   "ex": [],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 1
   },
   {
    "t": "huss",
@@ -312,12 +319,27 @@
    ],
    "ex": [
     "While telling the story, he's seen \"hussing\" while dribbling a basketball.",
-    "While telling the story, he is occasionally shown dribbling the ball while saying, \"Huss, huss, huss.\"",
     "Throughout the video, while telling the story, we see him dribbling a basketball and yelling, \"Huss, huss, huss!\"",
-    "This meme might have been the final push that the term \"huss\" needed to go mainstream."
+    "This meme might have been the final push that the term \"huss\" needed to go mainstream.",
+    "While telling the story, he is occasionally shown dribbling the ball while saying, \"Huss, huss, huss.\""
    ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 19
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 16
+  },
+  {
+   "t": "tante-tante code",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "What Does the 'Tante-Tante Code' Mean?"
+   ],
+   "ex": [],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 1
   },
   {
    "t": "preppy",
@@ -325,21 +347,15 @@
    "src": [
     "bing_news"
    ],
-   "s": 3,
-   "first": "2026-11-23",
-   "def": [
-    "Preppy no longer refers to the G.H.",
-    "Instead, preppy means skincare, Starbucks, Stanleys and Lululemon, my 11-year-old daughter informed me.",
-    "Being or relating to something (such as clothing) that is typical of students at prep schools"
+   "s": 3
+  },
+  {
+   "t": "shrek",
+   "n": 1,
+   "src": [
+    "bing_news"
    ],
-   "ex": [
-    "It was a snobbish club full of preppy airheads.",
-    "She had a posh accent, a private education, and a wardrobe of preppy clothes.",
-    "Alphas have tried to explain the 'new' definition of preppy on TikTok.",
-    "Like other fashion trends, many embrace the preppy look, while others find it unappealing."
-   ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 11
+   "s": 3
   },
   {
    "t": "atp",
@@ -398,55 +414,15 @@
    "s": 3
   },
   {
+   "t": "crashing out",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
    "t": "bruh",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "benching",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "situationship",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "or",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "six-seven",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "waste-guna-huiya",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "fomo",
    "n": 1,
    "src": [
     "bing_news"
@@ -478,33 +454,20 @@
    "s": 3
   },
   {
-   "t": "the city",
+   "t": "because they can",
    "n": 1,
    "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "shrek",
-   "n": 1,
-   "src": [
-    "bing_news"
+    "google_news"
    ],
    "s": 3,
-   "first": "2026-11-21",
-   "def": [
-    "This time, though, people are referencing Shrek to refer to something a little toxic in the dating world.",
-    "One student shared, \"I've never heard of the term getting Shrek'n, but I mean, I think I've seen it firsthand.\""
-   ],
+   "first": "2026-11-22",
+   "def": [],
    "ex": [
-    "\"Shrek\" means \"fear\" in Yiddish.",
-    "Welcome back to Shrek's swamp.",
-    "Overall, the students seemed to agree that while \"Shrek'n\" is currently popular, it may not have lasting power in everyday language.",
-    "The conversation also touched on the concept of \\\"getting Shrek'n,\\\" which refers to attempting to date down but still facing rejection."
+    "They want to adopt a child because they can't have a baby.",
+    "People are sickeningly jealous of all Capricorns because they can't be them."
    ],
-   "at": "2026-11-22T21:59:47.180877Z",
-   "cue": 2
+   "at": "2026-11-23T22:10:39.470615Z",
+   "cue": 1
   },
   {
    "t": "menty b",

@@ -1,32 +1,372 @@
 {
- "updated": "2026-11-23T22:10:39.470615Z",
+ "updated": "2026-11-24T22:15:26.468142Z",
  "lang": "es",
  "terms": [
   {
    "t": "mogging",
-   "n": 8,
+   "n": 6,
    "src": [
     "google_news"
    ],
-   "s": 10,
+   "s": 8,
    "first": "2026-11-18",
    "def": [],
    "ex": [],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 10
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 8
   },
   {
    "t": "maxxing",
-   "n": 5,
+   "n": 2,
    "src": [
     "google_news"
    ],
-   "s": 7,
+   "s": 4,
    "first": "2026-11-18",
    "def": [],
    "ex": [],
-   "at": "2026-11-23T22:10:39.470615Z",
+   "at": "2026-11-24T22:15:26.468142Z",
    "cue": 5
+  },
+  {
+   "t": "farmear aura",
+   "n": 2,
+   "src": [
+    "bing_news"
+   ],
+   "s": 4,
+   "first": "2026-11-18",
+   "def": [
+    "Para entender qué significa farmear aura hay que separar sus dos partes.",
+    "\"Farmear aura\" combina un término propio de los videojuegos con una tendencia que se volvió viral en TikTok.",
+    "to aura farm"
+   ],
+   "ex": [
+    "Así, farmear aura consiste en hacer o acumular acciones que aumentan esa percepción de carisma, seguridad o estilo .",
+    "Entre vídeos y retos se ha popularizado una que ya ha saltado de la pantalla a la calle: «farmear aura» .",
+    "- Farmear aura (ganar popularidad o mejorar la reputación dentro del grupo).",
+    "Hablemos sobre una de las tendencias más populares del momento: farmear aura ."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 4
+  },
+  {
+   "t": "demure",
+   "n": 2,
+   "src": [
+    "bing_news"
+   ],
+   "s": 4,
+   "first": "2026-11-18",
+   "def": [
+    "Su uso se ha popularizo en redes sociales y su significado parece que ha adquirido nuevas acepciones Demure, la palabra de moda...",
+    "La traducción literal de la palabra 'demure' es 'recatada'. 'Very mindful, very demure' significaría algo así como ' muy consciente, muy recatada '.",
+    "Pero, ¿qué significa 'demure' exactamente?"
+   ],
+   "ex": [
+    "“Very demure, very mindful”, dice, con tono sottomesso e molto calmo.",
+    "Inizialmente demure descrive una persona, generalmente una donna, caratterizzata da riservatezza, modestia, pudore e discrezione.",
+    "En la cultura pop, \"demure\" ha adquirido un nuevo sentido tras volverse un meme este año.",
+    "Ahora el turno es para 'demure'."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 14
+  },
+  {
+   "t": "a la",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-20",
+   "def": [
+    "a la ; in the style or manner of",
+    "to the"
+   ],
+   "ex": [],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 10
+  },
+  {
+   "t": "polyester",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "El último término que se ha viralizado en TikTok y en varias redes sociales es 'polyester'.",
+    "¿Qué significa 'polyester'?",
+    "La nueva palabra viral de la Generación Z para señalar lo falso Qué significa 'polyester', el último término viral de la Generación Z, y qué revela sobre su rechazo a todo lo que consideran falso y artificial."
+   ],
+   "ex": [
+    "No tanto, porque 'polyester' no apareció de la nada.",
+    "La red no tardó en etiquetar este vídeo diseñado por y para el algoritmo, que aspira a ser modelo de vida, como 'polyester' o 'Polyester lifestyle'."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 2
+  },
+  {
+   "t": "alv",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "initialism of a la verga",
+    "Qué significa ALV para los jóvenes",
+    "Te explicamos el verdadero significado de las siglas virales ‘ALV’ Que los jóvenes tienen su propio idioma parece una realidad universal."
+   ],
+   "ex": [
+    "Esto es lo que ha pasado con las siglas ‘ALV’ .",
+    "Alguna cosa similar ha ocurrido con ‘ALV’ .",
+    "Las siglas 'ALV' son un ejemplo."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 5
+  },
+  {
+   "t": "cringe",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "Un ejemplo de ello es el caso del término ‘cringe’.",
+    "Entre los nuevos modismos, está el término “cringe” .",
+    "cringe"
+   ],
+   "ex": [
+    "La RAE recomienda sustituir cringe por vergüenza ajena, grima o dentera según el contexto.",
+    "Sentir cringe es normal, ya que muchas personas deben afrontar y observar situaciones vergonzosas.",
+    "En resumen, evita cualquier acción que podría generarles cringe o vergüenza ajena a otros.",
+    "- Cringe (algo que da vergüenza ajena)."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 6
+  },
+  {
+   "t": "npc",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "Ahora ya entiendes que significa NPC y sabrás de que hablan cuando veas un vídeo en redes sociales."
+   ],
+   "ex": [
+    "- NPC (persona que actúa sin personalidad o de modo automático).",
+    "Comenzando por NPC, las siglas de Non Playable Character que en el argot de los videojuegos es como se llama a un personaje no jugable.",
+    "Sobre el registro: NPC es coloquial-juvenil y funciona bien en redes, chats y conversaciones informales.",
+    "¿ Por qué se dice que NPC es un insulto ?"
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 5
+  },
+  {
+   "t": "shippear",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "Responder a @livhg0 significado de #shippear en la chamacada ????????",
+    "De acuerdo con la RAE \"Shippear\" proviene de la palabra en inglés \"relationship\", que significa \"relación\".",
+    "to ship ; to support or approve of a fictional romantic relationship between two characters"
+   ],
+   "ex": [
+    "Shippear es desear que dos personas estén en una relación de pareja.",
+    "Entonces no se llamaba shippear, pero ella ya estaba shippeando.",
+    "En los últimos años, la palabra \"shippear\" se ha vuelto muy popular en redes sociales.",
+    "“Shippear” viene del inglés shipping , que a su vez es abreviatura de relationship ."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 4
+  },
+  {
+   "t": "delulu",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "Delulu vem de “delusional”, que, em português, significa “delirante”.",
+    "Skibidi, delulu, tradwife: o que significação novas palavras do Dicionário Cambridge?"
+   ],
+   "ex": [
+    "Você sabe o que é ser “delulu” ?",
+    "No ambiente de trabalho, \"delulu\" é utilizado para descrever momentos que despertam esperança e ilusão, inclusive relacionados a metas profissionais.",
+    "Segundo os relatos nas redes sociais, a mentalidade \"delulu\" envolve o uso de afirmações, otimismo e pensamento positivo 👍 .",
+    "- Delulu (persona que vive demasiado en su propia fantasía)."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 5
+  },
+  {
+   "t": "prime",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "prime ( the most active, thriving, or successful stage or period )",
+    "second-person singular imperative"
+   ],
+   "ex": [
+    "\"Metroid Prime 3 : Corruption\" es un videojuego de Nintendo vendido exclusivamente para Wii.",
+    "De esta manera, el peak puede coincidir durante el prime , aunque no necesariamente.",
+    "“Llevo todo el curso sacando sobresalientes, estoy en mi prime”.",
+    "No es la primera vez que sucede algo así."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 3
+  },
+  {
+   "t": "ghostear",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "Te contamos todo sobre esta forma de crueldad romántica Aquí te contamos qué significa ghostear .",
+    "to ghost ( to perform an act of ghosting : to break up with someone without warning or explanation ; to ignore someone, especially on social media )",
+    "El término “ghostear\" o ghosting” se generalizó hace unos siete años específicamente cuando aumentaba la tendencia de las citas en línea."
+   ],
+   "ex": [
+    "Ghostear puede causar daños emocionales en la persona que ha sido “ghosteada” .",
+    "Por supuesto que estamos hablando de ghostear sin motivo aparente.",
+    "Esta acción tiene un nombre y se llama ghostear.",
+    "Ghostear a una persona origina un dolor emocional y a veces es peor que una simple ruptura."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 4
+  },
+  {
+   "t": "chats",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "Que WhatsApp guarde una copia de tus chats no significa que lo haga gratis para tu cuenta de Google.",
+    "Entonces, una vez aclarado qué significa en WhatsApp el error algo falló con tu historial de chats, ¿cómo solucionarlo?",
+    "A pesar de su amplio uso, no todos conocen su funcionamiento, por ejemplo ¿qué significa el punto verde en los chats ?"
+   ],
+   "ex": [
+    "Los trolls se dedican a sembrar cizaña por chats, foros, blogs y páginas web colaborativas.",
+    "Los trolls se dedican a sembrar cizaña en chats, foros, blogs y páginas web colaborativas.",
+    "En los chats de WhatsApp hay varios códigos secretos para comunicar ideas o emociones.",
+    "Cabe precisar que al borrar la memoria caché no estarás eliminando documentos ni muchos menos fotos, videos o chats."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 2
+  },
+  {
+   "t": "no puedo más",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-24",
+   "def": [],
+   "ex": [
+    "No puedo más con ello."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 1
+  },
+  {
+   "t": "fomo",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-24",
+   "def": [
+    "¿Qué significa FOMO y cómo usar la palabra?",
+    "FOMO"
+   ],
+   "ex": [
+    "La forma corta —FOMO— fue McGinnis quien la consolidó y puso en circulación.",
+    "Si el FOMO es la ansiedad, el JOMO es la cura voluntaria.",
+    "El uso constante del móvil es un síntoma de tener FOMO."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 5
+  },
+  {
+   "t": "side quest",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-24",
+   "def": [],
+   "ex": [],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 1
+  },
+  {
+   "t": "boomers",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-24",
+   "def": [],
+   "ex": [
+    "Cuidarse es clave, y los boomers lo hacen.",
+    "Aquí va una guía básica con el argot que ya salpica las conversaciones de un grueso de boomers y da un nuevo nervio al habla.",
+    "Existe la idea -y se bromea sobre ello- de que los boomers no acaban de encajar en un mundo 100% tecnológico."
+   ],
+   "at": "2026-11-24T22:15:26.468142Z",
+   "cue": 2
+  },
+  {
+   "t": "farmeando aura",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "generación lamine yamal",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "al",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
   },
   {
    "t": "golf",
@@ -50,92 +390,6 @@
    "cue": 3
   },
   {
-   "t": "farmear aura",
-   "n": 2,
-   "src": [
-    "bing_news"
-   ],
-   "s": 4,
-   "first": "2026-11-18",
-   "def": [
-    "Así que, llevado al lenguaje de internet, “farmear aura” significa hacer cosas que “te dan puntos de aura”.",
-    "\"Farmear aura\" combina un término propio de los videojuegos con una tendencia que se volvió viral en TikTok.",
-    "to aura farm"
-   ],
-   "ex": [
-    "Hablemos sobre una de las tendencias más populares del momento: farmear aura .",
-    "“Farmear aura” es una de las expresiones que más aparecen en redes sociales últimamente.",
-    "- Farmear aura (ganar popularidad o mejorar la reputación dentro del grupo).",
-    "Al unir ambos conceptos aparece “farmear aura”, es decir, hacer algo que aumenta la percepción de carisma o actitud de una persona ."
-   ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 6
-  },
-  {
-   "t": "demure",
-   "n": 2,
-   "src": [
-    "bing_news"
-   ],
-   "s": 4,
-   "first": "2026-11-18",
-   "def": [
-    "Su uso se ha popularizo en redes sociales y su significado parece que ha adquirido nuevas acepciones Demure, la palabra de moda...",
-    "La traducción literal de la palabra 'demure' es 'recatada'. 'Very mindful, very demure' significaría algo así como ' muy consciente, muy recatada '.",
-    "Pero, ¿qué significa 'demure' exactamente?"
-   ],
-   "ex": [
-    "“Very demure, very mindful”, dice, con tono sottomesso e molto calmo.",
-    "Inizialmente demure descrive una persona, generalmente una donna, caratterizzata da riservatezza, modestia, pudore e discrezione.",
-    "En la cultura pop, \"demure\" ha adquirido un nuevo sentido tras volverse un meme este año.",
-    "Ahora el turno es para 'demure'."
-   ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 14
-  },
-  {
-   "t": "bad gyal",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-22",
-   "def": [],
-   "ex": [],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 2
-  },
-  {
-   "t": "a la",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-20",
-   "def": [
-    "a la ; in the style or manner of",
-    "to the"
-   ],
-   "ex": [],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 12
-  },
-  {
-   "t": "extraordinary",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-23",
-   "def": [],
-   "ex": [],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 2
-  },
-  {
    "t": "blocus",
    "n": 1,
    "src": [
@@ -152,245 +406,6 @@
    ],
    "at": "2026-11-23T22:10:39.470615Z",
    "cue": 2
-  },
-  {
-   "t": "polyester",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "El último término que se ha viralizado en TikTok y en varias redes sociales es 'polyester'.",
-    "¿Qué significa 'polyester'?",
-    "La nueva palabra viral de la Generación Z para señalar lo falso Qué significa 'polyester', el último término viral de la Generación Z, y qué revela sobre su rechazo a todo lo que consideran falso y artificial."
-   ],
-   "ex": [
-    "No tanto, porque 'polyester' no apareció de la nada.",
-    "La red no tardó en etiquetar este vídeo diseñado por y para el algoritmo, que aspira a ser modelo de vida, como 'polyester' o 'Polyester lifestyle'."
-   ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 2
-  },
-  {
-   "t": "alv",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "initialism of a la verga",
-    "Qué significa ALV para los jóvenes",
-    "Te explicamos el verdadero significado de las siglas virales ‘ALV’ Que los jóvenes tienen su propio idioma parece una realidad universal."
-   ],
-   "ex": [
-    "Esto es lo que ha pasado con las siglas ‘ALV’ .",
-    "Alguna cosa similar ha ocurrido con ‘ALV’ .",
-    "Las siglas 'ALV' son un ejemplo."
-   ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 6
-  },
-  {
-   "t": "chats",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Que WhatsApp guarde una copia de tus chats no significa que lo haga gratis para tu cuenta de Google.",
-    "Entonces, una vez aclarado qué significa en WhatsApp el error algo falló con tu historial de chats, ¿cómo solucionarlo?",
-    "A pesar de su amplio uso, no todos conocen su funcionamiento, por ejemplo ¿qué significa el punto verde en los chats ?"
-   ],
-   "ex": [
-    "Los trolls se dedican a sembrar cizaña por chats, foros, blogs y páginas web colaborativas.",
-    "Los trolls se dedican a sembrar cizaña en chats, foros, blogs y páginas web colaborativas.",
-    "En los chats de WhatsApp hay varios códigos secretos para comunicar ideas o emociones.",
-    "Se debe a que la plataforma de mensajería es incapaz de restaurar tus chats ."
-   ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 5
-  },
-  {
-   "t": "cringe",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Un ejemplo de ello es el caso del término ‘cringe’.",
-    "Entre los nuevos modismos, está el término “cringe” .",
-    "cringe"
-   ],
-   "ex": [
-    "La RAE recomienda sustituir cringe por vergüenza ajena, grima o dentera según el contexto.",
-    "Sentir cringe es normal, ya que muchas personas deben afrontar y observar situaciones vergonzosas.",
-    "En resumen, evita cualquier acción que podría generarles cringe o vergüenza ajena a otros.",
-    "- Cringe (algo que da vergüenza ajena)."
-   ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 6
-  },
-  {
-   "t": "npc",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Ahora ya entiendes que significa NPC y sabrás de que hablan cuando veas un vídeo en redes sociales."
-   ],
-   "ex": [
-    "- NPC (persona que actúa sin personalidad o de modo automático).",
-    "Comenzando por NPC, las siglas de Non Playable Character que en el argot de los videojuegos es como se llama a un personaje no jugable.",
-    "Sobre el registro: NPC es coloquial-juvenil y funciona bien en redes, chats y conversaciones informales.",
-    "¿ Por qué se dice que NPC es un insulto ?"
-   ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 3
-  },
-  {
-   "t": "shippear",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Responder a @livhg0 significado de #shippear en la chamacada ????????",
-    "De acuerdo con la RAE \"Shippear\" proviene de la palabra en inglés \"relationship\", que significa \"relación\".",
-    "to ship ; to support or approve of a fictional romantic relationship between two characters"
-   ],
-   "ex": [
-    "Shippear es desear que dos personas estén en una relación de pareja.",
-    "“Shippear” viene del inglés shipping , que a su vez es abreviatura de relationship .",
-    "Es parte del ritual de shippear.",
-    "En los últimos años, la palabra \"shippear\" se ha vuelto muy popular en redes sociales."
-   ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 3
-  },
-  {
-   "t": "delulu",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Delulu vem de “delusional”, que, em português, significa “delirante”.",
-    "Skibidi, delulu, tradwife: o que significação novas palavras do Dicionário Cambridge?"
-   ],
-   "ex": [
-    "Você sabe o que é ser “delulu” ?",
-    "No ambiente de trabalho, \"delulu\" é utilizado para descrever momentos que despertam esperança e ilusão, inclusive relacionados a metas profissionais.",
-    "Segundo os relatos nas redes sociais, a mentalidade \"delulu\" envolve o uso de afirmações, otimismo e pensamento positivo 👍 .",
-    "- Delulu (persona que vive demasiado en su propia fantasía)."
-   ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 5
-  },
-  {
-   "t": "prime",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "prime ( the most active, thriving, or successful stage or period )",
-    "second-person singular imperative"
-   ],
-   "ex": [
-    "\"Metroid Prime 3 : Corruption\" es un videojuego de Nintendo vendido exclusivamente para Wii.",
-    "De esta manera, el peak puede coincidir durante el prime , aunque no necesariamente.",
-    "“Llevo todo el curso sacando sobresalientes, estoy en mi prime”.",
-    "No es la primera vez que sucede algo así."
-   ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 3
-  },
-  {
-   "t": "ghostear",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Te contamos todo sobre esta forma de crueldad romántica Aquí te contamos qué significa ghostear .",
-    "to ghost ( to perform an act of ghosting : to break up with someone without warning or explanation ; to ignore someone, especially on social media )",
-    "El término “ghostear\" o ghosting” se generalizó hace unos siete años específicamente cuando aumentaba la tendencia de las citas en línea."
-   ],
-   "ex": [
-    "Ghostear puede causar daños emocionales en la persona que ha sido “ghosteada” .",
-    "Esta acción tiene un nombre y se llama ghostear.",
-    "Ghostear a una persona origina un dolor emocional y a veces es peor que una simple ruptura.",
-    "Por supuesto que estamos hablando de ghostear sin motivo aparente."
-   ],
-   "at": "2026-11-23T22:10:39.470615Z",
-   "cue": 5
-  },
-  {
-   "t": "no puedo más",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "fomo",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "side quest",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "boomers",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "farmeando aura",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "generación lamine yamal",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
   },
   {
    "t": "padrear",
