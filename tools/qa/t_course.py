@@ -11,7 +11,7 @@ def mk(n_due, n_new, lang="es"):
 async def seed(pg, cards, extra=None):
   meta={"setup":1,"tutAsked":1,"loginAsked":1,"days":{},"settings":{"ui":"ko","lang":"es"},"stepv":1}
   if extra: meta.update(extra)
-  await pg.evaluate("s=>localStorage.setItem('focus-vocab-v1', s)", json.dumps({"cards":cards,"meta":meta})); await pg.reload(); await pg.wait_for_timeout(1500)
+  await pg.evaluate("s=>localStorage.setItem('focus-vocab-v1', s)", json.dumps({"cards":cards,"meta":meta})); await pg.reload(); await pg.wait_for_function("()=>window.__t && document.readyState==='complete'"); await pg.wait_for_timeout(1500)
 async def main():
   async with async_playwright() as pw:
     b=await pw.chromium.launch(); pg=await b.new_page(viewport={"width":390,"height":844}); errs=[]; pg.on("pageerror",lambda e:errs.append(str(e)))
@@ -41,8 +41,8 @@ async def main():
     # 첫 판 끝 = 하루 달성 1번
     await seed(pg, mk(30,0))
     r=await pg.evaluate("""async()=>{ const t=window.__t, S=t.S(), d=t.today(); document.querySelector('#petClose') && document.querySelector('#petClose').click();
-      t.startSession(); const s=t.getSES(); let g=0, mid=null; while(s.queue.length>1 && g++<40){ t.settleItem(true); if(g===10) mid=S.meta.days[d]||null; }
-      t.settleItem(true); await new Promise(r=>setTimeout(r,500)); const one=!!document.querySelector('#oneMore'); return [mid, S.meta.days[d], one, !!S.meta.session]; }""")
+      t.startSession(); const s=t.getSES(); let g=0, mid=null; while(s.queue.length>1 && g++<40){ t.settleItem(true); if(g===10) mid=t.S().meta.days[d]||null; }
+      t.settleItem(true); await new Promise(r=>setTimeout(r,500)); const one=!!document.querySelector('#oneMore'); const S2=t.S(); return [mid, S2.meta.days[d], one, !!S2.meta.session, S2===S]; }""")
     ok("판 중간(10문제)엔 하루 달성 안 됨 → 첫 판 끝에 달성", r[0] is None and r[1]==True, r)
     ok("판 끝 화면 [한 판 더] · 세션 정리", r[2] and r[3]==False, r)
     r=await pg.evaluate("()=>document.documentElement.scrollHeight<=innerHeight+1")
