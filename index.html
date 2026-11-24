@@ -630,6 +630,7 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
   -webkit-mask:radial-gradient(closest-side,transparent 72%,#000 80%,#000 93%,transparent 100%);mask:radial-gradient(closest-side,transparent 72%,#000 80%,#000 93%,transparent 100%);transition:opacity .2s}
 .pw-items{position:absolute;inset:0;pointer-events:none} .pw-it{position:absolute;left:0;top:0;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;transition:opacity .2s}
 .pw-ring{position:absolute;width:72px;height:72px;border-radius:50%;border:1.5px solid rgba(120,120,130,.28);box-shadow:0 0 12px rgba(255,255,255,.12);pointer-events:none;transition:opacity .2s} #pet.grabbing .pw-ring{opacity:0}
+.pw-it .pw-d{position:absolute;left:-6px;bottom:-4px;padding:0 5px;border-radius:999px;background:#5a3a22;color:#fff;font:700 .62rem/16px system-ui;font-style:normal;white-space:nowrap} .shop-d{color:#c0392b;font-weight:700}
 .pw-it i{opacity:.85} .pw-it:not(.sel) i{transform:scale(.8);opacity:.6}
 .pw-empty{display:none;position:absolute;left:0;right:0;bottom:calc(30px + env(safe-area-inset-bottom));text-align:center} .pw-layer.empty .pw-empty{display:block} .pw-layer.empty .pw-disc{opacity:.4}
 #pet.grabbing .pw-disc,#pet.grabbing .pw-it{opacity:0!important;pointer-events:none} #pet.grabbing .pw-disc{pointer-events:auto}
@@ -2091,7 +2092,7 @@ function petSens(){ const v = +S.meta.settings.petSens; return v > 0 ? v : 1; }
 let BIZ = null;   // biz.json: 사업자 정보 — 사업자등록번호가 채워지면 설정 화면 맨 아래에 자동 표시
 /* 사업자 정보 푸터 — PG 심사(11-23): 홈페이지 하단에 상호·대표·사업자등록번호·주소·전화 + 판매 상품(상점) 링크 */
 function bizFootHTML(){ const ko = (S.meta.settings.ui || "ko") !== "ja";
-  return `<footer class="biz-foot"><p><a href="shop">🛒 ${ko ? "상점(판매 상품·가격·환불 안내)" : "ショップ（商品・価格・返金）"}</a> · <a href="terms">${ko ? "이용약관" : "利用規約"}</a> · <a href="privacy">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a></p><p class="bizL"></p></footer>`; }
+  return `<footer class="biz-foot"><p>${ko ? `<a href="shop">🛒 상점(판매 상품·가격·환불 안내)</a> · ` : ""}<a href="terms">${ko ? "이용약관" : "利用規約"}</a> · <a href="privacy">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a></p><p class="bizL"></p></footer>`; }
 async function bizFill(){ try{ if(!BIZ){ const r = await fetch("biz.json", { cache: "no-cache" }); BIZ = r.ok ? await r.json() : {}; } }catch(_){ BIZ = {}; }
   const els = document.querySelectorAll("#bizLine, .bizL"); if(!els.length || !BIZ.regNo) return; const el = { set innerHTML(v){ els.forEach(e => e.innerHTML = v); } };
   const ko = S.meta.settings.ui === "ko", b = BIZ, L = ko ? ["상호", "대표", "사업자등록번호", "통신판매업 신고", "주소", "문의", "대표전화"] : ["商号", "代表", "事業者登録番号", "通信販売業申告", "所在地", "お問い合わせ", "電話"];
@@ -2143,6 +2144,7 @@ const PAY_ITEMS = { snk_s: [990, "간식 한 줌 (10개 · 3일)"], snk_whale: [
 const payOn = () => !!TOSS_CK;
 function loadToss(){ return new Promise((res, rej) => { if(window.TossPayments) return res(window.TossPayments); const sc = document.createElement("script"); sc.src = "https://js.tosspayments.com/v2/standard"; sc.onload = () => res(window.TossPayments); sc.onerror = rej; document.head.appendChild(sc); }); }
 function payOpen(id){ const it = PAY_ITEMS[id]; if(!it) return; const ko = S.meta.settings.ui !== "ja";
+  if(!ko){ track("pay_ja_block", { id }); toast("日本ではまだ購入の準備中ニャ"); return; }   // 일본어 화면: 원화 결제는 열지 않음(냥이 상점 「準備中」과 같게)
   if(KID()){ toast(ko ? "만 14세 미만은 보호자와 함께 결제해 주세요" : "14歳未満は保護者と一緒に購入してください"); return; }
   if(!payOn()){ toast(ko ? "결제 준비 중이다냥. 곧 열린다!" : "決済は準備中ニャ"); return; }
   track("pay_open", { id });
@@ -2171,7 +2173,7 @@ function payOpen(id){ const it = PAY_ITEMS[id]; if(!it) return; const ko = S.met
 function payPool(){ return PET_ITEMS.filter(i => i.t <= petTier(streak()) && i.id !== "whale"); }
 function payWhat(id){ const n = { snk_s: 10, snk_m: 40, snk_l: 150 }[id]; if(!n) return ""; const pool = payPool(), per = {};
   for(let k = 0; k < n; k++){ const it = pool[k % pool.length]; per[it.id] = (per[it.id] || 0) + 1; }
-  return `<div class="pay-what"><b>들어 있는 간식</b><div>${pool.filter(i => per[i.id]).map(i => `<span>${i.e || "🍪"} ${esc(i.ko)} ×${per[i.id]}</span>`).join("")}</div><p class="tiny muted">지금 열려 있는 간식이 골고루 들어가요. 연속 학습일이 늘면 더 좋은 간식이 열려요. 산 간식은 ${({ snk_s: 3, snk_m: 7, snk_l: 14 })[id]}일 안에 줘야 해요.</p></div>`; }
+  return `<div class="pay-what"><b>들어 있는 간식</b><div>${pool.filter(i => per[i.id]).map(i => `<span>${petIconHTML(i, 18)} ${esc(i.ko)} ×${per[i.id]}</span>`).join("")}</div><p class="tiny muted">지금 열려 있는 간식이 골고루 들어가요. 연속 학습일이 늘면 더 좋은 간식이 열려요. 산 간식은 ${({ snk_s: 3, snk_m: 7, snk_l: 14 })[id]}일 안에 줘야 해요.</p></div>`; }
 function payGrant(id, orderId){ const p = petState(), g = S.meta.paid || (S.meta.paid = {}); if(g[orderId]) return false; g[orderId] = { id, at: Date.now() };
   const snack = (n, days) => { const pool = payPool(); const per = {}; for(let k = 0; k < n; k++){ const it = pool[k % pool.length]; per[it.id] = (per[it.id] || 0) + 1; } Object.entries(per).forEach(([iid, c]) => buyGrant(iid, c, days)); };
   if(id === "snk_s") snack(10, 3); else if(id === "snk_m") snack(40, 7); else if(id === "snk_l") snack(150, 14); else if(id === "snk_whale") buyGrant("whale", 1, 7);
@@ -2196,7 +2198,7 @@ async function payConfirm(){ const ko = S.meta.settings.ui !== "ja", pp = S.meta
 }
 function renderSupBox(){ const el = $("#supBox"); if(!el) return; const ko = S.meta.settings.ui === "ko";
   el.innerHTML = `<div class="sup-row">${nm("st_love", 52)}<div><b>${ko ? "MEOWCA! 암기냥이는 무료예요" : "MEOWCA!（ミヤオウカ）は無料です"}</b><p class="small muted" style="margin:.2em 0 0">${ko ? "광고도 없어요. 마음에 들면 친구에게 알려 주세요." : "広告もありません。気に入ったら友達に教えてください。"}</p></div></div>
-    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button><a class="btn" href="shop">🛒 ${ko ? "상점" : "ショップ"}</a></div>
+    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button>${ko ? `<a class="btn" href="shop">🛒 상점</a>` : ""}</div>
     <p class="tiny muted" style="margin:0"><a href="privacy.html">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a> · <a href="terms.html">${ko ? "이용약관" : "利用規約"}</a></p><p class="tiny muted" id="bizLine" style="margin:0"></p>`;
   bizFill();
   $("#supShare").onclick = async () => { const url = "https://meowca.app/?ref=invite", text = ko ? "MEOWCA! 암기냥이 — 가성비로 딱 필요한 만큼만 외우고, 나머진 말랑 냥이 괴롭히기 🐾 무료" : "MEOWCA!（ミヤオウカ）— もう無理やり暗記しなくていい。最小限だけ覚えて、あとはネコと遊ぶ 🐾 無料";
@@ -3876,7 +3878,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v185";
+const APP_VER = "v186";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -4099,7 +4101,7 @@ async function sbRpc(fn, body, keepalive){
   const tx = await r.text(); return tx ? JSON.parse(tx) : null;
 }
 function payload(){ const meta = Object.assign({}, S.meta); delete meta.session; delete meta.sync; delete meta.petBase; return { v: 1, cards: S.cards, meta }; }
-const MERGE_LOCAL = ["session", "sync", "mu", "settings", "payPend", "payErr", "diag", "riskSnooze", "movedAt", "movedIn", "lastDeck", "petBase"];   // 이 기기 전용: 다른 기기·탭 것을 받지 않음
+const MERGE_LOCAL = ["session", "sync", "mu", "settings", "payPend", "payErr", "diag", "riskSnooze", "movedAt", "movedIn", "lastDeck", "petBase", "bxp"];   // 이 기기 전용: 다른 기기·탭 것을 받지 않음
 /* 검수단 R1-49-1·R1-49-3: 동기화 병합 — 카드는 복습 기록 쪽(마지막 복습일·횟수)이 복습 칸을, 수정 시각 u 쪽이 내용을 이김 · 냥이는 지난 동기화 기준(petBase)으로 양쪽 변화를 더함 */
 const MG_REV = ["reps", "lapses", "log", "due", "S", "D", "last", "level", "isNew", "introduced", "mastered", "relearn"], MG_FILL = ["reps", "lapses", "log", "due", "S", "D", "last", "level", "isNew", "introduced"];
 function mgRevKey(c){ return [String(c.last || ""), +c.reps || 0]; }
@@ -4292,7 +4294,12 @@ const PT = {
 const pt = () => PT[S.meta.settings.ui] || PT.ja;
 const itName = it => it[S.meta.settings.ui] || it.ja;
 /* 산 간식: 묶음(lot)마다 유통기한. 학습으로 받은 간식은 기한 없음. 쓸 땐 산 것(기한 임박 순)부터 */
-function buyExpire(p){ if(!p.buy || !p.buy.length) return; const now = Date.now(); p.buy = p.buy.filter(l => { if(l.exp > now && l.n > 0) return true; buyGone(p, l); const k = Math.min(l.n, p.inv[l.id] || 0); if(k){ p.inv[l.id] -= k; if(!p.inv[l.id]) delete p.inv[l.id]; } return false; }); }
+function buyExpire(p){ if(!p.buy || !p.buy.length) return; const now = Date.now(); p.buy = p.buy.filter(l => { if(l.exp > now && l.n > 0) return true; buyGone(p, l); const k = Math.min(l.n, p.inv[l.id] || 0); if(k){ p.inv[l.id] -= k; if(!p.inv[l.id]) delete p.inv[l.id]; if(S && S.meta){ const b = S.meta.bxp || (S.meta.bxp = { n: 0 }); b.n += k; b.at = now; } } return false; }); }
+/* 산 간식 남은 기한: 그 간식의 가장 이른 묶음(n>0) 기준 「D-n」(하루 안이면 D-1), 산 간식이 없으면 "" */
+function buyDays(p, id){ const l = (p.buy || []).filter(z => z.id === id && z.n > 0 && z.exp > Date.now()).sort((a, b) => a.exp - b.exp)[0]; return l ? "D-" + Math.max(1, Math.ceil((l.exp - Date.now()) / 864e5)) : ""; }
+/* 기한 지나 사라진 산 간식 안내: 냥이 화면을 열 때 한 번(S.meta.bxp = {n,at}, 이 기기 전용) */
+function buyExpNote(){ const b = S.meta.bxp; if(!b || !(b.n > 0)) return false; const n = b.n; delete S.meta.bxp; save(); track("buy_expired", { n });
+  toast(S.meta.settings.ui === "ja" ? `買ったおやつ${n}個が期限切れで消えたニャ` : `산 간식 ${n}개가 기한이 지나 사라졌다냥`); return true; }
 function buyUse(p, id){ if(!p.buy) return; const l = p.buy.filter(z => z.id === id && z.n > 0).sort((a, b) => a.exp - b.exp)[0]; if(l){ l.n--; return l.exp; } }
 /* 던진 간식을 되돌림(빗나감·날아가는 중 닫기): 산 간식이면 그 묶음 n도 되돌림 — 묶음이 이미 기한 지나 없어졌으면 되돌리지 않음 */
 function petRefund(p, id, lot){ if(lot != null){ const l = (p.buy || []).find(z => z.id === id && z.exp === lot); if(!l || l.exp <= Date.now()) return; l.n++; } p.inv[id] = (p.inv[id] || 0) + 1; }
@@ -4324,7 +4331,7 @@ const petPrice = it => it.kcal;
 function renderShop(){
   const box = $("#shopBody"); if(!box) return; const p = petState(), x = pt(), nf = n => n.toLocaleString();
   box.innerHTML = `<div class="shop-top"><span class="eyebrow">${esc(x.shop)}</span><b>🪙 ${nf(p.coins)}</b></div>
-    <div class="shop-grid">${PET_ITEMS.map(i => `<div class="shop-it">${petIconHTML(i, 30)}<div class="nm">${esc(itName(i))}<small>🪙 ${nf(petPrice(i))} · ${esc(x.have(p.inv[i.id] || 0))}</small></div>
+    <div class="shop-grid">${PET_ITEMS.map(i => `<div class="shop-it">${petIconHTML(i, 30)}<div class="nm">${esc(itName(i))}<small>🪙 ${nf(petPrice(i))} · ${esc(x.have(p.inv[i.id] || 0))}${buyDays(p, i.id) ? ` · <span class="shop-d">${buyDays(p, i.id)}</span>` : ""}</small></div>
       <div class="bb"><button class="btn sm" type="button" data-buy="${i.id}" data-n="1">+1</button><button class="btn sm" type="button" data-buy="${i.id}" data-n="10">+10</button></div></div>`).join("")}</div>`;
   box.querySelectorAll("[data-buy]").forEach(b => b.onclick = () => { const it = PET_IT[b.dataset.buy], n = +b.dataset.n, c = petPrice(it) * n;
     if(p.coins < c){ toast(x.lack); return; } p.coins -= c; p.inv[it.id] = (p.inv[it.id] || 0) + n; p.u = Date.now(); save(); renderShop(); toast(x.bought(itName(it), n)); });
@@ -4480,7 +4487,7 @@ function openPet(welcome){
     applySndMode(); if(PMASTER) PMASTER.gain.value = petSoundOn() ? 1 : 0; petMsg(pt().sndMode[m], 2600); if(petSoundOn()){ pa(); sfxPoyon(.3); } };
   const tb = $("#petTest"); if(tb){ tb.onclick = () => { const s = streak(), top = petTier(s); for(let i = 0; i < 10; i++){ const c = PET_ITEMS.filter(it => it.t <= top); const it = c[Math.floor(Math.random() * c.length)]; p.inv[it.id] = (p.inv[it.id] || 0) + 1; } save(); petTray(); };
     $("#petTestS").onchange = e => { const n = Math.max(0, Math.min(200, parseInt(e.target.value, 10) || 0)); S.meta.days = {}; for(let i = 0; i < n; i++) S.meta.days[addDays(today(), -i)] = true; save(); openPet(); }; }
-  sulkInit(); petStart(); petTray(); el.classList.remove("enter"); void el.offsetWidth; el.classList.add("enter"); const sulked = sulkOpen(PET); if(welcome === true && !sulked) setTimeout(() => petMsg(meltLine("done") || pt().welcome, 3200), 450);
+  sulkInit(); petStart(); petTray(); buyExpNote(); el.classList.remove("enter"); void el.offsetWidth; el.classList.add("enter"); const sulked = sulkOpen(PET); if(welcome === true && !sulked) setTimeout(() => petMsg(meltLine("done") || pt().welcome, 3200), 450);
   const top = petTier(streak()); if(top > p.seenTier){ const its = PET_ITEMS.filter(i => i.t === top); p.seenTier = top; save(); setTimeout(() => { petMsg(`${x.unlock} ${its.map(i => i.e || "").join("")} ${its.map(itName).join("・")}`, 3200); sfxFanfare(); }, 500); }
   else if(!petCount()) petMsg(x.empty, 4200);
 }
@@ -4499,8 +4506,8 @@ function petTray(){ const host = $("#pet"); if(!host || !PET) return; const list
     const lay = document.createElement("div"); lay.className = "pw-layer"; lay.innerHTML = `<div class="pw-disc"></div><div class="pw-ring"></div><div class="pw-items"></div><span class="pet-none pw-empty">🍽️ 0</span>`; host.appendChild(lay);
     w = WHEEL = { lay, disc: lay.querySelector(".pw-disc"), box: lay.querySelector(".pw-items"), rot: 0, vel: 0, drag: false, raf: 0, sig: "" };
     wheelGeo(); w.disc.onpointerdown = wheelDown; w.disc.onpointermove = wheelMove; w.disc.onpointerup = wheelUp; w.disc.onpointercancel = wheelCancel; wheelAnim(); }
-  const sig = list.map(i => i.id).join(","); if(sig !== w.sig){ w.sig = sig; w.list = list;
-    w.box.innerHTML = list.map(i => `<div class="pw-it${i.gold ? " gold" : ""}" data-id="${i.id}">${petIconHTML(i, 36)}<i></i></div>`).join(""); w.els = [...w.box.children];
+  const pp = petState(), dd = list.map(i => buyDays(pp, i.id)), sig = list.map((i, k) => i.id + dd[k]).join(","); if(sig !== w.sig){ w.sig = sig; w.list = list;
+    w.box.innerHTML = list.map((i, k) => `<div class="pw-it${i.gold ? " gold" : ""}" data-id="${i.id}">${petIconHTML(i, 36)}${dd[k] ? `<em class="pw-d">${dd[k]}</em>` : ""}<i></i></div>`).join(""); w.els = [...w.box.children];
     w.st = Math.max(w.step, 2.1 / Math.max(1, list.length)); const idx = Math.max(0, list.findIndex(i => i.id === PET_SEL)); w.rot = -idx * w.st; }
   w.lay.classList.toggle("empty", !list.length); petLvUI(); }
 function wheelGeo(){ const w = WHEEL, pr = $("#pet").getBoundingClientRect(), W = pr.width, H = pr.height;
@@ -6024,7 +6031,7 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { dueCards, revToday, provButtons, presetDeckName, deckName, mergeData, mergeCard, mergePet, syncNow, payload, jaTailOk, formBoundOk, loanMatch, loanSk, frameSplit, frameParts, frameOpts, askFrame, materializeFrame, addPresetMore, presetMore, wlFind, wlLangOf, wlMake, newCandidates: () => newCandidates(), rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, closePet, petGrab, petDragMove, petRelease, petThrow, petRefund, buyGrant, petCount, PT: () => PT, MELT: () => MELT, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { payOpen, payWhat, payGrant, buyDays, buyExpNote, bizFootHTML, renderShop, dueCards, revToday, provButtons, presetDeckName, deckName, mergeData, mergeCard, mergePet, syncNow, payload, jaTailOk, formBoundOk, loanMatch, loanSk, frameSplit, frameParts, frameOpts, askFrame, materializeFrame, addPresetMore, presetMore, wlFind, wlLangOf, wlMake, newCandidates: () => newCandidates(), rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, closePet, petGrab, petDragMove, petRelease, petThrow, petRefund, buyGrant, petCount, PT: () => PT, MELT: () => MELT, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(PET) petRefundFlying(PET); }catch(_){} try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 load(); PET_SIG = petSig(); migrateSteps(); sulkInit(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain();
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
