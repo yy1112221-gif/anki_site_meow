@@ -1013,6 +1013,13 @@ html.short body.focus #sessionBox:has(.poster.ce) > .say{display:flex}
 .cd-img{width:100%;max-width:280px;display:block;margin:0 auto;border-radius:14px} .cd-sn{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dashed var(--line)} .cd-sn>span{flex:1;min-width:160px;font-weight:600}
 .cd-pick{width:100%} .cd-toks .cd-tk{border:0;background:none;font:inherit;color:inherit;padding:4px 2px;min-height:32px;cursor:pointer;border-radius:4px} .cd-toks .cd-tk.hl{background:var(--accent-soft);border-bottom:2px solid var(--rust)} .cd-priv{background:var(--accent-soft);border-radius:10px;padding:6px 10px}
 #chatBox textarea{width:100%;min-height:96px} #chatBox .chips{display:flex;flex-wrap:wrap;gap:6px}
+.fr-tabs{display:flex;gap:6px;margin-bottom:10px} .fr-tabs button{flex:1;min-height:44px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-weight:800;cursor:pointer} .fr-tabs button[aria-selected="true"]{border-color:var(--ink)}
+.fr-badge{font-style:normal;background:#D94A7E;color:#fff;border-radius:999px;padding:1px 7px;font-size:.75rem} #view-fr .card{display:flex;flex-direction:column;gap:10px} #frBody{display:flex;flex-direction:column;gap:10px}
+button.fr-cat{cursor:pointer;padding:0} .gf-list{display:flex;flex-direction:column;gap:6px} .gf-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:8px 10px;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);font:inherit;cursor:pointer;min-height:56px}
+.gf-row.nw{border-color:#D94A7E} .gf-th{flex:none;width:52px;height:44px;border-radius:10px;border:2px solid;display:grid;place-items:center} .gf-tx{flex:1;min-width:0;display:flex;flex-direction:column} .gf-tx small{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .gf-d{flex:none;color:var(--muted)}
+.fr-catbig{border:0;background:none;cursor:pointer;display:block;margin:0 auto;padding:0} .fr-catbig img{width:min(240px,70vw);height:auto;border-radius:20px;display:block} .fr-catbig.boing{animation:frBoing .45s ease}
+@keyframes frBoing{0%{transform:scale(1)}30%{transform:scale(1.08,.9)}60%{transform:scale(.95,1.06)}100%{transform:scale(1)}} nav.subnav button.dot{position:relative} nav.subnav button.dot::after{content:"";position:absolute;top:5px;right:9px;width:8px;height:8px;border-radius:50%;background:#D94A7E}
+@media (max-width:420px){nav.subnav{gap:4px} nav.subnav button{min-width:0;padding:6px 6px 5px} nav.subnav button small{white-space:nowrap;font-size:.66rem} nav.subnav .sn-home [data-i18n]{display:none} nav.subnav .sn-home{min-width:40px}}
 </style>
 </head>
 <body>
@@ -1045,9 +1052,12 @@ html.short body.focus #sessionBox:has(.poster.ce) > .say{display:flex}
   <nav class="subnav" aria-label="menu">
     <button type="button" class="sn-home" data-view="today"><span aria-hidden="true">←</span> <span data-i18n="tabToday"></span></button><span class="grow"></span>
     <button type="button" data-view="add"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><small data-i18n="tabAdd"></small></button>
+    <button type="button" data-view="fr" id="snFr" class="hidden"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M3 10h18M12 10v10M12 10c-2-4-6-5-6-2s4 2 6 2c2 0 6 1 6-2s-4-2-6 2"/></svg><small>친구</small></button>
     <button type="button" data-view="list"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg><small data-i18n="tabList"></small></button>
     <button type="button" data-view="how"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><small data-i18n="tabHow"></small></button>
   </nav>
+
+  <section id="view-fr" class="view hidden"><div class="card" id="frView"></div></section>
 
   <section id="view-today" class="view">
     <div id="sessionStart" class="card"></div>
@@ -3878,9 +3888,9 @@ function fillLangs(){
 }
 
 
-function showView(v){
+function showView(v){ if(v === "fr" && !FR_OK()) v = "today";
   document.querySelectorAll(".view").forEach(s => s.classList.add("hidden"));
-  $("#view-" + v).classList.remove("hidden"); if(v === "how") renderSupBox(); if(v === "add") setAddPanel();
+  $("#view-" + v).classList.remove("hidden"); if(v === "fr") renderFrView(); try{ snFrSync(); }catch(_){} if(v === "how") renderSupBox(); if(v === "add") setAddPanel();
   document.querySelectorAll("nav.tabs button, nav.subnav button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v ? "true" : "false")); document.body.dataset.view = v; if(v !== "today"){ const ta = $("#tutAsk"); if(ta) ta.remove(); }
   if(v === "list"){ renderDecks(); renderDeckFilter(); renderList(); } if(v === "how"){ renderHow(); renderSync(); const hs = $("#hshop"); if(hs){ hs.ontoggle = () => { if(hs.open) renderShop(); }; if(hs.open) renderShop(); } } if(v === "add"){ fillDeckSelects(); fillImport(); renderPresets(); }
   if(v === "today" && SES){ document.body.classList.add("focus"); centerBox($("#sessionBox")); }
@@ -6197,26 +6207,28 @@ const frMD = (id, v) => { const [m, d] = (v || "").split("-"); const x = frt();
   return `<select id="${id}M" aria-label="${x.month}"><option value="">${x.month}</option>${Array.from({ length: 12 }, (_, i) => `<option value="${String(i + 1).padStart(2, "0")}"${+m === i + 1 ? " selected" : ""}>${i + 1}</option>`).join("")}</select>
     <select id="${id}D" aria-label="${x.day}"><option value="">${x.day}</option>${Array.from({ length: 31 }, (_, i) => `<option value="${String(i + 1).padStart(2, "0")}"${+d === i + 1 ? " selected" : ""}>${i + 1}</option>`).join("")}</select>`; };
 const frMDval = (root, id) => { const m = root.querySelector(`#${id}M`).value, d = root.querySelector(`#${id}D`).value; return m && d ? `${m}-${d}` : ""; };
-async function frOpen(focusId){ if(!FR_OK()){ toast(frt().kid); return; } const x = frt(), f = frState(); let page = 0; track("fr_open", { n: f.list.length });
-  const bg = openSheet(`<h2 style="margin:0">${x.title}</h2><p class="muted small" style="margin:0">${esc(x.help)}</p>
+function frOpen(focusId){ if(!FR_OK()){ toast(frt().kid); return; } FRV.tab = "fr"; FRV.focus = focusId || null; closePop(); showView("fr"); }
+function frMount(root, focusId){ const x = frt(), f = frState(); let page = 0; track("fr_open", { n: f.list.length });
+  root.innerHTML = (`<p class="muted small" style="margin:0">${esc(x.help)}</p>
     <button type="button" class="btn primary" id="frInv">${x.invite}</button><div id="frList" class="fr-list"><p class="muted small">${x.loading}</p></div>
     <details class="fr-set"><summary>⚙️ ${x.setH}</summary>
       <label class="ms-row ms-tg"><span>${x.shareStats}</span><input type="checkbox" id="frShare"${f.share ? " checked" : ""}></label>
       <label class="ms-row ms-tg"><span>${x.shareBday}</span><input type="checkbox" id="frBshare"${f.bshare ? " checked" : ""}></label>
       <div class="ms-row"><span>${x.myBday}</span><span class="fr-md">${frMD("frB", f.bday)}</span></div></details>`);
-  const sh = bg.querySelector(".sheet"); sh.classList.add("fr-sheet");
+  const sh = root;
   const draw = () => { const L = sh.querySelector("#frList"); if(!L) return; if(f.nosrv && !f.list.length){ L.innerHTML = `<p class="muted small">${x.nosrv}</p>`; return; }
     if(!f.list.length){ L.innerHTML = `<p class="muted small">${x.none}</p>`; return; } const P = 4, pages = Math.ceil(f.list.length / P); page = Math.min(page, pages - 1);
     const evs = frEvents();
     L.innerHTML = f.list.slice(page * P, page * P + P).map(z => { const s = z.stats, b = z.bday ? z.bday.split("-").map(Number) : null, bd = frNextIn(z.bday), ev = evs.find(e => e.fid === z.id), anns = f.ann[z.id] || [];
-      return `<div class="fr-row${focusId === z.id ? " fr-hi" : ""}" data-fid="${esc(z.id)}"><span class="fr-cat" style="background:${frFur(z.fur)}">🐱</span><div class="fr-main"><b>${esc(z.nick || "?")}</b>
+      return `<div class="fr-row${focusId === z.id ? " fr-hi" : ""}" data-fid="${esc(z.id)}"><button type="button" class="fr-cat" data-cat="${esc(z.id)}" style="background:${frFur(z.fur)}" aria-label="${esc(x.catView)}">🐱</button><div class="fr-main"><b>${esc(z.nick || "?")}</b>
         <small>${s ? `${x.streak(s.st || 0)} · ${x.week(s.wk || 0)}${s.lang ? " · " + esc(langName(s.lang)) : ""}` : x.hidden}</small>
         <small>${b ? x.bday(b[0], b[1]) + (bd != null && bd <= 7 ? ` <em class="fr-d">${x.dday(bd)}</em>` : "") : ""}${anns.map(a => { const d = frNextIn(a.d); return ` · ${esc(a.n)} ${+a.d.slice(0, 2)}/${+a.d.slice(3)}${d != null && d <= 7 ? ` <em class="fr-d">${x.dday(d)}</em>` : ""}`; }).join("")}</small></div>
         <button type="button" class="btn sm${ev ? " primary" : ""}" data-card="${esc(z.id)}">${x.card}</button><button type="button" class="btn sm" data-more="${esc(z.id)}" aria-label="${x.more}">${x.more}</button></div>`; }).join("")
       + (pages > 1 ? `<div class="row fr-pg"><button type="button" class="btn sm" id="frPrev"${page ? "" : " disabled"}>${x.prev}</button><span class="small muted">${page + 1} / ${pages}</span><button type="button" class="btn sm" id="frNext"${page < pages - 1 ? "" : " disabled"}>${x.next}</button></div>` : "");
     const pv = L.querySelector("#frPrev"), nx = L.querySelector("#frNext"); if(pv) pv.onclick = () => { page--; draw(); }; if(nx) nx.onclick = () => { page++; draw(); };
     L.querySelectorAll("[data-card]").forEach(btn => btn.onclick = () => { const z = f.list.find(q => q.id === btn.dataset.card); const e = evs.find(q => q.fid === z.id); cardMake(z, e ? e.k : "free"); });
-    L.querySelectorAll("[data-more]").forEach(btn => btn.onclick = () => frMore(btn.dataset.more, draw)); };
+    L.querySelectorAll("[data-more]").forEach(btn => btn.onclick = () => frMore(btn.dataset.more, draw));
+    L.querySelectorAll("[data-cat]").forEach(btn => btn.onclick = () => frCat(f.list.find(q => q.id === btn.dataset.cat))); };
   if(focusId){ page = Math.max(0, Math.floor(f.list.findIndex(z => z.id === focusId) / 4)); }
   draw(); frSync().then(r => { if(!sh.isConnected) return; if(r === "err" && !f.list.length) sh.querySelector("#frList").innerHTML = `<p class="muted small">${x.err}</p>`; else draw(); });
   sh.querySelector("#frInv").onclick = () => frInvite();
@@ -6253,7 +6265,7 @@ async function frBoot(){ const q = new URLSearchParams(location.search), tk = q.
   bg.querySelector("#frLater").onclick = () => { track("fr_accept", { r: "later", fresh: fresh0 ? 1 : 0 }); closePop(); };
   bg.querySelector("#frAcc").onclick = async () => { let r; try{ await nickBoot(); r = await sbRpc("fr_invite_accept", { p_key: nickState().key, p_token: tk, p_nick: myNick(), p_fur: (S.meta.cos && S.meta.cos.on) || "" }); }catch(e){ r = "err"; }
     track("fr_accept", { r, fresh: fresh0 ? 1 : 0 }); closePop(); if(r === "ok"){ toast(x.accepted(pk.nick)); await frSync(); frOpen(); } else toast(x.reqBad[r] || x.err); }; }
-function frBindSet(ko){ const r = $("#frRow"); if(!r) return; r.classList.toggle("hidden", !FR_OK()); const b = $("#frOpenBtn"); if(b){ b.textContent = ko ? "👫 친구·생일" : "👫 友だち・誕生日"; b.onclick = () => frOpen(); } }
+function frBindSet(ko){ const r = $("#frRow"); if(!r) return; r.classList.toggle("hidden", !FR_OK()); const b = $("#frOpenBtn"); if(b){ b.textContent = ko ? "👫 친구·생일·선물함" : "👫 友だち・誕生日・ギフト"; snFrSync(); b.onclick = () => frOpen(); } }
 
 /* ── ② 축하 카드: 링크(?g=)에 카드 내용을 담아 공유. 서버 저장 없음 ── */
 const CARD_TPL = ["love", "happy", "surprised"], CARD_WRAP = { pink: ["#ffd6e5", "#f28ab2", "#D94A7E"], mint: ["#d9f5e8", "#8fd9b6", "#3a9c78"], night: ["#2a2f55", "#4b5596", "#f4cf6a"] };
@@ -6295,13 +6307,13 @@ function cardMake(friend, kind){ if(REC) return; const x = frt(), L = S.meta.set
   sh.querySelector("#cdSend").onclick = async () => { if(!o.m.trim() && !o.p.trim()){ sh.querySelector("#cdM").focus(); return; }
     const cv = await cardCanvas(o), blob = await new Promise(r => cv.toBlob(r, "image/png")), file = blob ? new File([blob], "meowca-card.png", { type: "image/png" }) : null;
     const url = `${location.origin}${location.pathname.replace(/[^/]*$/, "")}?g=${b64uEnc(o)}&src=gift`;
-    const how = await shareOut(x.cardTxt(o.n), url, file); track("card_send", { k: o.k, how, fr: friend ? 1 : 0, p: o.p.trim() ? 1 : 0, tpl: o.c, wrap: o.w }); if(how !== "cancel") closePop(); }; }
+    const how = await shareOut(x.cardTxt(o.n), url, file); if(how !== "cancel") giftPut("sent", o, url); track("card_send", { k: o.k, how, fr: friend ? 1 : 0, p: o.p.trim() ? 1 : 0, tpl: o.c, wrap: o.w }); if(how !== "cancel") closePop(); }; }
 function cardBoot(){ const q = new URLSearchParams(location.search), raw = q.get("g"); if(!raw || cardBoot._done) return; cardBoot._done = 1; let o;
   try{ o = b64uDec(raw); }catch(_){ o = null; } try{ q.delete("g"); history.replaceState(history.state, "", location.pathname + (q.toString() ? "?" + q : "") + location.hash); }catch(_){}
   if(!o || typeof o !== "object") return; const cut = v => String(v || "").slice(0, 80); o = { n: cut(o.n).slice(0, 24), c: CARD_TPL.includes(o.c) ? o.c : "love", w: CARD_WRAP[o.w] ? o.w : "pink", m: cut(o.m), p: cut(o.p), ml: /^(ko|ja)$/.test(o.ml) ? o.ml : scriptLang(o.m), pl: /^[a-z]{2}$/.test(o.pl || "") ? o.pl : scriptLang(o.p), to: cut(o.to).slice(0, 24), k: /^(bday|ann|free)$/.test(o.k) ? o.k : "free" };
-  const fresh = needSetup(); track("card_open", { fresh: fresh ? 1 : 0, k: o.k, p: o.p ? 1 : 0 }); S.meta.fr = S.meta.fr || {}; S.meta.fr.got = (S.meta.fr.got || 0) + 1; if(!fresh) save();
+  const fresh = needSetup(); track("card_open", { fresh: fresh ? 1 : 0, k: o.k, p: o.p ? 1 : 0 }); giftPut("recv", o, raw); save();
   setTimeout(() => cardShow(o, fresh), fresh ? 600 : 300); }
-function cardShow(o, fresh){ const x = (o.pl === "ja" || (!o.ml && o.pl !== "ko") ? FRT.ja : FRT.ko), ui = fresh ? (o.pl || (o.ml === "ko" ? "ja" : "ko")) : S.meta.settings.ui, X = FRT[ui === "ja" ? "ja" : "ko"];
+function cardShow(o, fresh, opt){ const x = (o.pl === "ja" || (!o.ml && o.pl !== "ko") ? FRT.ja : FRT.ko), ui = fresh ? (o.pl || (o.ml === "ko" ? "ja" : "ko")) : S.meta.settings.ui, X = FRT[ui === "ja" ? "ja" : "ko"];
   const bg = openSheet(`<div class="cd-box" id="cdBox" role="button" tabindex="0" style="--wr:${CARD_WRAP[o.w][1]};--rb:${CARD_WRAP[o.w][2]}"><span class="cd-lid"></span><span class="cd-body"></span></div>
     <h2 style="text-align:center;margin:0">${esc(X.boxT(o.n))}</h2><p class="muted small" style="text-align:center;margin:0">${X.boxTap}</p><div id="cdIn" class="hidden"></div>`);
   if(fresh) bg.style.zIndex = 95; const sh = bg.querySelector(".sheet"), box = sh.querySelector("#cdBox"); void x;
@@ -6312,7 +6324,7 @@ function cardShow(o, fresh){ const x = (o.pl === "ja" || (!o.ml && o.pl !== "ko"
       + `<button type="button" class="btn" id="cdThx">${X.thanks}</button>`;
     inn.querySelectorAll("[data-learn]").forEach(b => b.onclick = () => cardLearn(b.closest(".cd-sn").querySelector("span").textContent, b.dataset.learn, o, b.closest(".cd-sn"), fresh, X));
     inn.querySelector("#cdThx").onclick = async () => { const how = await shareOut(X.thanksTxt(o.n), location.origin + location.pathname.replace(/[^/]*$/, "") + "?src=thanks", null); track("card_thanks", { how, fresh: fresh ? 1 : 0 }); }; };
-  box.onclick = open; box.onkeydown = e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); open(); } }; }
+  box.onclick = open; box.onkeydown = e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); open(); } }; if(opt && opt.open) open(); }
 function cardLearn(sn, L, o, el, fresh, X){ if(el.querySelector(".cd-pick")) return; const toks = segWords(sn, L).reduce((a, z) => { const p = a[a.length - 1], kj = v => /^[一-龥々]+$/.test(v);   // 일본어: 誕生+日처럼 한자끼리 잘린 것은 붙임
     if(L === "ja" && p && p.w && z.w && kj(p.s) && kj(z.s)) p.s += z.s; else a.push(Object.assign({}, z)); return a; }, []); let pick = -1; track("card_learn_tap", { fresh: fresh ? 1 : 0 });
   const p = document.createElement("div"); p.className = "cd-pick"; p.innerHTML = `<p class="tiny muted">${X.pickW}</p><p class="cd-toks" lang="${esc(L)}">${toks.map((z, i) => z.w ? `<button type="button" class="cd-tk" data-i="${i}">${esc(z.s)}</button>` : esc(z.s)).join("")}</p><button type="button" class="btn sm primary" disabled>${X.mkCard}</button>`;
@@ -6377,9 +6389,45 @@ function chatBind(){ const box = $("#chatBox"); if(!box || box._b) return; box._
     list = await chatCands(msgs, S.meta.settings.lang, whoSel.value); track("chat_parse", { msgs: msgs.length, cand: list.length, who: whoSel.value ? 1 : 0, names: whoSel.options.length - 1 }); draw(); }; }
 function chatSync(){ const b = $("#amChat"); if(b) b.classList.toggle("hidden", !FR_OK()); const box = $("#chatBox"); if(box && FR_OK()) chatBind(); }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { explHTML, frState, frEvents, frHomeLine, frSync, frOpen, frBoot, frNextIn, cardBoot, cardShow, cardMake, cardCanvas, b64uEnc, b64uDec, parseChat, chatWords, chatCands, chatBind, segWords, FR_OK, REC: () => REC, recOpen, payOpen, payWhat, payGrant, buyDays, buyExpNote, bizFootHTML, renderShop, dueCards, revToday, provButtons, presetDeckName, deckName, mergeData, mergeCard, mergePet, syncNow, payload, jaTailOk, formBoundOk, loanMatch, loanSk, frameSplit, frameParts, frameOpts, askFrame, materializeFrame, addPresetMore, presetMore, wlFind, wlLangOf, wlMake, newCandidates: () => newCandidates(), rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, closePet, petGrab, petDragMove, petRelease, petThrow, petRefund, purrState: () => ({ on: !!PURR, purr0: PET ? PET.purr0 || 0 : 0, n: PET ? PET.purrN || 0 : 0 }), sndMode, buyGrant, petCount, PT: () => PT, MELT: () => MELT, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+
+/* ── 친구 탭(11-25 사용자): 친구·선물함을 한 화면 탭으로. 선물함 = 주고받은 카드(기기에만, 최근 60개씩) ── */
+Object.assign(FRT.ko, { tab: "친구", title2: "👫 친구", giftBox: "🎁 선물함", recv: "받은 선물", sent: "보낸 선물", noGift: "아직 주고받은 카드가 없어요. 친구에게 첫 카드를 보내 봐요!", sendCard: "🎁 카드 보내기", catView: "냥이 보기", resend: "📤 다시 보내기", fromL: n => `From. ${n || "?"}`, toL: n => `To. ${n || "♡"}`, catTap: "쓰다듬어 봐", catOf: n => `${n || "친구"}의 냥이` });
+Object.assign(FRT.ja, { tab: "友だち", title2: "👫 友だち", giftBox: "🎁 ギフトボックス", recv: "もらった", sent: "送った", noGift: "まだカードのやりとりはありません。友だちに最初のカードを送ってみて！", sendCard: "🎁 カードを送る", catView: "ネコを見る", resend: "📤 もう一度送る", fromL: n => `From. ${n || "?"}`, toL: n => `To. ${n || "♡"}`, catTap: "なでてみて", catOf: n => `${n || "友だち"}のネコ` });
+const FRV = { tab: "fr", focus: null, g: "recv", page: 0 };
+function giftState(){ const f = frState(); const g = f.gifts || (f.gifts = { recv: [], sent: [] }); g.recv = g.recv || []; g.sent = g.sent || []; return g; }
+function giftPut(kind, o, key){ const g = giftState(), k = String(key || "").slice(0, 2000); if(g[kind].some(z => z.k === k)) return;
+  g[kind].unshift({ k, o: { n: o.n, c: o.c, w: o.w, m: o.m, p: o.p, ml: o.ml, pl: o.pl, to: o.to, k: o.k }, at: Date.now(), ...(kind === "recv" ? { nw: 1 } : {}) }); g[kind] = g[kind].slice(0, 60); snFrSync(); }
+const giftNew = () => giftState().recv.filter(z => z.nw).length;
+function snFrSync(){ const b = $("#snFr"); if(!b) return; b.classList.toggle("hidden", !FR_OK()); const n = FR_OK() ? giftNew() + frEvents().filter(e => e.d === 0).length : 0; b.classList.toggle("dot", n > 0); const sm = b.querySelector("small"); if(sm) sm.textContent = frt().tab; }
+function renderFrView(){ const box = $("#frView"); if(!box) return; const x = frt();
+  if(!FR_OK()){ box.innerHTML = `<p class="muted">${esc(x.kid)}</p>`; return; }
+  const nn = giftNew();
+  box.innerHTML = `<div class="fr-tabs" role="tablist"><button type="button" role="tab" data-frt="fr" aria-selected="${FRV.tab === "fr"}">${x.title2}</button><button type="button" role="tab" data-frt="gift" aria-selected="${FRV.tab === "gift"}">${x.giftBox}${nn ? ` <em class="fr-badge">${nn}</em>` : ""}</button></div><div id="frBody"></div>`;
+  box.querySelectorAll("[data-frt]").forEach(b => b.onclick = () => { FRV.tab = b.dataset.frt; FRV.page = 0; renderFrView(); });
+  const body = box.querySelector("#frBody"); if(FRV.tab === "gift") giftMount(body); else { frMount(body, FRV.focus); FRV.focus = null; } }
+function giftMount(root){ const x = frt(), g = giftState(); track("gift_box", { g: FRV.g, recv: g.recv.length, sent: g.sent.length });
+  const list = g[FRV.g] || [], P = 5, pages = Math.max(1, Math.ceil(list.length / P)); FRV.page = Math.min(FRV.page, pages - 1);
+  const dt = t => { const d = new Date(t); return `${d.getMonth() + 1}/${d.getDate()}`; };
+  root.innerHTML = `<div class="row" style="gap:6px;flex-wrap:wrap"><button type="button" class="chiptog" data-gg="recv" aria-pressed="${FRV.g === "recv"}">${x.recv} ${g.recv.length}</button><button type="button" class="chiptog" data-gg="sent" aria-pressed="${FRV.g === "sent"}">${x.sent} ${g.sent.length}</button><span class="grow"></span><button type="button" class="btn sm primary" id="gfSend">${x.sendCard}</button></div>
+    <div class="gf-list">${list.length ? list.slice(FRV.page * P, FRV.page * P + P).map((z, i) => { const o = z.o, w = CARD_WRAP[o.w] || CARD_WRAP.pink;
+      return `<button type="button" class="gf-row${z.nw ? " nw" : ""}" data-gi="${FRV.page * P + i}"><span class="gf-th" style="background:${w[0]};border-color:${w[2]}"><img src="cat/melt/cat_${CARD_TPL.includes(o.c) ? o.c : "love"}.svg" alt="" width="44" height="32"></span><span class="gf-tx"><b>${esc(FRV.g === "recv" ? x.fromL(o.n) : x.toL(o.to))}</b><small>${esc(String(o.m || o.p || "").slice(0, 28))}</small></span><small class="gf-d">${dt(z.at)}${z.nw ? " 🆕" : ""}</small></button>`; }).join("") : `<p class="muted small">${esc(x.noGift)}</p>`}</div>
+    ${pages > 1 ? `<div class="row fr-pg"><button type="button" class="btn sm" id="gfPrev"${FRV.page ? "" : " disabled"}>‹</button><span class="small muted">${FRV.page + 1} / ${pages}</span><button type="button" class="btn sm" id="gfNext"${FRV.page < pages - 1 ? "" : " disabled"}>›</button></div>` : ""}`;
+  root.querySelectorAll("[data-gg]").forEach(b => b.onclick = () => { FRV.g = b.dataset.gg; FRV.page = 0; renderFrView(); });
+  const pv = root.querySelector("#gfPrev"), nx = root.querySelector("#gfNext"); if(pv) pv.onclick = () => { FRV.page--; renderFrView(); }; if(nx) nx.onclick = () => { FRV.page++; renderFrView(); };
+  root.querySelector("#gfSend").onclick = () => cardMake(null, "free");
+  root.querySelectorAll("[data-gi]").forEach(b => b.onclick = () => { const z = list[+b.dataset.gi]; if(!z) return; track("gift_view", { g: FRV.g, nw: z.nw ? 1 : 0 });
+    if(FRV.g === "recv"){ const first = !!z.nw; delete z.nw; save(); snFrSync(); cardShow(z.o, false, { open: !first }); }
+    else { cardShow(Object.assign({}, z.o), false, { open: true }); setTimeout(() => { const inn = document.querySelector("#cdIn"); if(!inn || !z.k) return; const r = document.createElement("button"); r.type = "button"; r.className = "btn"; r.textContent = x.resend; r.onclick = async () => { const how = await shareOut(x.cardTxt(z.o.n), z.k, null); track("gift_resend", { how }); }; inn.appendChild(r); }, 900); }
+    const pop = () => { if(document.querySelector(".sheet-bg")) return setTimeout(pop, 500); if(document.body.dataset.view === "fr") renderFrView(); }; setTimeout(pop, 800); }); }
+function frCat(z){ if(!z) return; const x = frt(), it = z.fur && COS.find(c => c.id === z.fur && c.f && !c.sup), src = it ? `img/shop/${it.id}.webp` : "cat/melt/cat_happy.svg", s = z.stats; track("fr_cat", { fur: z.fur ? 1 : 0 });
+  const bg = openSheet(`<h2 style="margin:0;text-align:center">${esc(x.catOf(z.nick))}</h2><button type="button" class="fr-catbig" id="frCatImg" aria-label="${esc(x.catTap)}"><img src="${src}" alt="" onerror="this.src='cat/melt/cat_happy.svg'"></button>
+    <p class="small muted" style="text-align:center;margin:0">${esc(x.catTap)} · ${s ? `${esc(x.streak(s.st || 0))} · ${esc(x.week(s.wk || 0))}` : esc(x.hidden)}</p><button type="button" class="btn primary" id="frCatCard">${x.sendCard}</button>`);
+  const im = bg.querySelector("#frCatImg"); let n = 0; im.onclick = () => { im.classList.remove("boing"); void im.offsetWidth; im.classList.add("boing"); if(++n === 1) track("fr_cat_pet", {}); try{ navigator.vibrate && navigator.vibrate(15); }catch(_){} };
+  bg.querySelector("#frCatCard").onclick = () => { closePop(); const e = frEvents().find(q => q.fid === z.id); cardMake(z, e ? e.k : "free"); }; }
+
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { explHTML, giftState, giftPut, renderFrView, frCat, FRV, frState, frEvents, frHomeLine, frSync, frOpen, frBoot, frNextIn, cardBoot, cardShow, cardMake, cardCanvas, b64uEnc, b64uDec, parseChat, chatWords, chatCands, chatBind, segWords, FR_OK, REC: () => REC, recOpen, payOpen, payWhat, payGrant, buyDays, buyExpNote, bizFootHTML, renderShop, dueCards, revToday, provButtons, presetDeckName, deckName, mergeData, mergeCard, mergePet, syncNow, payload, jaTailOk, formBoundOk, loanMatch, loanSk, frameSplit, frameParts, frameOpts, askFrame, materializeFrame, addPresetMore, presetMore, wlFind, wlLangOf, wlMake, newCandidates: () => newCandidates(), rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, closePet, petGrab, petDragMove, petRelease, petThrow, petRefund, purrState: () => ({ on: !!PURR, purr0: PET ? PET.purr0 || 0 : 0, n: PET ? PET.purrN || 0 : 0 }), sndMode, buyGrant, petCount, PT: () => PT, MELT: () => MELT, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(PET) petRefundFlying(PET); }catch(_){} try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
-if(!REC) setTimeout(() => { try{ cardBoot(); frBoot(); const f = S.meta.fr; if(FR_OK() && f && f.list && f.list.length && Date.now() - (f.at || 0) > 6 * 36e5) frSync().then(() => { if(!SES) renderStart(); }); }catch(e){} }, 1200);
+if(!REC) setTimeout(() => { try{ snFrSync(); cardBoot(); frBoot(); const f = S.meta.fr; if(FR_OK() && f && f.list && f.list.length && Date.now() - (f.at || 0) > 6 * 36e5) frSync().then(() => { if(!SES) renderStart(); snFrSync(); }); }catch(e){} }, 1200);
 load(); PET_SIG = petSig(); migrateSteps(); sulkInit(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain(); if(REC) setTimeout(recOpen, 60);
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 addEventListener("storage", e => { if(e.key !== LS_KEY || !e.newValue || LOAD_BAD || REC) return;   // 다른 탭에서 저장됨 → 이 탭 메모리에 합침(옛 탭이 새 기록을 덮지 않게)
