@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ショップ · MEOWCA! ミャオカ</title>
+<meta name="description" content="MEOWCA!（ミャオカ）アプリ内で使うネコの着せ替えスキン・おやつセット。単語学習は無料です。">
+<link rel="icon" href="icon-192.png">
+<style>
+body{margin:0;font:16px/1.65 "Hiragino Sans","Noto Sans JP",system-ui,sans-serif;color:#1E1A16;background:#FDF4EA}
+.wrap{max-width:860px;margin:0 auto;padding:24px 18px 40px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.plate{display:inline-flex;align-items:center;background:#1E1A16;color:#FFFDF8;border-radius:12px;padding:6px 14px;font-weight:900;font-size:1.5rem;letter-spacing:.02em;text-decoration:none}
+.plate svg{width:1.1em;height:1.1em;margin:0 .04em}
+h1{font-size:1.7rem;margin:22px 0 4px} h2{font-size:1.2rem;margin:30px 0 10px} .muted{color:#6E6253;font-size:.92rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px}
+.card{background:#fff;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:6px;box-shadow:0 2px 10px rgba(120,60,80,.06)}
+.card .e{font-size:2rem;line-height:1} .card b{font-size:1.05rem} .card p{margin:0;font-size:.9rem;color:#5E5446}
+.price{font-size:1.25rem;font-weight:900;margin-top:auto} .price small{font-size:.75rem;color:#6E6253;font-weight:600}
+.buy:disabled{background:#B9AFA4;cursor:default}
+.note{background:#FFF0F5;border-radius:14px;padding:10px 14px;font-size:.9rem}
+.buy{border:0;border-radius:999px;padding:11px;font:inherit;font-weight:800;background:#D94A7E;color:#fff;cursor:pointer;min-height:44px}
+.sw{width:44px;height:44px;border-radius:50%;border:2px solid rgba(0,0,0,.08)}
+.pimg{width:100%;height:auto;aspect-ratio:480/327;object-fit:cover;border-radius:12px;background:#F7F6F3;display:block} .term{font-size:.8rem;color:#6E6253;margin:0} .term span{color:#1E1A16;font-weight:700}
+@media (prefers-color-scheme: dark){.term span{color:#ECEEF2}}
+.box{background:#fff;border-radius:18px;padding:16px 20px} .box ul{margin:6px 0;padding-left:1.2em}
+a{color:#C23C70} footer{margin-top:36px;padding-top:16px;border-top:1px solid #E8D9C8;font-size:.86rem;color:#5E5446}
+dialog{border:0;border-radius:18px;max-width:360px;padding:20px} dialog::backdrop{background:rgba(0,0,0,.4)}
+@media (prefers-color-scheme: dark){body{background:#121317;color:#ECEEF2}.card,.box{background:#1F2128;box-shadow:none}.card p,.muted,footer{color:#B9B2A8}footer{border-color:#2A2C33}a{color:#F28AB2}.plate{border:1px solid #3a3a44}dialog{background:#1F2128;color:#ECEEF2}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<a class="plate" href="./" aria-label="MEOWCA! ホームへ">ME<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M9.5 14 L9 4.5 L17 9.5 Z M30.5 14 L31 4.5 L23 9.5 Z" fill="#FFFDF8" stroke="#FFFDF8" stroke-width="3" stroke-linejoin="round"/><path d="M12 9.5 L11.6 7 L14.6 9 Z M28 9.5 L28.4 7 L25.4 9 Z" fill="#f2a1b4"/><ellipse cx="20" cy="22.5" rx="15.2" ry="14" fill="#FFFDF8" stroke="#FFFDF8" stroke-width="4.6"/><circle cx="14.6" cy="21" r="1.9" fill="#2a221c"/><circle cx="25.4" cy="21" r="1.9" fill="#2a221c"/><path d="M16.6 25.4 Q18.3 27.6 20 25.6 Q21.7 27.6 23.4 25.4" fill="none" stroke="#2a221c" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="11.8" cy="25.6" rx="2.3" ry="1.3" fill="#f2a1b4" opacity=".8"/><ellipse cx="28.2" cy="25.6" rx="2.3" ry="1.3" fill="#f2a1b4" opacity=".8"/></svg>WCA!</a>
+<a href="./">← アプリに戻る</a>
+</header>
+<h1>ミャオカ ショップ</h1>
+<p class="muted">単語学習はこれからもすべて無料です。ここの商品はアプリ内で使うデジタルアイテムで、決済後すぐにあなたのアカウント（端末）に付与されます。表示価格はお支払い総額です。</p>
+<p class="note" id="soon">🛠 日本円でのお支払いは<b>準備中</b>です。購入できるようになったらアプリでお知らせします。</p>
+
+<h2>🍖 おやつセット</h2>
+<p class="muted">ネコに投げてあげるおやつです。買ったおやつは表示の期間内に使ってください（学習でもらったおやつは期限なし）。</p>
+<div class="grid" id="g-snack"></div>
+
+<h2>🎨 ネコのスキン</h2>
+<p class="muted">大福ネコの毛の色を変えます。一度買えばずっと使え、いつでも着替えられます。</p>
+<div class="grid" id="g-skin"></div>
+
+<h2 id="delivery">📦 提供について</h2>
+<div class="box"><ul>
+<li>すべての商品は配送のない<b>デジタル商品</b>で、送料はかかりません。</li>
+<li>決済完了後<b>すぐに</b>アプリ内のアカウント（端末）に付与されます。届かない場合はアプリの「質問」ボタンでお知らせください。すぐに再付与します。</li>
+<li>ログインまたは同期コードを作ると、ほかの端末でも同じアイテムを使えます。</li>
+</ul></div>
+
+<h2 id="refund">↩️ 返金について</h2>
+<div class="box"><ul>
+<li>購入日から<b>7日以内</b>で一度も使っていないアイテムは、<b>お申し出があれば全額返金</b>します（自動返金ではありません）。</li>
+<li>スキンを着せた・おやつをあげたなど、すでに提供が始まったアイテムはデジタル商品の性質上、返品・キャンセルできません。おやつセットは使っていない数の分だけ返金します。</li>
+<li>付与エラーや商品説明と異なる場合：再付与または全額返金（付与日から3か月以内）。</li>
+<li>未成年の方は保護者の同意を得てからご購入ください。</li>
+<li>申し込み：アプリ左下の「質問」ボタン。3営業日以内にお支払いに使った方法で返金します。</li>
+</ul></div>
+
+<footer>
+<p><a href="tokusho">特定商取引法に基づく表記</a> · <a href="terms">利用規約</a> · <a href="privacy">プライバシーポリシー</a> · <a href="./">アプリを開く</a></p>
+</footer>
+</div>
+<script>
+const P = {
+  snack: [["snk_s","おやつひとつかみ","ネコに投げるおやつ10個（そのとき開いているおやつがまんべんなく）","提供期間：決済後すぐ付与、付与日から3日間使用可",120],["snk_whale","クジラ一頭","特別おやつのクジラ1頭（食べる演出が別にある大きなおやつ）","提供期間：決済後すぐ付与、付与日から7日間使用可",160],["snk_m","おやつ一袋","ネコに投げるおやつ40個（そのとき開いているおやつがまんべんなく）","提供期間：決済後すぐ付与、付与日から7日間使用可",300],["snk_l","おやつトラック","ネコに投げるおやつ150個（そのとき開いているおやつがまんべんなく）","提供期間：決済後すぐ付与、付与日から14日間使用可",700]],
+  skin: [["mochi_st","いちご大福","ネコの毛をピンク色にする着せ替えアイテム（学習機能とは無関係）","提供期間：決済後すぐ付与、期間制限なし（サービス提供期間中）",200],["mochi_mc","抹茶もち","ネコの毛を若草色にする着せ替えアイテム（学習機能とは無関係）","提供期間：決済後すぐ付与、期間制限なし（サービス提供期間中）",200],["cheese","チーズねこ","ネコの毛を黄色にする着せ替えアイテム（学習機能とは無関係）","提供期間：決済後すぐ付与、期間制限なし（サービス提供期間中）",200],["pudding","プリンぷる","ネコの毛をキャラメル色にする着せ替えアイテム（学習機能とは無関係）","提供期間：決済後すぐ付与、期間制限なし（サービス提供期間中）",200],["sesame","黒ごまもち","ネコの毛をグレーにする着せ替えアイテム（学習機能とは無関係）","提供期間：決済後すぐ付与、期間制限なし（サービス提供期間中）",200],["soda","ソーダゼリー","ネコの毛を半透明の水色にする着せ替えアイテム（学習機能とは無関係）","提供期間：決済後すぐ付与、期間制限なし（サービス提供期間中）",300]],
+};
+// 日本円決済が開いたら JPY_OPEN を true にする（そのときアプリの ?buy= も開く）
+const JPY_OPEN = false;
+const yen = n => "¥" + n.toLocaleString("ja-JP");
+const esc = s => String(s).replace(/[<>&"]/g, c => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" })[c]);
+if (JPY_OPEN) document.getElementById("soon").remove();
+for (const [k, list] of Object.entries(P)) {
+  document.getElementById("g-" + k).innerHTML = list.map(([id, name, desc, term, price]) => `<div class="card"><img class="pimg" src="img/shop/${id}.webp" alt="${esc(name)} 商品画像" width="480" height="327" loading="lazy"><b>${esc(name)}</b><p>${esc(desc)}</p><p class="term"><span>${esc(term)}</span></p><div class="price">${yen(price)}</div><button class="buy" type="button" data-id="${id}"${JPY_OPEN ? "" : " disabled"}>${JPY_OPEN ? "購入する" : "準備中"}</button></div>`).join("");
+}
+document.addEventListener("click", e => { const b = e.target.closest(".buy[data-id]:not(:disabled)"); if (!b) return;
+  location.href = "./?buy=" + encodeURIComponent(b.dataset.id); });
+</script>
+</body>
+</html>
