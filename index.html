@@ -483,6 +483,7 @@ body.focus .say .bubble{font-size:.84rem;padding:7px 12px}
 /* 背景: ヒント・小見出し・残り枚数 */
 .q-hint,.fb-note,.fb-base{font-size:.78rem;color:var(--muted);opacity:.85;font-weight:400}
 .fb-base{margin-left:6px}
+.fb-expl{margin-top:6px;font-size:.86rem;color:var(--muted);text-align:left}.fb-expl summary{cursor:pointer;color:var(--accent);font-weight:600;list-style:none;display:inline-block;padding:4px 10px;border:1px solid currentColor;border-radius:999px}.fb-expl summary::-webkit-details-marker{display:none}.fb-expl[open] summary{margin-bottom:4px}.fb-expl span{display:block;line-height:1.5;white-space:normal}
 .modehead .muted.small{font-size:.66rem;font-weight:500;letter-spacing:.14em;color:var(--muted);opacity:.85}
 .feedback strong{font-size:.86rem;font-weight:700}
 .feedback.ok strong{color:var(--good)} .feedback.no strong{color:var(--bad)} .feedback.meh strong{color:var(--muted)}
@@ -2786,7 +2787,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
   let phase = "answer";
   const blank = box.querySelector(".stage .blank");
   // 答えは問題の空欄にそのまま入れる。フィードバックには「単語・意味」だけ（例文は上に出ているので繰り返さない）
-  const answerBlock = () => `<span class="fb-answer">${esc(target)}${norm(target) !== norm(c.word) ? ` <span class="fb-base">${x.baseForm} ${esc(c.word)}</span>` : ""}</span>${c.meaning ? `<span class="fb-mean">${esc(c.meaning)}</span>` : ""}${siblings(c)}${!blank && c.example ? `<span class="fb-ex">${highlight(c)}</span><span class="fb-mean">${esc(c.exampleKo)}</span>` : ""}${c.from ? `<span class="fb-from">${esc(frt().from(c.from))}</span>` : ""}`;
+  const answerBlock = () => `<span class="fb-answer">${esc(target)}${norm(target) !== norm(c.word) ? ` <span class="fb-base">${x.baseForm} ${esc(c.word)}</span>` : ""}</span>${c.meaning ? `<span class="fb-mean">${esc(c.meaning)}</span>` : ""}${siblings(c)}${!blank && c.example ? `<span class="fb-ex">${highlight(c)}</span><span class="fb-mean">${esc(trShow(c))}</span>` : ""}${c.from ? `<span class="fb-from">${esc(frt().from(c.from))}</span>` : ""}${explHTML(c)}`;
   const fillBlank = ok => { if(blank){ blank.textContent = target; blank.classList.add("filled", ok ? "ok" : "no"); } };
   const showFb = () => { const fb = $("#fb"), st = box.querySelector(".stage"); if(!fb || !st) return;   // 入りきるなら問題文が見える一番上のまま。入らないときだけ必要な分だけ動かす
     requestAnimationFrame(() => { if(st.scrollHeight - st.clientHeight <= 4) st.scrollTop = 0; else fb.scrollIntoView({ block: "nearest", behavior: "smooth" }); }); };
@@ -2869,7 +2870,7 @@ function askMeaning(c, promptHTML){
   const input = $("#ans"); micAttach(input, S.meta.settings.ui === "ja" ? "ja-JP" : "ko-KR"); vkAttach(input, S.meta.settings.ui === "ja" ? "ja" : "ko"); if(!vkFor(S.meta.settings.ui === "ja" ? "ja" : "ko")) input.focus({ preventScroll: true }); bindSay(box); speak(c.word);
   const keep = b => b.addEventListener("pointerdown", e => { if(document.activeElement === input) e.preventDefault(); });
   box.querySelectorAll(".dock button").forEach(keep);
-  const ansBlock = () => `<span class="fb-answer">${esc(c.meaning)}</span><span class="fb-mean">${esc(c.word)}</span>${c.example ? `<span class="fb-ex">${highlight(c)}</span>${trShow(c) ? `<span class="fb-mean">${esc(trShow(c))}</span>` : ""}` : ""}`;
+  const ansBlock = () => `<span class="fb-answer">${esc(c.meaning)}</span><span class="fb-mean">${esc(c.word)}</span>${c.example ? `<span class="fb-ex">${highlight(c)}</span>${trShow(c) ? `<span class="fb-mean">${esc(trShow(c))}</span>` : ""}` : ""}${explHTML(c)}`;
   const show = () => { const fb = $("#fb"); if(fb) requestAnimationFrame(() => fb.scrollIntoView({ block: "nearest", behavior: "smooth" })); };
   let done = false;
   const reveal = res => { if(done) return; done = true; SES.state.answered = true;
@@ -2920,7 +2921,7 @@ function askOrder(c){ const box = $("#sessionBox"), x = t(), ko = S.meta.setting
     if(SES.state.answered) return; box.querySelectorAll("[data-p]").forEach(b => b.onclick = () => { picked.push(pool.splice(+b.dataset.p, 1)[0]); draw(); if(!pool.length) check(); });
     box.querySelectorAll("[data-a]").forEach(b => b.onclick = () => { pool.push(picked.splice(+b.dataset.a, 1)[0]); draw(); }); };
   const done = ok => { if(SES.state.answered) return; SES.state.answered = true; $("#ordA").classList.add(ok ? "ok" : "no"); pool.length = 0; draw();
-    $("#fb").innerHTML = `<div class="feedback ${ok ? "ok" : "no"}"><strong>${esc(ok ? (ko ? "완벽하다냥" : "完璧だニャ") : (ko ? "정답은 이거다" : "正解はこれだ"))}</strong><span class="fb-answer" lang="${esc(c.lang)}">${esc(c.example)}</span><span class="fb-mean">${esc(c.word)} · ${esc(c.meaning || "")}</span></div>`;
+    $("#fb").innerHTML = `<div class="feedback ${ok ? "ok" : "no"}"><strong>${esc(ok ? (ko ? "완벽하다냥" : "完璧だニャ") : (ko ? "정답은 이거다" : "正解はこれだ"))}</strong><span class="fb-answer" lang="${esc(c.lang)}">${esc(c.example)}</span><span class="fb-mean">${esc(c.word)} · ${esc(c.meaning || "")}</span>${explHTML(c)}</div>`;
     try{ speak(c.example); }catch(_){} track("order", { ok }); const nb = $("#chk"); nb.disabled = false; nb.textContent = x.next; nb.onclick = () => settleItem(ok); $("#idk").remove(); };
   const check = () => done(picked.map(p2 => p2.w).join(sep).replace(/\s+/g, "") === toks.join(sep).replace(/\s+/g, ""));
   $("#chk").onclick = check; $("#idk").onclick = () => done(false); draw(); }
@@ -2999,7 +3000,7 @@ function askChoice(c, kind, o){ const box = $("#sessionBox"), x = t(), ja = S.me
     btns.forEach(b => { b.disabled = true; const bv = o.opts[+b.dataset.i]; if(bv === o.ans) b.classList.add("ok"); else if(+b.dataset.i === i) b.classList.add("no"); });
     let why = ""; if(!ok && kind === "trap" && v){ const k = o.juku ? (ja ? "特別な読み" : "특수 읽기") : diffKind(o.ans, v); if(k) why = ja ? `ちがいは「${k}」` : `차이: ${k}`; }
     const line = kind === "trap" ? `${esc(c.word)} · ${esc(o.ans)} · ${esc(o.sub)}` : `${esc(c.word)}${readingOf(c) ? " · " + esc(readingOf(c)) : ""} · ${esc(o.ans)}`;
-    $("#fb").innerHTML = `<div class="feedback ${ok ? "ok" : "no"}"><strong>${esc(ok ? (ja ? "正解だニャ" : "정답이다냥") : (ja ? "正解はこれだ" : "정답은 이거다"))}</strong><span class="fb-mean">${line}</span>${why ? `<span class="small">${esc(why)}</span>` : ""}${ok ? "" : kanjiSib(c)}</div>`;
+    $("#fb").innerHTML = `<div class="feedback ${ok ? "ok" : "no"}"><strong>${esc(ok ? (ja ? "正解だニャ" : "정답이다냥") : (ja ? "正解はこれだ" : "정답은 이거다"))}</strong><span class="fb-mean">${line}</span>${why ? `<span class="small">${esc(why)}</span>` : ""}${ok ? "" : kanjiSib(c)}${explHTML(c)}</div>`;
     try{ speak(c.word); }catch(_){} try{ track("choice", { k: kind, ok, ms: Date.now() - t0 }); }catch(_){}
     const nb = $("#chk"); nb.disabled = false; nb.onclick = () => settleItem(ok); const ik = $("#idk"); if(ik) ik.style.visibility = "hidden"; };
   btns.forEach(b => b.onclick = () => done(+b.dataset.i)); $("#idk").onclick = () => done(null); }
@@ -3905,7 +3906,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v197";
+const APP_VER = "v198";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5655,21 +5656,24 @@ const curOf = it => (Array.isArray(it) && it.find(v => v && typeof v === "object
 const curSig = X => { const j = JSON.stringify(X); let h = 0; for(let k = 0; k < j.length; k++) h = (h * 31 + j.charCodeAt(k)) | 0; return (h >>> 0).toString(36); };
 /* fresh = 아직 한 번도 안 푼 카드 → 큐레이션 값으로 바꿈. 푼 카드는 비어 있는 칸만 채움(사용자가 쓴 예문은 절대 안 건드림) */
 /* 큐레이션 번역은 「그 예문」의 번역 — 예문이 같을 때만 붙인다(같은 단어가 단어장에 두 번 있으면 뜻·예문이 다름: 못하다 #3 劣る / #1677 出来ない) */
+/* 📖 해설: 그 예문·그 UI 언어로 쓴 것만(예문이 바뀌었으면 안 보임). 접힌 채로 — 펼치면 그 자리에서 읽기 */
+const explHTML = c => (c && c.expl && c.explE && c.explE === c.example) ? `<details class="fb-expl"><summary>📖 ${S.meta.settings.ui === "ja" ? "解説" : "해설"}</summary><span>${esc(c.expl)}</span></details>` : "";
 const curBase = (it, c) => (c && (c.lang || "es") === "ko" && typeof it[3] === "string") ? it[3] : "";
 function curApply(c, X, fresh, base){ if(!X || !c) return false; const ui = S.meta.settings.ui, sig = curSig(X); let ch = false;
-  const own = ex => !!ex && (X.e ? ex === X.e : (!!base && ex === base)), tr = X.t && X.t[ui];
+  const own = ex => !!ex && (X.e ? ex === X.e : (!!base && ex === base)), tr = X.t && X.t[ui], xp = X.x && X.x[ui];
+  const setX = () => { if(xp && own(c.example)){ if(c.expl !== xp || c.explE !== c.example){ c.expl = xp; c.explE = c.example; ch = true; } } };
   if(fresh){ if(c.curv === sig) return false;
     if(X.e){ c.example = X.e; c.src = null; c.audio = null; c.exampleKo = ""; ch = true; }
     if(X.f && (c.example || "").includes(X.f)){ c.form = X.f; ch = true; } else if(X.e) c.form = findForm(c.example, c.word);
     if(X.r) { c.formR = X.r; ch = true; }
     if(tr && (c.lang || "es") !== ui && own(c.example)){ c.exampleKo = tr; ch = true; }
     if(c.example && c.mOk && c.lazy && X.e) delete c.lazy;   // 예문·뜻이 다 있으면 Tatoeba 조회 생략
-    c.curv = sig; return ch; }
+    setX(); c.curv = sig; return ch; }
   if(!c.example && X.e){ c.example = X.e; c.form = X.f && X.e.includes(X.f) ? X.f : findForm(X.e, c.word); if(X.r) c.formR = X.r; if(tr && (c.lang || "es") !== ui) c.exampleKo = tr; ch = true; }
   else if(own(c.example)){ if(!c.exampleKo && tr && (c.lang || "es") !== ui){ c.exampleKo = tr; ch = true; } if(X.r && !c.formR){ c.formR = X.r; ch = true; } }
-  return ch; }
+  setX(); return ch; }
 /* 이미 만들어진 카드에 큐레이션 반영 — ⑥이 데이터를 더할 때마다 자동으로(하루 한 번) */
-async function applyCuration(force){ if(!(S.meta.curdup >= 1)) force = true;   // 같은 단어 번역 섞임 고치기: 한 번은 바로 다시 돌림
+async function applyCuration(force){ if(!(S.meta.curdup >= 2)) force = true;   // 같은 단어 번역 섞임 고치기: 한 번은 바로 다시 돌림
   if(!force && S.meta.exfix && Date.now() - S.meta.exfix < 20 * 3600e3) return 0; let n = 0;
   try{ for(const d of decks()){ if(!d.preset || d.preset.startsWith("script-") || d.preset.endsWith("-slang")) continue; const data = await presetData(d.preset), map = {};
       (data.items || []).forEach(it => { const X = curOf(it); if(X) (map[it[0]] = map[it[0]] || []).push({ X, it }); }); if(!Object.keys(map).length) continue;
@@ -5679,7 +5683,7 @@ async function applyCuration(force){ if(!(S.meta.curdup >= 1)) force = true;   /
         /* 고치기: 다른 예문의 번역이 붙어 있으면(옛 버그) 내 번역으로 바꾸거나 비운다 → 비면 fillTr가 다시 받음 */
         if(c.exampleKo && L.some(x => x !== mine && x.X.t && x.X.t[ui] === c.exampleKo && ex(c)(x) !== c.example)){ const t = mine && mine.X.t && mine.X.t[ui]; c.exampleKo = (t && ex(c)(mine) === c.example) ? t : ""; c.u = Date.now(); n++; }
         if(!mine) return; if(curApply(c, mine.X, c.isNew && !c.reps, curBase(mine.it, c))){ c.u = Date.now(); n++; } }); }
-    S.meta.exfix = Date.now(); S.meta.curdup = 1; save(); if(n){ track("cur_apply", { n }); if(!SES) renderAll(); } }catch(e){} return n; }
+    S.meta.exfix = Date.now(); S.meta.curdup = 2; save(); if(n){ track("cur_apply", { n }); if(!SES) renderAll(); } }catch(e){} return n; }
 let TOPUP_BUSY = false;
 async function topUpPresets(){
   if(TOPUP_BUSY) return; TOPUP_BUSY = true; let added = 0;
@@ -6373,7 +6377,7 @@ function chatBind(){ const box = $("#chatBox"); if(!box || box._b) return; box._
     list = await chatCands(msgs, S.meta.settings.lang, whoSel.value); track("chat_parse", { msgs: msgs.length, cand: list.length, who: whoSel.value ? 1 : 0, names: whoSel.options.length - 1 }); draw(); }; }
 function chatSync(){ const b = $("#amChat"); if(b) b.classList.toggle("hidden", !FR_OK()); const box = $("#chatBox"); if(box && FR_OK()) chatBind(); }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { frState, frEvents, frHomeLine, frSync, frOpen, frBoot, frNextIn, cardBoot, cardShow, cardMake, cardCanvas, b64uEnc, b64uDec, parseChat, chatWords, chatCands, chatBind, segWords, FR_OK, REC: () => REC, recOpen, payOpen, payWhat, payGrant, buyDays, buyExpNote, bizFootHTML, renderShop, dueCards, revToday, provButtons, presetDeckName, deckName, mergeData, mergeCard, mergePet, syncNow, payload, jaTailOk, formBoundOk, loanMatch, loanSk, frameSplit, frameParts, frameOpts, askFrame, materializeFrame, addPresetMore, presetMore, wlFind, wlLangOf, wlMake, newCandidates: () => newCandidates(), rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, closePet, petGrab, petDragMove, petRelease, petThrow, petRefund, purrState: () => ({ on: !!PURR, purr0: PET ? PET.purr0 || 0 : 0, n: PET ? PET.purrN || 0 : 0 }), sndMode, buyGrant, petCount, PT: () => PT, MELT: () => MELT, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { explHTML, frState, frEvents, frHomeLine, frSync, frOpen, frBoot, frNextIn, cardBoot, cardShow, cardMake, cardCanvas, b64uEnc, b64uDec, parseChat, chatWords, chatCands, chatBind, segWords, FR_OK, REC: () => REC, recOpen, payOpen, payWhat, payGrant, buyDays, buyExpNote, bizFootHTML, renderShop, dueCards, revToday, provButtons, presetDeckName, deckName, mergeData, mergeCard, mergePet, syncNow, payload, jaTailOk, formBoundOk, loanMatch, loanSk, frameSplit, frameParts, frameOpts, askFrame, materializeFrame, addPresetMore, presetMore, wlFind, wlLangOf, wlMake, newCandidates: () => newCandidates(), rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, closePet, petGrab, petDragMove, petRelease, petThrow, petRefund, purrState: () => ({ on: !!PURR, purr0: PET ? PET.purr0 || 0 : 0, n: PET ? PET.purrN || 0 : 0 }), sndMode, buyGrant, petCount, PT: () => PT, MELT: () => MELT, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(PET) petRefundFlying(PET); }catch(_){} try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 if(!REC) setTimeout(() => { try{ cardBoot(); frBoot(); const f = S.meta.fr; if(FR_OK() && f && f.list && f.list.length && Date.now() - (f.at || 0) > 6 * 36e5) frSync().then(() => { if(!SES) renderStart(); }); }catch(e){} }, 1200);
 load(); PET_SIG = petSig(); migrateSteps(); sulkInit(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain(); if(REC) setTimeout(recOpen, 60);
