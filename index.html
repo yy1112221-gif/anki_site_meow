@@ -3905,7 +3905,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v196";
+const APP_VER = "v197";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -5645,7 +5645,7 @@ function materialize(d, data, want){
     else if(lang === "es" || lang === "en"){ const nat = ui === "ko" ? it[1] : ui === "ja" ? it[2] : ""; if(nat){ o.meaning = nat; o.mOk = 1; } o.lazy = 1; }
     else o.lazy = 1;
     const c = newCard(o); c.created = now + i; c.reading = o.reading || ""; if(o.lazy) c.lazy = 1; if(o.mOk) c.mOk = 1; if(c.example) c.form = findForm(c.example, c.word);
-    curApply(c, curOf(it), true);
+    curApply(c, curOf(it), true, curBase(it, c));
     S.cards[c.id] = c; have.add(norm(w)); n++;
   }
   d.cursor = i; d.total = data.items.length; return n;
@@ -5654,23 +5654,32 @@ function materialize(d, data, want){
 const curOf = it => (Array.isArray(it) && it.find(v => v && typeof v === "object" && !Array.isArray(v))) || null;
 const curSig = X => { const j = JSON.stringify(X); let h = 0; for(let k = 0; k < j.length; k++) h = (h * 31 + j.charCodeAt(k)) | 0; return (h >>> 0).toString(36); };
 /* fresh = 아직 한 번도 안 푼 카드 → 큐레이션 값으로 바꿈. 푼 카드는 비어 있는 칸만 채움(사용자가 쓴 예문은 절대 안 건드림) */
-function curApply(c, X, fresh){ if(!X || !c) return false; const ui = S.meta.settings.ui, tr = X.t && X.t[ui], sig = curSig(X); let ch = false;
+/* 큐레이션 번역은 「그 예문」의 번역 — 예문이 같을 때만 붙인다(같은 단어가 단어장에 두 번 있으면 뜻·예문이 다름: 못하다 #3 劣る / #1677 出来ない) */
+const curBase = (it, c) => (c && (c.lang || "es") === "ko" && typeof it[3] === "string") ? it[3] : "";
+function curApply(c, X, fresh, base){ if(!X || !c) return false; const ui = S.meta.settings.ui, sig = curSig(X); let ch = false;
+  const own = ex => !!ex && (X.e ? ex === X.e : (!!base && ex === base)), tr = X.t && X.t[ui];
   if(fresh){ if(c.curv === sig) return false;
     if(X.e){ c.example = X.e; c.src = null; c.audio = null; c.exampleKo = ""; ch = true; }
     if(X.f && (c.example || "").includes(X.f)){ c.form = X.f; ch = true; } else if(X.e) c.form = findForm(c.example, c.word);
     if(X.r) { c.formR = X.r; ch = true; }
-    if(tr && (c.lang || "es") !== ui){ c.exampleKo = tr; ch = true; }
+    if(tr && (c.lang || "es") !== ui && own(c.example)){ c.exampleKo = tr; ch = true; }
     if(c.example && c.mOk && c.lazy && X.e) delete c.lazy;   // 예문·뜻이 다 있으면 Tatoeba 조회 생략
     c.curv = sig; return ch; }
   if(!c.example && X.e){ c.example = X.e; c.form = X.f && X.e.includes(X.f) ? X.f : findForm(X.e, c.word); if(X.r) c.formR = X.r; if(tr && (c.lang || "es") !== ui) c.exampleKo = tr; ch = true; }
-  else if(c.example && X.e && c.example === X.e){ if(!c.exampleKo && tr && (c.lang || "es") !== ui){ c.exampleKo = tr; ch = true; } if(X.r && !c.formR){ c.formR = X.r; ch = true; } }
+  else if(own(c.example)){ if(!c.exampleKo && tr && (c.lang || "es") !== ui){ c.exampleKo = tr; ch = true; } if(X.r && !c.formR){ c.formR = X.r; ch = true; } }
   return ch; }
 /* 이미 만들어진 카드에 큐레이션 반영 — ⑥이 데이터를 더할 때마다 자동으로(하루 한 번) */
-async function applyCuration(force){ if(!force && S.meta.exfix && Date.now() - S.meta.exfix < 20 * 3600e3) return 0; let n = 0;
+async function applyCuration(force){ if(!(S.meta.curdup >= 1)) force = true;   // 같은 단어 번역 섞임 고치기: 한 번은 바로 다시 돌림
+  if(!force && S.meta.exfix && Date.now() - S.meta.exfix < 20 * 3600e3) return 0; let n = 0;
   try{ for(const d of decks()){ if(!d.preset || d.preset.startsWith("script-") || d.preset.endsWith("-slang")) continue; const data = await presetData(d.preset), map = {};
-      (data.items || []).forEach(it => { const X = curOf(it); if(X) map[it[0]] = X; }); if(!Object.keys(map).length) continue;
-      Object.values(S.cards).forEach(c => { if(c.deck !== d.id) return; const X = map[c.word]; if(!X) return; if(curApply(c, X, c.isNew && !c.reps)){ c.u = Date.now(); n++; } }); }
-    S.meta.exfix = Date.now(); save(); if(n){ track("cur_apply", { n }); if(!SES) renderAll(); } }catch(e){} return n; }
+      (data.items || []).forEach(it => { const X = curOf(it); if(X) (map[it[0]] = map[it[0]] || []).push({ X, it }); }); if(!Object.keys(map).length) continue;
+      const ui = S.meta.settings.ui;
+      Object.values(S.cards).forEach(c => { if(c.deck !== d.id) return; const L = map[c.word]; if(!L) return;
+        const ex = c => (x => x.X.e || curBase(x.it, c)), mine = L.find(x => ex(c)(x) && ex(c)(x) === c.example) || (L.length === 1 ? L[0] : null);
+        /* 고치기: 다른 예문의 번역이 붙어 있으면(옛 버그) 내 번역으로 바꾸거나 비운다 → 비면 fillTr가 다시 받음 */
+        if(c.exampleKo && L.some(x => x !== mine && x.X.t && x.X.t[ui] === c.exampleKo && ex(c)(x) !== c.example)){ const t = mine && mine.X.t && mine.X.t[ui]; c.exampleKo = (t && ex(c)(mine) === c.example) ? t : ""; c.u = Date.now(); n++; }
+        if(!mine) return; if(curApply(c, mine.X, c.isNew && !c.reps, curBase(mine.it, c))){ c.u = Date.now(); n++; } }); }
+    S.meta.exfix = Date.now(); S.meta.curdup = 1; save(); if(n){ track("cur_apply", { n }); if(!SES) renderAll(); } }catch(e){} return n; }
 let TOPUP_BUSY = false;
 async function topUpPresets(){
   if(TOPUP_BUSY) return; TOPUP_BUSY = true; let added = 0;

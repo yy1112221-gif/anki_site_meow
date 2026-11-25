@@ -49,7 +49,7 @@ if [ "$SCOPE" = auto ]; then SCOPE=full
     [ -n "$CH" ] && [ -z "$OTHER" ] && [ -z "$VER" ] && SCOPE=data
   fi
 fi
-[ "$SCOPE" = data ] && TESTS="treg tsafe t_curation t_steps t_meaning t_cloze t_jafix t_frame t_diag t_hint"
+[ "$SCOPE" = data ] && TESTS="treg tsafe t_curation t_curdup t_steps t_meaning t_cloze t_jafix t_frame t_diag t_hint"
 echo "🔎 검사 범위: $SCOPE"
 L=/tmp/qa_logs; rm -rf "$L"; mkdir -p "$L"; T0=$(date +%s)
 printf '%s\n' $TESTS | xargs -P "${QA_JOBS:-2}" -I{} sh -c 'S=$(date +%s); if timeout 420 python3 tools/qa/{}.py > '"$L"'/{}.log 2>&1; then echo "✅ {} ($(( $(date +%s)-S ))s)"; else echo "… {} 실패 → 혼자 다시"; touch '"$L"'/{}.fail; fi'
