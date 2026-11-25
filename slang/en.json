@@ -1,14 +1,14 @@
 {
- "updated": "2026-11-24T22:15:26.468142Z",
+ "updated": "2026-11-25T22:16:05.111463Z",
  "lang": "en",
  "terms": [
   {
    "t": "mogging",
-   "n": 51,
+   "n": 34,
    "src": [
     "google_news"
    ],
-   "s": 53,
+   "s": 36,
    "first": "2026-11-18",
    "def": [
     "The act or habit of being significantly more attractive than someone or something; a domination in appearance",
@@ -18,32 +18,96 @@
     "Are you mogging or maxxing?",
     "#WordOfTheDay: \"mogging\" Curious about the definition and etymology of our WOTD?"
    ],
-   "at": "2026-11-24T22:15:26.468142Z",
-   "cue": 60
+   "at": "2026-11-25T22:16:05.111463Z",
+   "cue": 44
   },
   {
-   "t": "maxxing",
-   "n": 13,
+   "t": "clock it",
+   "n": 4,
    "src": [
+    "bing_news",
     "google_news"
    ],
-   "s": 15,
+   "s": 8,
    "first": "2026-11-18",
-   "def": [],
-   "ex": [
-    "Are you mogging or maxxing?"
+   "def": [
+    "A congratulation of success",
+    "Here's what it means and how it became the basis for many memes.\",\"headline\":\"What Is The 'Clock It' Meme?",
+    "A congratulation of success ."
    ],
-   "at": "2026-11-24T22:15:26.468142Z",
-   "cue": 15
+   "ex": [
+    "In this context, phrases such as \"clock it\" and \"clock that tea\" function as affirmations, signaling agreement with or praise for someone's observation.",
+    "For the full history of Clock It, be sure to check out Know Your Meme's encyclopedia entry for more information.",
+    "BJP MP Bansuri Swaraj used the phrase \"clock it\" while supporting the Bill and praising the government's approach to tackling examination-related irregularities."
+   ],
+   "at": "2026-11-25T22:16:05.111463Z",
+   "cue": 5
   },
   {
-   "t": "skibidi",
+   "t": "chopped",
    "n": 3,
    "src": [
     "bing_news",
     "google_news"
    ],
    "s": 7,
+   "first": "2026-11-25",
+   "def": [
+    "So, what does \"chopped\" actually mean in slang?",
+    "In modern slang, \"chopped\" means unattractive, ugly or undesirable.",
+    "Cut or diced into small pieces"
+   ],
+   "ex": [
+    "\"I look chopped in this picture.\" — A self-deprecating way of saying the photo is unflattering.",
+    "\"That haircut is chopped.\" — Suggests that someone doesn't think the haircut looks good.",
+    "But if someone calls you \"chopped\" on social media, they probably aren't talking about your cooking skills."
+   ],
+   "at": "2026-11-25T22:16:05.111463Z",
+   "cue": 11
+  },
+  {
+   "t": "maxxing",
+   "n": 4,
+   "src": [
+    "google_news"
+   ],
+   "s": 6,
+   "first": "2026-11-18",
+   "def": [],
+   "ex": [
+    "Are you mogging or maxxing?"
+   ],
+   "at": "2026-11-25T22:16:05.111463Z",
+   "cue": 5
+  },
+  {
+   "t": "ratioed",
+   "n": 2,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 6,
+   "first": "2026-11-18",
+   "def": [
+    "Modified or multiplied by a ratio",
+    "Having significantly more replies than retweets or likes , indicating a general dislike by the public",
+    "‘Ratioed’ means that a tweet or post gets more replies than likes."
+   ],
+   "ex": [
+    "But often something simple can end up being ratioed as it goes unexpectedly viral."
+   ],
+   "at": "2026-11-25T22:16:05.111463Z",
+   "cue": 2
+  },
+  {
+   "t": "skibidi",
+   "n": 2,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 6,
    "first": "2026-11-19",
    "def": [
     "Skibidi word has various different meaning in some cases it can mean \"bad\" or \"cool,\" or it can be used in a meaningless way, according to the dictionary.",
@@ -52,46 +116,26 @@
    ],
    "ex": [
     "Skibidi we put the rhythm to the 'tism!",
-    "Definition: There is no one definition for skibidi, it is more of an expression.",
-    "Skibidi toilet, gyatt, Ohio, rizz — what are the kids going on about these days?",
-    "The task of defining \"skibidi,\" a term derived from viral memes, was also taken on by the publishers."
+    "The task of defining \"skibidi,\" a term derived from viral memes, was also taken on by the publishers.",
+    "It originated from a YouTube videos series called ‘Skibidi Toilet’ that featured animated talking heads.",
+    "Definition: There is no one definition for skibidi, it is more of an expression."
    ],
-   "at": "2026-11-24T22:15:26.468142Z",
-   "cue": 6
-  },
-  {
-   "t": "clock it",
-   "n": 2,
-   "src": [
-    "google_news"
-   ],
-   "s": 4,
-   "first": "2026-11-18",
-   "def": [
-    "Here's what it means and how it became the basis for many memes.\",\"headline\":\"What Is The 'Clock It' Meme?",
-    "A congratulation of success",
-    "A congratulation of success ."
-   ],
-   "ex": [
-    "In this context, phrases such as \"clock it\" and \"clock that tea\" function as affirmations, signaling agreement with or praise for someone's observation.",
-    "For the full history of Clock It, be sure to check out Know Your Meme's encyclopedia entry for more information.",
-    "BJP MP Bansuri Swaraj used the phrase \"clock it\" while supporting the Bill and praising the government's approach to tackling examination-related irregularities."
-   ],
-   "at": "2026-11-24T22:15:26.468142Z",
-   "cue": 7
+   "at": "2026-11-25T22:16:05.111463Z",
+   "cue": 5
   },
   {
    "t": "delulu",
    "n": 2,
    "src": [
+    "bing_news",
     "google_news"
    ],
-   "s": 4,
+   "s": 6,
    "first": "2026-11-18",
    "def": [
-    "Another term that the government now recognises as an acronym for delusions is \"Delulu.\" It refers to someone believing things that are unrealistic, often out of choice.",
     "Delusional",
-    "Delusion ; delusional attitudes or thoughts"
+    "Delusion ; delusional attitudes or thoughts",
+    "Another term that the government now recognises as an acronym for delusions is \"Delulu.\" It refers to someone believing things that are unrealistic, often out of choice."
    ],
    "ex": [
     "\"If being delulu is wrong, I don't want to be right.\"",
@@ -99,44 +143,8 @@
     "In other instances, \"delulu\" is used in a light-hearted manner, often in memes or social media comments, to poke fun at one's interests.",
     "Meanwhile, words like Delulu are shortened versions of existing words."
    ],
-   "at": "2026-11-24T22:15:26.468142Z",
-   "cue": 4
-  },
-  {
-   "t": "firewave",
-   "n": 2,
-   "src": [
-    "google_news"
-   ],
-   "s": 4,
-   "first": "2026-11-22",
-   "def": [
-    "The occurrence of multiple urban wildfires as a result of prolonged hot and dry weather"
-   ],
-   "ex": [
-    "Other shortlisted words included “firewave”, “ghost jobs” and “carspreading”."
-   ],
-   "at": "2026-11-24T22:15:26.468142Z",
-   "cue": 3
-  },
-  {
-   "t": "friendslop",
-   "n": 2,
-   "src": [
-    "google_news"
-   ],
-   "s": 4,
-   "first": "2026-11-23",
-   "def": [
-    "Co-operative multi-player video games as a genre , typified by low-budget , low-cost indie games intended to motivate friend groups to purchase and play together"
-   ],
-   "ex": [
-    "So, sure: You could look at the crudeness of friendslop and deem it a deficiency.",
-    "The flaws, however, might be the precise thing that makes friendslop trustworthy and approachable as a genre.",
-    "Friendslop is chopped, and mogging is sigma."
-   ],
-   "at": "2026-11-24T22:15:26.468142Z",
-   "cue": 3
+   "at": "2026-11-25T22:16:05.111463Z",
+   "cue": 6
   },
   {
    "t": "code rot",
@@ -156,25 +164,24 @@
     "\"Code rot\" is the latest gaming term to make its way into Gen Z slang.",
     "By October, a Despicable Me 4 TikTok filter had brought the \"code rot\" joke beyond Roblox."
    ],
-   "at": "2026-11-24T22:15:26.468142Z",
+   "at": "2026-11-25T22:16:05.111463Z",
    "cue": 6
   },
   {
-   "t": "pressed",
+   "t": "crashing out",
    "n": 2,
    "src": [
     "bing_news"
    ],
    "s": 4,
-   "first": "2026-11-24",
-   "def": [
-    "Under strain or deprivation",
-    "Upset , bothered , reprimanded"
-   ],
+   "first": "2026-11-25",
+   "def": [],
    "ex": [
-    "The staff was even more pressed for useful intelligence about the enemy's intentions than it was about the enemy's capabilities."
+    "If you've been online lately, you've likely seen people talking about crashing out.",
+    "Well, not literally — though, plenty of people actually are crashing out.",
+    "For some, “crashing out” can be a liberating release of pent-up emotions."
    ],
-   "at": "2026-11-24T22:15:26.468142Z",
+   "at": "2026-11-25T22:16:05.111463Z",
    "cue": 2
   },
   {
@@ -187,8 +194,291 @@
    "first": "2026-11-23",
    "def": [],
    "ex": [],
-   "at": "2026-11-24T22:15:26.468142Z",
+   "at": "2026-11-25T22:16:05.111463Z",
    "cue": 1
+  },
+  {
+   "t": "firewave",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-22",
+   "def": [
+    "The occurrence of multiple urban wildfires as a result of prolonged hot and dry weather"
+   ],
+   "ex": [
+    "Other shortlisted words included “firewave”, “ghost jobs” and “carspreading”."
+   ],
+   "at": "2026-11-25T22:16:05.111463Z",
+   "cue": 2
+  },
+  {
+   "t": "friendslop",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-23",
+   "def": [
+    "Co-operative multi-player video games as a genre , typified by low-budget , low-cost indie games intended to motivate friend groups to purchase and play together"
+   ],
+   "ex": [
+    "Nevertheless, friendslop has come to describe multiplayer games that share several characteristics.",
+    "So, sure: You could look at the crudeness of friendslop and deem it a deficiency.",
+    "Many friendslop games generate a new environment for each session.",
+    "The flaws, however, might be the precise thing that makes friendslop trustworthy and approachable as a genre."
+   ],
+   "at": "2026-11-25T22:16:05.111463Z",
+   "cue": 2
+  },
+  {
+   "t": "unc",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-21",
+   "def": [
+    "Old; old-fashioned; out-of-touch; no longer versed in or relevant to current youth culture; or acting older than their age",
+    "Clipping of uncle",
+    "Curious about the meaning behind the TikTok slang term “unc” ?"
+   ],
+   "ex": [
+    "The use of “unc” on TikTok often conveys both humor and lighthearted criticism.",
+    "If you're wondering this, you probably are \\\"unc\\\"—but that may not be a bad thing.",
+    "“Unc” also has roots in broader cultural contexts, particularly within AAVE, where it traditionally referred to actual family members."
+   ],
+   "at": "2026-11-25T22:16:05.111463Z",
+   "cue": 7
+  },
+  {
+   "t": "calling me unc",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-22",
+   "def": [],
+   "ex": [],
+   "at": "2026-11-25T22:16:05.111463Z",
+   "cue": 1
+  },
+  {
+   "t": "human",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "Of or belonging to the species Homo sapiens or its closest relatives",
+    "Having the nature or attributes of a human being"
+   ],
+   "ex": [
+    "To err is human ; to forgive, divine.",
+    "She's only human , so give her a break !",
+    "But this community of enthusiasts also offers deep insights into human nature.",
+    "Their fresh and accessible translations remind us that love is both ever-changing and eternally essential to human life."
+   ],
+   "at": "2026-11-25T22:16:05.111463Z",
+   "cue": 2
+  },
+  {
+   "t": "huss",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-20",
+   "def": [
+    "But what exactly does \"huss\" mean, and where did it come from?",
+    "In memes, the term \"huss\" is used to refer to the act of sprinting or exerting yourself in some other way.",
+    "A dogfish"
+   ],
+   "ex": [
+    "While telling the story, he's seen \"hussing\" while dribbling a basketball.",
+    "Throughout the video, while telling the story, we see him dribbling a basketball and yelling, \"Huss, huss, huss!\"",
+    "This meme might have been the final push that the term \"huss\" needed to go mainstream.",
+    "While telling the story, he is occasionally shown dribbling the ball while saying, \"Huss, huss, huss.\""
+   ],
+   "at": "2026-11-25T22:16:05.111463Z",
+   "cue": 16
+  },
+  {
+   "t": "tante-tante code",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "What Does the 'Tante-Tante Code' Mean?"
+   ],
+   "ex": [],
+   "at": "2026-11-25T22:16:05.111463Z",
+   "cue": 1
+  },
+  {
+   "t": "pressed",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-24",
+   "def": [
+    "Under strain or deprivation",
+    "Upset , bothered , reprimanded"
+   ],
+   "ex": [
+    "The staff was even more pressed for useful intelligence about the enemy's intentions than it was about the enemy's capabilities."
+   ],
+   "at": "2026-11-25T22:16:05.111463Z",
+   "cue": 1
+  },
+  {
+   "t": "atp",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "charismatic",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "demure",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "sus",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "mid",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "rizz",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "ijbol",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "bruh",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "meroi",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "choberigu",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "benching",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "situationship",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "or",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "six-seven",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "fomo",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "waste-guna-huiya",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "brain rot",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
   },
   {
    "t": "aura farming",
@@ -229,229 +519,6 @@
    ],
    "at": "2026-11-24T22:15:26.468142Z",
    "cue": 7
-  },
-  {
-   "t": "unc",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-21",
-   "def": [
-    "Old; old-fashioned; out-of-touch; no longer versed in or relevant to current youth culture; or acting older than their age",
-    "Clipping of uncle",
-    "Curious about the meaning behind the TikTok slang term “unc” ?"
-   ],
-   "ex": [
-    "The use of “unc” on TikTok often conveys both humor and lighthearted criticism.",
-    "If you're wondering this, you probably are \\\"unc\\\"—but that may not be a bad thing.",
-    "“Unc” also has roots in broader cultural contexts, particularly within AAVE, where it traditionally referred to actual family members."
-   ],
-   "at": "2026-11-24T22:15:26.468142Z",
-   "cue": 9
-  },
-  {
-   "t": "ratioed",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Modified or multiplied by a ratio",
-    "Having significantly more replies than retweets or likes , indicating a general dislike by the public",
-    "‘Ratioed’ means that a tweet or post gets more replies than likes."
-   ],
-   "ex": [
-    "But often something simple can end up being ratioed as it goes unexpectedly viral."
-   ],
-   "at": "2026-11-24T22:15:26.468142Z",
-   "cue": 1
-  },
-  {
-   "t": "calling me unc",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-22",
-   "def": [],
-   "ex": [],
-   "at": "2026-11-24T22:15:26.468142Z",
-   "cue": 1
-  },
-  {
-   "t": "human",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Of or belonging to the species Homo sapiens or its closest relatives",
-    "Having the nature or attributes of a human being"
-   ],
-   "ex": [
-    "To err is human ; to forgive, divine.",
-    "She's only human , so give her a break !",
-    "But this community of enthusiasts also offers deep insights into human nature.",
-    "Their fresh and accessible translations remind us that love is both ever-changing and eternally essential to human life."
-   ],
-   "at": "2026-11-24T22:15:26.468142Z",
-   "cue": 2
-  },
-  {
-   "t": "huss",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-20",
-   "def": [
-    "But what exactly does \"huss\" mean, and where did it come from?",
-    "In memes, the term \"huss\" is used to refer to the act of sprinting or exerting yourself in some other way.",
-    "A dogfish"
-   ],
-   "ex": [
-    "While telling the story, he's seen \"hussing\" while dribbling a basketball.",
-    "Throughout the video, while telling the story, we see him dribbling a basketball and yelling, \"Huss, huss, huss!\"",
-    "This meme might have been the final push that the term \"huss\" needed to go mainstream.",
-    "While telling the story, he is occasionally shown dribbling the ball while saying, \"Huss, huss, huss.\""
-   ],
-   "at": "2026-11-24T22:15:26.468142Z",
-   "cue": 16
-  },
-  {
-   "t": "tante-tante code",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "What Does the 'Tante-Tante Code' Mean?"
-   ],
-   "ex": [],
-   "at": "2026-11-24T22:15:26.468142Z",
-   "cue": 1
-  },
-  {
-   "t": "preppy",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "shrek",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "atp",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "charismatic",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "sus",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "mid",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "rizz",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "ijbol",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "demure",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "crashing out",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "bruh",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "brain rot",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "new",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "i really like",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
   },
   {
    "t": "because they can",
