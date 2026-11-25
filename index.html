@@ -168,6 +168,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .su-opt{min-height:72px;border-radius:18px;border:2px solid var(--glass-edge,#ddd);background:var(--surface,#fff);color:var(--ink);font-size:1.15rem;font-weight:800;cursor:pointer}
 .su-opt.on{border-color:var(--accent);box-shadow:0 0 0 3px rgba(61,195,143,.25)} .su-opt.ox{font-size:2rem;min-height:84px} .su-opt:active{transform:scale(.97)}
 .su-wheel{position:relative;height:220px;overflow-y:auto;scroll-snap-type:y mandatory;border-radius:18px;background:var(--surface,#fff);border:2px solid var(--glass-edge,#ddd);padding:88px 0;-webkit-mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent)}
+.su-wheels{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:6px} .su-wheels .su-md .su-y{font-size:1rem} .su-wheels .su-md .su-y.on{font-size:1.3rem}
 .su-y{height:44px;line-height:44px;text-align:center;font-size:1.15rem;font-weight:700;color:var(--muted);scroll-snap-align:center;cursor:pointer} .su-y.on{color:var(--ink);font-size:1.6rem;font-weight:900}
 .su-row{display:flex;justify-content:space-between;align-items:center} .su-note{font-size:.8rem;color:var(--muted);text-align:center;margin:0} .su-back{align-self:flex-start;font-size:.85rem}
 .movebar{position:fixed;left:10px;right:10px;top:calc(8px + env(safe-area-inset-top));z-index:85;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:var(--surface,#fff);border:2px solid var(--accent);box-shadow:0 8px 24px rgba(0,0,0,.15);font-weight:700;font-size:.9rem} .movebar span{flex:1}
@@ -2263,27 +2264,32 @@ function nerdPop(b){ if(NERD_ON || !b) return false; NERD_ON = true; const N = N
   return true; }
 /* ════════ 첫 접속 3초 설정: 화면 언어 → 배울 언어 → 태어난 해(스크롤) → 튜토리얼 O/X ════════ */
 const SETUP_T = {
- ko: { hi: "…왔군. 세 가지만 탁탁탁 골라라.", ui: "너가 가장 편한 언어 (배우는 언어 말고)", learn: "배우는 언어", born: "태어난 해", ok: "이걸로", skip: "건너뛰기", tut: "1분 튜토리얼 볼래?", tutNote: "나중에 설정에서 다시 볼 수 있으니 안심해라냥", back: "← 뒤로" },
- ja: { hi: "…来たか。三つだけ、ポンポンポンと選べ。", ui: "いちばん楽な言語（学ぶ言語じゃなくて）", learn: "学ぶ言語", born: "生まれた年", ok: "これで", skip: "スキップ", tut: "1分チュートリアル見る？", tutNote: "あとで設定からまた見られるから安心するニャ", back: "← 戻る" } };
+ ko: { hi: "…왔군. 세 가지만 탁탁탁 골라라.", ui: "너가 가장 편한 언어 (배우는 언어 말고)", learn: "배우는 언어", born: "생년월일 (월·일은 선택)", ok: "이걸로", skip: "건너뛰기", tut: "1분 튜토리얼 볼래?", tutNote: "나중에 설정에서 다시 볼 수 있으니 안심해라냥", back: "← 뒤로" },
+ ja: { hi: "…来たか。三つだけ、ポンポンポンと選べ。", ui: "いちばん楽な言語（学ぶ言語じゃなくて）", learn: "学ぶ言語", born: "生年月日（月・日は任意）", ok: "これで", skip: "スキップ", tut: "1分チュートリアル見る？", tutNote: "あとで設定からまた見られるから安心するニャ", back: "← 戻る" } };
 const needSetup = () => !/move=/.test(location.hash) && !S.meta.setup && !Object.keys(S.cards).length && !Object.keys(S.meta.days || {}).length && !syncOn();
 function maybeSetup(){ if(!needSetup() || $("#setupBox") || WL_PENDING) return; const st = S.meta.settings, box = document.createElement("div"); box.id = "setupBox"; box.setAttribute("role", "dialog"); document.body.appendChild(box);
   let step = 0; const T0 = Date.now(); const Y = new Date().getFullYear(), years = []; for(let y = Y - 6; y >= Y - 80; y--) years.push(y);
   const draw = () => { const x = SETUP_T[st.ui] || SETUP_T.ko, tt = t(); let body = "";
     if(step === 0) body = `<h3>${esc(SETUP_T.ko.ui)}<br><small style="font-weight:600;opacity:.75">${esc(SETUP_T.ja.ui)}</small></h3><div class="su-big">${[["ko", "🇰🇷 한국어<small> 韓国語</small>"], ["ja", "🇯🇵 日本語<small> 일본어</small>"]].map(([k, l]) => `<button type="button" class="su-opt${st.ui === k ? " on" : ""}" data-ui="${k}">${l}</button>`).join("")}</div>`;
     if(step === 1) body = `<h3>${esc(x.learn)}</h3><div class="su-grid">${["ja", "ko", "en", "es"].filter(k => k !== st.ui).map(k => `<button type="button" class="su-opt${st.lang === k ? " on" : ""}" data-lg="${k}">${FLAGS[k] || ""} ${esc(tt.langNames[k])}</button>`).join("")}</div>`;
-    if(step === 2) body = `<h3>${esc(x.born)}</h3><div class="su-wheel" id="suWheel">${years.map(y => `<div class="su-y" data-y="${y}">${y}</div>`).join("")}</div><div class="su-row"><button type="button" class="linkbtn" id="suSkip">${esc(x.skip)}</button><button type="button" class="btn primary big" id="suOk">${esc(x.ok)}</button></div>`;
+    if(step === 2) body = `<h3>${esc(x.born)}</h3><div class="su-wheels"><div class="su-wheel" id="suWheel">${years.map(y => `<div class="su-y" data-y="${y}">${y}</div>`).join("")}</div><div class="su-wheel su-md" id="suWM"><div class="su-y" data-v="">—</div>${Array.from({ length: 12 }, (_, i) => `<div class="su-y" data-v="${i + 1}">${i + 1}${st.ui === "ja" ? "月" : "월"}</div>`).join("")}</div><div class="su-wheel su-md" id="suWD"><div class="su-y" data-v="">—</div>${Array.from({ length: 31 }, (_, i) => `<div class="su-y" data-v="${i + 1}">${i + 1}${st.ui === "ja" ? "日" : "일"}</div>`).join("")}</div></div><div class="su-row"><button type="button" class="linkbtn" id="suSkip">${esc(x.skip)}</button><button type="button" class="btn primary big" id="suOk">${esc(x.ok)}</button></div>`;
     if(step === 3) body = `<h3>${esc(x.tut)}</h3><div class="su-big"><button type="button" class="su-opt ox" data-tut="1">⭕</button><button type="button" class="su-opt ox" data-tut="0">❌</button></div><p class="su-note">${esc(x.tutNote)}</p>`;
     box.innerHTML = `<div class="su-in">${say("st_default", step === 0 ? esc(SETUP_T.ko.hi) + "<br>" + esc(SETUP_T.ja.hi) : esc(x.hi))}<div class="su-dots">${[0, 1, 2, 3].map(i => `<i class="${i <= step ? "on" : ""}"></i>`).join("")}</div>${body}${step ? `<button type="button" class="linkbtn su-back" id="suBack">${esc(x.back)}</button>` : ""}</div>${bizFootHTML()}`; bizFill();
     const bk = $("#suBack"); if(bk) bk.onclick = () => { step--; draw(); };
     box.querySelectorAll("[data-ui]").forEach(b => b.onclick = () => { if(st.lang === b.dataset.ui) st.lang = b.dataset.ui === "ko" ? "ja" : "ko"; setUiLang(b.dataset.ui); track("setup", { step: 0, v: st.ui, ms: Date.now() - T0 }); step = 1; draw(); });
     box.querySelectorAll("[data-lg]").forEach(b => b.onclick = () => { st.lang = b.dataset.lg; st.handsFree = false; save(); track("setup", { step: 1, v: st.lang, ms: Date.now() - T0 }); step = 2; draw(); });
     box.querySelectorAll("[data-tut]").forEach(b => b.onclick = () => finish(b.dataset.tut === "1"));
-    const w = $("#suWheel"); if(w){ const def = S.meta.by || Y - 21, el = w.querySelector(`[data-y="${def}"]`) || w.children[15];
-      const mark = () => { const r = w.getBoundingClientRect(), c = r.top + r.height / 2; let best = null, bd = 1e9; [...w.children].forEach(k => { const kr = k.getBoundingClientRect(), d = Math.abs(kr.top + kr.height / 2 - c); if(d < bd){ bd = d; best = k; } }); w.querySelectorAll(".on").forEach(k => k.classList.remove("on")); if(best) best.classList.add("on"); return best; };
-      requestAnimationFrame(() => { w.scrollTop = el.offsetTop - w.clientHeight / 2 + el.offsetHeight / 2; mark(); });
-      w.addEventListener("scroll", () => requestAnimationFrame(mark), { passive: true });
-      w.onclick = e => { const k = e.target.closest(".su-y"); if(k) w.scrollTo({ top: k.offsetTop - w.clientHeight / 2 + k.offsetHeight / 2, behavior: "smooth" }); };
-      $("#suOk").onclick = () => { const k = mark(); if(k){ S.meta.by = +k.dataset.y; save(); } track("setup", { step: 2, v: S.meta.by || null, ms: Date.now() - T0 }); step = 3; draw(); };
+    const w = $("#suWheel"); if(w){ const md0 = (S.meta.bmd || "").split("-").map(Number);
+      const wire = (wh, el) => { const mark = () => { const r = wh.getBoundingClientRect(), c = r.top + r.height / 2; let best = null, bd = 1e9; [...wh.children].forEach(k => { const kr = k.getBoundingClientRect(), d = Math.abs(kr.top + kr.height / 2 - c); if(d < bd){ bd = d; best = k; } }); wh.querySelectorAll(".on").forEach(k => k.classList.remove("on")); if(best) best.classList.add("on"); return best; };
+        requestAnimationFrame(() => { wh.scrollTop = el.offsetTop - wh.clientHeight / 2 + el.offsetHeight / 2; mark(); });
+        wh.addEventListener("scroll", () => requestAnimationFrame(mark), { passive: true });
+        wh.onclick = e => { const k = e.target.closest(".su-y"); if(k) wh.scrollTo({ top: k.offsetTop - wh.clientHeight / 2 + k.offsetHeight / 2, behavior: "smooth" }); }; return mark; };
+      const mark = wire(w, w.querySelector(`[data-y="${S.meta.by || Y - 21}"]`) || w.children[15]), wm = $("#suWM"), wd = $("#suWD");
+      const markM = wire(wm, wm.querySelector(`[data-v="${md0[0] || ""}"]`) || wm.children[0]), markD = wire(wd, wd.querySelector(`[data-v="${md0[1] || ""}"]`) || wd.children[0]);
+      $("#suOk").onclick = () => { const k = mark(); if(k){ S.meta.by = +k.dataset.y; }
+        const m = +((markM() || {}).dataset || {}).v || 0; let d = +((markD() || {}).dataset || {}).v || 0;   // 11-25 사용자: 생일(월·일)도 함께, 고르지 않으면(—) 저장 안 함. 기기에만, 친구 공개는 따로(기본 끔)
+        if(m && d){ d = Math.min(d, [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m - 1]); S.meta.bmd = `${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`; const f = frState(); if(!f.bday) f.bday = S.meta.bmd; }
+        save(); track("setup", { step: 2, v: S.meta.by || null, bd: S.meta.bmd ? 1 : 0, ms: Date.now() - T0 }); step = 3; draw(); };
       $("#suSkip").onclick = () => { track("setup", { step: 2, v: "skip", ms: Date.now() - T0 }); step = 3; draw(); }; } };
   const finish = tut => { track("setup_done", { tut, ms: Date.now() - T0 }); S.meta.setup = 1; if(!Object.keys(S.meta.days || {}).length) S.meta.first1 = 1; S.meta.tutAsked = tut ? 0 : 1; S.meta.tutWant = tut ? 1 : 0; save(); box.classList.add("out"); setTimeout(() => box.remove(), 250);
     try{ fillLangs(); fillVoices(); }catch(e){} renderAll(); drawRain(); };
