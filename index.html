@@ -1006,12 +1006,21 @@ html.short body.focus #sessionBox:has(.poster.ce) > .say{display:flex}
 .fr-menu{display:flex;flex-direction:column;gap:6px;padding:6px 4px 10px} .fr-md{display:inline-flex;gap:4px} .fr-md select{width:auto} .fr-pg{justify-content:center;gap:10px} .fr-req{display:flex;flex-direction:column;gap:10px;text-align:center}
 .fr-set summary{cursor:pointer;font-weight:700} .hv2-say.fr-ev{cursor:pointer} .fb-from{display:block;font-size:.78rem;color:var(--rust);margin-top:4px}
 .card-pv canvas{width:100%;max-width:240px;height:auto;display:block;margin:0 auto;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,.12)} .cd-opt{flex-wrap:wrap;gap:6px;align-items:center}
-.cd-t,.cd-w{min-width:44px;min-height:44px;border-radius:12px;border:2px solid var(--line);background:var(--surface);cursor:pointer;padding:2px} .cd-t[aria-pressed="true"],.cd-w[aria-pressed="true"]{border-color:var(--ink)}
-.cd-box{position:relative;width:150px;height:140px;margin:10px auto 0;cursor:pointer;animation:cdShake 1.1s ease-in-out infinite} .cd-body{position:absolute;left:10px;right:10px;bottom:0;height:96px;border-radius:12px;background:var(--wr);box-shadow:inset 0 0 0 3px rgba(0,0,0,.06)}
-.cd-body::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:18px;margin-left:-9px;background:var(--rb)} .cd-lid{position:absolute;left:0;right:0;top:14px;height:34px;border-radius:10px;background:var(--wr);z-index:1;box-shadow:inset 0 -3px 0 rgba(0,0,0,.08)}
-.cd-lid::after{content:"🎀";position:absolute;left:50%;top:-30px;transform:translateX(-50%);font-size:2.4rem} .cd-box.open{animation:none} .cd-box.open .cd-lid{transition:transform .4s;transform:translateY(-60px) rotate(-18deg);opacity:.0}
+.cd-t,.cd-w{min-width:44px;min-height:44px;border-radius:12px;border:2px solid var(--line);background:var(--surface);cursor:pointer;padding:2px} .cd-t[aria-pressed="true"],.cd-w[aria-pressed="true"]{border-color:var(--ink)} .cd-t img{width:40px;height:40px;object-fit:contain;display:block}
+.cd-w{border-radius:50%;width:44px;height:44px;padding:0} .cd-w.mod{box-shadow:inset 0 0 0 3px #fff,inset 0 0 0 4px #cdb27a} .cd-wr{display:flex;flex-wrap:wrap;gap:6px;align-items:center;width:100%} .cd-wr+.cd-wr{margin-top:-2px}
+.cdx.cute{background:#fff6f0 url(cat/card/phone_bg.svg) center top/390px auto;color:#3a2a2a} .cdx.modern{background:#efe9e1;color:#3b3532}
+.cdx-note{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff;border:2.5px solid #3a2a2a;border-radius:20px 16px 22px 14px;box-shadow:3px 4px 0 #f6b7cc;transform:rotate(-1deg);margin-right:34px} .cdx-note h2{margin:0;font-size:1rem;line-height:1.35}
+.cdx.modern .cdx-note{background:#fbf8f3;border:1px solid #ddd3c4;border-radius:10px;box-shadow:none;transform:none} .cdx-note img{flex:none}
+.cdx-q{margin:0;text-align:center;color:#d94a7e;font-weight:700;transform:rotate(-3deg)} .cdx.modern .cdx-q{color:#8a7c6e;font-size:13px;letter-spacing:6px;transform:none;font-weight:600}
+.cdx-stage{position:relative;width:min(320px,82vw);height:min(250px,46vh);margin:0 auto;cursor:pointer} .cdx-stage img{position:absolute;pointer-events:none}
+.cdx-bx{left:50%;bottom:0;width:min(230px,62vw);transform-origin:50% 100%;margin-left:calc(min(230px,62vw) / -2);animation:cdShake 1.1s ease-in-out infinite} .cdx-cat{right:0;bottom:0;width:min(110px,28vw);animation:cdFloat 2.4s ease-in-out infinite}
+.cdx-env{left:50%;top:50%;width:min(300px,78vw);transform:translate(-50%,-50%)} .cdx-seal{left:50%;top:50%;width:min(74px,19vw);transform:translate(-50%,-10%)} .cdx-sprig{left:0;top:0;width:min(120px,30vw);transform:rotate(-18deg)}
+.cdx.modern .cdx-stage{animation:cdFloat 3s ease-in-out infinite} .cdx-stage.open{animation:none} .cdx-stage.open .cdx-bx{animation:none} .cdx-stage.open .cdx-seal{transition:transform .6s,opacity .6s;transform:translate(60%,-120%) rotate(14deg) scale(.7)}
+.cdx .cd-img{animation:cdPop .55s cubic-bezier(.2,1.4,.4,1) both} .cdx.modern .cd-img{animation:cdUp .7s ease-out both}
+.cdx.cute .cdx-btn{background:#fff;border:2.5px solid #d94a7e;color:#d94a7e;box-shadow:3px 3px 0 #d94a7e;font-weight:800} .cdx.modern .cdx-btn{background:#3b3532;color:#fff;border:1px solid #3b3532}
+@keyframes cdFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}} @keyframes cdPop{from{transform:translateY(40px) scale(.6) rotate(-3deg);opacity:0}to{transform:none;opacity:1}} @keyframes cdUp{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion: reduce){.cd-box,.cdx-bx,.cdx-cat,.cdx.modern .cdx-stage,.cdx .cd-img{animation:none!important}}
 @keyframes cdShake{0%,60%,100%{transform:rotate(0) scale(1)}10%{transform:rotate(-7deg) scale(1.04,.96)}20%{transform:rotate(6deg) scale(.97,1.04)}30%{transform:rotate(-4deg)}40%{transform:rotate(3deg)}50%{transform:rotate(-1deg)}}
-@media (prefers-reduced-motion: reduce){.cd-box{animation:none}}
 .cd-img{width:100%;max-width:280px;display:block;margin:0 auto;border-radius:14px} .cd-sn{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dashed var(--line)} .cd-sn>span{flex:1;min-width:160px;font-weight:600}
 .cd-pick{width:100%} .cd-toks .cd-tk{border:0;background:none;font:inherit;color:inherit;padding:4px 2px;min-height:32px;cursor:pointer;border-radius:4px} .cd-toks .cd-tk.hl{background:var(--accent-soft);border-bottom:2px solid var(--rust)} .cd-priv{background:var(--accent-soft);border-radius:10px;padding:6px 10px}
 #chatBox textarea{width:100%;min-height:96px} #chatBox .chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -3993,7 +4002,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v203";
+const APP_VER = "v204";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -6419,7 +6428,6 @@ async function frBoot(){ const q = new URLSearchParams(location.search), tk = q.
 function frBindSet(ko){ const r = $("#frRow"); if(!r) return; r.classList.toggle("hidden", !FR_OK()); const b = $("#frOpenBtn"); if(b){ b.textContent = ko ? "👫 친구·생일·선물함" : "👫 友だち・誕生日・ギフト"; snFrSync(); b.onclick = () => frOpen(); } }
 
 /* ── ② 축하 카드: 링크(?g=)에 카드 내용을 담아 공유. 서버 저장 없음 ── */
-const CARD_TPL = ["love", "happy", "surprised"], CARD_WRAP = { pink: ["#ffd6e5", "#f28ab2", "#D94A7E"], mint: ["#d9f5e8", "#8fd9b6", "#3a9c78"], night: ["#2a2f55", "#4b5596", "#f4cf6a"] };
 const b64uEnc = o => btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const b64uDec = s => JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(String(s).replace(/-/g, "+").replace(/_/g, "/")), ch => ch.charCodeAt(0))));
 const scriptLang = s => /[ぁ-んァ-ヶ一-龥]/.test(s) ? "ja" : /[가-힣]/.test(s) ? "ko" : /[ñáéíóú¿¡]/i.test(s) ? "es" : /[a-z]/i.test(s) ? "en" : "";
@@ -6428,30 +6436,90 @@ function cardHint(text, lang){ const x = frt(), toks = [...new Set(segWords(text
   const have = new Set(Object.values(S.cards).filter(c => (c.lang || "es") === lang).flatMap(c => [norm(c.word), norm(c.form || "")]));
   const known = toks.filter(w => have.has(norm(w)) || [...have].some(h => h && h.length >= 2 && norm(w).startsWith(h))), chk = toks.filter(w => !known.includes(w) && w.length >= 2).slice(0, 4);
   return known.length ? x.hintOk(known.length) + (chk.length ? " · " + x.hintChk(chk.join(", ")) : "") : x.hintNone; }
-const cardImg = tpl => new Promise(r => { const im = new Image(); im.onload = () => r(im); im.onerror = () => r(null); im.src = `cat/melt/cat_${tpl}.svg`; });
-async function cardCanvas(o){ const W = 1080, H = 1350, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const g = cv.getContext("2d"), wr = CARD_WRAP[o.w] || CARD_WRAP.pink, dark = o.w === "night";
-  const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, wr[0]); gr.addColorStop(1, wr[1]); g.fillStyle = gr; g.fillRect(0, 0, W, H);
-  g.fillStyle = wr[2]; g.globalAlpha = .9; g.fillRect(W / 2 - 34, 0, 68, H); g.fillRect(0, 300, W, 68); g.globalAlpha = 1;   // 리본
-  g.fillStyle = dark ? "rgba(20,22,40,.82)" : "rgba(255,255,255,.92)"; g.beginPath(); g.roundRect(70, 420, W - 140, 760, 48); g.fill();
-  const im = await cardImg(CARD_TPL.includes(o.c) ? o.c : "love"); if(im){ const h = 320, w = h * 1.36; g.drawImage(im, (W - w) / 2, 110, w, h); }
-  g.fillStyle = dark ? "#fff" : "#1E1A16"; g.textAlign = "center"; const font = (px, b) => `${b ? 800 : 600} ${px}px "Hiragino Sans","Apple SD Gothic Neo","Noto Sans KR","Noto Sans JP",sans-serif`;
-  const wrapTxt = (s, px, y, maxL) => { g.font = font(px, 0); const lines = []; let cur = ""; for(const ch of [...String(s || "")]){ if(ch === "\n" || g.measureText(cur + ch).width > W - 240){ lines.push(cur); cur = ch === "\n" ? "" : ch; } else cur += ch; } if(cur) lines.push(cur); lines.slice(0, maxL).forEach((l, i) => g.fillText(l, W / 2, y + i * px * 1.35)); return y + Math.min(maxL, lines.length) * px * 1.35; };
-  g.font = font(44, 1); g.fillText(`To. ${o.to || "♡"}`, W / 2, 510);
-  let y = wrapTxt(o.m, 54, 610, 5); if(o.p){ g.fillStyle = dark ? "#f4cf6a" : wr[2]; y = wrapTxt(o.p, 46, y + 40, 4); }
-  g.fillStyle = dark ? "#fff" : "#1E1A16"; g.font = font(40, 1); g.fillText(`From. ${o.n || ""} 🐱`, W / 2, 1120);
-  g.font = font(34, 1); g.fillStyle = dark ? "#fff" : "#1E1A16"; g.fillText("MEOWCA!", W / 2, 1290); return cv; }
+const CARD_TPL = ["love", "happy", "surprised"], CARD_WRAP = { pink: ["#ffe4ec", "#f28ab2", "#D94A7E"], mint: ["#c9ecdb", "#8fd9b6", "#2f8f69"], cream: ["#fbf6ec", "#f7c9cf", "#b5707d"], night: ["#252a52", "#4b5596", "#f7d774"], washi: ["#f8f3ea", "#efe4cf", "#b39257"], sakura: ["#fbf3f1", "#f3dade", "#c48a95"], hangul: ["#e8e4de", "#ffffff", "#2b2b2b"] };
+const CARD_MOD = { washi: 1, sakura: 1, hangul: 1 }, CARD_B = { pink: 1, mint: 1 };   // 모던 포장지(봉투로 받음) · 굵은 매직 냥이(B) 포장지
+const CARD_FONT = { cute: ["Gaegu", "Yomogi", "family=Gaegu:wght@700&family=Yomogi"], modern: ["Gowun Batang", "Shippori Mincho", "family=Gowun+Batang:wght@400;700&family=Shippori+Mincho:wght@400;700"], pen: ["Nanum Pen Script", "Klee One", "family=Nanum+Pen+Script&family=Klee+One:wght@400;600"] };
+const cardFontKey = w => w === "hangul" ? "pen" : CARD_MOD[w] ? "modern" : "cute";
+const cardCat = (w, tpl) => { const e = tpl === "surprised" ? "shock" : tpl === "happy" ? "happy" : "love"; return `cat/card/cat_${CARD_B[w] ? "b" : "a"}_${e}.png`; };
+const CARD_IMG = {}; const cardPic = src => CARD_IMG[src] || (CARD_IMG[src] = new Promise(r => { const im = new Image(); im.onload = () => r(im); im.onerror = () => { delete CARD_IMG[src]; r(null); }; im.src = src; }));
+const CARD_FL = {}; function cardFontsReady(w, text){ const k = cardFontKey(w), f = CARD_FONT[k];   // 글꼴은 기다리되 못 받으면(오프라인) 기본 글꼴로 그냥 그림
+  if(!CARD_FL[k]) CARD_FL[k] = new Promise(r => { try{ const l = document.createElement("link"); l.rel = "stylesheet"; l.href = `https://fonts.googleapis.com/css2?${f[2]}&display=swap`; l.onload = () => r(1); l.onerror = () => r(0); document.head.appendChild(l); }catch(_){ r(0); } });
+  const go = CARD_FL[k].then(ok => ok && document.fonts ? Promise.all([f[0], f[1]].map(fm => document.fonts.load(`700 60px "${fm}"`, text || "가あ").catch(() => 0))) : 0);
+  return Promise.race([go, sleep(2500)]).catch(() => 0); }
+async function cardCanvas(o){ const W = 1080, H = 1350, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const g = cv.getContext("2d"), w = CARD_WRAP[o.w] ? o.w : "pink", wr = CARD_WRAP[w], mod = !!CARD_MOD[w];
+  const ml = o.ml === "ja" ? "ja" : o.ml === "ko" ? "ko" : (scriptLang(o.m) === "ja" ? "ja" : "ko"), bday = o.k === "bday";
+  const TT = { ko: mod ? "생일 축하해" : "생일 축하해!", ja: mod ? "お誕生日おめでとう" : "お誕生日おめでとう！" }, oth = ml === "ja" ? "ko" : "ja";
+  const toTxt = !o.to ? "" : w === "cream" ? (ml === "ja" ? `${o.to}へ` : `${o.to}에게,`) : w === "sakura" ? "" : w === "washi" ? (ml === "ja" ? `${o.to}へ` : `To. ${o.to}`) : w === "hangul" ? "" : `To. ${o.to}`;
+  const all = [o.m, o.p, o.n, o.to, bday ? TT.ko + TT.ja : "", "To.from.에게へ·MEOWCA!meowca.app"].join("");
+  await cardFontsReady(w, all);
+  const ff = CARD_FONT[cardFontKey(w)], FB = `"Hiragino Sans","Apple SD Gothic Neo","Noto Sans KR","Noto Sans JP",sans-serif`, font = (px, b) => `${b ? 700 : 400} ${px}px "${ff[0]}","${ff[1]}",${FB}`;
+  const draw = async (src, x, y, dw, dh, rot) => { const im = await cardPic(src); if(!im) return 0; g.save(); if(rot){ g.translate(x + dw / 2, y + dh / 2); g.rotate(rot * Math.PI / 180); g.drawImage(im, -dw / 2, -dh / 2, dw, dh); } else g.drawImage(im, x, y, dw, dh); g.restore(); return im; };
+  const catAt = async (src, cx, bottom, h) => { const im = await cardPic(src); if(!im) return; const dw = h * im.naturalWidth / im.naturalHeight; g.drawImage(im, cx - dw / 2, bottom - h, dw, h); };
+  // 바탕
+  if(w === "sakura"){ const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "#fbf6f3"); gr.addColorStop(.55, "#fbf3f1"); gr.addColorStop(1, "#f3dade"); g.fillStyle = gr; } else g.fillStyle = wr[0];
+  g.fillRect(0, 0, W, H);
+  if(w === "washi" || w === "sakura") await draw("cat/card/washi.webp", 0, 0, W, H);
+  else { const gi = await cardPic("cat/card/grain.webp"); if(gi) for(let yy = 0; yy < H; yy += 512) for(let xx = 0; xx < W; xx += 512) g.drawImage(gi, xx, yy, 512, 512); }
+  if(w === "pink" || w === "mint" || w === "cream" || w === "night") await draw(`cat/card/${w}.svg`, 0, 0, W, H);
+  if(w === "sakura") await draw("cat/card/emboss.svg", 0, 0, W, H);
+  if(w === "washi"){ g.strokeStyle = "#cdb27a"; g.lineWidth = 1.5; g.strokeRect(56, 56, W - 112, H - 112); g.strokeStyle = "#e1cfa6"; g.lineWidth = 1; g.strokeRect(68, 68, W - 136, H - 136);
+    await draw("cat/card/sprig_a.webp", W - 400, 70, 336, 416); await draw("cat/card/sprig_b.webp", 80, H - 300, 240, 208); }
+  if(w === "hangul"){ g.save(); g.shadowColor = "rgba(0,0,0,.14)"; g.shadowBlur = 30; g.shadowOffsetY = 10; g.fillStyle = "#fff"; g.fillRect(130, 140, 820, 1060); g.restore();
+    g.save(); g.translate(W / 2, 150); g.rotate(-.05); g.fillStyle = "rgba(246,180,196,.78)"; g.fillRect(-110, -26, 220, 52); g.restore(); }
+  // 글자 도우미
+  const ink = w === "night" ? "#2b2840" : w === "hangul" ? "#2b2b2b" : mod ? "#4a403a" : "#3a2a2a", soft = w === "night" ? "#7a7390" : mod ? "#9a8d80" : "#a07f86";
+  const lines = (s, px, maxW, maxL, b) => { g.font = font(px, b); const out = []; let cur = ""; for(const ch of [...String(s || "")]){ if(ch === "\n" || g.measureText(cur + ch).width > maxW){ out.push(cur); cur = ch === "\n" ? "" : ch; } else cur += ch; } if(cur) out.push(cur); return out.filter((l, i) => l.trim() || i).slice(0, maxL); };
+  const text = (s, x, y, px, col, al, b, sp) => { g.font = font(px, b); g.fillStyle = col; g.textAlign = al || "left"; if(sp && "letterSpacing" in g) g.letterSpacing = sp + "px"; g.fillText(s, x, y); if(sp && "letterSpacing" in g) g.letterSpacing = "0px"; };
+  const block = (s, x, y, px, lh, maxW, maxL, col, al, b) => { const ls = lines(s, px, maxW, maxL, b); ls.forEach((l, i) => text(l, x, y + i * lh, px, col, al, b)); return y + ls.length * lh; };
+  const fit = (s, px, maxW, b) => { g.font = font(px, b); while(px > 40 && g.measureText(s).width > maxW){ px -= 4; g.font = font(px, b); } return px; };
+  const L = { pink: { al: "center", x: W / 2, mw: 740, title: 270, tpx: 120, cat: [W / 2, 790, 390], catN: [W / 2, 780, 560], msg: 830, mpx: 46, lh: 72, pk: 1 },
+    mint: { al: "center", x: W / 2, mw: 700, title: 300, tpx: 110, cat: [W / 2, 722, 300], catN: [W / 2, 640, 420], msg: 800, msgN: 740, mpx: 46, lh: 72 },
+    cream: { al: "left", x: 300, mw: 640, title: 300, tpx: 112, tx: 136, cat: [800, 760, 300], catN: [780, 700, 420], msg: 852, mpx: 46, lh: 70, pk: 1 },
+    night: { al: "center", x: W / 2, mw: 700, title: 220, tpx: 116, tx: 120, cat: [W / 2, 610, 210], catN: [W / 2, 610, 330], msg: 760, mpx: 46, lh: 72 },
+    washi: { al: "left", x: 150, mw: 680, title: 400, tpx: 100, tx: 146, cat: [880, 1230, 150], catN: [880, 1230, 150], msg: 620, msgN: 480, mpx: 42, lh: 80 },
+    sakura: { al: "center", x: W / 2, mw: 760, title: 560, tpx: 104, cat: null, msg: 700, msgN: 480, mpx: 44, lh: 84 },
+    hangul: { al: "center", x: W / 2, mw: 700, title: 380, tpx: 140, cat: [W / 2, 700, 260], catN: [W / 2, 640, 380], msg: 800, msgN: 740, mpx: 62, lh: 84 } }[w];
+  if(w === "mint"){ g.fillStyle = "#fff4c7"; g.beginPath(); g.roundRect(170, (bday ? L.msg : L.msgN) - 70, 740, 400, 28); g.fill(); }
+  // To
+  if(toTxt){ if(w === "pink") text(toTxt, 170, 150, 44, ink, "left", 1); else if(w === "cream") text(toTxt, 140, 120, 52, ink, "left", 1); else if(w === "night") text(toTxt, 190, 655, 40, ink, "left", 1);
+    else if(w === "washi") text(toTxt, 150, bday ? 480 : 360, 34, soft, "left"); else text(toTxt, W / 2, 120, 44, ink, "center", 1); }
+  // 제목 (생일만)
+  if(bday){ const big = TT[ml], small = TT[oth], tcol = w === "night" ? "#fbe39a" : w === "pink" ? "#d94a7e" : ink, scol = w === "night" ? "#f7d774" : soft;
+    if(w === "washi"){ text(small, L.tx, L.title - 110, 34, soft, "left", 0, 8); text(big, L.tx, L.title, fit(big, L.tpx, 780), ink, "left", 0, 8); }
+    else if(w === "sakura"){ text(small, W / 2, L.title - 110, 34, soft, "center", 0, 6); text(big, W / 2, L.title, fit(big, L.tpx, 900), ink, "center"); }
+    else { const tx = L.al === "left" || w === "night" ? (L.tx || L.x) : W / 2, al = tx === W / 2 ? "center" : "left"; text(big, tx, L.title, fit(big, L.tpx, tx === W / 2 ? 860 : W - tx - 120, 1), tcol, al, 1); text(small, tx, L.title + 64, 40, scol, al, 1); } }
+  // 냥이·장식
+  const c = bday ? L.cat : L.catN, tpl = CARD_TPL.includes(o.c) ? o.c : "love";
+  if(w === "night") await catAt("cat/card/cat_a_melt.png", c[0], c[1], c[2]);
+  else if(w === "mint"){ await catAt(tpl === "happy" ? "cat/card/cat_b_jump.png" : cardCat(w, tpl), c[0], c[1], c[2]);
+    await catAt("cat/card/cat_b_happy.png", 120, 1300, 120); await catAt("cat/card/cat_b_love.png", 960, 1300, 120); await catAt("cat/card/cat_b_shock.png", 960, 140, 110); }
+  else if(c) await catAt(cardCat(w, tpl), c[0], c[1], c[2]);
+  if(w === "hangul" && bday) await draw("cat/card/pen_heart.svg", 780, 230, 96, 88);
+  // 메시지·두 번째 언어
+  const pk = L.pk, mx = L.x, my = bday || !L.msgN ? L.msg : L.msgN, ppx = mod ? 32 : 34;
+  let y = block(o.m, mx, my, L.mpx, L.lh, L.mw, 4, ink, L.al);
+  if(o.p && o.p.trim()) y = block(o.p, mx, pk ? y : y + 10, ppx, pk ? L.lh : Math.round(ppx * 1.7), L.mw, 4, w === "night" ? "#6b6585" : soft, L.al);
+  // From
+  const nm = o.n || "";
+  if(w === "sakura"){ const ln = (o.to ? (ml === "ja" ? `${o.to}へ` : `${o.to}에게`) + " · " : "") + nm; const yy = Math.min(1150, Math.max(1030, y + 50)); if(ln.trim()) text(ln, W / 2, yy, 38, soft, "center"); await draw("cat/card/seal_rose.webp", W / 2 - 60, yy + 30, 120, 120); }
+  else if(nm){ const fy = Math.min(w === "hangul" ? 1150 : w === "night" ? 1160 : 1250, Math.max(y + (pk ? 30 : 60), w === "pink" || w === "cream" ? 1230 : 0)), fx = w === "washi" ? 800 : w === "night" ? 900 : w === "hangul" ? 900 : w === "mint" ? 880 : 910;
+    text(w === "washi" ? nm : `from. ${nm}`, fx, fy, w === "hangul" ? 58 : w === "washi" ? 40 : 46, ink, "right", !mod); }
+  // 바닥 표시
+  const fc = w === "night" ? "rgba(255,255,255,.75)" : mod ? "#b5a58f" : "#c08a9a";
+  if(mod) text("MEOWCA!", W / 2, w === "hangul" ? 1275 : 1300, 26, fc, "center", 0, 10); else text("MEOWCA! · meowca.app", W / 2, w === "cream" ? 1310 : 1330, 24, fc, "center", 1);
+  return cv; }
 function cardMake(friend, kind){ if(REC) return; const x = frt(), L = S.meta.settings.lang, ui = S.meta.settings.ui; const o = { v: 1, n: myNick(), u: (S.meta.cos && S.meta.cos.on) || "", c: "love", w: "pink", m: "", p: "", ml: ui, pl: L !== ui ? L : "", to: friend ? friend.nick : "", k: kind || "free" };
   track("card_make_open", { k: o.k, fr: friend ? 1 : 0 });
   const bg = openSheet(`<h2 style="margin:0">${x.mkT}</h2><div class="card-pv"><canvas id="cdPv" width="1080" height="1350"></canvas></div>
-    <div class="row cd-opt"><span class="small muted">${x.tpl}</span>${CARD_TPL.map(t => `<button type="button" class="cd-t" data-t="${t}" aria-pressed="${t === o.c}"><img src="cat/melt/cat_${t}.svg" alt="" width="44" height="32"></button>`).join("")}
-      <span class="small muted">${x.wrap}</span>${Object.keys(CARD_WRAP).map(w => `<button type="button" class="cd-w" data-w="${w}" aria-pressed="${w === o.w}" style="background:${CARD_WRAP[w][1]}" aria-label="${w}"></button>`).join("")}</div>
+    <div class="row cd-opt"><span class="small muted">${x.tpl}</span>${CARD_TPL.map(t => `<button type="button" class="cd-t" data-t="${t}" aria-pressed="${t === o.c}" aria-label="${t}"><img src="${cardCat(o.w, t)}" alt="" width="40" height="40"></button>`).join("")}
+      </div><div class="cd-wr"><span class="small muted">${x.wrap}</span>${Object.keys(CARD_WRAP).filter(w => !CARD_MOD[w]).map(w => `<button type="button" class="cd-w" data-w="${w}" aria-pressed="${w === o.w}" style="background:${CARD_WRAP[w][0]}" aria-label="${w}"></button>`).join("")}</div><div class="cd-wr">${Object.keys(CARD_WRAP).filter(w => CARD_MOD[w]).map(w => `<button type="button" class="cd-w mod" data-w="${w}" aria-pressed="${w === o.w}" style="background:${CARD_WRAP[w][0]}" aria-label="${w}"></button>`).join("")}</div>
     <label class="small">${x.msg}<textarea id="cdM" maxlength="80" rows="2" placeholder="${esc(x.msgPh)}"></textarea></label>
     ${o.pl ? `<label class="small">${esc(x.pTry(langName(o.pl)))}<textarea id="cdP" maxlength="80" rows="2" lang="${o.pl}" placeholder="${esc(x.pPh)}"></textarea></label><p class="tiny muted" id="cdHint" aria-live="polite"></p>` : ""}
     <button type="button" class="btn primary" id="cdSend">${x.send}</button>`);
   const sh = bg.querySelector(".sheet"), pv = sh.querySelector("#cdPv");
   let tm = 0; const redraw = () => { clearTimeout(tm); tm = setTimeout(async () => { const cv = await cardCanvas(o); if(pv.isConnected) pv.getContext("2d").drawImage(cv, 0, 0); }, 120); };
   sh.querySelectorAll(".cd-t").forEach(b => b.onclick = () => { o.c = b.dataset.t; sh.querySelectorAll(".cd-t").forEach(z => z.setAttribute("aria-pressed", z === b)); redraw(); });
-  sh.querySelectorAll(".cd-w").forEach(b => b.onclick = () => { o.w = b.dataset.w; sh.querySelectorAll(".cd-w").forEach(z => z.setAttribute("aria-pressed", z === b)); redraw(); });
+  sh.querySelectorAll(".cd-w").forEach(b => b.onclick = () => { o.w = b.dataset.w; sh.querySelectorAll(".cd-w").forEach(z => z.setAttribute("aria-pressed", z === b)); sh.querySelectorAll(".cd-t").forEach(z => { z.querySelector("img").src = cardCat(o.w, z.dataset.t); }); redraw(); });
   sh.querySelector("#cdM").oninput = e => { o.m = e.target.value.slice(0, 80); redraw(); };
   const pi = sh.querySelector("#cdP"); if(pi) pi.oninput = e => { o.p = e.target.value.slice(0, 80); redraw(); sh.querySelector("#cdHint").textContent = o.p.trim() ? cardHint(o.p, o.pl) : ""; };
   redraw();
@@ -6464,15 +6532,19 @@ function cardBoot(){ const q = new URLSearchParams(location.search), raw = q.get
   if(!o || typeof o !== "object") return; const cut = v => String(v || "").slice(0, 80); o = { n: cut(o.n).slice(0, 24), c: CARD_TPL.includes(o.c) ? o.c : "love", w: CARD_WRAP[o.w] ? o.w : "pink", m: cut(o.m), p: cut(o.p), ml: /^(ko|ja)$/.test(o.ml) ? o.ml : scriptLang(o.m), pl: /^[a-z]{2}$/.test(o.pl || "") ? o.pl : scriptLang(o.p), to: cut(o.to).slice(0, 24), k: /^(bday|ann|free)$/.test(o.k) ? o.k : "free" };
   const fresh = needSetup(); track("card_open", { fresh: fresh ? 1 : 0, k: o.k, p: o.p ? 1 : 0 }); giftPut("recv", o, raw); save();
   setTimeout(() => cardShow(o, fresh), fresh ? 600 : 300); }
-function cardShow(o, fresh, opt){ const x = (o.pl === "ja" || (!o.ml && o.pl !== "ko") ? FRT.ja : FRT.ko), ui = fresh ? (o.pl || (o.ml === "ko" ? "ja" : "ko")) : S.meta.settings.ui, X = FRT[ui === "ja" ? "ja" : "ko"];
-  const bg = openSheet(`<div class="cd-box" id="cdBox" role="button" tabindex="0" style="--wr:${CARD_WRAP[o.w][1]};--rb:${CARD_WRAP[o.w][2]}"><span class="cd-lid"></span><span class="cd-body"></span></div>
-    <h2 style="text-align:center;margin:0">${esc(X.boxT(o.n))}</h2><p class="muted small" style="text-align:center;margin:0">${X.boxTap}</p><div id="cdIn" class="hidden"></div>`);
-  if(fresh) bg.style.zIndex = 95; const sh = bg.querySelector(".sheet"), box = sh.querySelector("#cdBox"); void x;
-  const open = async () => { if(box.classList.contains("open")) return; box.classList.add("open"); track("card_box_tap", { fresh: fresh ? 1 : 0 }); await sleep(450);
-    const cv = await cardCanvas(o), img = cv.toDataURL("image/png"), inn = sh.querySelector("#cdIn"); box.remove(); sh.querySelector("h2").remove(); sh.querySelector("p.muted").remove(); inn.classList.remove("hidden");
+function cardShow(o, fresh, opt){ const x = (o.pl === "ja" || (!o.ml && o.pl !== "ko") ? FRT.ja : FRT.ko), ui = fresh ? (o.pl || (o.ml === "ko" ? "ja" : "ko")) : S.meta.settings.ui, X = FRT[ui === "ja" ? "ja" : "ko"], mod = !!CARD_MOD[o.w];
+  const q = ui === "ja" ? "なにかな…？" : "뭘까…？", stage = mod ? `<img class="cdx-env" src="cat/card/env_closed.svg" alt=""><img class="cdx-seal" src="cat/card/seal_rose.webp" alt=""><img class="cdx-sprig" src="cat/card/sprig_b.webp" alt="">`
+    : `<img class="cdx-bx" src="cat/card/box.svg" alt=""><img class="cdx-cat" src="cat/card/cat_b_happy.png" alt="">`;
+  const bg = openSheet(`<div class="cdx-note"><img src="cat/card/${mod ? "seal_rose.webp" : "gift_icon.svg"}" alt="" width="${mod ? 38 : 44}" height="${mod ? 38 : 41}"><h2>${esc(X.boxT(o.n))}</h2></div>
+    <p class="cdx-q">${mod ? "FOR YOU" : q}</p><div class="cdx-stage" id="cdBox" role="button" tabindex="0" aria-label="${esc(X.boxTap)}">${stage}</div><p class="muted small cdx-tap">${X.boxTap}</p><div id="cdIn" class="hidden"></div>`);
+  if(fresh) bg.style.zIndex = 95; const sh = bg.querySelector(".sheet"), box = sh.querySelector("#cdBox"); void x; sh.classList.add("cdx", mod ? "modern" : "cute");
+  const open = async () => { if(box.classList.contains("open")) return; box.classList.add("open"); track("card_box_tap", { fresh: fresh ? 1 : 0 });
+    const bx = box.querySelector(".cdx-bx, .cdx-env"); if(bx) bx.src = mod ? "cat/card/env_open.svg" : "cat/card/box_open.svg";
+    const cvP = cardCanvas(o); await sleep(mod ? 600 : 450);
+    const cv = await cvP, img = cv.toDataURL("image/png"), inn = sh.querySelector("#cdIn"); box.remove(); sh.querySelectorAll(".cdx-note,.cdx-q,.cdx-tap").forEach(e => e.remove()); inn.classList.remove("hidden");
     const blocks = [[o.m, o.ml], [o.p, o.pl]].filter(b => b[0] && b[0].trim());
     inn.innerHTML = `<img class="cd-img" src="${img}" alt="">` + blocks.map(([s, L]) => sentencesOf(s).map(sn => `<div class="cd-sn" lang="${esc(L)}"><span>${esc(sn)}</span>${L && L !== ui ? `<button type="button" class="btn sm" data-learn="${esc(L)}">${X.learn}</button>` : ""}</div>`).join("")).join("")
-      + `<button type="button" class="btn" id="cdThx">${X.thanks}</button>`;
+      + `<button type="button" class="btn cdx-btn" id="cdThx">${X.thanks}</button>`;
     inn.querySelectorAll("[data-learn]").forEach(b => b.onclick = () => cardLearn(b.closest(".cd-sn").querySelector("span").textContent, b.dataset.learn, o, b.closest(".cd-sn"), fresh, X));
     inn.querySelector("#cdThx").onclick = async () => { const how = await shareOut(X.thanksTxt(o.n), location.origin + location.pathname.replace(/[^/]*$/, "") + "?src=thanks", null); track("card_thanks", { how, fresh: fresh ? 1 : 0 }); }; };
   box.onclick = open; box.onkeydown = e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); open(); } }; if(opt && opt.open) open(); }
@@ -6576,7 +6648,7 @@ function frCat(z){ if(!z) return; const x = frt(), it = z.fur && COS.find(c => c
   const im = bg.querySelector("#frCatImg"); let n = 0; im.onclick = () => { im.classList.remove("boing"); void im.offsetWidth; im.classList.add("boing"); if(++n === 1) track("fr_cat_pet", {}); try{ navigator.vibrate && navigator.vibrate(15); }catch(_){} };
   bg.querySelector("#frCatCard").onclick = () => { closePop(); const e = frEvents().find(q => q.fid === z.id); cardMake(z, e ? e.k : "free"); }; }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { PS, psWord, petGrant, streak, PROMO, prOn, prLate, prState, prHomeLine, prSnackPick, prExam, prPrereg, prSet, prBoot, prSnackDue, PR_SNACKS, setHachiY: v => { HACHI_Y = v; }, explHTML, giftState, giftPut, renderFrView, frCat, FRV, frState, frEvents, frHomeLine, frSync, frOpen, frBoot, frNextIn, cardBoot, cardShow, cardMake, cardCanvas, b64uEnc, b64uDec, parseChat, chatWords, chatCands, chatBind, segWords, FR_OK, REC: () => REC, recOpen, payOpen, payWhat, payGrant, buyDays, buyExpNote, bizFootHTML, renderShop, dueCards, revToday, provButtons, presetDeckName, deckName, mergeData, mergeCard, mergePet, syncNow, payload, jaTailOk, formBoundOk, loanMatch, loanSk, frameSplit, frameParts, frameOpts, askFrame, materializeFrame, addPresetMore, presetMore, wlFind, wlLangOf, wlMake, newCandidates: () => newCandidates(), rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, closePet, petGrab, petDragMove, petRelease, petThrow, petRefund, purrState: () => ({ on: !!PURR, purr0: PET ? PET.purr0 || 0 : 0, n: PET ? PET.purrN || 0 : 0 }), sndMode, buyGrant, petCount, PT: () => PT, MELT: () => MELT, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { PS, psWord, petGrant, streak, PROMO, prOn, prLate, prState, prHomeLine, prSnackPick, prExam, prPrereg, prSet, prBoot, prSnackDue, PR_SNACKS, setHachiY: v => { HACHI_Y = v; }, explHTML, giftState, giftPut, renderFrView, frCat, FRV, frState, frEvents, frHomeLine, frSync, frOpen, frBoot, frNextIn, cardBoot, cardShow, cardMake, cardCanvas, CARD_WRAP, cardCat, b64uEnc, b64uDec, parseChat, chatWords, chatCands, chatBind, segWords, FR_OK, REC: () => REC, recOpen, payOpen, payWhat, payGrant, buyDays, buyExpNote, bizFootHTML, renderShop, dueCards, revToday, provButtons, presetDeckName, deckName, mergeData, mergeCard, mergePet, syncNow, payload, jaTailOk, formBoundOk, loanMatch, loanSk, frameSplit, frameParts, frameOpts, askFrame, materializeFrame, addPresetMore, presetMore, wlFind, wlLangOf, wlMake, newCandidates: () => newCandidates(), rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, closePet, petGrab, petDragMove, petRelease, petThrow, petRefund, purrState: () => ({ on: !!PURR, purr0: PET ? PET.purr0 || 0 : 0, n: PET ? PET.purrN || 0 : 0 }), sndMode, buyGrant, petCount, PT: () => PT, MELT: () => MELT, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(PET) petRefundFlying(PET); }catch(_){} try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
 if(!REC) setTimeout(() => { try{ snFrSync(); cardBoot(); frBoot(); const f = S.meta.fr; if(FR_OK() && f && f.list && f.list.length && Date.now() - (f.at || 0) > 6 * 36e5) frSync().then(() => { if(!SES) renderStart(); snFrSync(); }); }catch(e){} }, 1200);
 load(); PET_SIG = petSig(); migrateSteps(); sulkInit(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain(); if(REC) setTimeout(recOpen, 60);
