@@ -46,6 +46,10 @@ async def main():
     # ⑦ 가져오기는 u 갱신
     iu=await A.evaluate("""() => { document.querySelector('#importBox').value = JSON.stringify([{word:"先生",lang:"ja",meaning:"가져옴",u:1}]); document.querySelector('#btnImport').click(); const c=Object.values(window.__t.S().cards).find(c=>c.word==="先生"); return [c.meaning, c.u > 1e12]; }""")
     ok("⑦ 가져온 카드 u 갱신", iu==["가져옴",True], iu)
+    # ⑧ 프로모션(오늘의 간식·수험생·막차) 기록 병합이 학습일·카드를 안 건드림, 날짜는 늦은 쪽
+    pr=await A.evaluate("""() => { const S=window.__t.S(), d0=JSON.stringify(S.meta.days), c0=Object.keys(S.cards).length; S.meta.promo={ds:"2026-12-01",late:"2026-12-03"};
+      window.__t.mergeData({cards:{}, meta:{promo:{ds:"2026-12-02",late:"2026-11-30",exam:"2026-12-01"}}}); return [S.meta.promo.ds, S.meta.promo.late, S.meta.promo.exam, JSON.stringify(S.meta.days)===d0, Object.keys(S.cards).length===c0]; }""")
+    ok("⑧ 프로모션 병합(늦은 날짜)·학습일·카드 그대로", pr==["2026-12-02","2026-12-03","2026-12-01",True,True], pr)
     ok("페이지 오류 없음", not errs, errs[:3])
     await b.close()
   print("결과:", "통과" if all(R) else "실패"); sys.exit(0 if all(R) else 1)
