@@ -2312,7 +2312,7 @@ async function payConfirm(){ const ko = S.meta.settings.ui !== "ja", pp = S.meta
 }
 function renderSupBox(){ const el = $("#supBox"); if(!el) return; const ko = S.meta.settings.ui === "ko";
   el.innerHTML = `<div class="sup-row">${nm("st_love", 52)}<div><b>${ko ? "MEOWCA! 암기냥이는 무료예요" : "MEOWCA!（ミャオカ）は無料です"}</b><p class="small muted" style="margin:.2em 0 0">${ko ? "광고도 없어요. 마음에 들면 친구에게 알려 주세요." : "広告もありません。気に入ったら友達に教えてください。"}</p></div></div>
-    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button>${ko ? `<a class="btn" href="shop">🛒 상점</a>` : ""}</div>
+    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="supShare">📤 ${ko ? "친구에게 알리기" : "友達に教える"}</button>${ko && !(S.meta.promo || {}).exam ? `<a class="btn" href="shop">🛒 상점</a>` : ""}</div>
     <p class="tiny muted" style="margin:0"><a href="privacy.html">${ko ? "개인정보처리방침" : "プライバシーポリシー"}</a> · <a href="terms.html">${ko ? "이용약관" : "利用規約"}</a></p><p class="tiny muted" id="bizLine" style="margin:0"></p>`;
   bizFill();
   $("#supShare").onclick = async () => { const url = "https://meowca.app/?ref=invite", text = ko ? "MEOWCA! 암기냥이 — 가성비로 딱 필요한 만큼만 외우고, 나머진 말랑 냥이 괴롭히기 🐾 무료" : "MEOWCA!（ミャオカ）— もう無理やり暗記しなくていい。最小限だけ覚えて、あとはネコと遊ぶ 🐾 無料";
@@ -4002,7 +4002,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v204";
+const APP_VER = "v205";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -4112,10 +4112,11 @@ function attrBoot(){ try{ const a = attrRead(), ext = a.src || a.fb || a.iab || 
   if(dirty) history.replaceState(history.state, "", location.pathname + (q.toString() ? "?" + q : "") + location.hash);
   return a; }catch(_){ return {}; } }
 /* 12월 한정 「산타 냥이 모자」: 기간 안에 ① 처음 첫 판을 끝낸 사람(신규) ② 마지막 공부 뒤 3일 이상 쉬다 돌아와 한 판을 끝낸 사람(복귀)에게 한 번만 준다. 받으면 기간 뒤에도 계속 가진다 */
-const SANTA_END = Date.parse("2026-12-25T23:59:59+09:00");
+const SANTA_END_KO = Date.parse("2026-12-31T23:59:59+09:00"), SANTA_END_JA = Date.parse("2026-12-25T23:59:59+09:00");   // 한국 얼리 집사 12/31 · 일본 크리스마스 판촉 12/25 (④ 11-25)
+const santaEnd = () => S.meta.settings.ui === "ja" ? SANTA_END_JA : SANTA_END_KO;
 function santaType(){ const td = today(), past = Object.keys(S.meta.days || {}).filter(d => d < td && S.meta.days[d] === true).sort();
   if(!past.length) return "new"; return past[past.length - 1] <= addDays(td, -3) ? "back" : null; }
-function santaCheck(){ if(Date.now() > SANTA_END || S.meta.evSanta) return; const type = santaType(); if(!type) return;
+function santaCheck(){ if(Date.now() > santaEnd() || S.meta.evSanta) return; const type = santaType(); if(!type) return;
   const cm = S.meta.cos || (S.meta.cos = {}); cm.own = cm.own || {}; cm.own.santa_hat = Date.now(); if(!cm.hat) cm.hat = "santa_hat";
   S.meta.evSanta = { at: Date.now(), type }; save(); track("ev_santa_grant", { type, src: (S.meta.attr || {}).src || "", cmp: (S.meta.attr || {}).cmp || "" });
   setTimeout(santaShow, 3200); }
@@ -4129,9 +4130,9 @@ function santaShow(){ if($("#santaPop")) return; const ja = S.meta.settings.ui =
 /* ⏰ 시간 기반 프로모션 (③ `MEOWCA_타임프로모션_안` §1~§4, 11-25) — 나라 = 화면 언어(ko 한국 / ja 일본), 날짜는 앱 하루(새벽 4시 경계) 기준
    · 막차 타임: 23시대에 오늘 첫 목표를 채우면 그날 보상 간식 2배(petGrant) — 23시에 시작한 판이 자정을 넘겨 끝나도 인정(SES.late)
    · 새벽 유예: 앱 하루가 원래 새벽 4시에 바뀜(dayStr) → 00~03시 공부는 이미 전날 기록. 홈 말풍선으로 알려 주기만(학습일 저장 방식은 그대로)
-   · 오늘의 간식: 한국 = 얼리 집사(기간 안 누구나), 일본 = 事前登録한 사람. 하루 1개 골라 받기 + 첫 수령 때 산타 모자
+   · 오늘의 간식: 한국 = 얼리 집사, 일본 = リリース記念(둘 다 기간 안 누구나, 「事前登録」은 이미 열린 앱이라 쓰지 않음 — 사용자 11-25). 해금한 등급 안에서 하루 1개 + 첫 수령 때 산타 모자(산타 기간 안: 한국 12/31·일본 12/25)
    · 수험생 응원: 자기 신고 → 여행 단어 세트(presets index more, promo) + 합격 머리띠(hachi). 결제 권유 문구 없음
-   · 일본 事前登録 + 구매 의향(만 14세 미만은 의향 질문 없음). 저장 S.meta.promo = { ds 오늘의 간식 받은 날, early 얼리 시작일, exam 수험생 신고일, jreg 사전등록일, intent, late 막차 받은 날, d1 } */
+   · 일본 구매 의향 설문(엔화 결제 버튼·설정 줄, 보상·약속 없음, 만 14세 미만은 안 물음). 수험생 신고한 사람은 상점 링크 숨김. 저장 S.meta.promo = { ds 오늘의 간식 받은 날, early 얼리 시작일, exam 수험생 신고일, jreg 사전등록일, intent, late 막차 받은 날, d1 } */
 const PROMO = { ko: { early: ["2026-11-26", "2026-12-31"], exam: ["2026-11-26", "2026-12-31"], set: ["ja", "travel"] },
                 ja: { early: ["2026-12-01", "2027-01-31"], exam: ["2027-02-20", "2027-03-31"], set: ["ko", "travel"] } };
 const prCC = () => S.meta.settings.ui === "ja" ? "ja" : "ko";
@@ -4139,23 +4140,22 @@ const prState = () => S.meta.promo || (S.meta.promo = {});
 function prOn(k){ const r = PROMO[prCC()][k], d = today(); return !!r && d >= r[0] && d <= r[1]; }
 const prEnd = k => { const e = PROMO[prCC()][k][1].split("-"); return `${+e[1]}/${+e[2]}`; };
 function prLate(){ return new Date().getHours() === 23 || !!(SES && SES.late); }
-const prSnackOK = () => prOn("early") && (prCC() === "ko" || !!prState().jreg) && !REC;
+const prSnackOK = () => prOn("early") && !REC;
 const prSnackDue = () => prSnackOK() && prState().ds !== today();
-const PR_SNACKS = () => PET_ITEMS.filter(i => i.t <= 4 && !i.charge && !i.gold);
+const PR_SNACKS = () => { const top = Math.min(4, petTier(streak())); return PET_ITEMS.filter(i => i.t <= top && !i.charge && !i.gold); };   // 이미 해금한 등급 안에서만(④ 11-25)
 function prHomeLine(){ if(REC) return null; const ja = prCC() === "ja", h = new Date().getHours(), done = S.meta.days[today()] === true, z = prState();
   if(!done && h === 23) return { t: ja ? "🚃 終電タイム！今日の目標を達成するとおやつ2倍ニャ" : "🚃 막차 타임! 지금 오늘 목표 채우면 간식 2배다냥", a: "go" };
   if(!done && h < 4 && streak() > 0) return { t: ja ? `🌙 朝4時までは「昨日」に入るニャ。連続${streak()}日を守ろう` : `🌙 새벽 4시까지는 '어제'로 쳐 준다냥. 연속 ${streak()}일 지키자`, a: "go" };
-  if(prSnackDue()) return { t: ja ? "🎁 事前登録特典：今日のおやつを1個えらんでニャ" : "🎁 얼리 집사 매일 간식! 오늘 하나 골라 가라냥", a: "snack" };
+  if(prSnackDue()) return { t: ja ? "🎁 リリース記念！今日のおやつを1個えらんでニャ" : "🎁 얼리 집사 매일 간식! 오늘 하나 골라 가라냥", a: "snack" };
   if(prOn("exam") && !z.exam) return { t: ja ? "🎓 受験おつかれ！受験生には旅行単語＋合格ハチマキ（無料）ニャ" : "🎓 수능 끝! 수험생은 여행 단어 + 합격 머리띠가 공짜다냥", a: "exam" };
-  if(ja && prOn("early") && !z.jreg) return { t: "📝 事前登録で、毎日おやつ1個＋サンタ帽子ニャ", a: "prereg" };
   return null; }
 document.addEventListener("click", ev => { const s = ev.target.closest && ev.target.closest(".hv2-say.pr-ev"); if(!s) return; const a = s.dataset.pr; track("pr_line_tap", { a });
   if(a === "snack") prSnackPick(); else if(a === "exam") prExam(); else if(a === "prereg") prPrereg("home"); else if(a === "go"){ const b = document.querySelector(".hv2-shelf"); if(b) b.click(); } });
 function prPop(html){ const old = $("#prPop"); if(old) old.remove(); const d = document.createElement("div"); d.id = "prPop"; d.className = "santa-pop pr-pop"; d.innerHTML = `<div class="santa-card pr-card" role="dialog" aria-modal="true">${html}</div>`; document.body.appendChild(d);
   const close = () => { d.classList.add("out"); setTimeout(() => d.remove(), 260); }; d.onclick = e => { if(e.target === d) close(); }; d.querySelectorAll("[data-prx]").forEach(b => b.onclick = close); return { d, close }; }
-function prSanta(){ const cm = S.meta.cos || (S.meta.cos = {}); cm.own = cm.own || {}; if(cm.own.santa_hat) return false; cm.own.santa_hat = Date.now(); if(!cm.hat) cm.hat = "santa_hat"; return true; }
+function prSanta(){ if(Date.now() > santaEnd()) return false; const cm = S.meta.cos || (S.meta.cos = {}); cm.own = cm.own || {}; if(cm.own.santa_hat) return false; cm.own.santa_hat = Date.now(); if(!cm.hat) cm.hat = "santa_hat"; return true; }
 function prSnackPick(){ if(!prSnackDue()){ toast(prCC() === "ja" ? "今日のおやつはもう受け取ったニャ" : "오늘 간식은 이미 받았다냥"); return; } const ja = prCC() === "ja", L = PR_SNACKS();
-  const P = prPop(`<b>${ja ? "🎁 今日のおやつ、どれにする？" : "🎁 오늘의 간식, 뭐로 할래?"}</b><p class="tiny">${ja ? `事前登録特典 · ${prEnd("early")}まで毎日1個` : `얼리 집사 · ${prEnd("early")}까지 매일 1개`}</p>
+  const P = prPop(`<b>${ja ? "🎁 今日のおやつ、どれにする？" : "🎁 오늘의 간식, 뭐로 할래?"}</b><p class="tiny">${ja ? `リリース記念 · ${prEnd("early")}まで毎日1個` : `얼리 집사 · ${prEnd("early")}까지 매일 1개`}</p>
     <div class="pr-grid">${L.map(i => `<button type="button" class="pr-it" data-sn="${i.id}">${petIconHTML(i, 30)}<small>${esc(itName(i))}</small></button>`).join("")}</div><button type="button" class="linkbtn" data-prx>${ja ? "あとで" : "나중에"}</button>`);
   P.d.querySelectorAll("[data-sn]").forEach(b => b.onclick = () => { if(!prSnackDue()) return P.close(); const it = PET_IT[b.dataset.sn], p = petState(), z = prState();
     p.inv[it.id] = (p.inv[it.id] || 0) + 1; p.u = Date.now(); const first = !z.early; if(first) z.early = today(); z.ds = today(); const hat = prSanta(); save();
@@ -4169,18 +4169,19 @@ async function prExam(){ const ja = prCC() === "ja", z = prState(); if(!prOn("ex
   go.onclick = async () => { if(!c.checked || prState().exam) return; go.disabled = true; const z2 = prState(); z2.exam = today(); const cm = S.meta.cos || (S.meta.cos = {}); cm.own = cm.own || {}; cm.own.hachi = Date.now(); cm.hat = "hachi"; save();
     let n = 0; try{ n = (await addPresetMore(lang, id)) ? 1 : 0; }catch(_){} track("exam_claim", { cc: prCC(), set: n, lang, cur: S.meta.settings.lang }); P.close();
     toast(ja ? (S.meta.settings.lang === lang ? "旅行単語とハチマキをもらったニャ！" : "もらったニャ！旅行単語は学習言語を韓国語にすると出てくるニャ") : (S.meta.settings.lang === lang ? "여행 단어랑 머리띠 받았다냥!" : "받았다냥! 여행 단어는 학습 언어를 일본어로 바꾸면 나온다냥")); try{ renderAll(); }catch(_){} }; }
-function prPrereg(from){ const z = prState(), kid = KID(); if(z.jreg){ toast("事前登録ずみニャ。ありがとう！"); return; } let intent = "";
-  const P = prPop(`<b>📝 事前登録</b><p>日本円でのお支払いはまだ準備中ニャ。<br>いま登録すると ${prEnd("early")}まで<br><b class="pr-b">毎日おやつ1個 ＋ サンタ帽子</b></p>
-    ${kid ? "" : `<p class="tiny">日本円で買えるようになったら？</p><div class="pr-opt">${[["buy", "買いたい"], ["maybe", "たぶん買う"], ["no", "買わない"]].map(([v, l]) => `<button type="button" class="btn sm" data-in="${v}">${l}</button>`).join("")}</div>`}
-    <button type="button" class="btn primary" id="prRegGo"${kid ? "" : " disabled"}>事前登録する</button><button type="button" class="linkbtn" data-prx>あとで</button>`);
+function prPrereg(from){ const z = prState(), kid = KID(); if(kid){ toast("日本ではまだ購入の準備中ニャ"); return; }   // 만 14세 미만은 구매 의향을 묻지 않음
+  if(z.jreg){ toast("日本ではまだ購入の準備中ニャ。回答ありがとう！"); return; } let intent = "";
+  const P = prPop(`<b>💴 日本円でのお支払い</b><p>日本ではまだ購入の準備中ニャ。<br>準備の参考にしたいので、ひとつだけ教えてニャ。</p>
+    <p class="tiny">日本円で買えるようになったら？</p><div class="pr-opt">${[["buy", "買いたい"], ["maybe", "たぶん買う"], ["no", "買わない"]].map(([v, l]) => `<button type="button" class="btn sm" data-in="${v}">${l}</button>`).join("")}</div>
+    <button type="button" class="btn primary" id="prRegGo" disabled>送る</button><button type="button" class="linkbtn" data-prx>閉じる</button>`);
   const go = P.d.querySelector("#prRegGo"); track("jp_prereg_open", { from });
   P.d.querySelectorAll("[data-in]").forEach(b => b.onclick = () => { intent = b.dataset.in; P.d.querySelectorAll("[data-in]").forEach(x => x.classList.toggle("primary", x === b)); go.disabled = false; });
-  go.onclick = () => { const z2 = prState(); if(z2.jreg) return P.close(); z2.jreg = today(); if(intent) z2.intent = intent; const hat = prSanta(); save();
-    track("jp_prereg", { intent: intent || (kid ? "kid" : ""), from, src: (S.meta.attr || {}).src || "" }); P.close(); toast("事前登録ありがとニャ！" + (hat ? " 🎅 サンタ帽子をどうぞ" : "")); try{ renderAll(); }catch(_){} setTimeout(() => { if(prSnackDue()) prSnackPick(); }, 900); }; }
+  go.onclick = () => { const z2 = prState(); if(z2.jreg || !intent) return P.close(); z2.jreg = today(); z2.intent = intent; save();
+    track("jp_prereg", { intent, from, src: (S.meta.attr || {}).src || "" }); P.close(); toast("ありがとニャ！"); try{ renderAll(); }catch(_){} }; }
 /* 설정 🐱 냥이 카드 안 「이벤트」 줄: 지금 열려 있는 것만 (홈 말풍선이 다른 말로 차 있어도 여기서 받을 수 있게) */
 function prSet(ko){ const box = $("#promoSet"); if(!box) return; const ja = prCC() === "ja", z = prState(), B = [];
   if(prSnackOK()) B.push(`<button type="button" class="btn sm" data-pa="snack"${prSnackDue() ? "" : " disabled"}>🎁 ${ja ? "今日のおやつ" : "오늘의 간식"}${prSnackDue() ? "" : " ✓"}</button>`);
-  if(ja && prOn("early") && !z.jreg && !REC) B.push(`<button type="button" class="btn sm" data-pa="prereg">📝 事前登録</button>`);
+  if(ja && prOn("early") && !z.jreg && !REC && !KID()) B.push(`<button type="button" class="btn sm" data-pa="prereg">💴 日本円での購入</button>`);
   if(prOn("exam") && !REC) B.push(`<button type="button" class="btn sm" data-pa="exam"${z.exam ? " disabled" : ""}>🎓 ${ja ? "受験生応援" : "수험생 응원"}${z.exam ? " ✓" : ""}</button>`);
   box.innerHTML = B.length ? `<span class="pr-h">${ja ? "期間限定イベント" : "기간 한정 이벤트"}</span><div class="pr-row">${B.join("")}</div>` : "";
   box.querySelectorAll("[data-pa]").forEach(b => b.onclick = () => { const a = b.dataset.pa; track("pr_set_tap", { a }); if(a === "snack") prSnackPick(); else if(a === "exam") prExam(); else prPrereg("set"); }); }
@@ -4557,7 +4558,7 @@ function petGrantHTML(g){ if(!g) return ""; const x = pt();
   const tally = {}; g.got.forEach(it => tally[it.id] = (tally[it.id] || 0) + 1);
   return `<div class="petgrant"><div class="pg-top"><b>🎁 ${esc(x.grant(g.n))}</b><span>${esc(x.grantWhy(g.s, g.bonus))}</span></div>
     <div class="pg-items">${Object.keys(tally).map(id => `<span class="pg-it${id === g.main.id ? " main" : ""}">${petIconHTML(PET_IT[id], 24)}<i>×${tally[id]}</i></span>`).join("")}</div>
-    <div class="pg-main">${esc(x.main)}: ${esc(itName(g.main))}</div>${g.late ? `<div class="pg-main pg-late">🚃 ${S.meta.settings.ui === "ja" ? "終電タイム！おやつ2倍" : "막차 타임! 간식 2배"}</div>` : ""}${g.freeze ? `<div class="pg-main">🧊 ${esc(x.freezeGot)}</div>` : ""}</div>`; }
+    <div class="pg-main">${esc(x.main)}: ${esc(itName(g.main))}</div>${g.late ? `<div class="pg-main pg-late">${S.meta.settings.ui === "ja" ? "終電に乗ったニャ🚃 おやつ2倍" : "막차 탔다냥 🚃 간식 2배"}</div>` : ""}${g.freeze ? `<div class="pg-main">🧊 ${esc(x.freezeGot)}</div>` : ""}</div>`; }
 
 function bindPetOpen(root){ (root || document).querySelectorAll("[data-petopen]").forEach(b => b.onclick = () => openPet()); scr7Bind(root); }
 
