@@ -997,6 +997,21 @@ html.short body.focus #sessionBox:has(.poster.ce) > .say{display:flex}
  #sessionStart .poster .catbar.home{margin-top:0}
  #sessionStart .after-poster > .say .nm{width:44px}
 }
+.fr-list{display:flex;flex-direction:column;gap:8px} .fr-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:14px} .fr-row.fr-hi{border-color:var(--accent)}
+.fr-main{flex:1;min-width:0;display:flex;flex-direction:column} .fr-main small{color:var(--muted);font-size:.76rem;overflow-wrap:anywhere} .fr-d{font-style:normal;color:var(--rust);font-weight:800}
+.fr-cat{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:1.3rem;border:2px solid rgba(0,0,0,.08)} .fr-cat.big{width:72px;height:72px;font-size:2.4rem;margin:0 auto}
+.fr-menu{display:flex;flex-direction:column;gap:6px;padding:6px 4px 10px} .fr-md{display:inline-flex;gap:4px} .fr-md select{width:auto} .fr-pg{justify-content:center;gap:10px} .fr-req{display:flex;flex-direction:column;gap:10px;text-align:center}
+.fr-set summary{cursor:pointer;font-weight:700} .hv2-say.fr-ev{cursor:pointer} .fb-from{display:block;font-size:.78rem;color:var(--rust);margin-top:4px}
+.card-pv canvas{width:100%;max-width:240px;height:auto;display:block;margin:0 auto;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,.12)} .cd-opt{flex-wrap:wrap;gap:6px;align-items:center}
+.cd-t,.cd-w{min-width:44px;min-height:44px;border-radius:12px;border:2px solid var(--line);background:var(--surface);cursor:pointer;padding:2px} .cd-t[aria-pressed="true"],.cd-w[aria-pressed="true"]{border-color:var(--ink)}
+.cd-box{position:relative;width:150px;height:140px;margin:10px auto 0;cursor:pointer;animation:cdShake 1.1s ease-in-out infinite} .cd-body{position:absolute;left:10px;right:10px;bottom:0;height:96px;border-radius:12px;background:var(--wr);box-shadow:inset 0 0 0 3px rgba(0,0,0,.06)}
+.cd-body::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:18px;margin-left:-9px;background:var(--rb)} .cd-lid{position:absolute;left:0;right:0;top:14px;height:34px;border-radius:10px;background:var(--wr);z-index:1;box-shadow:inset 0 -3px 0 rgba(0,0,0,.08)}
+.cd-lid::after{content:"🎀";position:absolute;left:50%;top:-30px;transform:translateX(-50%);font-size:2.4rem} .cd-box.open{animation:none} .cd-box.open .cd-lid{transition:transform .4s;transform:translateY(-60px) rotate(-18deg);opacity:.0}
+@keyframes cdShake{0%,60%,100%{transform:rotate(0) scale(1)}10%{transform:rotate(-7deg) scale(1.04,.96)}20%{transform:rotate(6deg) scale(.97,1.04)}30%{transform:rotate(-4deg)}40%{transform:rotate(3deg)}50%{transform:rotate(-1deg)}}
+@media (prefers-reduced-motion: reduce){.cd-box{animation:none}}
+.cd-img{width:100%;max-width:280px;display:block;margin:0 auto;border-radius:14px} .cd-sn{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dashed var(--line)} .cd-sn>span{flex:1;min-width:160px;font-weight:600}
+.cd-pick{width:100%} .cd-toks .cd-tk{border:0;background:none;font:inherit;color:inherit;padding:4px 2px;min-height:32px;cursor:pointer;border-radius:4px} .cd-toks .cd-tk.hl{background:var(--accent-soft);border-bottom:2px solid var(--rust)} .cd-priv{background:var(--accent-soft);border-radius:10px;padding:6px 10px}
+#chatBox textarea{width:100%;min-height:96px} #chatBox .chips{display:flex;flex-wrap:wrap;gap:6px}
 </style>
 </head>
 <body>
@@ -1050,6 +1065,7 @@ html.short body.focus #sessionBox:has(.poster.ce) > .say{display:flex}
         <button type="button" class="am am-3" data-panel="imp"><span class="am-ic">🌐</span><b data-i18n="impTitle"></b></button>
         <button type="button" class="am am-4" data-panel="bulk"><span class="am-ic">📝</span><b data-i18n="addBulk"></b></button>
       </div>
+      <button type="button" class="am am-2 hidden" id="amChat" data-panel="chat"><span class="am-ic">💬</span><span class="am-tx"><b id="amChatT"></b><small id="amChatS"></small></span></button>
       <button type="button" class="am am-5" data-panel="one">✏️ <span data-i18n="addOne"></span></button>
     </nav>
     <div class="card" id="addDeckCard">
@@ -1092,6 +1108,7 @@ html.short body.focus #sessionBox:has(.poster.ce) > .say{display:flex}
       <div id="ocrQueue" class="ocrq hidden"></div>
       <div id="ocrBox" class="hidden"></div>
     </div>
+    <div class="card addpanel" data-panel="chat" id="chatBox"></div>
     <div class="card addpanel" data-panel="imp">
       <h2 data-i18n="impTitle"></h2>
       <p class="muted small" data-i18n="impHelp"></p>
@@ -1206,6 +1223,7 @@ html.short body.focus #sessionBox:has(.poster.ce) > .say{display:flex}
       <label class="ms-row ms-tg" id="kanjiRow"><span id="kanjiLbl"></span><input type="checkbox" id="kanjiChk"></label>
       <label class="ms-row ms-tg"><span id="petSensLbl"></span><select id="petSensSel"></select></label>
       <label class="ms-row ms-tg"><span id="trackLbl"></span><input type="checkbox" id="trackOn"></label>
+      <div class="ms-row hidden" id="frRow"><button type="button" class="linkbtn" id="frOpenBtn"></button></div>
       <div class="ms-row"><button type="button" class="linkbtn" id="tutAgain"></button><button type="button" class="linkbtn" id="s7Again"></button></div></div>
   </section>
 </div>
@@ -1585,7 +1603,7 @@ async function trOf(cand){
 
 /* ───────── カード ───────── */
 function newCard(o){
-  return { id: uid(), lang: o.lang || S.meta.settings.lang, word: String(o.word||"").trim(), meaning: String(o.meaning||"").trim(), example: String(o.example||"").trim(), exampleKo: String(o.exampleKo||"").trim(), form: String(o.form||"").trim(), src: o.src || null, audio: o.audio || null, deck: o.deck || currentAddDeck(), group: o.group || null,
+  return { id: uid(), lang: o.lang || S.meta.settings.lang, word: String(o.word||"").trim(), meaning: String(o.meaning||"").trim(), example: String(o.example||"").trim(), exampleKo: String(o.exampleKo||"").trim(), form: String(o.form||"").trim(), src: o.src || null, audio: o.audio || null, deck: o.deck || currentAddDeck(), group: o.group || null, ...(o.from ? { from: String(o.from).slice(0, 24) } : {}), ...(o.priv ? { priv: 1 } : {}),
     level: 0, due: null, isNew: true, lapses: 0, reps: 0, created: Date.now(), introduced: null, mastered: false, relearn: false, log: [] };
 }
 /* exampleKo は「例文の訳」(旧バージョン互換のためキー名はそのまま) */
@@ -1857,7 +1875,7 @@ function buildSession(){
   return { queue: q, done: 0, failed: {}, remaining, finished: [], state: null };
 }
 /* 레벨 디자인 v2 2단계 — 한 판 12문제(몸풀기 2 → 본편 8 → 보스 1 → 마무리 1). 판의 칸 수는 절대 안 늘어남. 문자 학습(script) 카드가 있으면 옛 방식 */
-const COURSE_N = 12;
+const COURSE_N = 12, COURSE_FIRST = 6;   // 처음 온 사람의 첫 판은 6문제(새 단어 3개 × 맞혀보기+고르기) — 11-25 사용자: 빨리 효능감 + 냥이
 /* 3단계: 85% 자동 조절(S.meta.dda = { n: 판당 새 단어 수 1~4, h: 최근 30문제 [0|1], lo: 지난 판이 어려웠으면 1 }) · 복귀 판(3일 이상 쉬고 첫 판) */
 function ddaState(){ const z = S.meta.dda && typeof S.meta.dda === "object" ? S.meta.dda : (S.meta.dda = { n: 3, h: [] }); if(!(z.n >= 1 && z.n <= 4)) z.n = 3; if(!Array.isArray(z.h)) z.h = []; return z; }
 /* 며칠 안 오면 냥이가 삐짐(연출일 뿐 벌 아님): 기준 = 마지막 접속 S.meta.seen. 하루 한 번 S.meta.sulk={lv,gap,at,need,done,c}를 정함 */
@@ -1909,7 +1927,7 @@ function courseMark(ses){ if(!ses || !ses.course) return; const z = cdayState();
 function buildCourse(){
   if(S.meta.settings.lang === "ja"){ jaxLoad(); kjxLoad(); }
   if(activeCards().some(c => c.script && (c.isNew || (!c.mastered && c.due && c.due <= today())))) return buildSession();
-  const N = COURSE_N, used = new Set(), take = c => { used.add(c.id); return c; };
+  const first = S.meta.first1 === 1 && !Object.keys(S.meta.days || {}).length, N = first ? COURSE_FIRST : COURSE_N, used = new Set(), take = c => { used.add(c.id); return c; };
   const ret = isReturnDay(); let pool = dueCards().filter(c => !c.script).map(c => ({ c, R: Rof(c) }));
   if(ret){ const mid = pool.filter(z => z.R >= .4 && z.R <= .8); if(mid.length) pool = mid.concat(pool.filter(z => z.R > .8)); }   // 복귀 판: 살릴 수 있는 것(R 0.4~0.8)부터, R<0.4는 다음 판으로(순서만)
   const cd = cdayState(), capped = id => (cd.n[id] || 0) >= COURSE_DAY_MAX;   // 같은 단어는 하루 2판까지(검수단 R1-10-1: 끈질긴 단어가 「한 판 더」마다 반복되던 것)
@@ -1936,7 +1954,7 @@ function buildCourse(){
   items = items.slice(0, N);
   if(items.length < COURSE_MIN && cd.c > 0) items = [];   // 오늘 이미 한 판 했으면 4문제 아래 판은 만들지 않음 → 「오늘 끝! 내일 다시」
   const remaining = {}; items.forEach(it => remaining[it.id] = (remaining[it.id] || 0) + 1);
-  return { queue: items, done: 0, failed: {}, remaining, finished: [], state: null, course: { n: items.length, newK: nw.length, ret: ret ? 1 : 0 } };
+  return { queue: items, done: 0, failed: {}, remaining, finished: [], state: null, course: { n: items.length, newK: nw.length, ret: ret ? 1 : 0, ...(first ? { first: 1 } : {}) } };
 }
 /* 같은 단어가 연달아 나오지 않게: 단어마다 단계 순서(맞혀보기→뜻→빈칸→쓰기)는 지키면서, 같은 단어 사이에 최소 SPREAD_GAP개의 다른 문제를 끼움.
    (같은 세션 안에서도 바로 다시 묻는 것보다 사이를 두고 꺼내 떠올리게 하는 편이 오래 남는다 — 간격 효과·인출 연습) 다른 단어가 없으면 어쩔 수 없이 가장 오래된 것부터 */
@@ -2057,7 +2075,7 @@ function bindCorner(){ const ko = S.meta.settings.ui === "ko", a = $("#tutAgain"
   const vk = $("#vkOnChk"); if(vk){ $("#vkLbl").textContent = ko ? "화면 자판 쓰기 (끄면 폰 키보드)" : "画面キーボードを使う（オフでスマホのキーボード）"; vk.checked = vkOn(); vk.onchange = () => { S.meta.settings.vk = vk.checked; save(); track("vk_set", { on: vk.checked }); }; }
   const kj = $("#kanjiChk"); if(kj){ $("#kanjiLbl").textContent = ko ? "일본어: 한자까지 정확히 써야 정답 (끄면 히라가나도 정답)" : "日本語：漢字まで正確に書かないと不正解（オフならひらがなもOK）"; kj.checked = !!S.meta.settings.strictKanji; $("#kanjiRow").classList.toggle("hidden", S.meta.settings.lang !== "ja"); kj.onchange = () => { S.meta.settings.strictKanji = kj.checked; save(); if(kj.checked && vkOn()) toast(ko ? "화면 자판으론 한자를 못 써서, 일본어 답은 폰 키보드로 받는다냥" : "画面キーボードでは漢字が打てないので、日本語の答えはスマホのキーボードになるニャ"); }; }
   const hp = $("#homePetOn"); if(hp){ $("#homePetLbl").textContent = ko ? "앱 열면 냥이부터" : "起動したらネコから"; hp.checked = S.meta.settings.homePet !== false; hp.onchange = () => { S.meta.settings.homePet = hp.checked; save(); track("home_pet", { on: hp.checked }); }; }
-  bindNick(ko); { const b = $("#s7Again"); if(b){ const lang = S.meta.settings.lang, ok = !!SCRIPT_SETS[lang]; b.style.display = ok ? "" : "none"; b.textContent = ko ? "🔤 글자 7분 코스 (다시 보이기·이어 하기)" : "🔤 文字7分コース（再表示・つづき）";
+  bindNick(ko); frBindSet(ko); { const b = $("#s7Again"); if(b){ const lang = S.meta.settings.lang, ok = !!SCRIPT_SETS[lang]; b.style.display = ok ? "" : "none"; b.textContent = ko ? "🔤 글자 7분 코스 (다시 보이기·이어 하기)" : "🔤 文字7分コース（再表示・つづき）";
     b.onclick = () => { const z = scr7State(lang); z.skip = 0; save(); showView("today"); renderAll(); setTimeout(scr7Open, 200); }; } }
   const ss = $("#petSensSel"); if(ss){ $("#petSensLbl").textContent = ko ? "냥이 감도" : "ネコの感度"; const o = ko ? ["둔하게", "조금 둔하게", "보통", "말랑하게", "초예민"] : ["にぶめ", "ややにぶめ", "ふつう", "やわらかめ", "超びんかん"], v = [.5, .75, 1, 1.35, 1.8];
     ss.innerHTML = v.map((z, i) => `<option value="${z}">${o[i]}</option>`).join(""); ss.value = String(petSens()); ss.onchange = () => { S.meta.settings.petSens = +ss.value; save(); track("pet_sens", { v: +ss.value }); }; } }
@@ -2213,7 +2231,7 @@ function renderSupBox(){ const el = $("#supBox"); if(!el) return; const ko = S.m
   $("#supShare").onclick = async () => { const url = "https://meowca.app/?ref=invite", text = ko ? "MEOWCA! 암기냥이 — 가성비로 딱 필요한 만큼만 외우고, 나머진 말랑 냥이 괴롭히기 🐾 무료" : "MEOWCA!（ミャオカ）— もう無理やり暗記しなくていい。最小限だけ覚えて、あとはネコと遊ぶ 🐾 無料";
     try{ if(navigator.share){ await navigator.share({ title: "MEOWCA!", text, url }); return; } await navigator.clipboard.writeText(text + " " + url); toast(ko ? "링크를 복사했어요" : "リンクをコピーしました"); }catch(e){} }; }
 function setAddPanel(k){   // 단어 추가: 스크롤 대신 메뉴에서 하나 고르기
-  const v = $("#view-add"); if(!v) return; k = k || v.dataset.panel || "preset"; v.dataset.panel = k;
+  const v = $("#view-add"); if(!v) return; k = k || v.dataset.panel || "preset"; if(k === "chat" && !FR_OK()) k = "preset"; if(k === "chat") chatSync(); { const ct = $("#amChatT"); if(ct){ const ja = S.meta.settings.ui === "ja"; ct.textContent = ja ? "トークから追加" : "대화로 추가"; $("#amChatS").textContent = ja ? "カカオ・LINEのトークから" : "카톡·LINE 대화에서"; $("#amChat").classList.toggle("hidden", !FR_OK()); } } v.dataset.panel = k;
   v.querySelectorAll(".addpanel").forEach(el => el.classList.toggle("hidden", el.dataset.panel !== k));
   v.querySelectorAll(".addmenu .am").forEach(b => b.setAttribute("aria-pressed", b.dataset.panel === k ? "true" : "false"));
   const dc = $("#addDeckCard"); if(dc) dc.classList.toggle("hidden", k === "preset" || k === "slang"); }
@@ -2256,7 +2274,7 @@ function maybeSetup(){ if(!needSetup() || $("#setupBox") || WL_PENDING) return; 
       w.onclick = e => { const k = e.target.closest(".su-y"); if(k) w.scrollTo({ top: k.offsetTop - w.clientHeight / 2 + k.offsetHeight / 2, behavior: "smooth" }); };
       $("#suOk").onclick = () => { const k = mark(); if(k){ S.meta.by = +k.dataset.y; save(); } track("setup", { step: 2, v: S.meta.by || null, ms: Date.now() - T0 }); step = 3; draw(); };
       $("#suSkip").onclick = () => { track("setup", { step: 2, v: "skip", ms: Date.now() - T0 }); step = 3; draw(); }; } };
-  const finish = tut => { track("setup_done", { tut, ms: Date.now() - T0 }); S.meta.setup = 1; S.meta.tutAsked = tut ? 0 : 1; S.meta.tutWant = tut ? 1 : 0; save(); box.classList.add("out"); setTimeout(() => box.remove(), 250);
+  const finish = tut => { track("setup_done", { tut, ms: Date.now() - T0 }); S.meta.setup = 1; if(!Object.keys(S.meta.days || {}).length) S.meta.first1 = 1; S.meta.tutAsked = tut ? 0 : 1; S.meta.tutWant = tut ? 1 : 0; save(); box.classList.add("out"); setTimeout(() => box.remove(), 250);
     try{ fillLangs(); fillVoices(); }catch(e){} renderAll(); drawRain(); };
   draw(); }
 
@@ -2304,7 +2322,7 @@ function renderStartInner(){
 function startSession(){
   { const ta = $("#tutAsk"); if(ta) ta.remove(); }
   if(S.meta.hfTip === 1 && S.meta.settings.handsFree){ S.meta.hfTip = 2; save(); setTimeout(() => toast(S.meta.settings.ui === "ko" ? "지금은 '입력 없이' 모드예요. 일본어 키보드가 있으면 위 버튼을 눌러 직접 써 보세요" : "いまは「入力なし」モード。キーボードがあれば上のボタンで書く練習もできます"), 900); }
-  SES = buildCourse(); if(!SES.queue.length){ SES = null; renderStart(); if(S.meta.cday && S.meta.cday.d === today() && S.meta.cday.c > 0) toast(S.meta.settings.ui === "ja" ? "今日はここまで！また明日ニャ" : "오늘은 여기까지! 내일 다시 하자냥"); return; } courseMark(SES); nearPreload();
+  SES = buildCourse(); if(SES.course && SES.course.first){ S.meta.first1 = 2; track("first_course", { n: SES.queue.length }); } if(!SES.queue.length){ SES = null; renderStart(); if(S.meta.cday && S.meta.cday.d === today() && S.meta.cday.c > 0) toast(S.meta.settings.ui === "ja" ? "今日はここまで！また明日ニャ" : "오늘은 여기까지! 내일 다시 하자냥"); return; } courseMark(SES); nearPreload();
   prefetchLazy([...new Set(SES.queue.map(it => it.id))]);
   saveSession();
   $("#sessionStart").classList.add("hidden"); $("#sessionBox").classList.remove("hidden"); nextItem();
@@ -2768,7 +2786,7 @@ function askTyped(c, mode, promptHTML, target, isGuess){
   let phase = "answer";
   const blank = box.querySelector(".stage .blank");
   // 答えは問題の空欄にそのまま入れる。フィードバックには「単語・意味」だけ（例文は上に出ているので繰り返さない）
-  const answerBlock = () => `<span class="fb-answer">${esc(target)}${norm(target) !== norm(c.word) ? ` <span class="fb-base">${x.baseForm} ${esc(c.word)}</span>` : ""}</span>${c.meaning ? `<span class="fb-mean">${esc(c.meaning)}</span>` : ""}${siblings(c)}${!blank && c.example ? `<span class="fb-ex">${highlight(c)}</span><span class="fb-mean">${esc(c.exampleKo)}</span>` : ""}`;
+  const answerBlock = () => `<span class="fb-answer">${esc(target)}${norm(target) !== norm(c.word) ? ` <span class="fb-base">${x.baseForm} ${esc(c.word)}</span>` : ""}</span>${c.meaning ? `<span class="fb-mean">${esc(c.meaning)}</span>` : ""}${siblings(c)}${!blank && c.example ? `<span class="fb-ex">${highlight(c)}</span><span class="fb-mean">${esc(c.exampleKo)}</span>` : ""}${c.from ? `<span class="fb-from">${esc(frt().from(c.from))}</span>` : ""}`;
   const fillBlank = ok => { if(blank){ blank.textContent = target; blank.classList.add("filled", ok ? "ok" : "no"); } };
   const showFb = () => { const fb = $("#fb"), st = box.querySelector(".stage"); if(!fb || !st) return;   // 入りきるなら問題文が見える一番上のまま。入らないときだけ必要な分だけ動かす
     requestAnimationFrame(() => { if(st.scrollHeight - st.clientHeight <= 4) st.scrollTop = 0; else fb.scrollIntoView({ block: "nearest", behavior: "smooth" }); }); };
@@ -3243,7 +3261,7 @@ const ART_PALETTES = [
 function seededRand(seed){ let h = 1779033703 ^ seed.length; for(let i = 0; i < seed.length; i++){ h = Math.imul(h ^ seed.charCodeAt(i), 3432918353); h = h << 13 | h >>> 19; } return () => { h = Math.imul(h ^ h >>> 16, 2246822507); h = Math.imul(h ^ h >>> 13, 3266489909); return ((h ^= h >>> 16) >>> 0) / 4294967296; }; }
 
 /* ════════ 홈 v2: 츄르바(자·목적지) → 책장(=학습 버튼, 위에서 냥이가 몰래 봄) + 밥 주는 냥이 → 연속·보상 → 말풍선 칸(고정) → 달력 ════════ */
-function homeV2(o){ { const sl = sulkHomeLine(); if(sl) o = Object.assign({}, o, { line: sl }); } const ja = S.meta.settings.ui === "ja", n = petCount(), sk = streak(), x = t(), tot = o.done + o.remain, pct = Math.round(o.done / Math.max(1, tot) * 100), doneToday = S.meta.days[today()] === true;
+function homeV2(o){ { const sl = sulkHomeLine(); if(sl) o = Object.assign({}, o, { line: sl }); else { const fl = frHomeLine(); if(fl) o = Object.assign({}, o, { line: fl, frEv: 1 }); } } const ja = S.meta.settings.ui === "ja", n = petCount(), sk = streak(), x = t(), tot = o.done + o.remain, pct = Math.round(o.done / Math.max(1, tot) * 100), doneToday = S.meta.days[today()] === true;
   const k = petTier(sk), maxed = k >= PET_TIERS.length - 1, a = PET_TIERS[k], z = maxed ? a : PET_TIERS[k + 1], its = maxed ? [] : PET_ITEMS.filter(i => i.t === k + 1);
   const dots = maxed ? "" : Array.from({ length: z - a }, (_, i) => `<i class="${a + i < sk ? "on" : a + i === sk && !doneToday ? "now" : ""}"></i>`).join("");
   const rw = maxed ? `<div class="hv2-chip hv2-rw"><b>🎉 ${ja ? "おやつ全部解禁！" : "간식 전부 해금!"}</b></div>`
@@ -3253,7 +3271,7 @@ function homeV2(o){ { const sl = sulkHomeLine(); if(sl) o = Object.assign({}, o,
     <div class="hv2-chips"><div class="hv2-chip hv2-sk">${nm(sk ? "st_happy" : "st_sleepy", 26)}<b>${sk}</b><small>${ja ? "日連続" : "일 연속"} 🔥</small></div>${rw}</div>
     <div class="hv2-grid"><button type="button" class="hv2-shelf" id="${o.id}"><img class="hv2-books" src="${NM_BASE}ic/shelf.svg" alt=""><span class="hv2-go">▶ ${esc(o.label)}</span></button>
       <button type="button" class="hv2-feed" data-petopen><img class="hv2-side" src="${NM_BASE}ic/peekside.svg" alt=""><span class="hv2-fgo">🍖 ${esc(pt().give)}${n ? ` <em>${n}</em>` : ""}</span></button></div>
-    <div class="hv2-say">${say("cat_jpop", esc(o.line || ""))}</div>
+    <div class="hv2-say${o.frEv ? " fr-ev" : ""}">${say("cat_jpop", esc(o.line || ""))}</div>
     ${miniCal()}${o.re ? `<button class="linkbtn hv2-re" id="restartBtn" type="button">↺ ${esc(o.re)}</button>` : ""}</div>`; }
 function miniCal(){ const td = today(), ja = S.meta.settings.ui === "ja", D = S.meta.days || {}, W = (ja ? "月火水木金土日" : "월화수목금토일").split(""); const dow = (new Date(td + "T00:00:00").getDay() + 6) % 7; let d = addDays(td, -dow);
   const cells = W.map((w, i) => { const dd = addDays(d, i), fut = dd > td, on = !!D[dd]; return `<div class="hv2-day${on ? " on" : ""}${dd === td ? " td" : ""}${fut ? " fut" : ""}"><span>${w}</span><i>${on ? "🐾" : +dd.slice(8)}</i></div>`; });
@@ -5756,7 +5774,7 @@ const trBad = (s, ui) => { s = String(s || ""); if(!s) return false; if(EN_TR.te
 const trShow = c => trBad(c.exampleKo) ? "" : (c.exampleKo || "");
 function fixEnTr(){ let n = 0; Object.values(S.cards).forEach(c => { if(c.exampleKo && (c.lang || "es") !== (S.meta.settings.ui || "ko") && trBad(c.exampleKo)){ c.exampleKo = ""; n++; } }); if(n){ save(); track("en_tr_fix", { n }); } return n; }
 let TR_OFF = 0;   // 번역 한도에 걸리면 1시간 쉼
-async function fillTr(c){ const cur = c && S.cards[c.id]; if(!cur || !cur.example || cur.exampleKo || (cur.lang || "es") === S.meta.settings.ui || Date.now() < TR_OFF) return;
+async function fillTr(c){ const cur = c && S.cards[c.id]; if(!cur || cur.priv || !cur.example || cur.exampleKo || (cur.lang || "es") === S.meta.settings.ui || Date.now() < TR_OFF) return;
   try{ const tr = await translate(cur.example, L().mm); if(tr && !trBad(tr) && S.cards[cur.id] && !S.cards[cur.id].exampleKo){ S.cards[cur.id].exampleKo = tr; saveCard(S.cards[cur.id]); } }
   catch(e){ if(/quota/.test(String(e && e.message))) TR_OFF = Date.now() + 3600e3; } }
 function fillLazy(c){
@@ -5778,17 +5796,17 @@ async function prefetchLazy(ids){ for(const id of ids){ const c = S.cards[id]; i
 /* レベル診断: 各レベルから数語＋存在しない単語。わかる率を「うそ○」で補正（yes/no 語彙テスト） */
 async function startDiag(lang, host, from){
   const x = t(), idx = await presetIndex(), dg = idx.diag[lang], set = idx.sets[lang]; if(!dg) return; track("diag_start", { lang, from: from || "" });
-  // 적응형: 한 페이지 = 지금 레벨 단어 4 + 없는 단어 1. 잘 알면 한 단계 위, 모르면 한 단계 아래로 (10페이지)
+  // 적응형: 한 페이지 = 지금 레벨 단어 4 + 없는 단어 1. 잘 알면 한 단계 위, 모르면 한 단계 아래로 (4페이지 — 11-25 사용자: 짧게)
   const shuf = a => a.slice().sort(() => Math.random() - .5), pools = {}, fakes = shuf(dg.fake), L = set.levels.map(l => l.id);
   set.levels.forEach(lv => pools[lv.id] = shuf(dg.levels[lv.id] || []));
-  const items = [], PAGES = 10; let cur = Math.min(1, L.length - 1);
+  const items = [], PAGES = 4; let cur = Math.min(1, L.length - 1);
   const mk = w => ({ w: Array.isArray(w) ? w[0] : w, r: Array.isArray(w) ? w[1] : "" });
   const addPage = () => { let li = cur; while(li >= 0 && pools[L[li]].length < 4) li--; if(li < 0){ li = cur; while(li < L.length && pools[L[li]].length < 4) li++; } if(li >= L.length) return false;
     const pg = pools[L[li]].splice(0, 4).map(w => Object.assign(mk(w), { lv: L[li] })); if(fakes.length) pg.push(Object.assign(mk(fakes.shift()), { fake: 1 }));
     shuf(pg).forEach(it => items.push(it)); return true; };
   addPage();
   const box = host || $("#diagBox"); const known = new Set(); if(!box) return; box.scrollIntoView({ behavior: "smooth", block: "center" });
-  const PG = 5, total = PAGES, ja = S.meta.settings.ui === "ja"; let page = 0, mood = "";   // 5개씩, 1/10 처럼 넘기며 (긴 스크롤 대신)
+  const PG = 5, total = PAGES, ja = S.meta.settings.ui === "ja"; let page = 0, mood = "";   // 5개씩, 1/4 처럼 넘기며 (긴 스크롤 대신)
   const draw = () => { const sl = items.slice(page * PG, page * PG + PG), last = page === total - 1;
     const ti = diagTitleIdx(cur, L.length);
     box.innerHTML = `<div class="diag dpg"><div class="dpg-h"><b>${esc(x.diagTitle)}</b><span class="dpg-st" aria-hidden="true">${DIAG_TI.map((e, i) => `<i class="${i === ti ? "on" : i < ti ? "past" : ""}">${i === ti ? e : "·"}</i>`).join("")}${mood ? `<em class="dpg-mood">${esc(mood)}</em>` : ""}</span><span class="dpg-n">${page + 1} / ${total}</span></div><div class="dpg-bar"><i style="width:${Math.round((page + 1) / total * 100)}%"></i></div>
@@ -6111,8 +6129,244 @@ function petDrawItem(ctx, it, x, y, sz, rot, ch){
   ctx.restore();
 }
 
-if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { REC: () => REC, recOpen, payOpen, payWhat, payGrant, buyDays, buyExpNote, bizFootHTML, renderShop, dueCards, revToday, provButtons, presetDeckName, deckName, mergeData, mergeCard, mergePet, syncNow, payload, jaTailOk, formBoundOk, loanMatch, loanSk, frameSplit, frameParts, frameOpts, askFrame, materializeFrame, addPresetMore, presetMore, wlFind, wlLangOf, wlMake, newCandidates: () => newCandidates(), rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, closePet, petGrab, petDragMove, petRelease, petThrow, petRefund, purrState: () => ({ on: !!PURR, purr0: PET ? PET.purr0 || 0 : 0, n: PET ? PET.purrN || 0 : 0 }), sndMode, buyGrant, petCount, PT: () => PT, MELT: () => MELT, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
+/* ════════ 친구·축하 카드·대화로 학습 (사업안 §7 ①②③, v196~) ════════
+   - 만 14세 미만(KID)이면 친구·생일·대화 기능을 숨김. 촬영 모드(REC)에서도 끔.
+   - 서버는 friends_setup.sql(fr_*) 함수로만. 주인 = nick.key 해시(닉네임과 같은 방식).
+   - 대화 원문은 기기 안에서만 읽고 저장·전송하지 않음. 고른 단어 카드는 c.priv=1 → 예문 번역 요청(fillTr)도 안 보냄. */
+const FR_OK = () => !REC && !KID();
+const FRT = {
+  ko: { title: "👫 친구", help: "초대 링크로 친구를 맺으면 생일·기념일을 챙기고, 서로 공개한 학습 현황을 볼 수 있어요.", invite: "💌 친구 초대 링크 보내기", inviteTxt: n => `${n}님이 MEOWCA!에서 친구 신청을 보냈어요 🐱 같이 외국어 공부해요!`, copied: "초대 링크를 복사했어요",
+    none: "아직 친구가 없어요. 초대 링크를 보내 보세요!", nosrv: "친구 기능 서버를 준비 중이에요. 잠시 뒤 다시 열어 주세요.", err: "연결이 안 돼요. 잠시 뒤 다시 해 주세요.", loading: "불러오는 중…",
+    setH: "공개 설정", shareStats: "친구에게 학습 현황 보이기", shareBday: "생일 알려 주기", myBday: "내 생일(월·일만)", month: "월", day: "일", none0: "선택 안 함", saved: "저장했어요",
+    streak: n => `🔥 ${n}일 연속`, week: n => `이번 주 ${n}장`, hidden: "학습 현황 비공개", bday: (m, d) => `🎂 ${m}월 ${d}일`, dday: n => n ? `D-${n}` : "오늘!", card: "🎁 카드", more: "⋯",
+    annAdd: "기념일 추가", annName: "이름(예: 사귄 날)", annSave: "추가", unfriend: "친구 끊기", block: "차단", sure: "정말 할까요?", removed: "정리했어요", prev: "‹", next: "›",
+    reqT: n => `${n || "친구"}님이 친구 신청을 보냈어요`, reqSub: "수락하면 서로 친구 목록에 보여요. 생일·학습 현황은 각자 켠 것만 보여요.", accept: "수락", later: "나중에", accepted: n => `${n || "친구"}님과 친구가 됐어요!`,
+    reqBad: { used: "이미 쓰인 초대 링크예요", expired: "기한(7일)이 지난 초대 링크예요", none: "없는 초대 링크예요", self: "내가 보낸 초대 링크예요", blocked: "친구를 맺을 수 없어요" }, kid: "이 기능은 만 14세 이상만 쓸 수 있어요",
+    homeBday: (n, d) => d ? `${n} 생일 D-${d}! 축하 카드 보낼래냥?` : `오늘은 ${n} 생일이다냥! 🎂 카드 보내자`, homeAnn: (n, a, d) => d ? `${n}과(와) ${a} D-${d}냥` : `오늘은 ${n}과(와) ${a}! 🎉`,
+    mkT: "🎁 축하 카드 만들기", tpl: "냥이", wrap: "포장지", msg: "하고 싶은 말", msgPh: "생일 축하해! 🎂", pTry: L => `${L}로 써 보기 (선택)`, pPh: "상대 언어로 한마디", send: "📤 카드 보내기", cardTxt: n => `${n}님이 보낸 냥이 카드가 도착했어요 🎁`,
+    hintOk: n => `✓ 아는 단어 ${n}개`, hintChk: w => `확인해 볼 단어: ${w}`, hintNone: "단어장에 없는 표현만 있어요. 맞춤법을 한 번 더 확인해 봐요",
+    boxT: n => `💌 ${n || "누군가"}님이 카드를 보냈어요`, boxTap: "상자를 톡 눌러 열어 봐", learn: "📌 이 문장으로 외우기", pickW: "빈칸으로 만들 단어를 골라 줘", mkCard: "이 단어로 카드 만들기", noBlank: "이 단어로는 빈칸을 못 만들어요. 다른 단어를 골라 봐", made: "카드를 만들었어요! 오늘 문제에 나와요",
+    thanks: "💗 고맙다냥 보내기", thanksTxt: n => `${n}님 카드 고마워요! 🐱💗`, from: n => `💌 ${n}님이 보낸 문장`, deckGift: "💌 받은 문장", deckChat: "💬 대화 단어",
+    chatT: "💬 대화로 단어 추가", chatHelp: "카톡·LINE 대화를 붙여넣거나 「대화 내보내기」 파일(.txt)을 고르면, 모르는 단어 후보를 골라 카드로 만들어요. 캡처는 위 「사진으로 추가」를 써 주세요.", chatPriv: "🔒 대화 내용은 이 기기 안에서만 읽고 저장하지 않아요",
+    chatPh: "여기에 대화를 붙여넣기", chatFile: "📄 내보내기 파일 고르기", chatWho: "이 사람 메시지만", chatAll: "모두", chatLine: "원래 대화 문장을 예문으로 쓰기", chatFind: "단어 찾기", chatNone: "새 단어 후보가 없어요", chatAdd: n => `${n}개 카드로 만들기`, chatCnt: (n, k) => `후보 ${n}개 · ${k}개 고름` },
+  ja: { title: "👫 友だち", help: "招待リンクで友だちになると、誕生日・記念日を祝えて、お互いが公開した学習状況が見られます。", invite: "💌 友だち招待リンクを送る", inviteTxt: n => `${n}さんがMEOWCA!で友だち申請を送りました 🐱 一緒に外国語を勉強しよう！`, copied: "招待リンクをコピーしました",
+    none: "まだ友だちがいません。招待リンクを送ってみて！", nosrv: "友だち機能のサーバーを準備中です。しばらくしてから開いてください。", err: "つながりません。しばらくしてからもう一度。", loading: "読み込み中…",
+    setH: "公開設定", shareStats: "友だちに学習状況を見せる", shareBday: "誕生日を知らせる", myBday: "自分の誕生日（月日のみ）", month: "月", day: "日", none0: "選ばない", saved: "保存しました",
+    streak: n => `🔥 ${n}日連続`, week: n => `今週 ${n}枚`, hidden: "学習状況は非公開", bday: (m, d) => `🎂 ${m}月${d}日`, dday: n => n ? `あと${n}日` : "今日！", card: "🎁 カード", more: "⋯",
+    annAdd: "記念日を追加", annName: "名前（例：付き合った日）", annSave: "追加", unfriend: "友だちをやめる", block: "ブロック", sure: "本当にしますか？", removed: "整理しました", prev: "‹", next: "›",
+    reqT: n => `${n || "友だち"}さんから友だち申請が届きました`, reqSub: "承認するとお互いの友だちリストに表示されます。誕生日・学習状況はそれぞれ公開したものだけ。", accept: "承認", later: "あとで", accepted: n => `${n || "友だち"}さんと友だちになりました！`,
+    reqBad: { used: "使用済みの招待リンクです", expired: "期限（7日）切れの招待リンクです", none: "存在しない招待リンクです", self: "自分が送った招待リンクです", blocked: "友だちになれません" }, kid: "この機能は14歳以上のみ使えます",
+    homeBday: (n, d) => d ? `${n}さんの誕生日まであと${d}日！カード送るニャ？` : `今日は${n}さんの誕生日ニャ！🎂 カードを送ろう`, homeAnn: (n, a, d) => d ? `${n}さんと${a}まであと${d}日ニャ` : `今日は${n}さんと${a}！🎉`,
+    mkT: "🎁 お祝いカードを作る", tpl: "ネコ", wrap: "包装紙", msg: "伝えたいこと", msgPh: "誕生日おめでとう！🎂", pTry: L => `${L}で書いてみる（任意）`, pPh: "相手の言葉でひとこと", send: "📤 カードを送る", cardTxt: n => `${n}さんからネコのカードが届きました 🎁`,
+    hintOk: n => `✓ 知っている単語 ${n}個`, hintChk: w => `確認したい単語：${w}`, hintNone: "単語帳にない表現だけです。つづりをもう一度確認してみて",
+    boxT: n => `💌 ${n || "だれか"}さんからカードが届きました`, boxTap: "箱をタップして開けてみて", learn: "📌 この文で覚える", pickW: "穴埋めにする単語を選んでね", mkCard: "この単語でカードを作る", noBlank: "この単語では穴埋めが作れません。ほかの単語を選んで", made: "カードを作りました！今日の問題に出ます",
+    thanks: "💗 ありがとうを送る", thanksTxt: n => `${n}さん、カードありがとう！🐱💗`, from: n => `💌 ${n}さんから届いた文`, deckGift: "💌 届いた文", deckChat: "💬 トークの単語",
+    chatT: "💬 トークから単語を追加", chatHelp: "カカオトーク・LINEのトークを貼り付けるか「トーク履歴を送信」ファイル(.txt)を選ぶと、知らない単語の候補を選んでカードにできます。スクショは上の「写真から追加」を使ってください。", chatPriv: "🔒 トーク内容はこの端末の中だけで読み、保存しません",
+    chatPh: "ここにトークを貼り付け", chatFile: "📄 書き出しファイルを選ぶ", chatWho: "この人のメッセージだけ", chatAll: "全員", chatLine: "元のトークの文を例文にする", chatFind: "単語をさがす", chatNone: "新しい単語の候補がありません", chatAdd: n => `${n}個カードにする`, chatCnt: (n, k) => `候補 ${n}個 · ${k}個選択` } };
+const frt = () => FRT[S.meta.settings.ui === "ja" ? "ja" : "ko"];
+function frState(){ const f = S.meta.fr || (S.meta.fr = {}); if(!f.ann) f.ann = {}; if(!Array.isArray(f.list)) f.list = []; return f; }
+const frFur = id => { const it = id && COS.find(c => c.id === id && c.f); return (it ? it.f : COS_FUR0)[1]; };
+function frStats(){ const from = addDays(today(), -6); return { st: streak(), wk: Object.values(S.cards).filter(c => c.last && c.last >= from && (c.lang || "es") === S.meta.settings.lang).length, lang: S.meta.settings.lang }; }
+async function frSync(){ const f = frState(), n = nickState();
+  try{ const r = await sbRpc("fr_sync", { p_key: n.key, p_nick: myNick() || nickRand(), p_fur: (S.meta.cos && S.meta.cos.on) || "", p_share_stats: !!f.share, p_share_bday: !!f.bshare, p_bday: f.bday || "", p_stats: f.share ? frStats() : null });
+    if(r && Array.isArray(r.list)){ f.list = r.list.map(z => ({ id: z.id, nick: z.nick, fur: z.fur, stats: z.stats || null, bday: z.bday || "", since: z.since })); f.at = Date.now(); delete f.nosrv; save(); return "ok"; } return "err"; }
+  catch(e){ if(/ 404$/.test(e.message)){ f.nosrv = 1; return "nosrv"; } return "err"; } }
+const frNextIn = md => { if(!/^\d\d-\d\d$/.test(md || "")) return null; const td = today(), y = +td.slice(0, 4); for(const yy of [y, y + 1]){ const d = `${yy}-${md}`; if(d >= td) return Math.round((new Date(d) - new Date(td)) / 864e5); } return null; };
+function frEvents(){ if(!FR_OK()) return []; const f = frState(), out = [];
+  f.list.forEach(z => { const b = frNextIn(z.bday); if(b != null && b <= 3) out.push({ k: "bday", fid: z.id, nick: z.nick, d: b });
+    (f.ann[z.id] || []).forEach(a => { const d = frNextIn(a.d); if(d != null && d <= 3) out.push({ k: "ann", fid: z.id, nick: z.nick, a: a.n, d }); }); });
+  return out.sort((a, b) => a.d - b.d); }
+function frHomeLine(){ const e = frEvents()[0]; if(!e) return ""; const x = frt(); const key = today() + "|" + e.fid + "|" + e.k; const f = frState();
+  if(f.evSeen !== key){ f.evSeen = key; save(); track("fr_event_show", { k: e.k, d: e.d }); }
+  return e.k === "bday" ? x.homeBday(e.nick, e.d) : x.homeAnn(e.nick, e.a, e.d); }
+document.addEventListener("click", ev => { const s = ev.target.closest && ev.target.closest(".hv2-say.fr-ev"); if(!s) return; const e = frEvents()[0]; track("fr_event_tap", { k: e ? e.k : "" }); frOpen(e ? e.fid : null); });
+const frMD = (id, v) => { const [m, d] = (v || "").split("-"); const x = frt();
+  return `<select id="${id}M" aria-label="${x.month}"><option value="">${x.month}</option>${Array.from({ length: 12 }, (_, i) => `<option value="${String(i + 1).padStart(2, "0")}"${+m === i + 1 ? " selected" : ""}>${i + 1}</option>`).join("")}</select>
+    <select id="${id}D" aria-label="${x.day}"><option value="">${x.day}</option>${Array.from({ length: 31 }, (_, i) => `<option value="${String(i + 1).padStart(2, "0")}"${+d === i + 1 ? " selected" : ""}>${i + 1}</option>`).join("")}</select>`; };
+const frMDval = (root, id) => { const m = root.querySelector(`#${id}M`).value, d = root.querySelector(`#${id}D`).value; return m && d ? `${m}-${d}` : ""; };
+async function frOpen(focusId){ if(!FR_OK()){ toast(frt().kid); return; } const x = frt(), f = frState(); let page = 0; track("fr_open", { n: f.list.length });
+  const bg = openSheet(`<h2 style="margin:0">${x.title}</h2><p class="muted small" style="margin:0">${esc(x.help)}</p>
+    <button type="button" class="btn primary" id="frInv">${x.invite}</button><div id="frList" class="fr-list"><p class="muted small">${x.loading}</p></div>
+    <details class="fr-set"><summary>⚙️ ${x.setH}</summary>
+      <label class="ms-row ms-tg"><span>${x.shareStats}</span><input type="checkbox" id="frShare"${f.share ? " checked" : ""}></label>
+      <label class="ms-row ms-tg"><span>${x.shareBday}</span><input type="checkbox" id="frBshare"${f.bshare ? " checked" : ""}></label>
+      <div class="ms-row"><span>${x.myBday}</span><span class="fr-md">${frMD("frB", f.bday)}</span></div></details>`);
+  const sh = bg.querySelector(".sheet"); sh.classList.add("fr-sheet");
+  const draw = () => { const L = sh.querySelector("#frList"); if(!L) return; if(f.nosrv && !f.list.length){ L.innerHTML = `<p class="muted small">${x.nosrv}</p>`; return; }
+    if(!f.list.length){ L.innerHTML = `<p class="muted small">${x.none}</p>`; return; } const P = 4, pages = Math.ceil(f.list.length / P); page = Math.min(page, pages - 1);
+    const evs = frEvents();
+    L.innerHTML = f.list.slice(page * P, page * P + P).map(z => { const s = z.stats, b = z.bday ? z.bday.split("-").map(Number) : null, bd = frNextIn(z.bday), ev = evs.find(e => e.fid === z.id), anns = f.ann[z.id] || [];
+      return `<div class="fr-row${focusId === z.id ? " fr-hi" : ""}" data-fid="${esc(z.id)}"><span class="fr-cat" style="background:${frFur(z.fur)}">🐱</span><div class="fr-main"><b>${esc(z.nick || "?")}</b>
+        <small>${s ? `${x.streak(s.st || 0)} · ${x.week(s.wk || 0)}${s.lang ? " · " + esc(langName(s.lang)) : ""}` : x.hidden}</small>
+        <small>${b ? x.bday(b[0], b[1]) + (bd != null && bd <= 7 ? ` <em class="fr-d">${x.dday(bd)}</em>` : "") : ""}${anns.map(a => { const d = frNextIn(a.d); return ` · ${esc(a.n)} ${+a.d.slice(0, 2)}/${+a.d.slice(3)}${d != null && d <= 7 ? ` <em class="fr-d">${x.dday(d)}</em>` : ""}`; }).join("")}</small></div>
+        <button type="button" class="btn sm${ev ? " primary" : ""}" data-card="${esc(z.id)}">${x.card}</button><button type="button" class="btn sm" data-more="${esc(z.id)}" aria-label="${x.more}">${x.more}</button></div>`; }).join("")
+      + (pages > 1 ? `<div class="row fr-pg"><button type="button" class="btn sm" id="frPrev"${page ? "" : " disabled"}>${x.prev}</button><span class="small muted">${page + 1} / ${pages}</span><button type="button" class="btn sm" id="frNext"${page < pages - 1 ? "" : " disabled"}>${x.next}</button></div>` : "");
+    const pv = L.querySelector("#frPrev"), nx = L.querySelector("#frNext"); if(pv) pv.onclick = () => { page--; draw(); }; if(nx) nx.onclick = () => { page++; draw(); };
+    L.querySelectorAll("[data-card]").forEach(btn => btn.onclick = () => { const z = f.list.find(q => q.id === btn.dataset.card); const e = evs.find(q => q.fid === z.id); cardMake(z, e ? e.k : "free"); });
+    L.querySelectorAll("[data-more]").forEach(btn => btn.onclick = () => frMore(btn.dataset.more, draw)); };
+  if(focusId){ page = Math.max(0, Math.floor(f.list.findIndex(z => z.id === focusId) / 4)); }
+  draw(); frSync().then(r => { if(!sh.isConnected) return; if(r === "err" && !f.list.length) sh.querySelector("#frList").innerHTML = `<p class="muted small">${x.err}</p>`; else draw(); });
+  sh.querySelector("#frInv").onclick = () => frInvite();
+  const setSave = () => { f.share = sh.querySelector("#frShare").checked ? 1 : 0; f.bshare = sh.querySelector("#frBshare").checked ? 1 : 0; f.bday = frMDval(sh, "frB"); save();
+    track("fr_share", { st: f.share, bd: f.bshare, has: f.bday ? 1 : 0 }); frSync().then(() => { if(sh.isConnected) toast(x.saved); }); };
+  ["#frShare", "#frBshare", "#frBM", "#frBD"].forEach(s => sh.querySelector(s).onchange = setSave); }
+function frMore(fid, redraw){ const x = frt(), f = frState(), z = f.list.find(q => q.id === fid); if(!z) return; const row = document.querySelector(`.fr-row[data-fid="${CSS.escape(fid)}"]`); if(!row) return;
+  const old = row.parentNode.querySelector(".fr-menu"); if(old){ old.remove(); if(old.dataset.fid === fid) return; }
+  const m = document.createElement("div"); m.className = "fr-menu"; m.dataset.fid = fid;
+  m.innerHTML = `<div class="row" style="gap:6px;flex-wrap:wrap"><input id="frAnN" maxlength="16" placeholder="${esc(x.annName)}" style="flex:1;min-width:120px"><span class="fr-md">${frMD("frAn", "")}</span><button type="button" class="btn sm" id="frAnOk">${x.annSave}</button></div>
+    ${(f.ann[fid] || []).map((a, i) => `<span class="chip">${esc(a.n)} ${+a.d.slice(0, 2)}/${+a.d.slice(3)} <button type="button" class="linkbtn" data-andel="${i}" aria-label="✕">✕</button></span>`).join(" ")}
+    <div class="row" style="gap:8px"><button type="button" class="linkbtn" id="frUn">${x.unfriend}</button><button type="button" class="linkbtn bad" id="frBl">${x.block}</button></div>`;
+  row.after(m);
+  m.querySelector("#frAnOk").onclick = () => { const n = m.querySelector("#frAnN").value.trim().slice(0, 16), d = frMDval(m, "frAn"); if(!n || !d) return; (f.ann[fid] = f.ann[fid] || []).push({ n, d }); save(); track("fr_ann_add", {}); redraw(); };
+  m.querySelectorAll("[data-andel]").forEach(b => b.onclick = () => { f.ann[fid].splice(+b.dataset.andel, 1); save(); redraw(); });
+  const rm = async block => { if(!confirm(x.sure)) return; try{ await sbRpc("fr_remove", { p_key: nickState().key, p_fid: fid, p_block: !!block }); f.list = f.list.filter(q => q.id !== fid); delete f.ann[fid]; save(); track(block ? "fr_block" : "fr_unfriend", {}); toast(x.removed); redraw(); }catch(e){ toast(x.err); } };
+  m.querySelector("#frUn").onclick = () => rm(false); m.querySelector("#frBl").onclick = () => rm(true); }
+async function shareOut(text, url, file){ try{ if(file && navigator.canShare && navigator.canShare({ files: [file] })){ await navigator.share({ files: [file], text: text + "\n" + url }); return "file"; }
+    if(navigator.share){ await navigator.share({ text, url }); return "share"; } }catch(e){ if(e && e.name === "AbortError") return "cancel"; }
+  try{ await navigator.clipboard.writeText(text + " " + url); toast(frt().copied); return "copy"; }catch(_){ prompt("", url); return "prompt"; } }
+async function frInvite(){ const x = frt(); let tk; try{ tk = await sbRpc("fr_invite_make", { p_key: nickState().key }); }catch(e){ toast(/ 404$/.test(e.message) ? x.nosrv : x.err); return; }
+  if(!tk || tk.length < 20){ toast(x.err); return; } frSync();
+  const url = `${location.origin}${location.pathname.replace(/[^/]*$/, "")}?f=${tk}&src=friend`; const how = await shareOut(x.inviteTxt(myNick()), url); track("fr_invite", { how }); }
+async function frBoot(){ const q = new URLSearchParams(location.search), tk = q.get("f"); if(!tk || frBoot._done) return; frBoot._done = 1;
+  const clean = () => { try{ q.delete("f"); history.replaceState(history.state, "", location.pathname + (q.toString() ? "?" + q : "") + location.hash); }catch(_){} };
+  const fresh0 = needSetup(); for(let i = 0; i < 400 && (needSetup() || $("#setupBox")); i++) await sleep(1500);   // 처음 온 사람은 첫 설정(태어난 해)을 끝낸 뒤
+  clean(); const x = frt(); if(!/^[0-9a-f]{32}$/.test(tk)) return;
+  if(!FR_OK()){ toast(x.kid); track("fr_accept", { r: "kid" }); return; }
+  let pk = null; try{ pk = await sbRpc("fr_invite_peek", { p_token: tk }); }catch(e){ toast(x.err); return; }
+  track("fr_invite_open", { st: pk && pk.st, fresh: fresh0 ? 1 : 0 });
+  if(!pk || pk.st !== "ok"){ toast(x.reqBad[(pk && pk.st) || "none"] || x.err); return; }
+  const bg = openSheet(`<div class="fr-req"><span class="fr-cat big" style="background:${frFur(pk.fur)}">🐱</span><h2>${esc(x.reqT(pk.nick))}</h2><p class="muted small">${esc(x.reqSub)}</p>
+    <div class="row" style="gap:8px;justify-content:center"><button type="button" class="btn" id="frLater">${x.later}</button><button type="button" class="btn primary" id="frAcc">${x.accept}</button></div></div>`);
+  bg.querySelector("#frLater").onclick = () => { track("fr_accept", { r: "later", fresh: fresh0 ? 1 : 0 }); closePop(); };
+  bg.querySelector("#frAcc").onclick = async () => { let r; try{ await nickBoot(); r = await sbRpc("fr_invite_accept", { p_key: nickState().key, p_token: tk, p_nick: myNick(), p_fur: (S.meta.cos && S.meta.cos.on) || "" }); }catch(e){ r = "err"; }
+    track("fr_accept", { r, fresh: fresh0 ? 1 : 0 }); closePop(); if(r === "ok"){ toast(x.accepted(pk.nick)); await frSync(); frOpen(); } else toast(x.reqBad[r] || x.err); }; }
+function frBindSet(ko){ const r = $("#frRow"); if(!r) return; r.classList.toggle("hidden", !FR_OK()); const b = $("#frOpenBtn"); if(b){ b.textContent = ko ? "👫 친구·생일" : "👫 友だち・誕生日"; b.onclick = () => frOpen(); } }
+
+/* ── ② 축하 카드: 링크(?g=)에 카드 내용을 담아 공유. 서버 저장 없음 ── */
+const CARD_TPL = ["love", "happy", "surprised"], CARD_WRAP = { pink: ["#ffd6e5", "#f28ab2", "#D94A7E"], mint: ["#d9f5e8", "#8fd9b6", "#3a9c78"], night: ["#2a2f55", "#4b5596", "#f4cf6a"] };
+const b64uEnc = o => btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const b64uDec = s => JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(String(s).replace(/-/g, "+").replace(/_/g, "/")), ch => ch.charCodeAt(0))));
+const scriptLang = s => /[ぁ-んァ-ヶ一-龥]/.test(s) ? "ja" : /[가-힣]/.test(s) ? "ko" : /[ñáéíóú¿¡]/i.test(s) ? "es" : /[a-z]/i.test(s) ? "en" : "";
+function segWords(text, lang){ try{ const sg = new Intl.Segmenter(lang || undefined, { granularity: "word" }); return [...sg.segment(text)].map(z => ({ s: z.segment, w: !!z.isWordLike })); }catch(_){ return String(text).split(/(\s+)/).map(s => ({ s, w: /\S/.test(s) })); } }
+function cardHint(text, lang){ const x = frt(), toks = [...new Set(segWords(text, lang).filter(z => z.w).map(z => z.s.trim()).filter(Boolean))]; if(!toks.length) return "";
+  const have = new Set(Object.values(S.cards).filter(c => (c.lang || "es") === lang).flatMap(c => [norm(c.word), norm(c.form || "")]));
+  const known = toks.filter(w => have.has(norm(w)) || [...have].some(h => h && h.length >= 2 && norm(w).startsWith(h))), chk = toks.filter(w => !known.includes(w) && w.length >= 2).slice(0, 4);
+  return known.length ? x.hintOk(known.length) + (chk.length ? " · " + x.hintChk(chk.join(", ")) : "") : x.hintNone; }
+const cardImg = tpl => new Promise(r => { const im = new Image(); im.onload = () => r(im); im.onerror = () => r(null); im.src = `cat/melt/cat_${tpl}.svg`; });
+async function cardCanvas(o){ const W = 1080, H = 1350, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const g = cv.getContext("2d"), wr = CARD_WRAP[o.w] || CARD_WRAP.pink, dark = o.w === "night";
+  const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, wr[0]); gr.addColorStop(1, wr[1]); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  g.fillStyle = wr[2]; g.globalAlpha = .9; g.fillRect(W / 2 - 34, 0, 68, H); g.fillRect(0, 300, W, 68); g.globalAlpha = 1;   // 리본
+  g.fillStyle = dark ? "rgba(20,22,40,.82)" : "rgba(255,255,255,.92)"; g.beginPath(); g.roundRect(70, 420, W - 140, 760, 48); g.fill();
+  const im = await cardImg(CARD_TPL.includes(o.c) ? o.c : "love"); if(im){ const h = 320, w = h * 1.36; g.drawImage(im, (W - w) / 2, 110, w, h); }
+  g.fillStyle = dark ? "#fff" : "#1E1A16"; g.textAlign = "center"; const font = (px, b) => `${b ? 800 : 600} ${px}px "Hiragino Sans","Apple SD Gothic Neo","Noto Sans KR","Noto Sans JP",sans-serif`;
+  const wrapTxt = (s, px, y, maxL) => { g.font = font(px, 0); const lines = []; let cur = ""; for(const ch of [...String(s || "")]){ if(ch === "\n" || g.measureText(cur + ch).width > W - 240){ lines.push(cur); cur = ch === "\n" ? "" : ch; } else cur += ch; } if(cur) lines.push(cur); lines.slice(0, maxL).forEach((l, i) => g.fillText(l, W / 2, y + i * px * 1.35)); return y + Math.min(maxL, lines.length) * px * 1.35; };
+  g.font = font(44, 1); g.fillText(`To. ${o.to || "♡"}`, W / 2, 510);
+  let y = wrapTxt(o.m, 54, 610, 5); if(o.p){ g.fillStyle = dark ? "#f4cf6a" : wr[2]; y = wrapTxt(o.p, 46, y + 40, 4); }
+  g.fillStyle = dark ? "#fff" : "#1E1A16"; g.font = font(40, 1); g.fillText(`From. ${o.n || ""} 🐱`, W / 2, 1120);
+  g.font = font(34, 1); g.fillStyle = dark ? "#fff" : "#1E1A16"; g.fillText("MEOWCA!", W / 2, 1290); return cv; }
+function cardMake(friend, kind){ if(REC) return; const x = frt(), L = S.meta.settings.lang, ui = S.meta.settings.ui; const o = { v: 1, n: myNick(), u: (S.meta.cos && S.meta.cos.on) || "", c: "love", w: "pink", m: "", p: "", ml: ui, pl: L !== ui ? L : "", to: friend ? friend.nick : "", k: kind || "free" };
+  track("card_make_open", { k: o.k, fr: friend ? 1 : 0 });
+  const bg = openSheet(`<h2 style="margin:0">${x.mkT}</h2><div class="card-pv"><canvas id="cdPv" width="1080" height="1350"></canvas></div>
+    <div class="row cd-opt"><span class="small muted">${x.tpl}</span>${CARD_TPL.map(t => `<button type="button" class="cd-t" data-t="${t}" aria-pressed="${t === o.c}"><img src="cat/melt/cat_${t}.svg" alt="" width="44" height="32"></button>`).join("")}
+      <span class="small muted">${x.wrap}</span>${Object.keys(CARD_WRAP).map(w => `<button type="button" class="cd-w" data-w="${w}" aria-pressed="${w === o.w}" style="background:${CARD_WRAP[w][1]}" aria-label="${w}"></button>`).join("")}</div>
+    <label class="small">${x.msg}<textarea id="cdM" maxlength="80" rows="2" placeholder="${esc(x.msgPh)}"></textarea></label>
+    ${o.pl ? `<label class="small">${esc(x.pTry(langName(o.pl)))}<textarea id="cdP" maxlength="80" rows="2" lang="${o.pl}" placeholder="${esc(x.pPh)}"></textarea></label><p class="tiny muted" id="cdHint" aria-live="polite"></p>` : ""}
+    <button type="button" class="btn primary" id="cdSend">${x.send}</button>`);
+  const sh = bg.querySelector(".sheet"), pv = sh.querySelector("#cdPv");
+  let tm = 0; const redraw = () => { clearTimeout(tm); tm = setTimeout(async () => { const cv = await cardCanvas(o); if(pv.isConnected) pv.getContext("2d").drawImage(cv, 0, 0); }, 120); };
+  sh.querySelectorAll(".cd-t").forEach(b => b.onclick = () => { o.c = b.dataset.t; sh.querySelectorAll(".cd-t").forEach(z => z.setAttribute("aria-pressed", z === b)); redraw(); });
+  sh.querySelectorAll(".cd-w").forEach(b => b.onclick = () => { o.w = b.dataset.w; sh.querySelectorAll(".cd-w").forEach(z => z.setAttribute("aria-pressed", z === b)); redraw(); });
+  sh.querySelector("#cdM").oninput = e => { o.m = e.target.value.slice(0, 80); redraw(); };
+  const pi = sh.querySelector("#cdP"); if(pi) pi.oninput = e => { o.p = e.target.value.slice(0, 80); redraw(); sh.querySelector("#cdHint").textContent = o.p.trim() ? cardHint(o.p, o.pl) : ""; };
+  redraw();
+  sh.querySelector("#cdSend").onclick = async () => { if(!o.m.trim() && !o.p.trim()){ sh.querySelector("#cdM").focus(); return; }
+    const cv = await cardCanvas(o), blob = await new Promise(r => cv.toBlob(r, "image/png")), file = blob ? new File([blob], "meowca-card.png", { type: "image/png" }) : null;
+    const url = `${location.origin}${location.pathname.replace(/[^/]*$/, "")}?g=${b64uEnc(o)}&src=gift`;
+    const how = await shareOut(x.cardTxt(o.n), url, file); track("card_send", { k: o.k, how, fr: friend ? 1 : 0, p: o.p.trim() ? 1 : 0, tpl: o.c, wrap: o.w }); if(how !== "cancel") closePop(); }; }
+function cardBoot(){ const q = new URLSearchParams(location.search), raw = q.get("g"); if(!raw || cardBoot._done) return; cardBoot._done = 1; let o;
+  try{ o = b64uDec(raw); }catch(_){ o = null; } try{ q.delete("g"); history.replaceState(history.state, "", location.pathname + (q.toString() ? "?" + q : "") + location.hash); }catch(_){}
+  if(!o || typeof o !== "object") return; const cut = v => String(v || "").slice(0, 80); o = { n: cut(o.n).slice(0, 24), c: CARD_TPL.includes(o.c) ? o.c : "love", w: CARD_WRAP[o.w] ? o.w : "pink", m: cut(o.m), p: cut(o.p), ml: /^(ko|ja)$/.test(o.ml) ? o.ml : scriptLang(o.m), pl: /^[a-z]{2}$/.test(o.pl || "") ? o.pl : scriptLang(o.p), to: cut(o.to).slice(0, 24), k: /^(bday|ann|free)$/.test(o.k) ? o.k : "free" };
+  const fresh = needSetup(); track("card_open", { fresh: fresh ? 1 : 0, k: o.k, p: o.p ? 1 : 0 }); S.meta.fr = S.meta.fr || {}; S.meta.fr.got = (S.meta.fr.got || 0) + 1; if(!fresh) save();
+  setTimeout(() => cardShow(o, fresh), fresh ? 600 : 300); }
+function cardShow(o, fresh){ const x = (o.pl === "ja" || (!o.ml && o.pl !== "ko") ? FRT.ja : FRT.ko), ui = fresh ? (o.pl || (o.ml === "ko" ? "ja" : "ko")) : S.meta.settings.ui, X = FRT[ui === "ja" ? "ja" : "ko"];
+  const bg = openSheet(`<div class="cd-box" id="cdBox" role="button" tabindex="0" style="--wr:${CARD_WRAP[o.w][1]};--rb:${CARD_WRAP[o.w][2]}"><span class="cd-lid"></span><span class="cd-body"></span></div>
+    <h2 style="text-align:center;margin:0">${esc(X.boxT(o.n))}</h2><p class="muted small" style="text-align:center;margin:0">${X.boxTap}</p><div id="cdIn" class="hidden"></div>`);
+  if(fresh) bg.style.zIndex = 95; const sh = bg.querySelector(".sheet"), box = sh.querySelector("#cdBox"); void x;
+  const open = async () => { if(box.classList.contains("open")) return; box.classList.add("open"); track("card_box_tap", { fresh: fresh ? 1 : 0 }); await sleep(450);
+    const cv = await cardCanvas(o), img = cv.toDataURL("image/png"), inn = sh.querySelector("#cdIn"); box.remove(); sh.querySelector("h2").remove(); sh.querySelector("p.muted").remove(); inn.classList.remove("hidden");
+    const blocks = [[o.m, o.ml], [o.p, o.pl]].filter(b => b[0] && b[0].trim());
+    inn.innerHTML = `<img class="cd-img" src="${img}" alt="">` + blocks.map(([s, L]) => sentencesOf(s).map(sn => `<div class="cd-sn" lang="${esc(L)}"><span>${esc(sn)}</span>${L && L !== ui ? `<button type="button" class="btn sm" data-learn="${esc(L)}">${X.learn}</button>` : ""}</div>`).join("")).join("")
+      + `<button type="button" class="btn" id="cdThx">${X.thanks}</button>`;
+    inn.querySelectorAll("[data-learn]").forEach(b => b.onclick = () => cardLearn(b.closest(".cd-sn").querySelector("span").textContent, b.dataset.learn, o, b.closest(".cd-sn"), fresh, X));
+    inn.querySelector("#cdThx").onclick = async () => { const how = await shareOut(X.thanksTxt(o.n), location.origin + location.pathname.replace(/[^/]*$/, "") + "?src=thanks", null); track("card_thanks", { how, fresh: fresh ? 1 : 0 }); }; };
+  box.onclick = open; box.onkeydown = e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); open(); } }; }
+function cardLearn(sn, L, o, el, fresh, X){ if(el.querySelector(".cd-pick")) return; const toks = segWords(sn, L).reduce((a, z) => { const p = a[a.length - 1], kj = v => /^[一-龥々]+$/.test(v);   // 일본어: 誕生+日처럼 한자끼리 잘린 것은 붙임
+    if(L === "ja" && p && p.w && z.w && kj(p.s) && kj(z.s)) p.s += z.s; else a.push(Object.assign({}, z)); return a; }, []); let pick = -1; track("card_learn_tap", { fresh: fresh ? 1 : 0 });
+  const p = document.createElement("div"); p.className = "cd-pick"; p.innerHTML = `<p class="tiny muted">${X.pickW}</p><p class="cd-toks" lang="${esc(L)}">${toks.map((z, i) => z.w ? `<button type="button" class="cd-tk" data-i="${i}">${esc(z.s)}</button>` : esc(z.s)).join("")}</p><button type="button" class="btn sm primary" disabled>${X.mkCard}</button>`;
+  el.appendChild(p); const go = p.querySelector(".btn.primary");
+  p.querySelectorAll(".cd-tk").forEach(b => b.onclick = () => { pick = +b.dataset.i; p.querySelectorAll(".cd-tk").forEach(z => z.classList.toggle("hl", z === b)); go.disabled = false; });
+  go.onclick = async () => { const w = toks[pick] && toks[pick].s.trim(); if(!w) return;
+    if(!clozeParts({ word: w, example: sn, form: findForm(sn, w) || w, lang: L })){ toast(X.noBlank); return; }
+    if(fresh){ const st = S.meta.settings; if(L === "ja") setUiLang("ko"); else if(L === "ko") setUiLang("ja"); st.lang = L; S.meta.setup = 1; $("#setupBox") && $("#setupBox").remove(); try{ fillLangs(); fillVoices(); }catch(_){} }
+    else if(S.meta.settings.lang !== L){ S.meta.settings.lang = L; try{ fillLangs(); fillVoices(); }catch(_){} }
+    const tr = (o.ml && o.ml !== L ? o.m : o.pl && o.pl !== L ? o.p : "") || "", d = frDeck("gift", L, X);
+    const note = document.createElement("p"); note.className = "tiny muted"; p.appendChild(note);
+    const added = await addMany([{ word: w, meaning: "", example: sn, exampleKo: tr, lang: L, deck: d.id, from: o.n || "?", priv: 1 }], note, go, true);
+    track("card_learn", { n: added.length, fresh: fresh ? 1 : 0, lang: L }); if(added.length){ toast(X.made); go.disabled = true; renderAll(); } }; }
+function frDeck(kind, L, X){ let d = decks().find(z => z.frk === kind + ":" + L); if(!d){ d = addDeck(kind === "gift" ? X.deckGift : X.deckChat); d.frk = kind + ":" + L; save(); } return d; }
+
+/* ── ③ 대화로 학습: 카톡·LINE 내보내기 txt / 붙여넣기 → 기기 안에서만 단어 후보 ── */
+const CHAT_SKIP = /^(-{3,}|={3,}|\[LINE\]|저장한 날짜|保存日時|Talk_|.*님과 카카오톡 대화|.*とのトーク履歴|\d{4}[./년-]\s*\d{1,2}[./월-]\s*\d{1,2}일?\s*(\([^)]*\)|[월화수목금토일]요일)?\s*$|\d{4}\/\d{1,2}\/\d{1,2}\([^)]*\)\s*$|-+\s*\d{4}년.*-+$)/;
+const CHAT_MEDIA = /^(사진|동영상|이모티콘|사진 \d+장|삭제된 메시지입니다\.?|\[?写真\]?|\[?動画\]?|\[?スタンプ\]?|メッセージの送信を取り消しました|파일:.*|ファイル:.*|\(emoticon\)|\[(Photo|Sticker|Video)\])$/i;
+function parseChat(raw){ const msgs = []; let last = null;
+  const rx = [ /^\d{4}[년.\/-]\s*\d{1,2}[월.\/-]\s*\d{1,2}일?\.?\s*(?:오전|오후|午前|午後)?\s*\d{1,2}:\d{2}(?:\s*[AP]M)?,\s*([^:]{1,40}?)\s*:\s?(.*)$/,   // 카톡 모바일
+    /^\[([^\]]{1,40})\]\s*\[(?:오전|오후|午前|午後)?\s*\d{1,2}:\d{2}(?:\s*[AP]M)?\]\s*(.*)$/,   // 카톡 PC
+    /^(?:(?:오전|오후|午前|午後)\s*)?\d{1,2}:\d{2}(?:\s*[AP]M)?\t([^\t]{1,40})\t(.*)$/ ];   // LINE
+  String(raw || "").replace(/\r/g, "").split("\n").forEach(line => { const t0 = line.trim(); if(!t0 || CHAT_SKIP.test(t0)) return; let m = null;
+    for(const r of rx){ m = t0.match(r); if(m) break; }
+    if(m){ last = { who: m[1].trim(), t: m[2].trim() }; msgs.push(last); } else if(last) last.t += "\n" + t0; else msgs.push(last = { who: "", t: t0 }); });
+  return msgs.map(z => ({ who: z.who, t: z.t.replace(/https?:\/\/\S+/g, " ").replace(/^"|"$/g, "").trim() })).filter(z => z.t && !CHAT_MEDIA.test(z.t)); }
+const KO_TAIL = ["에게서","으로서","으로써","에서","에게","께서","한테","으로","이랑","하고","보다","처럼","까지","부터","마다","조차","밖에","만큼","이나","이에요","예요","이야","이지","이네","은","는","이","가","을","를","의","에","도","와","과","만","로","랑","야","요"];
+const JA_STOP = new Set("する した して います ます です でした ある いる ない こと もの これ それ あれ どれ ここ そこ どこ この その あの どの よう ため から まで けど って とか じゃ なる なっ でも だけ ちょっと 本当 ほんと".split(" "));
+function chatWords(text, L){ const toks = segWords(text, L).filter(z => z.w).map(z => z.s.trim());
+  return toks.map(w => { if(L === "ko"){ if(!/^[가-힣]+$/.test(w)) return ""; for(const tl of KO_TAIL) if(w.length > tl.length + 1 && w.endsWith(tl)) return w.slice(0, -tl.length); return w.length >= 2 ? w : ""; }
+      if(L === "ja"){ if(!/[ぁ-んァ-ヶ一-龥]/.test(w) || JA_STOP.has(w)) return ""; if(/^[ぁ-ん]+$/.test(w) && w.length < 3) return ""; if(/^[ァ-ヶー]$/.test(w)) return ""; return w; }
+      if(!/^[\p{L}][\p{L}\p{M}'’\-]*$/u.test(w) || w.length < 3) return ""; return w.toLowerCase(); }).filter(Boolean); }
+async function chatCands(msgs, L, who){ const pick = msgs.filter(z => !who || z.who === who), cnt = new Map();
+  pick.forEach(z => sentencesOf(z.t).forEach(sn => chatWords(sn, L).forEach(w => { const e = cnt.get(w) || { word: w, n: 0, line: sn }; e.n++; if(e.line.length > 60 && sn.length < e.line.length) e.line = sn; cnt.set(w, e); })));
+  const fm = L === "ja" ? null : await Promise.race([freqMap(L), sleep(3500).then(() => null)]).catch(() => null);
+  const ig = (S.meta.ignore || {})[L] || [];
+  return [...cnt.values()].filter(e => !findDup(e.word) && !ig.includes(e.word) && !(fm && fm.get(e.word) && fm.get(e.word) < 300)).sort((a, b) => b.n - a.n); }
+function chatBind(){ const box = $("#chatBox"); if(!box || box._b) return; box._b = 1; const x = frt(); let msgs = [], list = [], page = 0; const picked = new Set();
+  box.innerHTML = `<h2>${x.chatT}</h2><p class="muted small">${esc(x.chatHelp)}</p><p class="small cd-priv">${x.chatPriv}</p>
+    <textarea id="chatIn" rows="4" placeholder="${esc(x.chatPh)}" spellcheck="false" autocomplete="off"></textarea>
+    <div class="row" style="gap:8px;flex-wrap:wrap"><label class="btn sm" style="display:inline-flex">${x.chatFile}<input type="file" id="chatFile" accept=".txt,text/plain" class="hidden"></label>
+      <label class="small" id="chatWhoL">${x.chatWho} <select id="chatWho"><option value="">${x.chatAll}</option></select></label></div>
+    <label class="switch" for="chatLine"><span>${x.chatLine}</span><input type="checkbox" id="chatLine" checked></label>
+    <div class="row end"><button type="button" class="btn primary" id="chatGo">${x.chatFind}</button></div><div id="chatOut"></div>`;
+  const ta = box.querySelector("#chatIn"), whoSel = box.querySelector("#chatWho"), out = box.querySelector("#chatOut");
+  const refreshWho = () => { msgs = parseChat(ta.value); const names = [...new Set(msgs.map(z => z.who).filter(Boolean))]; const cur = whoSel.value;
+    whoSel.innerHTML = `<option value="">${x.chatAll}</option>` + names.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join(""); whoSel.value = names.includes(cur) ? cur : ""; box.querySelector("#chatWhoL").classList.toggle("hidden", names.length < 2); };
+  ta.oninput = () => { clearTimeout(ta._t); ta._t = setTimeout(refreshWho, 300); }; refreshWho();
+  box.querySelector("#chatFile").onchange = async e => { const f = e.target.files && e.target.files[0]; e.target.value = ""; if(!f) return; if(f.size > 8e6){ toast("8MB↓"); return; } ta.value = await f.text(); refreshWho(); track("chat_file", { kb: Math.round(f.size / 1024) }); };
+  const draw = () => { const P = 24, pages = Math.max(1, Math.ceil(list.length / P)); page = Math.min(page, pages - 1);
+    if(!list.length){ out.innerHTML = `<p class="muted small">${x.chatNone}</p>`; return; }
+    out.innerHTML = `<p class="small muted">${x.chatCnt(list.length, picked.size)}</p><div class="chips">${list.slice(page * P, page * P + P).map(e => `<button type="button" class="chiptog" aria-pressed="${picked.has(e.word)}" data-w="${esc(e.word)}">${esc(e.word)}${e.n > 1 ? ` <small>×${e.n}</small>` : ""}</button>`).join("")}</div>
+      ${pages > 1 ? `<div class="row fr-pg"><button type="button" class="btn sm" id="chPrev"${page ? "" : " disabled"}>‹</button><span class="small muted">${page + 1} / ${pages}</span><button type="button" class="btn sm" id="chNext"${page < pages - 1 ? "" : " disabled"}>›</button></div>` : ""}
+      <div class="row end"><button type="button" class="btn primary" id="chatAdd"${picked.size ? "" : " disabled"}>${x.chatAdd(picked.size)}</button></div><p class="muted small" id="chatNote" aria-live="polite"></p>`;
+    out.querySelectorAll("[data-w]").forEach(b => b.onclick = () => { const w = b.dataset.w; picked.has(w) ? picked.delete(w) : picked.add(w); draw(); });
+    const pv = out.querySelector("#chPrev"), nx = out.querySelector("#chNext"); if(pv) pv.onclick = () => { page--; draw(); }; if(nx) nx.onclick = () => { page++; draw(); };
+    out.querySelector("#chatAdd").onclick = async () => { const L = S.meta.settings.lang, useLine = box.querySelector("#chatLine").checked, d = frDeck("chat", L, x), btn = out.querySelector("#chatAdd");
+      const rows = list.filter(e => picked.has(e.word)).map(e => ({ word: e.word, meaning: "", example: useLine ? e.line : "", exampleKo: "", lang: L, deck: d.id, priv: 1 }));
+      const added = await addMany(rows, out.querySelector("#chatNote"), btn, true); track("chat_add", { n: added.length, cand: list.length, line: useLine ? 1 : 0 });
+      list = list.filter(e => !picked.has(e.word)); picked.clear(); setTimeout(draw, 2500); }; };
+  box.querySelector("#chatGo").onclick = async () => { refreshWho(); if(!msgs.length){ ta.focus(); return; } out.innerHTML = `<p class="muted small">${x.loading}</p>`; picked.clear(); page = 0;
+    list = await chatCands(msgs, S.meta.settings.lang, whoSel.value); track("chat_parse", { msgs: msgs.length, cand: list.length, who: whoSel.value ? 1 : 0, names: whoSel.options.length - 1 }); draw(); }; }
+function chatSync(){ const b = $("#amChat"); if(b) b.classList.toggle("hidden", !FR_OK()); const box = $("#chatBox"); if(box && FR_OK()) chatBind(); }
+
+if(location.protocol === "file:" || location.hostname === "localhost") window.__t = { frState, frEvents, frHomeLine, frSync, frOpen, frBoot, frNextIn, cardBoot, cardShow, cardMake, cardCanvas, b64uEnc, b64uDec, parseChat, chatWords, chatCands, chatBind, segWords, FR_OK, REC: () => REC, recOpen, payOpen, payWhat, payGrant, buyDays, buyExpNote, bizFootHTML, renderShop, dueCards, revToday, provButtons, presetDeckName, deckName, mergeData, mergeCard, mergePet, syncNow, payload, jaTailOk, formBoundOk, loanMatch, loanSk, frameSplit, frameParts, frameOpts, askFrame, materializeFrame, addPresetMore, presetMore, wlFind, wlLangOf, wlMake, newCandidates: () => newCandidates(), rjStep, qMean, sameMeanSyn, nearSyn, presetData, askListenWrite, sulkInit, sulkOn, sulkLv, sulkTouch, sulkCalm, sulkSnack, sulkHomeLine, setAddPanel, renderPresets, startDiag, diagKind, diagTitleIdx, diagCardHTML, presetIndex, decks, canSpeakLang, pickVoice, spkHas, esPhon, loadVoices, check, stripAcc, norm, clozeParts, findForm, hgTailOk, S: () => S, save, mergeData, persist, petSig, curApply, curOf, applyCuration, ansOk, materialize, stepOf, stepGuess, stepMode, stepItems, stepSettle, schedule, migrateSteps, buildCourse, courseRetry, courseMark, cdayState, leechMode, courseGift, Rof, courseEnd, ddaState, isReturnDay, lastStudyGap, meltPoints, trapOpts, pickOpts, diffKind, dictFormHit, meaningMatch, kanjiSib, kjxLoad, fixReadings, readingOf, isKanaWord, jaxLoad, jaxOf, askChoice, nextItem: () => nextItem(), buildSession, settleItem: ok => settleItem(ok), getSES: () => SES, santaCheck, santaShow, santaType, shareCardImg, renderAll: () => renderAll(), addDays, today, finishSession, setSES: v => { SES = v; }, $, scoreOcrWords, renderOcrWords, showView, pet: () => PET, closePet, petGrab, petDragMove, petRelease, petThrow, petRefund, purrState: () => ({ on: !!PURR, purr0: PET ? PET.purr0 || 0 : 0, n: PET ? PET.purrN || 0 : 0 }), sndMode, buyGrant, petCount, PT: () => PT, MELT: () => MELT, catBarHTML, slangLine, slangPick, openPet, petImpact, drawCatTex, petDraw, jellyStep, pawStamp, startSession, speak, plainAudio };
 window.addEventListener("pagehide", () => { try{ if(PET) petRefundFlying(PET); }catch(_){} try{ if(SES && SES.course && SES.queue.length && !SES.quitSent){ SES.quitSent = 1; track("course_quit", { i: SES.done, n: SES.course.n, close: 1 }); evFlush(true); } }catch(_){} });
+if(!REC) setTimeout(() => { try{ cardBoot(); frBoot(); const f = S.meta.fr; if(FR_OK() && f && f.list && f.list.length && Date.now() - (f.at || 0) > 6 * 36e5) frSync().then(() => { if(!SES) renderStart(); }); }catch(e){} }, 1200);
 load(); PET_SIG = petSig(); migrateSteps(); sulkInit(); setTimeout(() => { if(!(S.meta.rfix >= 1) && Object.values(S.cards).some(c => (c.lang || "es") === "ja")) jaxLoad(); }, 2200); slimPresets(); setTimeout(() => applyCuration(), 4200); setTimeout(fixPresetMeanings, 1500); setTimeout(fixKoJaMeanings, 1600); fixEnTr(); setTimeout(fixCutExamples, 1700); setTimeout(esSlangClean, 1800); setTimeout(loadSlang, 1200); setTimeout(topUpPresets, 800); setTimeout(() => { riskUI(); maybeRiskPrompt(); }, 2500); { const fz = petApplyFreeze(); if(fz) setTimeout(() => toast(pt().freezeUsed(fz)), 900); } applyUi(); drawRain(); if(REC) setTimeout(recOpen, 60);
 if(syncReady() && S.meta.sync && S.meta.sync.code) setTimeout(() => syncNow(), 300);
 addEventListener("storage", e => { if(e.key !== LS_KEY || !e.newValue || LOAD_BAD || REC) return;   // 다른 탭에서 저장됨 → 이 탭 메모리에 합침(옛 탭이 새 기록을 덮지 않게)
