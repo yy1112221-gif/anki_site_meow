@@ -1,35 +1,19 @@
 {
- "updated": "2026-11-25T22:16:05.111463Z",
+ "updated": "2026-11-26T22:16:01.948698Z",
  "lang": "es",
  "terms": [
   {
    "t": "mogging",
-   "n": 6,
+   "n": 7,
    "src": [
     "google_news"
    ],
-   "s": 8,
+   "s": 9,
    "first": "2026-11-18",
    "def": [],
    "ex": [],
-   "at": "2026-11-25T22:16:05.111463Z",
-   "cue": 8
-  },
-  {
-   "t": "maxxing",
-   "n": 2,
-   "src": [
-    "google_news"
-   ],
-   "s": 4,
-   "first": "2026-11-18",
-   "def": [],
-   "ex": [
-    "Sleepmaxxing : ottimizzare la qualità del sonno con abitudini e routine dedicate al riposo.",
-    "Sui social questa filosofia ha già un nome: maxxing."
-   ],
-   "at": "2026-11-25T22:16:05.111463Z",
-   "cue": 7
+   "at": "2026-11-26T22:16:01.948698Z",
+   "cue": 9
   },
   {
    "t": "farmear aura",
@@ -40,18 +24,18 @@
    "s": 4,
    "first": "2026-11-18",
    "def": [
-    "\"Farmear aura\" combina un término propio de los videojuegos con una tendencia que se volvió viral en TikTok.",
-    "Farmear aura: la expresión nació de la combinación entre un término gamer y el concepto de \"aura\", utilizado para describir la presencia de una persona.",
-    "to aura farm"
+    "Así que, llevado al lenguaje de internet, “farmear aura” significa hacer cosas que “te dan puntos de aura”.",
+    "Agosto 21, 2026 • Gabriela Velasco Ceja Twitter Pinterest Tumblr Email ¿Qué significa farmear aura y por qué es una tendencia?",
+    "\"Farmear aura\" combina un término propio de los videojuegos con una tendencia que se volvió viral en TikTok."
    ],
    "ex": [
-    "- Farmear aura (ganar popularidad o mejorar la reputación dentro del grupo).",
-    "Al unir ambos conceptos aparece “farmear aura”, es decir, hacer algo que aumenta la percepción de carisma o actitud de una persona .",
-    "\"Farmear aura\": la nueva tendencia de redes transforma las situaciones cotidianas en un juego imaginario donde cada gesto puede sumar o restar puntos de popularidad.",
-    "Así, farmear aura consiste en hacer o acumular acciones que aumentan esa percepción de carisma, seguridad o estilo ."
+    "Hablemos sobre una de las tendencias más populares del momento: farmear aura .",
+    "A expressão \"farmear aura\" se tornou um dos novos códigos da cultura da internet.",
+    "“Farmear aura” es una de las expresiones que más aparecen en redes sociales últimamente.",
+    "- Farmear aura (ganar popularidad o mejorar la reputación dentro del grupo)."
    ],
-   "at": "2026-11-25T22:16:05.111463Z",
-   "cue": 3
+   "at": "2026-11-26T22:16:01.948698Z",
+   "cue": 4
   },
   {
    "t": "demure",
@@ -68,12 +52,12 @@
    ],
    "ex": [
     "“Very demure, very mindful”, dice, con tono sottomesso e molto calmo.",
-    "Inizialmente demure descrive una persona, generalmente una donna, caratterizzata da riservatezza, modestia, pudore e discrezione.",
     "En la cultura pop, \"demure\" ha adquirido un nuevo sentido tras volverse un meme este año.",
-    "Ahora el turno es para 'demure'."
+    "Tutti ora vorremmo essere un po' “demure”.",
+    "Inizialmente demure descrive una persona, generalmente una donna, caratterizzata da riservatezza, modestia, pudore e discrezione."
    ],
-   "at": "2026-11-25T22:16:05.111463Z",
-   "cue": 14
+   "at": "2026-11-26T22:16:01.948698Z",
+   "cue": 12
   },
   {
    "t": "a la",
@@ -87,9 +71,27 @@
     "a la ; in the style or manner of",
     "to the"
    ],
-   "ex": [],
-   "at": "2026-11-25T22:16:05.111463Z",
-   "cue": 9
+   "ex": [
+    "Y esto no sólo ha afectado a la moda o a la música, sino también al lenguaje ."
+   ],
+   "at": "2026-11-26T22:16:01.948698Z",
+   "cue": 8
+  },
+  {
+   "t": "maxxing",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [],
+   "ex": [
+    "Sleepmaxxing : ottimizzare la qualità del sonno con abitudini e routine dedicate al riposo.",
+    "Sui social questa filosofia ha già un nome: maxxing."
+   ],
+   "at": "2026-11-26T22:16:01.948698Z",
+   "cue": 5
   },
   {
    "t": "divorciada",
@@ -109,7 +111,7 @@
     "Esta clase de expresiones, como PEC , divorciada o zorra , han surgido más bien en entornos LGTBI y de chicas cisheterosexuales politizados.",
     "Una divorciada es una persona que se elige a sí misma, que deja atrás algo que no le es bueno y que prioriza su cuidado."
    ],
-   "at": "2026-11-25T22:16:05.111463Z",
+   "at": "2026-11-26T22:16:01.948698Z",
    "cue": 2
   },
   {
@@ -129,7 +131,7 @@
     "No tanto, porque 'polyester' no apareció de la nada.",
     "La red no tardó en etiquetar este vídeo diseñado por y para el algoritmo, que aspira a ser modelo de vida, como 'polyester' o 'Polyester lifestyle'."
    ],
-   "at": "2026-11-25T22:16:05.111463Z",
+   "at": "2026-11-26T22:16:01.948698Z",
    "cue": 2
   },
   {
@@ -150,8 +152,8 @@
     "Alguna cosa similar ha ocurrido con ‘ALV’ .",
     "Las siglas 'ALV' son un ejemplo."
    ],
-   "at": "2026-11-25T22:16:05.111463Z",
-   "cue": 5
+   "at": "2026-11-26T22:16:01.948698Z",
+   "cue": 4
   },
   {
    "t": "cringe",
@@ -172,7 +174,7 @@
     "En resumen, evita cualquier acción que podría generarles cringe o vergüenza ajena a otros.",
     "- Cringe (algo que da vergüenza ajena)."
    ],
-   "at": "2026-11-25T22:16:05.111463Z",
+   "at": "2026-11-26T22:16:01.948698Z",
    "cue": 6
   },
   {
@@ -184,6 +186,8 @@
    "s": 3,
    "first": "2026-11-18",
    "def": [
+    "Con el lanzamiento de GTA 6 , hay un término que se repite constantemente entre los jugadores: NPC.",
+    "Sin embargo, su significado original es mucho más sencillo y no tiene necesariamente una connotación negativa: un NPC es, simplemente, un personaje que no controla el jugador .",
     "Ahora ya entiendes que significa NPC y sabrás de que hablan cuando veas un vídeo en redes sociales."
    ],
    "ex": [
@@ -192,8 +196,8 @@
     "Sobre el registro: NPC es coloquial-juvenil y funciona bien en redes, chats y conversaciones informales.",
     "¿ Por qué se dice que NPC es un insulto ?"
    ],
-   "at": "2026-11-25T22:16:05.111463Z",
-   "cue": 3
+   "at": "2026-11-26T22:16:01.948698Z",
+   "cue": 4
   },
   {
    "t": "shippear",
@@ -214,7 +218,7 @@
     "En los últimos años, la palabra \"shippear\" se ha vuelto muy popular en redes sociales.",
     "“Shippear” viene del inglés shipping , que a su vez es abreviatura de relationship ."
    ],
-   "at": "2026-11-25T22:16:05.111463Z",
+   "at": "2026-11-26T22:16:01.948698Z",
    "cue": 4
   },
   {
@@ -235,7 +239,7 @@
     "Segundo os relatos nas redes sociais, a mentalidade \"delulu\" envolve o uso de afirmações, otimismo e pensamento positivo 👍 .",
     "- Delulu (persona que vive demasiado en su propia fantasía)."
    ],
-   "at": "2026-11-25T22:16:05.111463Z",
+   "at": "2026-11-26T22:16:01.948698Z",
    "cue": 5
   },
   {
@@ -256,7 +260,7 @@
     "“Llevo todo el curso sacando sobresalientes, estoy en mi prime”.",
     "No es la primera vez que sucede algo así."
    ],
-   "at": "2026-11-25T22:16:05.111463Z",
+   "at": "2026-11-26T22:16:01.948698Z",
    "cue": 3
   },
   {
@@ -278,8 +282,77 @@
     "Esta acción tiene un nombre y se llama ghostear.",
     "Ghostear a una persona origina un dolor emocional y a veces es peor que una simple ruptura."
    ],
-   "at": "2026-11-25T22:16:05.111463Z",
-   "cue": 3
+   "at": "2026-11-26T22:16:01.948698Z",
+   "cue": 4
+  },
+  {
+   "t": "no puedo más",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-24",
+   "def": [],
+   "ex": [
+    "No puedo más con ello."
+   ],
+   "at": "2026-11-26T22:16:01.948698Z",
+   "cue": 1
+  },
+  {
+   "t": "fomo",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-24",
+   "def": [
+    "¿Qué significa FOMO y cómo usar la palabra?",
+    "FOMO"
+   ],
+   "ex": [
+    "La forma corta —FOMO— fue McGinnis quien la consolidó y puso en circulación.",
+    "Si el FOMO es la ansiedad, el JOMO es la cura voluntaria.",
+    "El uso constante del móvil es un síntoma de tener FOMO."
+   ],
+   "at": "2026-11-26T22:16:01.948698Z",
+   "cue": 5
+  },
+  {
+   "t": "side quest",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-24",
+   "def": [],
+   "ex": [],
+   "at": "2026-11-26T22:16:01.948698Z",
+   "cue": 1
+  },
+  {
+   "t": "farmeando aura",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3,
+   "first": "2026-11-26",
+   "def": [],
+   "ex": [],
+   "at": "2026-11-26T22:16:01.948698Z",
+   "cue": 1
+  },
+  {
+   "t": "boomers",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
   },
   {
    "t": "chats",
@@ -302,70 +375,6 @@
    ],
    "at": "2026-11-25T22:16:05.111463Z",
    "cue": 3
-  },
-  {
-   "t": "no puedo más",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-24",
-   "def": [],
-   "ex": [
-    "No puedo más con ello."
-   ],
-   "at": "2026-11-25T22:16:05.111463Z",
-   "cue": 1
-  },
-  {
-   "t": "fomo",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-24",
-   "def": [
-    "FOMO",
-    "¿Qué significa FOMO y cómo usar la palabra?"
-   ],
-   "ex": [
-    "La forma corta —FOMO— fue McGinnis quien la consolidó y puso en circulación.",
-    "Si el FOMO es la ansiedad, el JOMO es la cura voluntaria.",
-    "El uso constante del móvil es un síntoma de tener FOMO."
-   ],
-   "at": "2026-11-25T22:16:05.111463Z",
-   "cue": 3
-  },
-  {
-   "t": "side quest",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3,
-   "first": "2026-11-24",
-   "def": [],
-   "ex": [],
-   "at": "2026-11-25T22:16:05.111463Z",
-   "cue": 1
-  },
-  {
-   "t": "farmeando aura",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "boomers",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
   },
   {
    "t": "golf",
