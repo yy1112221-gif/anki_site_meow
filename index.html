@@ -2132,40 +2132,44 @@ function psBind(ko){ const r = $("#petSensSel"); if(!r) return; $("#petSensLbl")
   r.value = String(petSens()); show();
   r.oninput = () => { S.meta.settings.petSens = Math.round(+r.value * 100) / 100; PS.max = 0; show(); };
   r.onchange = () => { S.meta.settings.petSens = Math.round(+r.value * 100) / 100; save(); track("pet_sens", { v: S.meta.settings.petSens }); };
-  const st = $("#psStage"); if(st) st.onclick = () => { PS.v += (PS.x >= 0 ? -1 : 1) * 260 * petSens(); PS.lv += 180 * petSens(); };
+  const st = $("#psStage"); if(st) st.onclick = () => { PS.lv += 260 * petSens(); };
   if(!PS.run){ PS.run = 1; PS.last = performance.now(); requestAnimationFrame(psTick); } }
-/* 냥이 감도 미리보기(11-25 사용자): 몸은 그대로, 머리만 고무줄 목에 매달려 좌우로 대롱대롱. 감도 ↑ = 목이 더 늘어나고(L) 더 출렁(감쇠 ↓) · 감도 ↓ = 짧고 탄탄
-   같은 냥이 그림(cat_happy)을 목 줄(NECK)에서 잘라: 아래(몸) 고정 · 그 줄 한 줄을 늘여 목 · 위(머리)는 옆으로 + 살짝 기울임 */
-const PS_NECK = .695;
+/* 냥이 감도 미리보기(11-25·26 사용자): 몸은 그대로, 머리만 고무 목으로 좌우 대롱대롱 — 1초에 한 번 왕복(0.5초 왼쪽 끝 → 1초 오른쪽 끝 → 1.5초 왼쪽 끝…)
+   같은 냥이 그림(cat_happy)을 입 아래 깨끗한 줄(PS_NECK, 테두리만 있는 줄)에서 나눔: 아래(몸) 고정 · 그 줄을 L만큼 늘여 목 · 위(머리)는 옆으로 + 위쪽일수록 조금 더(기울임 대신 줄마다 밀기 → 이음매 없음)
+   감도 ↑ = 진폭·목 늘어남 ↑, 늘어남이 덜 감쇠돼 출렁 · ↓ = 짧고 탄탄 */
+const PS_NECK = .688;
 function psTick(now){ const img = document.getElementById("psCat"), cv = document.getElementById("psCv"), vw = document.getElementById("view-how");
   if(!img || !cv || !vw || vw.classList.contains("hidden") || document.hidden){ PS.run = 0; setTimeout(() => { if(!PS.run && document.getElementById("psCv")){ PS.run = 1; PS.last = performance.now(); requestAnimationFrame(psTick); } }, 700); return; }
   const k = Math.max(0, Math.min(1, (petSens() - .5) / 1.3)), red = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let dt = Math.min(.05, (now - PS.last) / 1000); PS.last = now;
-  const A = 7 + 20 * k, K = 560 - 470 * k, C = 2 * Math.sqrt(K) * (.9 - .78 * k);   // 좌우: 진폭·강성·감쇠
-  const LK = 900 - 760 * k, LC = 2 * Math.sqrt(LK) * (.85 - .72 * k), LG = .12 + .78 * k;   // 목 늘어남: 강성·감쇠·좌우 흔들림당 늘어나는 양
-  PS.t += dt; if(PS.t > .62 + .25 * k){ PS.t = 0; PS.dir *= -1; }
-  const tgt = red ? 0 : PS.dir * A;
-  for(let i = 0; i < 4; i++){ const h = dt / 4; PS.v += (K * (tgt - PS.x) - C * PS.v) * h; PS.x += PS.v * h;
-    const lt = red ? 0 : 2 + LG * Math.abs(PS.x) + .02 * Math.abs(PS.v) * k; PS.lv += (LK * (lt - PS.L) - LC * PS.lv) * h; PS.L += PS.lv * h; }
-  PS.x = Math.max(-40, Math.min(40, PS.x)); PS.L = Math.max(0, Math.min(34, PS.L));
+  let dt = Math.min(.05, (now - PS.last) / 1000); PS.last = now; PS.t += dt;
+  const A = 7 + 20 * k, ph = (PS.t % 1) * 2 * Math.PI;   // 1초 왕복: t=0.5 왼쪽 끝, t=1 오른쪽 끝
+  const nx = red ? 0 : A * Math.cos(ph), v = red ? 0 : -A * 2 * Math.PI * Math.sin(ph); PS.v = v; PS.x = nx;
+  const LK = 900 - 760 * k, LC = 2 * Math.sqrt(LK) * (.85 - .72 * k), LG = .35 + .65 * k;   // 목 길이 = 옆으로 간 만큼 바로 늘어남(머리가 끝에 닿을 때 가장 김) + 눌렀을 때 출렁(PS.w 스프링: 감도 ↑ = 덜 감쇠)
+  PS.w = PS.w || 0; for(let i = 0; i < 4; i++){ const hs = dt / 4; PS.lv += (-LK * PS.w - LC * PS.lv) * hs; PS.w += PS.lv * hs; }
+  PS.L = red ? 0 : Math.max(0, Math.min(34, 3 + LG * Math.abs(PS.x) + PS.w));
   PS.max = Math.max(PS.max * .995, Math.abs(PS.x)); PS.lmax = Math.max(PS.lmax * .995, PS.L);
   if(img.complete && img.naturalWidth) psDraw(cv, img, k);
   requestAnimationFrame(psTick); }
 function psDraw(cv, img, k){ const g = cv.getContext("2d"), CW = 220, S2 = cv.width / CW, W = 112, H = W * 375 / 510, cut = H * PS_NECK, x0 = (CW - W) / 2, base = 126 - 3;
-  let src = PS.src; if(!src || src.w !== img.naturalWidth){ src = document.createElement("canvas"); src.width = 512; src.height = Math.round(512 * 375 / 510); src.getContext("2d").drawImage(img, 0, 0, src.width, src.height); src.w = img.naturalWidth; PS.src = src; }
-  const sw = src.width, sh = src.height, cutS = sh * PS_NECK, bodyTop = base - (H - cut), L = PS.L, X = PS.x * .9;
-  const ang = PS.x * .011 + PS.v * .00025 * k, sq = Math.max(-.06, Math.min(.08, -PS.lv * .0009)), hx = x0 + W / 2 + X, hy = bodyTop - L + .5;
-  g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, cv.width, cv.height); g.setTransform(S2, 0, 0, S2, 0, 0);
-  if(L > .6){   // 목: 그림 대신 크림색 고무 목을 그림(양옆 테두리만) — 늘어날수록 가운데가 가늘어짐
-    const eL = W * (.172 - .5), eR = W * (.81 - .5), thin = Math.min(.36, L / 80) * (.55 + .45 * k), c = Math.cos(ang), s = Math.sin(ang);
-    const top = e => [hx + e * c * (1 + sq * .5), hy + e * s];   // 기울어진 머리 아래 모서리
-    const bl = [x0 + W / 2 + eL, bodyTop + .5], br = [x0 + W / 2 + eR, bodyTop + .5], tl = top(eL), tr = top(eR), my = (bodyTop + hy) / 2, mx = (x0 + W / 2 + hx) / 2, nw = (eR - eL) * thin / 2;
-    const path = new Path2D(); path.moveTo(...bl); path.bezierCurveTo(bl[0] + nw, my + L * .2, tl[0] + nw * .6 + (mx - tl[0]) * 0, my - L * .2, ...tl); path.lineTo(...tr); path.bezierCurveTo(tr[0] - nw * .6, my - L * .2, br[0] - nw, my + L * .2, ...br); path.closePath();
-    const fg = g.createLinearGradient(bl[0], 0, br[0], 0); fg.addColorStop(0, "#ece2d4"); fg.addColorStop(.45, "#faf5ee"); fg.addColorStop(1, "#e7dccd"); g.fillStyle = fg; g.fill(path);
-    g.strokeStyle = "#2b2025"; g.lineWidth = 1.5; g.lineCap = "round"; [[bl, [bl[0] + nw, my + L * .2], [tl[0] + nw * .6, my - L * .2], tl], [br, [br[0] - nw, my + L * .2], [tr[0] - nw * .6, my - L * .2], tr]].forEach(([a, b, c2, d]) => { g.beginPath(); g.moveTo(...a); g.bezierCurveTo(...b, ...c2, ...d); g.stroke(); }); }
-  g.drawImage(src, 0, cutS, sw, sh - cutS, x0, bodyTop, W, H - cut);   // 몸: 그대로
-  g.save(); g.translate(hx, hy); g.rotate(ang); g.scale(1 + sq * .5, 1 - sq);   // 머리: 옆으로 + 기울임 + 늘었다 줄 때 살짝 납작
-  g.drawImage(src, 0, 0, sw, cutS, -W / 2, -cut, W, cut); g.restore(); }
+  let src = PS.src; if(!src || src.w !== img.naturalWidth){ src = psPrep(img); PS.src = src; }
+  const sw = src.width, sh = src.height, sc = sh / H, bodyTop = base - (H - cut), L = PS.L, X = PS.x * .9, lean = .22 + .18 * k, ease = t => t * t * (3 - 2 * t);
+  g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, cv.width, cv.height); g.setTransform(S2, 0, 0, S2, 0, 0); g.imageSmoothingQuality = "high";
+  g.drawImage(src, 0, cut * sc, sw, sh - cut * sc, x0, bodyTop - .2, W, H - cut + .2);   // 몸: 그대로
+  const thin = 1 - Math.min(.3, L / 90) * (.6 + .4 * k), n = Math.max(1, Math.ceil(L * 2));   // 목: 입 아래 한 줄(테두리만)을 늘임, 양 끝은 몸·머리 줄과 같은 폭
+  for(let j = 0; j < n; j++){ const t = (j + .5) / n, ws = 1 - (1 - thin) * Math.sin(Math.PI * t), w = W * ws, y = bodyTop - L * (j + 1) / n;
+    g.drawImage(src.neck, 0, 0, sw, 1, x0 + (W - w) / 2 + X * ease(t), y - .35, w, L / n + .7); }
+  const top = bodyTop - L, hn = Math.ceil(cut * 2);   // 머리: 줄마다 X + 위로 갈수록 조금 더 → 기울어 보이되 아래 줄은 목 꼭대기와 딱 맞음
+  for(let j = 0; j < hn; j++){ const y0 = cut * j / hn, y1 = cut * (j + 1) / hn, up = (cut - (y0 + y1) / 2) / cut;
+    g.drawImage(src.head, 0, y0 * sc, sw, (y1 - y0) * sc, x0 + X * (1 + lean * up), top - cut + y0 - .3, W, y1 - y0 + .6); } }
+/* 그림 준비(한 번): 몸 = 원본 · 머리 = 목 줄 바로 위 팔 끝(입 아래 몇 줄)을 위쪽 깨끗한 살색으로 덮은 것 · 목 = 목 줄의 바깥 테두리 + 안쪽은 이마 쪽 깨끗한 줄을 늘여 채운 한 줄(팔·수염 줄무늬 없음)
+   좌표는 cat_happy 510×375 기준: 목 줄 258, 팔 끝 253~257(x 135~176·331~376), 깨끗한 줄 190(이마, 안쪽 135~374 — 볼 빗금·수염 없음), 목 줄 안쪽 105~404 */
+function psPrep(img){ const sw = 512, sh = Math.round(512 * 375 / 510), fx = sw / 510, fy = sh / 375, mk = () => { const c = document.createElement("canvas"); c.width = sw; c.height = sh; return c; };
+  const src = mk(); src.getContext("2d").drawImage(img, 0, 0, sw, sh); src.w = img.naturalWidth;
+  const hd = mk(), hg = hd.getContext("2d"); hg.drawImage(src, 0, 0);
+  [[135, 176], [331, 376]].forEach(([a, b]) => hg.drawImage(src, a * fx, 249 * fy, (b - a) * fx, 2 * fy, a * fx, 252.5 * fy, (b - a) * fx, (PS_NECK * 375 - 252.5 + 1) * fy));
+  const nk = document.createElement("canvas"); nk.width = sw; nk.height = 1; const ng = nk.getContext("2d"), ry = PS_NECK * 375 * fy - .5;
+  ng.drawImage(src, 0, ry, sw, 1, 0, 0, sw, 1); ng.clearRect(105 * fx, 0, 299 * fx, 1); ng.drawImage(src, 135 * fx, 190 * fy, 240 * fx, 1, 105 * fx, 0, 299 * fx, 1);
+  src.head = hd; src.neck = nk; return src; }
 /* 닉네임: 계정마다 하나, 중복 불가(서버 nick_claim), 언제든 변경. 안 정하면 냥이 밈 기본 닉네임 */
 const NICK_BASE = { ko: ["냥이집사", "츄르도둑", "꾹꾹이장인", "말랑이수집가", "골골송DJ", "식빵굽는중", "냥펀치맞은자", "캣닢중독", "숨숨집주인", "젤리발바닥", "츄르셔틀", "냥모나이트", "고영희씨", "털뭉치", "냥냥펀치", "꼬리흔들기"],
   ja: ["ネコの下僕", "ちゅーる泥棒", "ふみふみ職人", "香箱座り中", "猫パンチ被害者", "ゴロゴロDJ", "猫吸い常習犯", "肉球マニア", "毛玉製造機", "おやつ係", "にゃんモナイト", "ねこ様の家来"] };
@@ -4002,7 +4006,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v205";
+const APP_VER = "v206";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
