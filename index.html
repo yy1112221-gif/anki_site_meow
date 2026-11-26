@@ -620,7 +620,7 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .pet-snd{position:absolute;z-index:5;left:12px;top:calc(64px + env(safe-area-inset-top));width:38px;height:38px;border-radius:50%;border:1px solid var(--glass-edge);background:var(--glass-strong);font-size:1.05rem;display:grid;place-items:center;cursor:pointer}.pet-nt{left:56px}
 .pet-bar{width:min(220px,100%);height:9px;border-radius:999px;background:rgba(255,255,255,.5);overflow:hidden} .pet-bar i{display:block;height:100%;background:linear-gradient(90deg,#ffb84d,#f2708f);border-radius:999px;transition:width .3s}
 .pet-st{display:flex;flex-direction:column;align-items:flex-end} .pet-st b{font-size:1.05rem;color:var(--ink)} .pet-st small{font-size:.7rem;color:var(--muted)}
-.pet-msg{position:absolute;z-index:5;left:50%;top:calc(200px + env(safe-area-inset-top));transform:translate(-50%,-10px);max-width:88vw;padding:10px 16px;border-radius:18px;background:rgba(255,255,255,.92);color:#1d2b27;font-weight:700;font-size:.9rem;text-align:center;opacity:0;transition:.25s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.pet-msg{position:absolute;z-index:5;left:50%;top:calc(var(--pmT,206px) + env(safe-area-inset-top));transform:translate(-50%,-10px);max-width:84vw;padding:7px 14px;border-radius:16px;font-size:.8rem!important;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;background:rgba(255,255,255,.92);color:#1d2b27;font-weight:700;font-size:.9rem;text-align:center;opacity:0;transition:.25s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.15)}
 .pet-msg.show{opacity:1;transform:translate(-50%,0)}
 .pet-bottom{position:absolute;left:0;right:0;top:calc(156px + env(safe-area-inset-top));bottom:auto;pointer-events:none;padding:0 12px;z-index:3} .pet-bottom .row,.pet-bottom button,.pet-bottom input{pointer-events:auto} .pet-bottom-old{padding:10px 12px calc(12px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px}
 .pet-tray{display:flex;gap:10px;overflow-x:auto;padding:6px 4px;scrollbar-width:none;justify-content:safe center}
@@ -645,7 +645,7 @@ header.top{padding-top:6px;padding-bottom:4px} header.top #todayLabel{display:no
 .shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;text-align:left} .shop-it{display:flex;gap:8px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
 .shop-it .nm{flex:1;min-width:0;font-size:.85rem;line-height:1.25} .shop-it .nm small{display:block;color:var(--muted);font-variant-numeric:tabular-nums} .shop-it .bb{display:flex;flex-direction:column;gap:4px} .shop-it .bb button{padding:3px 8px;font-size:.75rem}
 .pet-none{color:var(--muted);font-weight:600;padding:20px}
-.pet-hint{text-align:center;font-size:.72rem;color:var(--muted);margin:0;word-break:keep-all;overflow-wrap:anywhere}
+.pet-hint{text-align:center;font-size:.72rem;color:var(--muted);margin:0;word-break:keep-all;overflow-wrap:anywhere;position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .aud{display:flex;flex:1 1 100%;align-items:stretch;border:1.5px solid var(--line);border-radius:999px;background:var(--glass,transparent);position:relative;flex-wrap:nowrap;max-width:100%}
 .aud-b{display:inline-flex;flex:1 1 0;justify-content:center;align-items:center;gap:5px;border:0;background:transparent;color:inherit;font:inherit;font-weight:700;font-size:.88rem;padding:10px 8px;cursor:pointer;white-space:nowrap;border-radius:999px;position:relative;z-index:1}
 .aud-b:active{background:var(--accent-soft,rgba(0,0,0,.06))} .aud-i{font-size:1.05rem;line-height:1}
@@ -4006,7 +4006,7 @@ function renderAll(){
 document.addEventListener("visibilitychange", () => { if(!document.hidden && !SES) renderAll(); });
 
 /* ════════ 문의 냥이: 기본 챗봇 + 문제 접수(Supabase) + 자동 오류 보고 ════════ */
-const APP_VER = "v207";
+const APP_VER = "v208";
 const ERR_LOG = []; let LAST_Q = [];
 function logErr(m){ m = String(m || "").slice(0, 300); if(!m || /ResizeObserver|Script error/.test(m)) return; ERR_LOG.push({ m, t: Date.now() }); if(ERR_LOG.length > 8) ERR_LOG.shift(); autoReport(m); }
 window.addEventListener("error", e => logErr((e.message || "") + " @" + (e.lineno || "")));
@@ -4785,7 +4785,7 @@ function petStart(){
   // タッチ（指ごとに別々）: ほっぺ=つまんで引っぱる/寄せる（両手でも可） · おなか=つつく/なでる/一か所長押しでむぎゅっ
   st.pulls = []; st.hpid = null;
   const toU = e => { const r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top; return { px, py, ux: (px - st.cx) / (st.s * st.bw) + 64, uy: (py - st.by) / (st.s * st.bh) + 120 }; };
-  cv.onpointerdown = e => { pa(); const { px, py, ux, uy } = toU(e); st.mctx.lineWidth = 22; if(!st.mctx.isPointInPath(st.upath, ux, uy) && !st.mctx.isPointInStroke(st.upath, ux, uy) && !(ux > -10 && ux < 138 && uy > 44 && uy < 128)) return;
+  cv.onpointerdown = e => { pa(); st.act = performance.now(); const { px, py, ux, uy } = toU(e); st.mctx.lineWidth = 22; if(!st.mctx.isPointInPath(st.upath, ux, uy) && !st.mctx.isPointInStroke(st.upath, ux, uy) && !(ux > -10 && ux < 138 && uy > 44 && uy < 128)) return;
     const flap = (ux < 24 || ux > 104) && uy > 97 && uy < 126, belly = ux > 47 && ux < 81 && uy > 101 && uy < 126;   // 뱃살: 양쪽 끝 + 가운데 대뱃살 (앞발 있는 곳은 제외)
     if(((ux < 53 || ux > 75) && uy > 66 && uy < 106 && !flap || flap || belly) && st.pulls.length < 2){ st.pulls.push({ pid: e.pointerId, x0: ux, y0: Math.min(uy, 117), ox: 0, oy: 0, on: false, side: belly ? 0 : ux < 64 ? -1 : 1, belly: flap || belly ? 1 : 0, mid: belly ? 1 : 0, t0: performance.now() }); try{ cv.setPointerCapture(e.pointerId); }catch(_){} return; }
     if(st.holding) return;
@@ -4794,7 +4794,7 @@ function petStart(){
   cv.onpointermove = e => { const { px, py, ux, uy: uyr } = toU(e);
     const pl = st.pulls.find(q => q.pid === e.pointerId);
     if(pl){ let ox = ux - pl.x0, oy = uyr - pl.y0; const L = Math.hypot(ox, oy);
-      if(!pl.on && L > 3){ pl.on = true; buzz(10); }
+      if(!pl.on && L > 3){ pl.on = true; buzz(10); st.userPulled = 1; }
       if(pl.on){ const inward = ox * pl.side < 0, cap = pl.mid ? 46 : pl.belly ? (inward ? 18 : 62) : inward ? 26 : 78, k = L > 0 ? cap * Math.tanh(L * 1.25 / cap) / L : 0; pl.ox = ox * k; pl.oy = Math.max(pl.belly ? -30 : -55, Math.min(oy * k, pl.mid ? 26 : pl.belly ? 30 : 118 - pl.y0)); st.flap = Math.max(st.flap, .4); if(Math.random() < .15) buzz(5); }
       return; }
     if(!st.holding || e.pointerId !== st.hpid) return;
@@ -4851,9 +4851,28 @@ function jellyStep(st, h){
     vy[k] += (-ka * (dy[k] - ty) + KS * (ly - n * dy[k]) - C * vy[k]) * h; }
   for(let k = 0; k < N; k++){ dx[k] += vx[k] * h; dy[k] += vy[k] * h; if(st.pin[k] && !st.free[k]){ if(Math.abs(dy[k]) > .01){ dy[k] *= .6; vy[k] = 0; } } if(!st.pin[k] && !st.free[k]){ const lim = 120 - st.ry[k]; if(dy[k] > lim){ dy[k] = lim; if(vy[k] > 0) vy[k] *= -.2; } if(dy[k] < -20){ dy[k] = -20; if(vy[k] < 0) vy[k] *= .3; } } }
 }
+/* 가만히 있을 때 유도(11-26 사용자): 글 대신 냥이 몸짓. 아무 손짓(쓰다듬기·잡아당기기·간식 잡기)이 없으면
+   · 간식이 있는데 7초: 「움냠냠…」「배고프다냥」 + 입맛 다시는 들썩임(10초마다, 4번까지)
+   · 볼을 아직 안 당겨 봤으면 12초(간식 없으면 5초): 냥이가 스스로 한쪽 볼을 쭉 당겼다 놓음(18초마다, 3번까지) — 볼 잡아당기기를 알려 줌
+   손을 대면 시계가 처음부터. 삐진 동안·던지는 중·촬영 모드(clean)는 안 함 */
+const NUDGE = { ko: ["움냠냠…", "배고프다냥", "간식… 냄새난다냥", "츄릅…"], ja: ["もぐもぐ…", "おなかすいたニャ", "おやつのにおいがするニャ…", "じゅるり…"] };
+function petNudge(st, now, dt){ if(st.act == null){ st.act = now; st.nN = 0; st.nP = 0; st.nAt = st.pAt = -1e9; }
+  if(st.ap) petAutoPull(st, dt);
+  const busy = st.grab || st.holding || (st.pulls && st.pulls.some(q => !q.auto)) || st.proj.length || st.flies.length || (WHEEL && WHEEL.mode) || sulkOn() || (REC && REC.clean) || document.hidden;
+  if(busy){ st.act = now; return; } const idle = now - st.act, has = petCount() > 0;
+  if(has && idle > 7000 && st.nN < 4 && now - st.nAt > 10000){ st.nAt = now; st.nN++; const L = NUDGE[S.meta.settings.ui === "ja" ? "ja" : "ko"]; petMsg(L[(st.nN - 1) % L.length], 2200); st.hit = Math.max(st.hit || 0, .22); st.flap = Math.max(st.flap || 0, .5); try{ track("pet_nudge", { k: "hungry" }); }catch(_){} return; }
+  if(!st.userPulled && !st.ap && st.nP < 3 && idle > (has ? 12000 : 5000) && now - st.pAt > 18000){ st.pAt = now; st.nP++; const side = st.nP % 2 ? 1 : -1;
+    st.ap = { t: 0, side, pl: { pid: "auto", auto: 1, x0: 64 + side * 24, y0: 88, ox: 0, oy: 0, on: true, side, belly: 0, mid: 0, t0: now } }; st.pulls.push(st.ap.pl); try{ track("pet_nudge", { k: "pull" }); }catch(_){} } }
+function petAutoPull(st, dt){ const a = st.ap; a.t += dt; const pl = a.pl, ease = t => t * t * (3 - 2 * t);
+  const out = a.t < .7 ? ease(a.t / .7) : a.t < 1.15 ? 1 + .06 * Math.sin((a.t - .7) * 26) : 1;   // 0.7초 쭉 → 0.45초 버팀(바들바들) → 놓음
+  pl.ox = a.side * 58 * out; pl.oy = -6 * out;
+  if(a.t >= 1.15){ const i = st.pulls.indexOf(pl); if(i >= 0) st.pulls.splice(i, 1); st.ap = null; st.snap = .28; st.hit = Math.max(st.hit || 0, .5); st.flap = 1; st.lastHit = performance.now(); try{ sfxPoyon(.8); }catch(_){} } }
+function petMsgPlace(st){ if(st.mpT && st.mpT > performance.now() - 500) return; st.mpT = performance.now(); const pe = $("#pet"), b = $("#petBrag"), cv = st.cv; if(!pe || !cv) return;
+  const r = pe.getBoundingClientRect(), bb = b && b.offsetParent ? b.getBoundingClientRect().bottom - r.top : 150, catTop = st.toScr(64, 50).y + cv.getBoundingClientRect().top - r.top;
+  pe.style.setProperty("--pmT", Math.round(Math.max(bb + 16, Math.min(catTop - 52, bb + 60))) + "px"); }
 function petLoop(now){ const st = PET; if(!st) return; try{ petLoop0(now); }catch(e){ console.error(e); st.raf = requestAnimationFrame(petLoop); } }
 function petLoop0(now){
-  const st = PET; if(!st) return; let dt = Math.min(.05, (now - st.last) / 1000); st.last = now; st.t += dt;
+  const st = PET; if(!st) return; let dt = Math.min(.05, (now - st.last) / 1000); st.last = now; st.t += dt; petNudge(st, now, dt); petMsgPlace(st);
   if(!st.grab && !(WHEEL && WHEEL.mode === "grab")){ const pe = $("#pet"); if(pe && pe.classList.contains("grabbing")) pe.classList.remove("grabbing"); }   // 잡기 상태가 꼬이면(캡처·끊김) 자동으로 풀기
   const p = petState(); st.bw = 1 + Math.min(p.lv, 40) * .011; st.bh = 1 + Math.min(p.lv, 40) * .005;
   if(st.holding && now - st.still0 > 480){ if(!SQZ) sfxSqueezeStart(); st.squeeze = Math.min(1, st.squeeze + dt * 1.3); if(Math.random() < .2) buzz(8); }
