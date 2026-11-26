@@ -1,10 +1,10 @@
-# R-1125-②-선물카드: 포장지 7종 캔버스 · 받는 화면 상자/봉투 · 옛 링크 w 값 · 글꼴 못 받을 때
+# R-1125-②-선물카드 + R-1126-②-무지개포장지: 포장지 8종 캔버스 · 받는 화면 상자/봉투 · 옛 링크 w 값 · 글꼴 못 받을 때
 import asyncio, json, sys, re, base64
 from playwright.async_api import async_playwright
 R=[]
 def ok(n,c,i=""): R.append(c); print(("✅" if c else "❌"), n, "" if c else i)
 B="http://localhost:8765/index.html"
-WR=["pink","mint","cream","night","washi","sakura","hangul"]
+WR=["pink","mint","cream","night","rainbow","washi","sakura","hangul"]
 def meta(ui="ko"): return {"setup":1,"tutAsked":1,"loginAsked":1,"days":{},"settings":{"ui":ui,"lang":"ja" if ui=="ko" else "ko","homePet":False}}
 def enc(o): return base64.urlsafe_b64encode(json.dumps(o,ensure_ascii=False).encode()).decode().rstrip("=")
 M80={"ko":"생일 진심으로 축하해! 올해도 맛있는 거 많이 먹고 행복하게 지내자. 늘 고마워 우리 또 만나서 놀자 꼭이야 약속해 정말 정말로","ja":"いつもありがとう！これからもよろしくね。また一緒にごはん行こうね、約束だよ。ずっとずっと友だちでいてね、本当に本当にありがとう"}
@@ -17,7 +17,7 @@ async def main():
     ctx=await b.new_context(viewport={"width":390,"height":844}); pg=await ctx.new_page(); errs=[]; pg.on("pageerror",lambda e:errs.append(str(e)))
     await ctx.route(re.compile(r"supabase\.co|tosspayments"), lambda r: r.abort())
     await seed(pg)
-    ok("포장지 7종", await pg.evaluate("()=>window.__t.CARD_WRAP && Object.keys(window.__t.CARD_WRAP).join()")=="pink,mint,cream,night,washi,sakura,hangul")
+    ok("포장지 8종", await pg.evaluate("()=>window.__t.CARD_WRAP && Object.keys(window.__t.CARD_WRAP).join()")=="pink,mint,cream,night,rainbow,washi,sakura,hangul")
     # 캔버스: 7 × ml ko/ja × to 유무 × bday/free, 80자 + 두 번째 언어
     bad=[]
     for w in WR:
@@ -27,7 +27,14 @@ async def main():
             o={"n":"미나","c":"surprised" if k=="free" else "love","w":w,"m":M80[ml][:80],"p":M80["ja" if ml=="ko" else "ko"][:80],"ml":ml,"pl":"ja" if ml=="ko" else "ko","to":to,"k":k}
             r=await pg.evaluate("""async o=>{const cv=await window.__t.cardCanvas(o); const g=cv.getContext('2d'); const d=g.getImageData(0,0,cv.width,cv.height).data; let n=0; for(let i=0;i<d.length;i+=4*97) if(d[i]+d[i+1]+d[i+2]<300) n++; return [cv.width,cv.height,n]}""", o)
             if r[0]!=1080 or r[1]!=1350 or r[2]<20: bad.append((w,ml,to,k,r))
-    ok("7 포장지 × ko·ja × to × bday/free 카드 생성(글자 그려짐)", not bad, str(bad[:3]))
+    ok("8 포장지 × ko·ja × to × bday/free 카드 생성(글자 그려짐)", not bad, str(bad[:3]))
+    # rainbow 카드 PNG 몇 장 저장(눈으로 확인) + 무지개 바탕·검은 테가 그려짐
+    for ml,to,k in [("ko","하나","bday"),("ja","","free"),("ja","ハナ","bday")]:
+      o={"n":"미나" if ml=="ko" else "ミナ","c":"love" if k=="bday" else "happy","w":"rainbow","m":M80[ml][:80],"p":M80["ja" if ml=="ko" else "ko"][:80],"ml":ml,"pl":"ja" if ml=="ko" else "ko","to":to,"k":k}
+      r=await pg.evaluate("""async o=>{const cv=await window.__t.cardCanvas(o); const g=cv.getContext('2d'); const px=(x,y)=>[...g.getImageData(x,y,1,1).data].slice(0,3); return {url:cv.toDataURL('image/png'), tl:px(4,4), br:px(1075,1345), blk:(()=>{const d=g.getImageData(0,0,1080,1350).data; let n=0; for(let i=0;i<d.length;i+=4*13) if(d[i]+d[i+1]+d[i+2]<60) n++; return n})()}}""", o)
+      open(f"/tmp/t_card_rainbow_{ml}_{k}{'_to' if to else ''}.png","wb").write(base64.b64decode(r["url"].split(",")[1]))
+      ok(f"rainbow {ml} {k}: 왼쪽 위 빨강·오른쪽 아래 보라·검은 테", r["tl"][0]>200 and r["tl"][2]<120 and r["br"][2]>200 and r["br"][1]<120 and r["blk"]>2000, str({"tl":r["tl"],"br":r["br"],"blk":r["blk"]}))
+    ok("rainbow 템플릿 냥이 B", await pg.evaluate("()=>window.__t.cardCat('rainbow','surprised')=='cat/card/cat_b_shock.png'"))
     # 냥이 그림: 무리별 B/A
     ok("템플릿 냥이 pink=B·cream=A·surprised→shock", await pg.evaluate("()=>{const c=window.__t.cardCat; return c('pink','love')=='cat/card/cat_b_love.png' && c('cream','happy')=='cat/card/cat_a_happy.png' && c('mint','surprised')=='cat/card/cat_b_shock.png'}"))
     # 그림 파일 26개 모두 열림
@@ -36,20 +43,30 @@ async def main():
     # 만들기 시트: 포장지 버튼 7개(귀여움 4·모던 3), 44px 이상, 바꾸면 템플릿 그림도 바뀜
     await pg.evaluate("()=>window.__t.cardMake(null,'bday')"); await pg.wait_for_timeout(700)
     ws=await pg.evaluate("()=>[...document.querySelectorAll('.cd-w')].map(b=>{const r=b.getBoundingClientRect(); return [b.dataset.w, r.width>=44&&r.height>=44, b.classList.contains('mod')]})")
-    ok("포장지 버튼 7개·44px·모던 3", len(ws)==7 and all(x[1] for x in ws) and [x[0] for x in ws if x[2]]==["washi","sakura","hangul"], str(ws))
+    ok("포장지 버튼 8개·44px·모던 3·귀여움 5번째 무지개", len(ws)==8 and [x[0] for x in ws if not x[2]]==["pink","mint","cream","night","rainbow"] and all(x[1] for x in ws) and [x[0] for x in ws if x[2]]==["washi","sakura","hangul"], str(ws))
+    ok("무지개 버튼 바탕 = 그라데이션", "gradient" in await pg.evaluate("()=>getComputedStyle(document.querySelector('.cd-w[data-w=rainbow]')).backgroundImage"))
+    await pg.click(".cd-w[data-w=rainbow]"); await pg.wait_for_timeout(300)
+    ok("rainbow 고르면 템플릿 버튼이 B 냥이", await pg.evaluate("()=>[...document.querySelectorAll('.cd-t img')].every(i=>i.src.includes('cat_b_'))"))
     await pg.click(".cd-w[data-w=cream]"); await pg.wait_for_timeout(300)
     ok("cream 고르면 템플릿 버튼이 A 냥이", await pg.evaluate("()=>[...document.querySelectorAll('.cd-t img')].every(i=>i.src.includes('cat_a_'))"))
     ok("만들기 시트 가로 넘침 없음", await pg.evaluate("()=>document.documentElement.scrollWidth<=innerWidth"))
     await pg.evaluate("()=>document.querySelector('.sheet .x').click()")
+    await pg.set_viewport_size({"width":360,"height":640})
+    await pg.evaluate("()=>window.__t.cardMake(null,'free')"); await pg.wait_for_timeout(600)
+    rr=await pg.evaluate("()=>{const r=[...document.querySelectorAll('.cd-wr')].map(e=>{const a=[...e.querySelectorAll('.cd-w')].map(b=>b.getBoundingClientRect().top); return a.length?Math.max(...a)-Math.min(...a):0}); const sh=document.querySelector('.sheet').getBoundingClientRect(); return {rows:r, out:[...document.querySelectorAll('.cd-w')].some(b=>b.getBoundingClientRect().right>sh.right+0.5), sw:document.documentElement.scrollWidth<=innerWidth}}")
+    ok("360폭: 포장지 두 줄이 각각 한 줄·넘침 없음", all(x<2 for x in rr["rows"]) and not rr["out"] and rr["sw"], str(rr))
+    await pg.screenshot(path="/tmp/t_card_make_360.png")
+    await pg.evaluate("()=>document.querySelector('.sheet .x').click()")
+    await pg.set_viewport_size({"width":390,"height":844})
     # 옛 링크·이상한 w 값
-    for w,exp in [("pink","pink"),("mint","mint"),("night","night"),("washi","washi"),("hangul","hangul"),("gold","pink"),("<x>","pink")]:
+    for w,exp in [("pink","pink"),("mint","mint"),("night","night"),("washi","washi"),("hangul","hangul"),("rainbow","rainbow"),("gold","pink"),("<x>","pink")]:
       await seed(pg,"ko","?g="+enc({"n":"ミナ","c":"love","w":w,"m":"ありがとう","ml":"ja","k":"free"}))
       got=await pg.evaluate("()=>{const l=window.__t.giftState().recv; const z=l.find(z=>z.o&&z.o.m=='ありがとう'); return z?z.o.w:null}")
       ok(f"링크 w={w} → {exp}", got==exp, str(got))
     # 받는 화면
     for vw,vh in [(390,844),(360,640)]:
       await pg.set_viewport_size({"width":vw,"height":vh})
-      for w in ["pink","sakura"]:
+      for w in ["pink","rainbow","sakura"]:
         for ui in ["ko","ja"]:
           await seed(pg,ui,"?g="+enc({"n":"ミナ","c":"love","w":w,"m":"お誕生日おめでとう！","ml":"ja","p":"생일 축하해","pl":"ko","k":"bday","to":"하나"}))
           await pg.wait_for_timeout(500)
@@ -72,6 +89,9 @@ async def main():
     await seed(p3)
     r=await p3.evaluate("async()=>{const t0=performance.now(); const cv=await window.__t.cardCanvas({n:'미나',c:'love',w:'hangul',m:'고마워',ml:'ko',k:'bday',to:'하나'}); return [cv.width, performance.now()-t0]}")
     ok("글꼴 막혀도 카드 생성(3초 안)", r[0]==1080 and r[1]<3500, str(r))
+    r=await p3.evaluate("async()=>{const t0=performance.now(); const cv=await window.__t.cardCanvas({n:'미나',c:'happy',w:'rainbow',m:'고마워 정말로',p:'ありがとう',ml:'ko',pl:'ja',k:'bday',to:'하나'}); return [cv.width, performance.now()-t0, cv.toDataURL('image/png')]}")
+    open("/tmp/t_card_rainbow_nofont.png","wb").write(base64.b64decode(r[2].split(",")[1]))
+    ok("rainbow 글꼴 막혀도 생성(3초 안)", r[0]==1080 and r[1]<3500, str(r[:2]))
     ok("페이지 오류 없음", not errs, str(errs[:3]))
     await b.close()
   print(f"{sum(R)}/{len(R)}"); sys.exit(0 if all(R) else 1)
