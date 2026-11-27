@@ -1,14 +1,14 @@
 {
- "updated": "2026-11-26T22:16:01.948698Z",
+ "updated": "2026-11-27T22:14:33.060725Z",
  "lang": "en",
  "terms": [
   {
    "t": "mogging",
-   "n": 26,
+   "n": 35,
    "src": [
     "google_news"
    ],
-   "s": 28,
+   "s": 37,
    "first": "2026-11-18",
    "def": [
     "The act or habit of being significantly more attractive than someone or something; a domination in appearance",
@@ -18,8 +18,31 @@
     "Are you mogging or maxxing?",
     "#WordOfTheDay: \"mogging\" Curious about the definition and etymology of our WOTD?"
    ],
-   "at": "2026-11-26T22:16:01.948698Z",
-   "cue": 34
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 50
+  },
+  {
+   "t": "delulu",
+   "n": 4,
+   "src": [
+    "bing_news",
+    "google_news"
+   ],
+   "s": 8,
+   "first": "2026-11-18",
+   "def": [
+    "Delusional",
+    "Delusion ; delusional attitudes or thoughts",
+    "Another term that the government now recognises as an acronym for delusions is \"Delulu.\" It refers to someone believing things that are unrealistic, often out of choice."
+   ],
+   "ex": [
+    "\"If being delulu is wrong, I don't want to be right.\"",
+    "Within online spaces, using \"delulu\" to describe someone means they have unrealistic ideas about their interest.",
+    "In other instances, \"delulu\" is used in a light-hearted manner, often in memes or social media comments, to poke fun at one's interests.",
+    "Meanwhile, words like Delulu are shortened versions of existing words."
+   ],
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 7
   },
   {
    "t": "clock it",
@@ -40,54 +63,342 @@
     "For the full history of Clock It, be sure to check out Know Your Meme's encyclopedia entry for more information.",
     "BJP MP Bansuri Swaraj used the phrase \"clock it\" while supporting the Bill and praising the government's approach to tackling examination-related irregularities."
    ],
-   "at": "2026-11-26T22:16:01.948698Z",
+   "at": "2026-11-27T22:14:33.060725Z",
    "cue": 5
   },
   {
-   "t": "skibidi",
+   "t": "rizz",
    "n": 2,
    "src": [
-    "bing_news",
+    "bing_news"
+   ],
+   "s": 4,
+   "first": "2026-11-27",
+   "def": [
+    "To “rizz” someone means to charm or seduce them.",
+    "In contrast, unspoken rizz refers to the ability to exude charm without saying a word."
+   ],
+   "ex": [
+    "My rizz is silent but deadly.",
+    "There is more than a fine line between unspoken rizz and surreptitious sexual harassment.",
+    "Merriam-Webster defines rizz as “romantic appeal or charm” when used as a noun.",
+    "Rizz is an ability to attract or flirt successfully with potential romantic interests."
+   ],
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 22
+  },
+  {
+   "t": "sus",
+   "n": 2,
+   "src": [
+    "bing_news"
+   ],
+   "s": 4,
+   "first": "2026-11-27",
+   "def": [
+    "\"Sus\" is the top slang word used by teens in 2023, with 62% of parents hearing it from their kids, and 65% understanding its meaning.",
+    "\"Sus\" as a noun also means \"suspect\" and is \"usually used to define someone or something that looks suspicious or untrustworthy,\" says the website."
+   ],
+   "ex": [
+    "Although Cooper wasn't aware of \"sus\" at the time, he was struck by its familiarity to students.",
+    "Misuse a slang word and you'll reveal yourself as an outsider, says Cooper.",
+    "\"You didn't text me back last night — you're acting sus.\""
+   ],
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 12
+  },
+  {
+   "t": "zebi",
+   "n": 1,
+   "src": [
     "google_news"
    ],
-   "s": 6,
+   "s": 3,
+   "first": "2026-11-27",
+   "def": [],
+   "ex": [
+    "It's doubtful that Hokit saying \"zebi\" actually landed as a psychological blow.",
+    "In contemporary French youth slang, \"zebi\" functions less as a targeted insult and more as a crude exclamation."
+   ],
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 2
+  },
+  {
+   "t": "blue sweep",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-27",
+   "def": [],
+   "ex": [],
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 1
+  },
+  {
+   "t": "friendslop",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-23",
+   "def": [
+    "Co-operative multi-player video games as a genre , typified by low-budget , low-cost indie games intended to motivate friend groups to purchase and play together"
+   ],
+   "ex": [
+    "So, sure: You could look at the crudeness of friendslop and deem it a deficiency.",
+    "The flaws, however, might be the precise thing that makes friendslop trustworthy and approachable as a genre.",
+    "Friendslop is chopped, and mogging is sigma.",
+    "Nevertheless, friendslop has come to describe multiplayer games that share several characteristics."
+   ],
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 2
+  },
+  {
+   "t": "because they can",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-22",
+   "def": [],
+   "ex": [
+    "They want to adopt a child because they can't have a baby.",
+    "People are sickeningly jealous of all Capricorns because they can't be them."
+   ],
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 1
+  },
+  {
+   "t": "mobland",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-27",
+   "def": [
+    "The post What Does MobLand's Slag Slang Mean? appeared first on ComingSoon.net - Movie Trailers, TV & Streaming News, and More ."
+   ],
+   "ex": [
+    "In MobLand, the insult is not thrown casually.",
+    "MobLand Episode 10, the season finale, is now streaming on Paramount+."
+   ],
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 5
+  },
+  {
+   "t": "ratioed",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "Modified or multiplied by a ratio",
+    "Having significantly more replies than retweets or likes , indicating a general dislike by the public",
+    "‘Ratioed’ means that a tweet or post gets more replies than likes."
+   ],
+   "ex": [
+    "But often something simple can end up being ratioed as it goes unexpectedly viral."
+   ],
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 1
+  },
+  {
+   "t": "calling me unc",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-22",
+   "def": [],
+   "ex": [],
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 1
+  },
+  {
+   "t": "skibidi",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
    "first": "2026-11-19",
    "def": [
+    "Not every new entry comes with a clear-cut meaning, and skibidi is no exception.",
     "Skibidi word has various different meaning in some cases it can mean \"bad\" or \"cool,\" or it can be used in a meaningless way, according to the dictionary.",
-    "A nonsense word , sometimes used to form noun adjuncts for humorous effect",
-    "A strong reaction or an exclamation, sometimes used to replace words in set phrases or other interjections for humorous effect"
+    "A nonsense word , sometimes used to form noun adjuncts for humorous effect"
    ],
    "ex": [
     "Skibidi we put the rhythm to the 'tism!",
     "Definition: There is no one definition for skibidi, it is more of an expression.",
     "Skibidi toilet, gyatt, Ohio, rizz — what are the kids going on about these days?",
-    "The task of defining \"skibidi,\" a term derived from viral memes, was also taken on by the publishers."
+    "Oh, and if you're sick of skibidi toilet, you might have skibidi toilet syndrome ."
    ],
-   "at": "2026-11-26T22:16:01.948698Z",
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 11
+  },
+  {
+   "t": "human",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "Of or belonging to the species Homo sapiens or its closest relatives",
+    "Having the nature or attributes of a human being"
+   ],
+   "ex": [
+    "To err is human ; to forgive, divine.",
+    "She's only human , so give her a break !",
+    "But this community of enthusiasts also offers deep insights into human nature.",
+    "Their fresh and accessible translations remind us that love is both ever-changing and eternally essential to human life."
+   ],
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 2
+  },
+  {
+   "t": "huss",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-20",
+   "def": [
+    "But what exactly does \"huss\" mean, and where did it come from?",
+    "In memes, the term \"huss\" is used to refer to the act of sprinting or exerting yourself in some other way.",
+    "A dogfish"
+   ],
+   "ex": [
+    "While telling the story, he's seen \"hussing\" while dribbling a basketball.",
+    "While telling the story, he is occasionally shown dribbling the ball while saying, \"Huss, huss, huss.\"",
+    "Throughout the video, while telling the story, we see him dribbling a basketball and yelling, \"Huss, huss, huss!\"",
+    "This meme might have been the final push that the term \"huss\" needed to go mainstream."
+   ],
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 19
+  },
+  {
+   "t": "tante-tante code",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "What Does the 'Tante-Tante Code' Mean?"
+   ],
+   "ex": [],
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 1
+  },
+  {
+   "t": "get clapped",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-27",
+   "def": [],
+   "ex": [],
+   "at": "2026-11-27T22:14:33.060725Z",
+   "cue": 2
+  },
+  {
+   "t": "code rot",
+   "n": 1,
+   "src": [
+    "google_news"
+   ],
+   "s": 3,
+   "first": "2026-11-18",
+   "def": [
+    "Synonym of bit rot : the development of bugs and incompatibilities of software due to changes in its environment , etc",
+    "Synonym of bit rot : the development of bugs and incompatibilities of software due to changes in its environment , etc."
+   ],
+   "ex": [
+    "Users also found \"code rot\" in other games, like Fortnite and Genshin Impact .",
+    "\"Yup yup yup i f*cking knew it this assignment is definitely code rotted.\" Can't log into your Google account?",
+    "\"Code rot\" is the latest gaming term to make its way into Gen Z slang.",
+    "By October, a Despicable Me 4 TikTok filter had brought the \"code rot\" joke beyond Roblox."
+   ],
+   "at": "2026-11-27T22:14:33.060725Z",
    "cue": 5
   },
   {
-   "t": "delulu",
-   "n": 2,
+   "t": "crashing out",
+   "n": 1,
    "src": [
-    "bing_news",
-    "google_news"
+    "bing_news"
    ],
-   "s": 6,
-   "first": "2026-11-18",
-   "def": [
-    "Delusional",
-    "Delusion ; delusional attitudes or thoughts",
-    "Another term that the government now recognises as an acronym for delusions is \"Delulu.\" It refers to someone believing things that are unrealistic, often out of choice."
+   "s": 3
+  },
+  {
+   "t": "meroi",
+   "n": 1,
+   "src": [
+    "bing_news"
    ],
-   "ex": [
-    "\"If being delulu is wrong, I don't want to be right.\"",
-    "Within online spaces, using \"delulu\" to describe someone means they have unrealistic ideas about their interest.",
-    "In other instances, \"delulu\" is used in a light-hearted manner, often in memes or social media comments, to poke fun at one's interests.",
-    "Meanwhile, words like Delulu are shortened versions of existing words."
+   "s": 3
+  },
+  {
+   "t": "choberigu",
+   "n": 1,
+   "src": [
+    "bing_news"
    ],
-   "at": "2026-11-26T22:16:01.948698Z",
-   "cue": 5
+   "s": 3
+  },
+  {
+   "t": "or",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "benching",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "situationship",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "fomo",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
+  },
+  {
+   "t": "brain rot",
+   "n": 1,
+   "src": [
+    "bing_news"
+   ],
+   "s": 3
   },
   {
    "t": "maxxing",
@@ -103,23 +414,6 @@
    ],
    "at": "2026-11-26T22:16:01.948698Z",
    "cue": 3
-  },
-  {
-   "t": "crashing out",
-   "n": 2,
-   "src": [
-    "bing_news"
-   ],
-   "s": 4,
-   "first": "2026-11-25",
-   "def": [],
-   "ex": [
-    "If you've been online lately, you've likely seen people talking about crashing out.",
-    "Well, not literally — though, plenty of people actually are crashing out.",
-    "For some, “crashing out” can be a liberating release of pent-up emotions."
-   ],
-   "at": "2026-11-26T22:16:01.948698Z",
-   "cue": 2
   },
   {
    "t": "bruh",
@@ -165,22 +459,6 @@
    "cue": 5
   },
   {
-   "t": "because they can",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-22",
-   "def": [],
-   "ex": [
-    "They want to adopt a child because they can't have a baby.",
-    "People are sickeningly jealous of all Capricorns because they can't be them."
-   ],
-   "at": "2026-11-26T22:16:01.948698Z",
-   "cue": 1
-  },
-  {
    "t": "unc",
    "n": 1,
    "src": [
@@ -200,117 +478,6 @@
    ],
    "at": "2026-11-26T22:16:01.948698Z",
    "cue": 6
-  },
-  {
-   "t": "ratioed",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Modified or multiplied by a ratio",
-    "Having significantly more replies than retweets or likes , indicating a general dislike by the public",
-    "‘Ratioed’ means that a tweet or post gets more replies than likes."
-   ],
-   "ex": [
-    "But often something simple can end up being ratioed as it goes unexpectedly viral."
-   ],
-   "at": "2026-11-26T22:16:01.948698Z",
-   "cue": 1
-  },
-  {
-   "t": "calling me unc",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-22",
-   "def": [],
-   "ex": [],
-   "at": "2026-11-26T22:16:01.948698Z",
-   "cue": 1
-  },
-  {
-   "t": "human",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Of or belonging to the species Homo sapiens or its closest relatives",
-    "Having the nature or attributes of a human being"
-   ],
-   "ex": [
-    "To err is human ; to forgive, divine.",
-    "She's only human , so give her a break !",
-    "But this community of enthusiasts also offers deep insights into human nature.",
-    "Their fresh and accessible translations remind us that love is both ever-changing and eternally essential to human life."
-   ],
-   "at": "2026-11-26T22:16:01.948698Z",
-   "cue": 1
-  },
-  {
-   "t": "huss",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-20",
-   "def": [
-    "But what exactly does \"huss\" mean, and where did it come from?",
-    "In memes, the term \"huss\" is used to refer to the act of sprinting or exerting yourself in some other way.",
-    "A dogfish"
-   ],
-   "ex": [
-    "While telling the story, he's seen \"hussing\" while dribbling a basketball.",
-    "While telling the story, he is occasionally shown dribbling the ball while saying, \"Huss, huss, huss.\"",
-    "Throughout the video, while telling the story, we see him dribbling a basketball and yelling, \"Huss, huss, huss!\"",
-    "This meme might have been the final push that the term \"huss\" needed to go mainstream."
-   ],
-   "at": "2026-11-26T22:16:01.948698Z",
-   "cue": 18
-  },
-  {
-   "t": "tante-tante code",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "What Does the 'Tante-Tante Code' Mean?"
-   ],
-   "ex": [],
-   "at": "2026-11-26T22:16:01.948698Z",
-   "cue": 1
-  },
-  {
-   "t": "code rot",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-18",
-   "def": [
-    "Synonym of bit rot : the development of bugs and incompatibilities of software due to changes in its environment , etc",
-    "Synonym of bit rot : the development of bugs and incompatibilities of software due to changes in its environment , etc."
-   ],
-   "ex": [
-    "Users also found \"code rot\" in other games, like Fortnite and Genshin Impact .",
-    "\"Yup yup yup i f*cking knew it this assignment is definitely code rotted.\" Can't log into your Google account?",
-    "\"Code rot\" is the latest gaming term to make its way into Gen Z slang.",
-    "By October, a Despicable Me 4 TikTok filter had brought the \"code rot\" joke beyond Roblox."
-   ],
-   "at": "2026-11-26T22:16:01.948698Z",
-   "cue": 5
   },
   {
    "t": "preppy",
@@ -352,94 +519,6 @@
    "cue": 2
   },
   {
-   "t": "atp",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "charismatic",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "gts",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "demure",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "meroi",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "choberigu",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "benching",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "situationship",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "or",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "six-seven",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
-   "t": "fomo",
-   "n": 1,
-   "src": [
-    "bing_news"
-   ],
-   "s": 3
-  },
-  {
    "t": "firewave",
    "n": 1,
    "src": [
@@ -452,26 +531,6 @@
    ],
    "ex": [
     "Other shortlisted words included “firewave”, “ghost jobs” and “carspreading”."
-   ],
-   "at": "2026-11-25T22:16:05.111463Z",
-   "cue": 2
-  },
-  {
-   "t": "friendslop",
-   "n": 1,
-   "src": [
-    "google_news"
-   ],
-   "s": 3,
-   "first": "2026-11-23",
-   "def": [
-    "Co-operative multi-player video games as a genre , typified by low-budget , low-cost indie games intended to motivate friend groups to purchase and play together"
-   ],
-   "ex": [
-    "Nevertheless, friendslop has come to describe multiplayer games that share several characteristics.",
-    "So, sure: You could look at the crudeness of friendslop and deem it a deficiency.",
-    "Many friendslop games generate a new environment for each session.",
-    "The flaws, however, might be the precise thing that makes friendslop trustworthy and approachable as a genre."
    ],
    "at": "2026-11-25T22:16:05.111463Z",
    "cue": 2
